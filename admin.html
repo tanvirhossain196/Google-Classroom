@@ -4,81 +4,636 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>প্রশাসক প্যানেল - শিক্ষা ব্যবস্থাপনা</title>
+    <title>প্রশাসনিক প্যানেল - ক্লাসরুম</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 
-<body>
-    <div class="container">
-        <header class="header">
-            <h1>সিস্টেম ব্যবস্থাপনা ও নিয়ন্ত্রণ</h1>
-            <div class="user-info">
-                <span id="adminName">প্রশাসক</span>
-                <button id="logoutBtn">লগআউট</button>
+<body class="light-theme font-medium font-inter" id="mainBody">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link p-2 me-3" id="menuToggle">
+                    <i class="fas fa-bars fs-5"></i>
+                </button>
+                <a class="navbar-brand fw-normal text-muted" href="#">
+                    <span>ক্লাসরুম প্রশাসনিক প্যানেল</span>
+                </a>
             </div>
-        </header>
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-warning me-2" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge bg-danger" id="notificationCount">3</span>
+                    </button>
+                    <button class="btn btn-link p-0 me-3" type="button" data-bs-toggle="dropdown">
+                        <div class="user-avatar-header" id="headerAvatar">
+                            <span id="headerUserInitial">A</span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html">
+                                <i class="fas fa-user me-2"></i>প্রোফাইল
+                            </a></li>
+                        <li><a class="dropdown-item" href="settings.html">
+                                <i class="fas fa-cog me-2"></i>সেটিংস
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>লগআউট
+                            </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        <nav class="navigation">
-            <a href="admin.html" class="nav-link active">প্রশাসক প্যানেল</a>
-            <a href="dashboard.html" class="nav-link">ড্যাশবোর্ড</a>
-            <a href="courses.html" class="nav-link">কোর্স</a>
-            <a href="reports.html" class="nav-link">রিপোর্ট</a>
-            <a href="settings.html" class="nav-link">সেটিংস</a>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h5 class="sidebar-title">প্রশাসনিক মেনু</h5>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#overview" class="nav-item active" data-section="overview">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">ওভারভিউ</span>
+            </a>
+            <a href="#users" class="nav-item" data-section="users">
+                <i class="fas fa-users"></i>
+                <span class="nav-text">ব্যবহারকারী</span>
+            </a>
+            <a href="#courses" class="nav-item" data-section="courses">
+                <i class="fas fa-book"></i>
+                <span class="nav-text">কোর্স</span>
+            </a>
+            <a href="#assignments" class="nav-item" data-section="assignments">
+                <i class="fas fa-tasks"></i>
+                <span class="nav-text">অ্যাসাইনমেন্ট</span>
+            </a>
+            <a href="#analytics" class="nav-item" data-section="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span class="nav-text">অ্যানালিটিক্স</span>
+            </a>
+            <a href="#communications" class="nav-item" data-section="communications">
+                <i class="fas fa-comments"></i>
+                <span class="nav-text">যোগাযোগ</span>
+            </a>
+            <a href="#system" class="nav-item" data-section="system">
+                <i class="fas fa-server"></i>
+                <span class="nav-text">সিস্টেম</span>
+            </a>
+            <a href="#security" class="nav-item" data-section="security">
+                <i class="fas fa-shield-alt"></i>
+                <span class="nav-text">নিরাপত্তা</span>
+            </a>
         </nav>
-
-        <main class="main-content">
-            <div class="admin-overview">
-                <h2>সিস্টেম ব্যবস্থাপনা এবং নিয়ন্ত্রণ</h2>
-
-                <div class="admin-grid">
-                    <div class="admin-card" id="manageUsers">
-                        <div class="admin-icon">👥</div>
-                        <h3>সকল ইউজার দেখুন ও পরিচালনা করুন</h3>
-                        <p>ব্যবহারকারীদের তথ্য দেখুন এবং অ্যাকাউন্ট পরিচালনা করুন</p>
-                    </div>
-
-                    <div class="admin-card" id="monitorCourses">
-                        <div class="admin-icon">📚</div>
-                        <h3>সকল কোর্স মনিটর করুন</h3>
-                        <p>সমস্ত কোর্সের কার্যক্রম এবং অগ্রগতি পর্যবেক্ষণ করুন</p>
-                    </div>
-
-                    <div class="admin-card" id="platformConfig">
-                        <div class="admin-icon">⚙️</div>
-                        <h3>প্ল্যাটফর্ম কনফিগারেশন</h3>
-                        <p>সিস্টেম সেটিংস এবং কনফিগারেশন পরিবর্তন করুন</p>
-                    </div>
-
-                    <div class="admin-card" id="usageStats">
-                        <div class="admin-icon">📊</div>
-                        <h3>ব্যবহারের পরিসংখ্যান</h3>
-                        <p>বিস্তারিত রিপোর্ট এবং ব্যবহারের পরিসংখ্যান দেখুন</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="users-management" id="usersSection" style="display: none;">
-                <h3>ব্যবহারকারী পরিচালনা</h3>
-                <div class="users-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>নাম</th>
-                                <th>ইমেইল</th>
-                                <th>ভূমিকা</th>
-                                <th>অবস্থা</th>
-                                <th>কার্যক্রম</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTableBody">
-                            <!-- Users will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
     </div>
 
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+            <!-- Overview Section -->
+            <div class="admin-section active" id="overview">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">প্রশাসনিক প্যানেল</h1>
+                        </div>
+                        <div class="col-auto">
+                            <div class="admin-welcome">
+                                <span class="welcome-text">স্বাগতম, <strong id="adminName">প্রশাসক</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-icon bg-primary">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="card-subtitle mb-1">মোট ব্যবহারকারী</h6>
+                                        <h3 class="card-title mb-0" id="totalUsers">০</h3>
+                                        <small class="text-success" id="userGrowth">+০ নতুন এই মাসে</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-icon bg-success">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="card-subtitle mb-1">মোট কোর্স</h6>
+                                        <h3 class="card-title mb-0" id="totalCourses">০</h3>
+                                        <small class="text-success" id="courseGrowth">+০ নতুন কোর্স</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-icon bg-warning">
+                                        <i class="fas fa-tasks"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="card-subtitle mb-1">সক্রিয় অ্যাসাইনমেন্ট</h6>
+                                        <h3 class="card-title mb-0" id="activeAssignments">০</h3>
+                                        <small class="text-info">চলমান</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-icon bg-info">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="card-subtitle mb-1">সিস্টেম স্বাস্থ্য</h6>
+                                        <h3 class="card-title mb-0" id="systemHealth">১০০%</h3>
+                                        <small class="text-success">চমৎকার</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">সাম্প্রতিক কার্যকলাপ</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-feed" id="activityFeed">
+                                    <!-- Activity items will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management Section -->
+            <div class="admin-section" id="users">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">ব্যবহারকারী ব্যবস্থাপনা</h1>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="addUserBtn">
+                                <i class="fas fa-plus me-2"></i>নতুন ব্যবহারকারী
+                            </button>
+                            <button class="btn btn-success" id="bulkUploadBtn">
+                                <i class="fas fa-upload me-2"></i>বাল্ক আপলোড
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="userSearch"
+                                    placeholder="নাম বা ইমেইল খুঁজুন...">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="roleFilter">
+                                    <option value="">সব ভূমিকা</option>
+                                    <option value="admin">প্রশাসক</option>
+                                    <option value="teacher">শিক্ষক</option>
+                                    <option value="student">শিক্ষার্থী</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="statusFilter">
+                                    <option value="">সব অবস্থা</option>
+                                    <option value="active">সক্রিয়</option>
+                                    <option value="inactive">নিষ্ক্রিয়</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-info w-100" id="exportUsersBtn">
+                                    <i class="fas fa-download me-2"></i>এক্সপোর্ট
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <input type="checkbox" id="selectAllUsers">
+                                        </th>
+                                        <th>নাম</th>
+                                        <th>ইমেইল</th>
+                                        <th>ভূমিকা</th>
+                                        <th>অবস্থা</th>
+                                        <th>যোগদানের তারিখ</th>
+                                        <th>শেষ লগইন</th>
+                                        <th>কার্যক্রম</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <!-- Users will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Management Section -->
+            <div class="admin-section" id="courses">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">কোর্স ব্যবস্থাপনা</h1>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="createCourseBtn">
+                                <i class="fas fa-plus me-2"></i>নতুন কোর্স
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="courseSearch"
+                                            placeholder="কোর্সের নাম খুঁজুন...">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="courseStatusFilter">
+                                            <option value="">সব অবস্থা</option>
+                                            <option value="active">সক্রিয়</option>
+                                            <option value="archived">আর্কাইভ</option>
+                                            <option value="draft">খসড়া</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="courseTeacherFilter">
+                                            <option value="">সব শিক্ষক</option>
+                                            <!-- Teacher options will be populated by JavaScript -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="courses-grid" id="coursesGrid">
+                                    <!-- Course cards will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignment Management Section -->
+            <div class="admin-section" id="assignments">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">অ্যাসাইনমেন্ট ব্যবস্থাপনা</h1>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="createAssignmentBtn">
+                                <i class="fas fa-plus me-2"></i>নতুন অ্যাসাইনমেন্ট
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>অ্যাসাইনমেন্ট</th>
+                                                <th>কোর্স</th>
+                                                <th>শিক্ষক</th>
+                                                <th>জমা দেওয়ার তারিখ</th>
+                                                <th>জমা</th>
+                                                <th>গ্রেড</th>
+                                                <th>অবস্থা</th>
+                                                <th>কার্যক্রম</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="assignmentsTableBody">
+                                            <!-- Assignments will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="admin-section" id="analytics">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">সিস্টেম অ্যানালিটিক্স</h1>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="generateReportBtn">
+                                <i class="fas fa-chart-line me-2"></i>রিপোর্ট তৈরি করুন
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">ব্যবহারকারী সক্রিয়তা</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="userActivityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">কোর্স পারফরম্যান্স</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="coursePerformanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communications Section -->
+            <div class="admin-section" id="communications">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">যোগাযোগ ব্যবস্থাপনা</h1>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" id="sendAnnouncementBtn">
+                                <i class="fas fa-bullhorn me-2"></i>ঘোষণা পাঠান
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">সাম্প্রতিক বার্তা</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="messages-list" id="messagesList">
+                                    <!-- Messages will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">ঘোষণা পাঠান</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="announcementForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">বিষয়</label>
+                                        <input type="text" class="form-control" id="announcementTitle" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">বার্তা</label>
+                                        <textarea class="form-control" id="announcementMessage" rows="4"
+                                            required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">প্রাপক</label>
+                                        <select class="form-select" id="announcementRecipients" required>
+                                            <option value="">নির্বাচন করুন</option>
+                                            <option value="all">সবাই</option>
+                                            <option value="students">শিক্ষার্থীরা</option>
+                                            <option value="teachers">শিক্ষকরা</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-paper-plane me-2"></i>পাঠান
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Section -->
+            <div class="admin-section" id="system">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">সিস্টেম ব্যবস্থাপনা</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">সিস্টেম তথ্য</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="system-info">
+                                    <div class="info-item">
+                                        <span class="info-label">সিস্টেম ভার্সন</span>
+                                        <span class="info-value">v2.5.0</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">আপটাইম</span>
+                                        <span class="info-value">৯৮.৫%</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">ডেটাবেস সাইজ</span>
+                                        <span class="info-value">২.৪ GB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">সিস্টেম কার্যক্রম</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary" id="systemBackupBtn">
+                                        <i class="fas fa-download me-2"></i>ব্যাকআপ তৈরি করুন
+                                    </button>
+                                    <button class="btn btn-warning" id="systemMaintenanceBtn">
+                                        <i class="fas fa-tools me-2"></i>রক্ষণাবেক্ষণ মোড
+                                    </button>
+                                    <button class="btn btn-info" id="systemUpdateBtn">
+                                        <i class="fas fa-sync me-2"></i>আপডেট চেক করুন
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="admin-section" id="security">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">নিরাপত্তা ব্যবস্থাপনা</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">নিরাপত্তা লগ</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>সময়</th>
+                                                <th>ব্যবহারকারী</th>
+                                                <th>কার্যক্রম</th>
+                                                <th>IP ঠিকানা</th>
+                                                <th>অবস্থা</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="securityLogTableBody">
+                                            <!-- Security logs will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div class="modal fade" id="userProfileModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ব্যবহারকারী প্রোফাইল</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>ব্যক্তিগত তথ্য</h6>
+                            <p><strong>ইমেইল:</strong> <span id="profileUserEmail"></span></p>
+                            <p><strong>নাম:</strong> <span id="profileUserName"></span></p>
+                            <p><strong>ফোন:</strong> <span id="profileUserPhone"></span></p>
+                            <p><strong>ঠিকানা:</strong> <span id="profileUserAddress"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>কার্যকলাপ</h6>
+                            <p><strong>তৈরি কোর্স:</strong> <span id="userCreatedCourses"></span></p>
+                            <p><strong>যোগদান কোর্স:</strong> <span id="userEnrolledCourses"></span></p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6>বায়ো</h6>
+                            <p id="profileUserBio"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বন্ধ করুন</button>
+                    <button type="button" class="btn btn-primary" id="editUserFromProfile">সম্পাদনা করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">নতুন ব্যবহারকারী যোগ করুন</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <div class="mb-3">
+                            <label class="form-label">নাম</label>
+                            <input type="text" class="form-control" id="newUserName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ইমেইল</label>
+                            <input type="email" class="form-control" id="newUserEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ভূমিকা</label>
+                            <select class="form-select" id="newUserRole" required>
+                                <option value="">নির্বাচন করুন</option>
+                                <option value="student">শিক্ষার্থী</option>
+                                <option value="teacher">শিক্ষক</option>
+                                <option value="admin">প্রশাসক</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
+                    <button type="button" class="btn btn-primary" id="saveUserBtn">সংরক্ষণ করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="admin.js"></script>
 </body>
 

@@ -4,364 +4,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সাহায্য - শিক্ষা ব্যবস্থাপনা</title>
+    <title>সাহায্য - ক্লাসরুম</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="help.css">
 </head>
 
-<body>
-    <div class="container">
-        <header class="header">
-            <h1>সাহায্য এবং সহায়তা</h1>
-            <div class="user-info">
-                <span id="userName">ব্যবহারকারী</span>
-                <button id="logoutBtn">লগআউট</button>
+<body class="light-theme font-medium font-inter" id="mainBody">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link p-2 me-3" id="menuToggle">
+                    <i class="fas fa-bars fs-5"></i>
+                </button>
+                <a class="navbar-brand fw-normal text-muted" href="#">
+                    <span>ক্লাসরুম</span>
+                </a>
             </div>
-        </header>
-
-        <nav class="navigation">
-            <a href="dashboard.html" class="nav-link">ড্যাশবোর্ড</a>
-            <a href="courses.html" class="nav-link">কোর্স</a>
-            <a href="profile.html" class="nav-link">প্রোফাইল</a>
-            <a href="settings.html" class="nav-link">সেটিংস</a>
-            <a href="reports.html" class="nav-link">রিপোর্ট</a>
-            <a href="help.html" class="nav-link active">সাহায্য</a>
-        </nav>
-
-        <main class="main-content">
-            <div class="help-container">
-                <div class="help-sidebar">
-                    <h3>সাহায্য বিভাগ</h3>
-                    <ul class="help-menu">
-                        <li><a href="#getting-started" class="help-link active">শুরু করা</a></li>
-                        <li><a href="#course-management" class="help-link">কোর্স ব্যবস্থাপনা</a></li>
-                        <li><a href="#user-guide" class="help-link">ব্যবহারকারী গাইড</a></li>
-                        <li><a href="#troubleshooting" class="help-link">সমস্যা সমাধান</a></li>
-                        <li><a href="#faq" class="help-link">সাধারণ প্রশ্ন</a></li>
-                        <li><a href="#contact" class="help-link">যোগাযোগ</a></li>
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-link p-0 me-3" type="button" data-bs-toggle="dropdown">
+                        <div class="user-avatar-header" id="headerAvatar">
+                            <span id="headerUserInitial">U</span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html">
+                                <i class="fas fa-user me-2"></i>প্রোফাইল
+                            </a></li>
+                        <li><a class="dropdown-item" href="settings.html">
+                                <i class="fas fa-cog me-2"></i>সেটিংস
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>লগআউট
+                            </a></li>
                     </ul>
-
-                    <div class="help-search">
-                        <input type="text" id="helpSearch" placeholder="সাহায্য অনুসন্ধান করুন...">
-                        <button id="searchBtn">🔍</button>
-                    </div>
-                </div>
-
-                <div class="help-content">
-                    <!-- Getting Started Section -->
-                    <div id="getting-started" class="help-section active">
-                        <h2>শুরু করা</h2>
-                        <div class="section-content">
-                            <h3>স্বাগতম! শিক্ষা ব্যবস্থাপনা সিস্টেমে</h3>
-                            <p>আমাদের প্ল্যাটফর্মে আপনাকে স্বাগতম। এখানে আপনি কীভাবে শুরু করবেন তার একটি সহজ গাইড:</p>
-
-                            <div class="step-guide">
-                                <div class="step">
-                                    <div class="step-number">১</div>
-                                    <div class="step-content">
-                                        <h4>লগইন করুন</h4>
-                                        <p>আপনার ইমেইল এবং পাসওয়ার্ড দিয়ে লগইন করুন। আপনার ভূমিকা
-                                            (শিক্ষক/ছাত্র/প্রশাসক) নির্বাচন করুন।</p>
-                                    </div>
-                                </div>
-
-                                <div class="step">
-                                    <div class="step-number">২</div>
-                                    <div class="step-content">
-                                        <h4>প্রোফাইল সেটআপ</h4>
-                                        <p>আপনার প্রোফাইল সম্পূর্ণ করুন। ব্যক্তিগত তথ্য, যোগাযোগ বিবরণ এবং প্রাথমিকতা
-                                            সেট করুন।</p>
-                                    </div>
-                                </div>
-
-                                <div class="step">
-                                    <div class="step-number">৩</div>
-                                    <div class="step-content">
-                                        <h4>কোর্স শুরু করুন</h4>
-                                        <p>শিক্ষক হলে নতুন কোর্স তৈরি করুন, ছাত্র হলে কোর্স কোড দিয়ে যোগ দিন।</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Course Management Section -->
-                    <div id="course-management" class="help-section">
-                        <h2>কোর্স ব্যবস্থাপনা</h2>
-                        <div class="section-content">
-                            <h3>কোর্স তৈরি এবং পরিচালনা</h3>
-
-                            <div class="feature-guide">
-                                <div class="feature">
-                                    <h4>🎓 নতুন কোর্স তৈরি</h4>
-                                    <ul>
-                                        <li>কোর্স পেজে যান</li>
-                                        <li>"নতুন কোর্স তৈরি করুন" বাটনে ক্লিক করুন</li>
-                                        <li>কোর্সের নাম, বিবরণ এবং বিষয় পূরণ করুন</li>
-                                        <li>কোর্স কোড স্বয়ংক্রিয়ভাবে তৈরি হবে</li>
-                                    </ul>
-                                </div>
-
-                                <div class="feature">
-                                    <h4>👥 কোর্সে যোগদান</h4>
-                                    <ul>
-                                        <li>"কোর্সে যোগ দিন" বাটনে ক্লিক করুন</li>
-                                        <li>শিক্ষক থেকে প্রাপ্ত কোর্স কোড লিখুন</li>
-                                        <li>যোগ দিন বাটনে ক্লিক করুন</li>
-                                    </ul>
-                                </div>
-
-                                <div class="feature">
-                                    <h4>📚 কোর্স পরিচালনা</h4>
-                                    <ul>
-                                        <li>কোর্স তালিকা দেখুন</li>
-                                        <li>কোর্সের বিবরণ সম্পাদনা করুন</li>
-                                        <li>শিক্ষার্থীদের অগ্রগতি ট্র্যাক করুন</li>
-                                        <li>অ্যাসাইনমেন্ট এবং পরীক্ষা যোগ করুন</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- User Guide Section -->
-                    <div id="user-guide" class="help-section">
-                        <h2>ব্যবহারকারী গাইড</h2>
-                        <div class="section-content">
-                            <h3>প্রতিটি ফিচার কীভাবে ব্যবহার করবেন</h3>
-
-                            <div class="guide-tabs">
-                                <div class="tab-buttons">
-                                    <button class="tab-btn active" data-tab="dashboard">ড্যাশবোর্ড</button>
-                                    <button class="tab-btn" data-tab="profile">প্রোফাইল</button>
-                                    <button class="tab-btn" data-tab="settings">সেটিংস</button>
-                                    <button class="tab-btn" data-tab="reports">রিপোর্ট</button>
-                                </div>
-
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="dashboard-tab">
-                                        <h4>ড্যাশবোর্ড ব্যবহার</h4>
-                                        <p>ড্যাশবোর্ড হলো আপনার মূল নিয়ন্ত্রণ কেন্দ্র:</p>
-                                        <ul>
-                                            <li>দ্রুত পরিসংখ্যান দেখুন</li>
-                                            <li>সাম্প্রতিক কার্যক্রম ট্র্যাক করুন</li>
-                                            <li>গুরুত্বপূর্ণ বিজ্ঞপ্তি পান</li>
-                                            <li>দ্রুত অ্যাক্সেস লিঙ্ক ব্যবহার করুন</li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="tab-pane" id="profile-tab">
-                                        <h4>প্রোফাইল ব্যবস্থাপনা</h4>
-                                        <p>আপনার প্রোফাইল আপডেট এবং কাস্টমাইজ করুন:</p>
-                                        <ul>
-                                            <li>ব্যক্তিগত তথ্য সম্পাদনা করুন</li>
-                                            <li>প্রোফাইল ছবি পরিবর্তন করুন</li>
-                                            <li>পাসওয়ার্ড আপডেট করুন</li>
-                                            <li>বিজ্ঞপ্তি প্রাথমিকতা সেট করুন</li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="tab-pane" id="settings-tab">
-                                        <h4>সিস্টেম সেটিংস</h4>
-                                        <p>সিস্টেম আপনার পছন্দ অনুযায়ী কনফিগার করুন:</p>
-                                        <ul>
-                                            <li>ভাষা এবং অঞ্চল সেটিংস</li>
-                                            <li>নিরাপত্তা বিকল্প</li>
-                                            <li>গোপনীয়তা নিয়ন্ত্রণ</li>
-                                            <li>ব্যাকআপ এবং পুনরুদ্ধার</li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="tab-pane" id="reports-tab">
-                                        <h4>রিপোর্ট এবং বিশ্লেষণ</h4>
-                                        <p>বিস্তারিত রিপোর্ট এবং পরিসংখ্যান দেখুন:</p>
-                                        <ul>
-                                            <li>কোর্স পারফরম্যান্স ট্র্যাক করুন</li>
-                                            <li>শিক্ষার্থীর অগ্রগতি মনিটর করুন</li>
-                                            <li>ব্যবহারের পরিসংখ্যান দেখুন</li>
-                                            <li>রিপোর্ট এক্সপোর্ট করুন</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Troubleshooting Section -->
-                    <div id="troubleshooting" class="help-section">
-                        <h2>সমস্যা সমাধান</h2>
-                        <div class="section-content">
-                            <h3>সাধারণ সমস্যা এবং সমাধান</h3>
-
-                            <div class="troubleshoot-list">
-                                <div class="problem">
-                                    <h4>🔐 লগইন করতে পারছি না</h4>
-                                    <div class="solution">
-                                        <p><strong>সমাধান:</strong></p>
-                                        <ul>
-                                            <li>ইমেইল এবং পাসওয়ার্ড সঠিক কিনা যাচাই করুন</li>
-                                            <li>Caps Lock চালু আছে কিনা দেখুন</li>
-                                            <li>ব্রাউজার ক্যাশ এবং কুকি পরিষ্কার করুন</li>
-                                            <li>"পাসওয়ার্ড ভুলে গেছেন?" লিঙ্ক ব্যবহার করুন</li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div class="problem">
-                                    <h4>📱 সাইট ধীরে লোড হচ্ছে</h4>
-                                    <div class="solution">
-                                        <p><strong>সমাধান:</strong></p>
-                                        <ul>
-                                            <li>ইন্টারনেট সংযোগ চেক করুন</li>
-                                            <li>ব্রাউজার রিফ্রেশ করুন (F5)</li>
-                                            <li>অন্য ব্রাউজার ব্যবহার করে দেখুন</li>
-                                            <li>অ্যাড-ব্লকার নিষ্ক্রিয় করুন</li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div class="problem">
-                                    <h4>📚 কোর্স কোড কাজ করছে না</h4>
-                                    <div class="solution">
-                                        <p><strong>সমাধান:</strong></p>
-                                        <ul>
-                                            <li>কোর্স কোড সঠিকভাবে লিখেছেন কিনা যাচাই করুন</li>
-                                            <li>কোডে কোন অতিরিক্ত স্পেস নেই কিনা দেখুন</li>
-                                            <li>কোর্স এখনও সক্রিয় আছে কিনা নিশ্চিত করুন</li>
-                                            <li>শিক্ষকের সাথে যোগাযোগ করুন</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- FAQ Section -->
-                    <div id="faq" class="help-section">
-                        <h2>সাধারণ প্রশ্ন</h2>
-                        <div class="section-content">
-                            <div class="faq-list">
-                                <div class="faq-item">
-                                    <div class="faq-question">
-                                        <h4>কীভাবে আমি আমার পাসওয়ার্ড পরিবর্তন করব?</h4>
-                                        <span class="faq-toggle">+</span>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>প্রোফাইল পেজে যান → "পাসওয়ার্ড পরিবর্তন" বিভাগে → বর্তমান পাসওয়ার্ড লিখুন →
-                                            নতুন পাসওয়ার্ড দিন → সংরক্ষণ করুন।</p>
-                                    </div>
-                                </div>
-
-                                <div class="faq-item">
-                                    <div class="faq-question">
-                                        <h4>আমি কি একাধিক কোর্সে যোগ দিতে পারি?</h4>
-                                        <span class="faq-toggle">+</span>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>হ্যাঁ, আপনি যত খুশি কোর্সে যোগ দিতে পারেন। প্রতিটি কোর্সের জন্য আলাদা কোর্স
-                                            কোড প্রয়োজন।</p>
-                                    </div>
-                                </div>
-
-                                <div class="faq-item">
-                                    <div class="faq-question">
-                                        <h4>আমার ডেটা কি নিরাপদ?</h4>
-                                        <span class="faq-toggle">+</span>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>হ্যাঁ, আমরা আপনার ডেটার নিরাপত্তায় সর্বোচ্চ গুরুত্ব দিই। আমাদের সিস্টেম
-                                            এনক্রিপশন এবং নিরাপত্তার সর্বোচ্চ মান অনুসরণ করে।</p>
-                                    </div>
-                                </div>
-
-                                <div class="faq-item">
-                                    <div class="faq-question">
-                                        <h4>কোর্স সম্পন্ন হলে সার্টিফিকেট পাব?</h4>
-                                        <span class="faq-toggle">+</span>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>এটি শিক্ষক এবং কোর্সের ধরনের উপর নির্ভর করে। সার্টিফিকেট সংক্রান্ত বিস্তারিত
-                                            আপনার শিক্ষকের সাথে আলোচনা করুন।</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Contact Section -->
-                    <div id="contact" class="help-section">
-                        <h2>যোগাযোগ</h2>
-                        <div class="section-content">
-                            <h3>আমাদের সাথে যোগাযোগ করুন</h3>
-
-                            <div class="contact-methods">
-                                <div class="contact-method">
-                                    <div class="contact-icon">📧</div>
-                                    <div class="contact-info">
-                                        <h4>ইমেইল সাপোর্ট</h4>
-                                        <p>support@education-system.com</p>
-                                        <p>২৪ ঘন্টার মধ্যে উত্তর দেওয়া হবে</p>
-                                    </div>
-                                </div>
-
-                                <div class="contact-method">
-                                    <div class="contact-icon">📞</div>
-                                    <div class="contact-info">
-                                        <h4>ফোন সাপোর্ট</h4>
-                                        <p>+৮৮০ ১৭০০ ০০০ ০০০</p>
-                                        <p>সকাল ৯টা - রাত ৯টা</p>
-                                    </div>
-                                </div>
-
-                                <div class="contact-method">
-                                    <div class="contact-icon">💬</div>
-                                    <div class="contact-info">
-                                        <h4>লাইভ চ্যাট</h4>
-                                        <p>তাৎক্ষণিক সাহায্য</p>
-                                        <button class="chat-btn">চ্যাট শুরু করুন</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="contact-form">
-                                <h4>সরাসরি বার্তা পাঠান</h4>
-                                <form id="contactForm">
-                                    <div class="form-group">
-                                        <label for="contactName">নাম:</label>
-                                        <input type="text" id="contactName" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="contactEmail">ইমেইল:</label>
-                                        <input type="email" id="contactEmail" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="contactSubject">বিষয়:</label>
-                                        <select id="contactSubject" required>
-                                            <option value="">বিষয় নির্বাচন করুন</option>
-                                            <option value="technical">প্রযুক্তিগত সমস্যা</option>
-                                            <option value="course">কোর্স সংক্রান্ত</option>
-                                            <option value="account">অ্যাকাউন্ট সমস্যা</option>
-                                            <option value="suggestion">পরামর্শ</option>
-                                            <option value="other">অন্যান্য</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="contactMessage">বার্তা:</label>
-                                        <textarea id="contactMessage" rows="5" required></textarea>
-                                    </div>
-
-                                    <button type="submit" class="submit-btn">বার্তা পাঠান</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </main>
+        </div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h5 class="sidebar-title">মেনু</h5>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">ড্যাশবোর্ড</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span class="nav-text">কোর্স</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span class="nav-text">প্রোফাইল</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span class="nav-text">সেটিংস</span>
+            </a>
+            <a href="reports.html" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span class="nav-text">রিপোর্ট</span>
+            </a>
+            <a href="help.html" class="nav-item active">
+                <i class="fas fa-question-circle"></i>
+                <span class="nav-text">সাহায্য</span>
+            </a>
+        </nav>
     </div>
 
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h1 class="page-title">সাহায্য কেন্দ্র</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="dashboard.html">ড্যাশবোর্ড</a></li>
+                                <li class="breadcrumb-item active">সাহায্য</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-auto">
+                        <div class="search-box">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="helpSearch" placeholder="কিছু খুঁজুন...">
+                                <button class="btn btn-primary" id="searchBtn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <div class="card help-sidebar-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-list me-2"></i>বিষয়সমূহ
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <nav class="help-nav">
+                                <a href="#getting-started" class="help-link active" data-section="getting-started">
+                                    <i class="fas fa-rocket"></i>
+                                    <span>শুরু করুন</span>
+                                </a>
+                                <a href="#user-guide" class="help-link" data-section="user-guide">
+                                    <i class="fas fa-book-open"></i>
+                                    <span>ব্যবহারকারী গাইড</span>
+                                </a>
+                                <a href="#features" class="help-link" data-section="features">
+                                    <i class="fas fa-star"></i>
+                                    <span>বৈশিষ্ট্যসমূহ</span>
+                                </a>
+                                <a href="#troubleshooting" class="help-link" data-section="troubleshooting">
+                                    <i class="fas fa-wrench"></i>
+                                    <span>সমস্যা সমাধান</span>
+                                </a>
+                                <a href="#faq" class="help-link" data-section="faq">
+                                    <i class="fas fa-question"></i>
+                                    <span>প্রশ্ন ও উত্তর</span>
+                                </a>
+                                <a href="#contact" class="help-link" data-section="contact">
+                                    <i class="fas fa-phone"></i>
+                                    <span>যোগাযোগ</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="help-section active" id="getting-started">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-rocket me-2"></i>শুরু করুন
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="welcome-section">
+                                    <h3 class="mb-4">স্বাগতম! শিক্ষা ব্যবস্থাপনা সিস্টেমে</h3>
+                                    <p class="lead">আমাদের প্ল্যাটফর্মে আপনাকে স্বাগতম। এখানে আপনি কীভাবে শুরু করবেন তার
+                                        একটি সহজ গাইড:</p>
+                                </div>
+
+                                <div class="step-guide">
+                                    <div class="step-item">
+                                        <div class="step-number">১</div>
+                                        <div class="step-content">
+                                            <h4>লগইন করুন</h4>
+                                            <p>আপনার ইমেইল এবং পাসওয়ার্ড দিয়ে লগইন করুন। আপনার ভূমিকা
+                                                (শিক্ষক/ছাত্র/প্রশাসক) নির্বাচন করুন।</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-number">২</div>
+                                        <div class="step-content">
+                                            <h4>প্রোফাইল সেটআপ</h4>
+                                            <p>আপনার প্রোফাইল সম্পূর্ণ করুন। ব্যক্তিগত তথ্য, যোগাযোগ বিবরণ এবং
+                                                প্রাথমিকতা সেট করুন।</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-number">৩</div>
+                                        <div class="step-content">
+                                            <h4>কোর্স শুরু করুন</h4>
+                                            <p>শিক্ষক হলে নতুন কোর্স তৈরি করুন, ছাত্র হলে কোর্স কোড দিয়ে যোগ দিন।</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-section" id="user-guide">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-book-open me-2"></i>ব্যবহারকারী গাইড
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="guide-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="student">শিক্ষার্থী</button>
+                                        <button class="tab-btn" data-tab="teacher">শিক্ষক</button>
+                                        <button class="tab-btn" data-tab="admin">প্রশাসক</button>
+                                    </div>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="student-tab">
+                                            <h4>শিক্ষার্থীদের জন্য গাইড</h4>
+                                            <ul>
+                                                <li>কোর্স কোড দিয়ে কোর্সে যোগ দিন</li>
+                                                <li>অ্যাসাইনমেন্ট দেখুন এবং জমা দিন</li>
+                                                <li>ক্লাস নোট এবং ম্যাটেরিয়াল ডাউনলোড করুন</li>
+                                                <li>শিক্ষক এবং সহপাঠীদের সাথে যোগাযোগ করুন</li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-pane" id="teacher-tab">
+                                            <h4>শিক্ষকদের জন্য গাইড</h4>
+                                            <ul>
+                                                <li>নতুন কোর্স তৈরি করুন</li>
+                                                <li>শিক্ষার্থীদের কোর্স কোড শেয়ার করুন</li>
+                                                <li>অ্যাসাইনমেন্ট তৈরি এবং পরিচালনা করুন</li>
+                                                <li>গ্রেড এবং ফিডব্যাক প্রদান করুন</li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-pane" id="admin-tab">
+                                            <h4>প্রশাসকদের জন্য গাইড</h4>
+                                            <ul>
+                                                <li>ব্যবহারকারী অ্যাকাউন্ট পরিচালনা করুন</li>
+                                                <li>সিস্টেম সেটিংস কনফিগার করুন</li>
+                                                <li>রিপোর্ট এবং অ্যানালিটিক্স দেখুন</li>
+                                                <li>ডেটা ব্যাকআপ এবং রিস্টোর করুন</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-section" id="features">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-star me-2"></i>বৈশিষ্ট্যসমূহ
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="feature-grid">
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>কোর্স ব্যবস্থাপনা</h4>
+                                            <ul>
+                                                <li>অনলাইন কোর্স তৈরি</li>
+                                                <li>শিক্ষার্থী তালিকা</li>
+                                                <li>কোর্স ম্যাটেরিয়াল আপলোড</li>
+                                                <li>ক্লাস শিডিউল</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-tasks"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>অ্যাসাইনমেন্ট</h4>
+                                            <ul>
+                                                <li>অ্যাসাইনমেন্ট তৈরি</li>
+                                                <li>সাবমিশন ট্র্যাক</li>
+                                                <li>গ্রেডিং সিস্টেম</li>
+                                                <li>ফিডব্যাক প্রদান</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-comments"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>যোগাযোগ</h4>
+                                            <ul>
+                                                <li>ইনস্ট্যান্ট মেসেজিং</li>
+                                                <li>ফোরাম আলোচনা</li>
+                                                <li>ভিডিও কনফারেন্স</li>
+                                                <li>ইমেইল নোটিফিকেশন</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h4>রিপোর্ট</h4>
+                                            <ul>
+                                                <li>পারফরম্যান্স রিপোর্ট</li>
+                                                <li>অ্যাটেন্ডেন্স ট্র্যাকিং</li>
+                                                <li>প্রোগ্রেস মনিটরিং</li>
+                                                <li>ডেটা এক্সপোর্ট</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-section" id="troubleshooting">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-wrench me-2"></i>সমস্যা সমাধান
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="troubleshoot-list">
+                                    <div class="problem-item">
+                                        <div class="problem-header">
+                                            <h4>লগইন করতে পারছি না</h4>
+                                        </div>
+                                        <div class="problem-solution">
+                                            <p><strong>সমাধান:</strong></p>
+                                            <ul>
+                                                <li>আপনার ইমেইল এবং পাসওয়ার্ড চেক করুন</li>
+                                                <li>ব্রাউজার ক্যাশ ক্লিয়ার করুন</li>
+                                                <li>পাসওয়ার্ড রিসেট করার চেষ্টা করুন</li>
+                                                <li>সাপোর্ট টিমের সাথে যোগাযোগ করুন</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="problem-item">
+                                        <div class="problem-header">
+                                            <h4>কোর্স কোড কাজ করছে না</h4>
+                                        </div>
+                                        <div class="problem-solution">
+                                            <p><strong>সমাধান:</strong></p>
+                                            <ul>
+                                                <li>কোর্স কোড সঠিকভাবে লিখেছেন কিনা চেক করুন</li>
+                                                <li>স্পেস বা অতিরিক্ত ক্যারেক্টার আছে কিনা দেখুন</li>
+                                                <li>কোর্স কোড এখনও সক্রিয় আছে কিনা নিশ্চিত করুন</li>
+                                                <li>শিক্ষকের সাথে যোগাযোগ করুন</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="problem-item">
+                                        <div class="problem-header">
+                                            <h4>ফাইল আপলোড হচ্ছে না</h4>
+                                        </div>
+                                        <div class="problem-solution">
+                                            <p><strong>সমাধান:</strong></p>
+                                            <ul>
+                                                <li>ফাইল সাইজ ১০MB এর কম রাখুন</li>
+                                                <li>সমর্থিত ফাইল ফরম্যাট ব্যবহার করুন</li>
+                                                <li>ইন্টারনেট কানেকশন চেক করুন</li>
+                                                <li>ব্রাউজার রিফ্রেশ করুন</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-section" id="faq">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-question me-2"></i>প্রশ্ন ও উত্তর
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="faq-list">
+                                    <div class="faq-item">
+                                        <div class="faq-question">
+                                            <h4>কিভাবে নতুন কোর্স তৈরি করব?</h4>
+                                            <div class="faq-toggle">+</div>
+                                        </div>
+                                        <div class="faq-answer">
+                                            <p>ড্যাশবোর্ড থেকে "কোর্স তৈরি করুন" বাটনে ক্লিক করুন। কোর্সের নাম, বিষয়,
+                                                এবং অন্যান্য তথ্য পূরণ করুন। তারপর "তৈরি করুন" বাটনে ক্লিক করুন।</p>
+                                        </div>
+                                    </div>
+                                    <div class="faq-item">
+                                        <div class="faq-question">
+                                            <h4>আমার কোর্স কোড কোথায় পাবো?</h4>
+                                            <div class="faq-toggle">+</div>
+                                        </div>
+                                        <div class="faq-answer">
+                                            <p>কোর্স তৈরি করার পর আপনি একটি ইউনিক কোর্স কোড পাবেন। এটি আপনার কোর্স
+                                                কার্ডে দেখানো হবে। এই কোডটি শিক্ষার্থীদের সাথে শেয়ার করুন।</p>
+                                        </div>
+                                    </div>
+                                    <div class="faq-item">
+                                        <div class="faq-question">
+                                            <h4>কিভাবে অ্যাসাইনমেন্ট তৈরি করব?</h4>
+                                            <div class="faq-toggle">+</div>
+                                        </div>
+                                        <div class="faq-answer">
+                                            <p>কোর্স পেজে গিয়ে "অ্যাসাইনমেন্ট" সেকশনে ক্লিক করুন। "নতুন অ্যাসাইনমেন্ট"
+                                                বাটনে ক্লিক করে অ্যাসাইনমেন্টের বিবরণ, সময়সীমা এবং নির্দেশনা দিন।</p>
+                                        </div>
+                                    </div>
+                                    <div class="faq-item">
+                                        <div class="faq-question">
+                                            <h4>পাসওয়ার্ড রিসেট করব কিভাবে?</h4>
+                                            <div class="faq-toggle">+</div>
+                                        </div>
+                                        <div class="faq-answer">
+                                            <p>লগইন পেজে "পাসওয়ার্ড ভুলে গেছেন?" লিংকে ক্লিক করুন। আপনার ইমেইল এড্রেস
+                                                দিন এবং পাসওয়ার্ড রিসেট লিংক পেতে ইমেইল চেক করুন।</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-section" id="contact">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-phone me-2"></i>যোগাযোগ
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="contact-methods">
+                                    <div class="contact-method">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="contact-info">
+                                            <h4>ইমেইল</h4>
+                                            <p>support@classroom.com</p>
+                                            <p>২৪ ঘণ্টার মধ্যে উত্তর</p>
+                                        </div>
+                                    </div>
+                                    <div class="contact-method">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="contact-info">
+                                            <h4>ফোন</h4>
+                                            <p>+৮৮০-১৭১২-৩৪৫৬৭৮</p>
+                                            <p>সকাল ৯টা - রাত ৬টা</p>
+                                        </div>
+                                    </div>
+                                    <div class="contact-method">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-comments"></i>
+                                        </div>
+                                        <div class="contact-info">
+                                            <h4>লাইভ চ্যাট</h4>
+                                            <p>তাৎক্ষণিক সাহায্য</p>
+                                            <button class="btn btn-primary chat-btn">চ্যাট শুরু করুন</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="contact-form">
+                                    <h4>আমাদের কাছে লিখুন</h4>
+                                    <form id="contactForm">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">নাম</label>
+                                                <input type="text" class="form-control" id="contactName" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">ইমেইল</label>
+                                                <input type="email" class="form-control" id="contactEmail" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">বিষয়</label>
+                                                <select class="form-select" id="contactSubject" required>
+                                                    <option value="">বিষয় নির্বাচন করুন</option>
+                                                    <option value="technical">প্রযুক্তিগত সমস্যা</option>
+                                                    <option value="account">অ্যাকাউন্ট সমস্যা</option>
+                                                    <option value="course">কোর্স সংক্রান্ত</option>
+                                                    <option value="other">অন্যান্য</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">বার্তা</label>
+                                                <textarea class="form-control" id="contactMessage" rows="4"
+                                                    required></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-paper-plane me-2"></i>বার্তা পাঠান
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="help.js"></script>
 </body>
 
