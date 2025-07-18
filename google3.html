@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Classroom</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #202124;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e8eaed;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, .3);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .menu-btn:hover {
+            background-color: #f1f3f4;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #5f6368;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #0f9d58, #00acc1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 20px;
+            color: #5f6368;
+        }
+
+        .header-btn:hover {
+            background-color: #f1f3f4;
+        }
+
+        .profile-pic {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid #dadce0;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 65px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e8eaed;
+            padding: 20px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #5f6368;
+            text-decoration: none;
+            border-radius: 0 25px 25px 0;
+            margin-right: 12px;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .nav-item.active {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .nav-item i {
+            width: 24px;
+            margin-right: 32px;
+            font-size: 20px;
+        }
+
+        .nav-section {
+            margin: 20px 0;
+            border-bottom: 1px solid #e8eaed;
+            padding-bottom: 20px;
+        }
+
+        .enrolled-classes {
+            padding: 0 24px;
+        }
+
+        .enrolled-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .enrolled-title {
+            font-weight: 500;
+            color: #202124;
+            font-size: 14px;
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            color: #5f6368;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .expand-btn:hover {
+            background-color: #f1f3f4;
+        }
+
+        .class-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            color: #5f6368;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .class-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .class-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .class-icon.blue {
+            background-color: #1a73e8;
+        }
+
+        .class-icon.green {
+            background-color: #137333;
+        }
+
+        .class-icon.orange {
+            background-color: #f9ab00;
+        }
+
+        .class-icon.purple {
+            background-color: #9aa0a6;
+        }
+
+        .class-info {
+            flex: 1;
+        }
+
+        .class-name {
+            font-size: 14px;
+            font-weight: 400;
+            color: #202124;
+        }
+
+        .class-count {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+        }
+
+        /* Class Card */
+        .class-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, .3);
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .class-card:hover {
+            box-shadow: 0 2px 8px rgba(60, 64, 67, .3);
+            transform: translateY(-1px);
+        }
+
+        .card-header {
+            height: 100px;
+            position: relative;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+            color: white;
+        }
+
+        .card-header.green {
+            background: linear-gradient(45deg, #137333, #34a853);
+        }
+
+        .card-header.orange {
+            background: linear-gradient(45deg, #ea4335, #ff6d01);
+        }
+
+        .card-header.blue {
+            background: linear-gradient(45deg, #1565c0, #1976d2);
+        }
+
+        .card-header.teal {
+            background: linear-gradient(45deg, #00695c, #00897b);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .card-instructor {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .card-menu {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .card-menu:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        .assignment-info {
+            color: #5f6368;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .due-info {
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 4px;
+        }
+
+        .assignment-title {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        .assignment-title:hover {
+            text-decoration: underline;
+        }
+
+        .card-footer {
+            padding: 8px 16px;
+            border-top: 1px solid #f1f3f4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .instructor-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #5f6368;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .instructor-avatar.brown {
+            background: #8d6e63;
+        }
+
+        .instructor-avatar.teal {
+            background: #26a69a;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-action {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #5f6368;
+            transition: background-color 0.2s;
+        }
+
+        .card-action:hover {
+            background-color: #f1f3f4;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                z-index: 999;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .classes-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .main-container {
+                position: relative;
+            }
+        }
+
+        /* Help Button */
+        .help-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(60, 64, 67, .3);
+            transition: all 0.2s;
+            color: #5f6368;
+            font-size: 18px;
+        }
+
+        .help-btn:hover {
+            box-shadow: 0 4px 8px rgba(60, 64, 67, .3);
+            transform: translateY(-1px);
+        }
+
+        /* Animation for cards */
+        .class-card {
+            animation: slideUp 0.3s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .class-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .class-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .class-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .class-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .class-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .class-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span class="logo-text">Classroom</span>
+            </a>
+        </div>
+        <div class="header-right">
+            <button class="header-btn">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="header-btn">
+                <i class="fas fa-th"></i>
+            </button>
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/17d391e0-5d4f-4361-b0f2-705b427b9768.png"
+                alt="User profile picture showing a professional headshot" class="profile-pic">
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="nav-section">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    Calendar
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-star"></i>
+                    Gemini
+                </a>
+            </div>
+
+            <div class="enrolled-classes">
+                <div class="enrolled-header">
+                    <span class="enrolled-title">Enrolled</span>
+                    <button class="expand-btn">
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
+                </div>
+
+                <a href="#" class="class-item" onclick="navigateToCourse('CSE200')">
+                    <div class="class-icon blue">C</div>
+                    <div class="class-info">
+                        <div class="class-name">CSE 200 Computer Aided Design</div>
+                        <div class="class-count">7</div>
+                    </div>
+                </a>
+
+                <a href="#" class="class-item" onclick="navigateToCourse('CSE464')">
+                    <div class="class-icon blue">C</div>
+                    <div class="class-info">
+                        <div class="class-name">CSE464_Advanced_Database</div>
+                        <div class="class-count">Section-1</div>
+                    </div>
+                </a>
+
+                <a href="#" class="class-item" onclick="navigateToCourse('CSE479')">
+                    <div class="class-icon green">C</div>
+                    <div class="class-info">
+                        <div class="class-name">CSE479_Summer25</div>
+                        <div class="class-count">1</div>
+                    </div>
+                </a>
+
+                <a href="#" class="class-item" onclick="navigateToCourse('CSE430')">
+                    <div class="class-icon green">C</div>
+                    <div class="class-info">
+                        <div class="class-name">CSE430.1_Summer2025</div>
+                        <div class="class-count">1</div>
+                    </div>
+                </a>
+
+                <a href="#" class="class-item" onclick="navigateToCourse('CSE303')">
+                    <div class="class-icon orange">F</div>
+                    <div class="class-info">
+                        <div class="class-name">Fall2024-CSE303-S4</div>
+                        <div class="class-count">4</div>
+                    </div>
+                </a>
+
+                <a href="#" class="class-item" onclick="navigateToCourse('CSE246')">
+                    <div class="class-icon purple">2</div>
+                    <div class="class-info">
+                        <div class="class-name">2024 Summer CSE246-04</div>
+                        <div class="class-count">04</div>
+                    </div>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="classes-grid">
+                <!-- Class Card 1 -->
+                <div class="class-card" onclick="navigateToCourse('CSE200')">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">CSE 200 Computer Aided Design</div>
+                            <div class="card-instructor">Nishat Tasnim</div>
+                        </div>
+                        <button class="card-menu" onclick="event.stopPropagation()">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/45da3822-dbf4-4ad8-8b9d-0c726e437dde.png"
+                            alt="Computer aided design course banner with technical drawing elements and CAD software interface"
+                            class="card-image"
+                            style="position: absolute; top: 10px; right: 50px; width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <div class="assignment-info">
+                            <div class="due-info">Due Monday</div>
+                            <div>1:30 PM – <a href="#" class="assignment-title"
+                                    onclick="event.stopPropagation()">Assignment on Plain Scale Problem</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instructor-avatar">N</div>
+                        <div class="card-actions">
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder"></i>
+                            </button>
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Card 2 -->
+                <div class="class-card" onclick="navigateToCourse('CSE464')">
+                    <div class="card-header blue">
+                        <div>
+                            <div class="card-title">CSE464_Advanced_Database</div>
+                            <div class="card-instructor">Antu Chowdhury</div>
+                        </div>
+                        <button class="card-menu" onclick="event.stopPropagation()">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="instructor-avatar brown"
+                            style="position: absolute; top: 20px; right: 50px; width: 50px; height: 50px; font-size: 18px;">
+                            A</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="assignment-info">
+                            <div class="due-info">Due Monday</div>
+                            <div>11:59 PM – <a href="#" class="assignment-title"
+                                    onclick="event.stopPropagation()">Lab-03</a></div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instructor-avatar brown">A</div>
+                        <div class="card-actions">
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder"></i>
+                            </button>
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Card 3 -->
+                <div class="class-card" onclick="navigateToCourse('CSE479')">
+                    <div class="card-header green">
+                        <div>
+                            <div class="card-title">CSE479_Summer25</div>
+                            <div class="card-instructor">Nishat Tasnim Niloy</div>
+                        </div>
+                        <button class="card-menu" onclick="event.stopPropagation()">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b629cfbf-d90e-42d3-a502-7a8db251d707.png"
+                            alt="Summer course banner with bright green background and academic elements"
+                            class="card-image"
+                            style="position: absolute; top: 10px; right: 50px; width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <div class="assignment-info">
+                            <div style="color: #5f6368; font-size: 14px;">No upcoming assignments</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instructor-avatar teal">N</div>
+                        <div class="card-actions">
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder"></i>
+                            </button>
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Card 4 -->
+                <div class="class-card" onclick="navigateToCourse('CSE430')">
+                    <div class="card-header teal">
+                        <div>
+                            <div class="card-title">CSE430.1_Summer20...</div>
+                            <div class="card-instructor">Anika Tabassum</div>
+                        </div>
+                        <button class="card-menu" onclick="event.stopPropagation()">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="instructor-avatar teal"
+                            style="position: absolute; top: 20px; right: 50px; width: 50px; height: 50px; font-size: 18px;">
+                            A</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="assignment-info">
+                            <div style="color: #5f6368; font-size: 14px;">No upcoming assignments</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instructor-avatar teal">A</div>
+                        <div class="card-actions">
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder"></i>
+                            </button>
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Card 5 -->
+                <div class="class-card" onclick="navigateToCourse('CSE303')">
+                    <div class="card-header orange">
+                        <div>
+                            <div class="card-title">Fall2024-CSE303-S4</div>
+                            <div class="card-instructor">Mohammad Manzurul Islam</div>
+                        </div>
+                        <button class="card-menu" onclick="event.stopPropagation()">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cbc515d2-9b70-4ef6-8d24-902536d245f4.png"
+                            alt="Fall semester course banner with autumn colors and academic theme" class="card-image"
+                            style="position: absolute; top: 10px; right: 50px; width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <div class="assignment-info">
+                            <div style="color: #5f6368; font-size: 14px;">No upcoming assignments</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instructor-avatar">M</div>
+                        <div class="card-actions">
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder"></i>
+                            </button>
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Card 6 -->
+                <div class="class-card" onclick="navigateToCourse('CSE246')">
+                    <div class="card-header blue">
+                        <div>
+                            <div class="card-title">2024 Summer CSE246-04</div>
+                            <div class="card-instructor">Redwan Ahmed Rizvee</div>
+                        </div>
+                        <button class="card-menu" onclick="event.stopPropagation()">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b7d6c633-cc5b-421c-93b7-55507e70eee7.png"
+                            alt="Summer 2024 computer science course banner with modern blue design and programming elements"
+                            class="card-image"
+                            style="position: absolute; top: 10px; right: 50px; width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <div class="assignment-info">
+                            <div style="color: #5f6368; font-size: 14px;">No upcoming assignments</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="instructor-avatar">R</div>
+                        <div class="card-actions">
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder"></i>
+                            </button>
+                            <button class="card-action" onclick="event.stopPropagation()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Help Button -->
+    <button class="help-btn">
+        <i class="fas fa-question"></i>
+    </button>
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <script>
+        // Navigation function for courses
+        function navigateToCourse(courseId) {
+            window.location.href = `google4.html?course=${courseId}`;
+        }
+
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+        });
+
+        // Card hover effects
+        document.querySelectorAll('.class-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-2px)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Navigation item click effects
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+
+                // Add active class to clicked item
+                this.classList.add('active');
+            });
+        });
+
+        // Class item click effects
+        document.querySelectorAll('.class-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Add ripple effect
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(26, 115, 232, 0.3)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 600ms linear';
+                ripple.style.left = '50%';
+                ripple.style.top = '50%';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                ripple.style.marginLeft = '-10px';
+                ripple.style.marginTop = '-10px';
+
+                this.style.position = 'relative';
+                this.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add ripple animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Card menu functionality
+        document.querySelectorAll('.card-menu').forEach(menu => {
+            menu.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                // Show dropdown menu (simplified for demo)
+                const dropdown = document.createElement('div');
+                dropdown.style.position = 'absolute';
+                dropdown.style.right = '0';
+                dropdown.style.top = '100%';
+                dropdown.style.background = '#fff';
+                dropdown.style.border = '1px solid #dadce0';
+                dropdown.style.borderRadius = '4px';
+                dropdown.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                dropdown.style.zIndex = '1000';
+                dropdown.style.minWidth = '120px';
+                dropdown.innerHTML = `
+                    <div style="padding: 8px 16px; cursor: pointer; font-size: 14px;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='#fff'">View</div>
+                    <div style="padding: 8px 16px; cursor: pointer; font-size: 14px;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='#fff'">Settings</div>
+                    <div style="padding: 8px 16px; cursor: pointer; font-size: 14px;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='#fff'">Archive</div>
+                `;
+
+                this.parentElement.style.position = 'relative';
+                this.parentElement.appendChild(dropdown);
+
+                // Remove dropdown when clicking outside
+                setTimeout(() => {
+                    document.addEventListener('click', function () {
+                        if (dropdown.parentElement) {
+                            dropdown.remove();
+                        }
+                    }, { once: true });
+                }, 100);
+            });
+        });
+
+        // Smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize animations on load
+        window.addEventListener('load', function () {
+            document.querySelectorAll('.class-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+
+</html>

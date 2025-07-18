@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লগইন - শিক্ষা ব্যবস্থাপনা</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <h1>শিক্ষা ব্যবস্থাপনা সিস্টেম</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">ইমেইল:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">পাসওয়ার্ড:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">লগইন করুন</button>
+            </form>
+            <p><a href="#" id="forgotPassword">পাসওয়ার্ড ভুলে গেছেন?</a></p>
+
+            <div class="role-selection">
+                <h3>শিক্ষক বা ছাত্র হিসেবে ব্যবহার</h3>
+                <div class="role-cards">
+                    <div class="role-card" data-role="teacher">
+                        <div class="role-icon">👨‍🏫</div>
+                        <div class="role-title">শিক্ষক</div>
+                    </div>
+                    <div class="role-card" data-role="student">
+                        <div class="role-icon">👨‍🎓</div>
+                        <div class="role-title">ছাত্র</div>
+                    </div>
+                    <div class="role-card" data-role="admin">
+                        <div class="role-icon">⚙️</div>
+                        <div class="role-title">প্রশাসক</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

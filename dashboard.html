@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ড্যাশবোর্ড - শিক্ষা ব্যবস্থাপনা</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <div class="menu-icon" id="menuIcon">
+                    <i class="material-icons">menu</i>
+                </div>
+                <h1>Classroom</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-avatar" id="userAvatar">
+                    <span id="userInitial">U</span>
+                </div>
+                <button id="logoutBtn" class="logout-btn">লগআউট</button>
+            </div>
+        </header>
+
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>মেনু</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" class="nav-link active"><i class="material-icons">home</i>
+                        <span>ড্যাশবোর্ড</span></a></li>
+                <!-- <li><a href="course-detail.html" class="nav-link"><i class="material-icons">book</i>
+                        <span>কোর্স</span></a></li> -->
+                <li><a href="profile.html" class="nav-link"><i class="material-icons">person</i>
+                        <span>প্রোফাইল</span></a></li>
+                <li><a href="settings.html" class="nav-link"><i class="material-icons">settings</i>
+                        <span>সেটিংস</span></a></li>
+                <li><a href="reports.html" class="nav-link"><i class="material-icons">bar_chart</i>
+                        <span>রিপোর্ট</span></a></li>
+                <li><a href="help.html" class="nav-link"><i class="material-icons">help_outline</i>
+                        <span>সাহায্য</span></a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content" id="mainContent">
+            <!-- Course Grid -->
+            <div class="courses-container">
+                <div class="courses-header">
+                    <h2>আমার ক্লাসরুম</h2>
+                    <div class="add-course-btn" id="addCourseBtn">+</div>
+                </div>
+
+                <div class="courses-grid" id="coursesGrid">
+                    <!-- Default courses will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📚</div>
+                <h3>কোন কোর্স নেই</h3>
+                <p>আপনার প্রথম কোর্স তৈরি করুন অথবা একটি কোর্সে যোগ দিন</p>
+                <div class="empty-actions">
+                    <button class="btn-primary" id="createCourseBtn">কোর্স তৈরি করুন</button>
+                    <button class="btn-secondary" id="joinCourseBtn">কোর্সে যোগ দিন</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Course Modal -->
+    <div id="createCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন কোর্স তৈরি করুন</h3>
+                <button class="close-btn" id="closeCreateModal">&times;</button>
+            </div>
+            <form id="createCourseForm">
+                <div class="form-group">
+                    <label for="courseName">কোর্সের নাম *</label>
+                    <input type="text" id="courseName" required placeholder="যেমন: গণিত - ক্লাস ১০">
+                </div>
+                <div class="form-group">
+                    <label for="courseSection">সেকশন</label>
+                    <input type="text" id="courseSection" placeholder="যেমন: সেকশন-১">
+                </div>
+                <div class="form-group">
+                    <label for="courseSubject">বিষয়</label>
+                    <input type="text" id="courseSubject" placeholder="যেমন: গণিত">
+                </div>
+                <div class="form-group">
+                    <label for="courseRoom">রুম</label>
+                    <input type="text" id="courseRoom" placeholder="যেমন: রুম-১০১">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelCreate">বাতিল</button>
+                    <button type="submit" class="btn-primary">তৈরি করুন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Join Course Modal -->
+    <div id="joinCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>কোর্সে যোগ দিন</h3>
+                <button class="close-btn" id="closeJoinModal">&times;</button>
+            </div>
+            <form id="joinCourseForm">
+                <div class="form-group">
+                    <label for="courseCode">কোর্স কোড *</label>
+                    <input type="text" id="courseCode" required placeholder="কোর্স কোড লিখুন">
+                    <small>শিক্ষকের কাছ থেকে কোর্স কোড সংগ্রহ করুন</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelJoin">বাতিল</button>
+                    <button type="submit" class="btn-primary">যোগ দিন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 600px;
+            position: relative;
+            margin: 20px auto;
+        }
+
+        /* Login Section */
+        .login-section {
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-section h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #5a67d8;
+        }
+
+        .role-selector {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .role-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .role-card {
+            display: inline-block;
+            margin: 10px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            min-width: 200px;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+        }
+
+        .role-card.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-3px);
+        }
+
+        .role-card div {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-layout {
+            display: none;
+            height: 100vh;
+            background: #f8f9fa;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            width: 250px;
+            height: calc(100vh - 60px);
+            position: fixed;
+            top: 60px;
+            left: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+        }
+
+        .sidebar-item:hover {
+            background: #f8f9fa;
+        }
+
+        .sidebar-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .sidebar-item i {
+            font-size: 1.2em;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            animation: slideInDown 0.5s ease;
+            margin-bottom: 30px;
+        }
+
+        .admin-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .admin-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .admin-feature:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Empty Dashboard */
+        .empty-dashboard {
+            text-align: center;
+            padding: 100px 20px;
+            color: #666;
+        }
+
+        .empty-dashboard h2 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #333;
+        }
+
+        .empty-dashboard p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .create-btn {
+            background: #48bb78;
+            color: white;
+        }
+
+        .join-btn {
+            background: #4299e1;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Floating Add Button */
+        .floating-add {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .floating-add:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .quick-actions {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            display: none;
+            z-index: 998;
+        }
+
+        .quick-action {
+            display: block;
+            width: 220px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .quick-action.create {
+            background: #48bb78;
+            color: white;
+        }
+
+        .quick-action.join {
+            background: #4299e1;
+            color: white;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Course Cards */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .course-title {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .course-info {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .course-body {
+            padding: 25px;
+        }
+
+        .course-code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 16px;
+            border: 2px solid #e9ecef;
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .captcha-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .captcha-code {
+            font-size: 28px;
+            font-weight: bold;
+            color: #495057;
+            letter-spacing: 4px;
+            font-family: monospace;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.error {
+            background: #e53e3e;
+        }
+
+        .notification.warning {
+            background: #ed8936;
+        }
+
+        .notification.success {
+            background: #48bb78;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-top: 0;
+            }
+
+            .navbar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Section -->
+    <div id="loginSection" class="login-section">
+        <h1>🎓 Classroom Platform</h1>
+
+        <div class="login-form">
+            <div class="form-group">
+                <label for="email">ইমেইল ঠিকানা / Email Address</label>
+                <input type="email" id="email" placeholder="user@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">পাসওয়ার্ড / Password</label>
+                <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
+            </div>
+
+            <button type="button" class="login-btn" onclick="login()">লগইন করুন</button>
+
+            <p style="margin-top: 15px; color: #666; text-align: center;">
+                <a href="#" style="color: #667eea;">পাসওয়ার্ড ভুলে গেছেন?</a>
+            </p>
+        </div>
+
+        <div class="role-selector">
+            <h3>আপনার ভূমিকা নির্বাচন করুন:</h3>
+            <div class="role-card" data-role="admin">
+                <div>🛠️</div>
+                <h4>অ্যাডমিন (Admin)</h4>
+                <p>সিস্টেম ব্যবস্থাপনা ও নিয়ন্ত্রণ</p>
+            </div>
+            <div class="role-card" data-role="user">
+                <div>👤</div>
+                <h4>ইউজার (User)</h4>
+                <p>শিক্ষক বা ছাত্র হিসেবে ব্যবহার</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Layout -->
+    <div id="dashboardLayout" class="dashboard-layout">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <span>🎓</span>
+                <span>Classroom Platform</span>
+            </div>
+            <div class="navbar-user">
+                <div class="user-avatar" id="navUserAvatar">U</div>
+                <div>
+                    <div id="navUserName">User</div>
+                    <small id="navUserRole">Role</small>
+                </div>
+                <button class="logout-btn" onclick="logout()">লগআউট</button>
+            </div>
+        </nav>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-menu">
+                <!-- Menu items will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Admin Panel -->
+            <div id="adminPanel" class="admin-panel" style="display: none;">
+                <h2>🛠️ অ্যাডমিন কন্ট্রোল প্যানেল</h2>
+                <p>সিস্টেম ব্যবস্থাপনা এবং নিয়ন্ত্রণ</p>
+                <div class="admin-features">
+                    <div class="admin-feature" onclick="manageUsers()">
+                        <h4>👥 ইউজার ব্যবস্থাপনা</h4>
+                        <p>সকল ইউজার দেখুন ও পরিচালনা করুন</p>
+                    </div>
+                    <div class="admin-feature" onclick="manageCourses()">
+                        <h4>📚 কোর্স তদারকি</h4>
+                        <p>সকল কোর্স মনিটর করুন</p>
+                    </div>
+                    <div class="admin-feature" onclick="systemSettings()">
+                        <h4>⚙️ সিস্টেম সেটিংস</h4>
+                        <p>প্ল্যাটফর্ম কনফিগারেশন</p>
+                    </div>
+                    <div class="admin-feature" onclick="viewAnalytics()">
+                        <h4>📊 অ্যানালিটিক্স</h4>
+                        <p>ব্যবহারের পরিসংখ্যান</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Dashboard -->
+            <div id="emptyDashboard" class="empty-dashboard">
+                <h2>🎯 স্বাগতম!</h2>
+                <p>আপনার শিক্ষা যাত্রা শুরু করুন</p>
+                <div class="action-buttons">
+                    <button class="action-btn create-btn" onclick="openCreateModal()">
+                        📚 নতুন কোর্স তৈরি করুন
+                    </button>
+                    <button class="action-btn join-btn" onclick="openJoinModal()">
+                        🚀 ক্লাসে যোগদান করুন
+                    </button>
+                </div>
+            </div>
+
+            <!-- Courses Grid -->
+            <div id="coursesGrid" class="courses-grid" style="display: none;">
+                <!-- Course cards will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Floating Add Button -->
+        <button class="floating-add" onclick="toggleQuickActions()" style="display: none;">+</button>
+
+        <!-- Quick Actions Menu -->
+        <div id="quickActions" class="quick-actions">
+            <button class="quick-action create" onclick="openCreateModal()">📚 নতুন কোর্স তৈরি</button>
+            <button class="quick-action join" onclick="openJoinModal()">🚀 ক্লাসে যোগদান</button>
+        </div>
+    </div>
+
+    <!-- Create Course Modal -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>নতুন কোর্স তৈরি করুন</h2>
+                <button class="close-btn" onclick="closeModal('createModal')">&times;</button>
+            </div>
+            <form id="createCourseForm">
+                <div class="form-group">
+                    <label for="courseName">কোর্সের নাম *</label>
+                    <input type="text" id="courseName" placeholder="উদাহরণ: গণিত" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseSection">সেকশন *</label>
+                    <input type="text" id="courseSection" placeholder="উদাহরণ: A" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseRoom">রুম</label>
+                    <input type="text" id="courseRoom" placeholder="উদাহরণ: 101">
+                </div>
+                <div class="form-group">
+                    <label for="courseSubject">বিষয় *</label>
+                    <select id="courseSubject" required>
+                        <option value="">বিষয় নির্বাচন করুন</option>
+                        <option value="গণিত">গণিত</option>
+                        <option value="বিজ্ঞান">বিজ্ঞান</option>
+                        <option value="ইংরেজি">ইংরেজি</option>
+                        <option value="বাংলা">বাংলা</option>
+                        <option value="ইতিহাস">ইতিহাস</option>
+                        <option value="কম্পিউটার বিজ্ঞান">কম্পিউটার বিজ্ঞান</option>
+                        <option value="পদার্থবিজ্ঞান">পদার্থবিজ্ঞান</option>
+                        <option value="রসায়ন">রসায়ন</option>
+                        <option value="জীববিজ্ঞান">জীববিজ্ঞান</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="courseDescription">কোর্সের বিবরণ</label>
+                    <textarea id="courseDescription" rows="3"
+                        placeholder="কোর্স সম্পর্কে বিস্তারিত লিখুন..."></textarea>
+                </div>
+                <div style="text-align: center; margin-top: 25px;">
+                    <button type="button" onclick="closeModal('createModal')"
+                        style="margin-right: 15px; padding: 12px 25px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer;">বাতিল</button>
+                    <button type="submit"
+                        style="padding: 12px 25px; background: #48bb78; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">কোর্স
+                        তৈরি করুন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Join Course Modal -->
+    <div id="joinModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>ক্লাসে যোগদান করুন</h2>
+                <button class="close-btn" onclick="closeModal('joinModal')">&times;</button>
+            </div>
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                    <div class="user-avatar" id="joinUserAvatar" style="background: #667eea;">U</div>
+                    <div>
+                        <div id="joinUserEmail" style="font-weight: 500; color: #333;">user@email.com</div>
+                        <small style="color: #666;">লগইন করা অ্যাকাউন্ট</small>
+                    </div>
+                </div>
+            </div>
+            <form id="joinCourseForm">
+                <div class="form-group">
+                    <label for="classCode">ক্লাস কোড *</label>
+                    <input type="text" id="classCode" placeholder="8 অক্ষরের কোড লিখুন" maxlength="8" required
+                        style="text-transform: uppercase; text-align: center; font-family: monospace; font-size: 18px; letter-spacing: 2px;">
+                    <small style="color: #666; margin-top: 8px; display: block;">
+                        📧 ক্লাসে যোগদানের জন্য আপনার শিক্ষকের কাছ থেকে ক্লাস কোড নিন।
+                    </small>
+                </div>
+                <div style="text-align: center; margin-top: 25px;">
+                    <button type="button" onclick="closeModal('joinModal')"
+                        style="margin-right: 15px; padding: 12px 25px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer;">বাতিল</button>
+                    <button type="submit"
+                        style="padding: 12px 25px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">ক্লাসে
+                        যোগদান</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Course Details Modal -->
+    <div id="courseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="courseModalTitle">কোর্স বিস্তারিত</h2>
+                <button class="close-btn" onclick="closeModal('courseModal')">&times;</button>
+            </div>
+            <div id="courseModalContent">
+                <!-- Course content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentRole = null;
+        let courses = JSON.parse(localStorage.getItem('courses')) || [];
+        let userCourses = JSON.parse(localStorage.getItem('userCourses')) || {};
+        let quickActionsVisible = false;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM Content Loaded - Initializing...');
+
+            // Add role selection functionality
+            const roleCards = document.querySelectorAll('.role-card');
+            roleCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    console.log('Role card clicked:', this.getAttribute('data-role'));
+                    roleCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentRole = this.getAttribute('data-role');
+                    console.log('Current role set to:', currentRole);
+                });
+            });
+
+            // Add form event listeners
+            const createForm = document.getElementById('createCourseForm');
+            const joinForm = document.getElementById('joinCourseForm');
+
+            if (createForm) {
+                createForm.addEventListener('submit', createCourse);
+            }
+            if (joinForm) {
+                joinForm.addEventListener('submit', joinCourse);
+            }
+
+            // Enter key handlers for login
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            if (emailInput) {
+                emailInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        passwordInput.focus();
+                    }
+                });
+            }
+
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        login();
+                    }
+                });
+            }
+
+            // Auto-uppercase class code input
+            const classCodeInput = document.getElementById('classCode');
+            if (classCodeInput) {
+                classCodeInput.addEventListener('input', function (e) {
+                    e.target.value = e.target.value.toUpperCase();
+                });
+            }
+
+            // Close quick actions when clicking outside
+            document.addEventListener('click', function (event) {
+                if (!event.target.closest('.floating-add') && !event.target.closest('.quick-actions')) {
+                    hideQuickActions();
+                }
+            });
+
+            console.log('Initialization complete');
+        });
+
+        // FIXED Login functionality
+        function login() {
+            console.log('Login function called');
+
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            if (!emailInput || !passwordInput) {
+                console.error('Email or password input not found');
+                showNotification('ইনপুট ফিল্ড খুঁজে পাওয়া যাচ্ছে না', 'error');
+                return;
+            }
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            console.log('Login attempt:', { email, passwordLength: password.length, role: currentRole });
+
+            // Validation
+            if (!email || !password) {
+                showNotification('ইমেইল এবং পাসওয়ার্ড দিন', 'error');
+                return;
+            }
+
+            if (!currentRole) {
+                showNotification('আপনার ভূমিকা নির্বাচন করুন', 'error');
+                return;
+            }
+
+            // Store user info
+            currentUser = {
+                email: email,
+                role: currentRole,
+                name: email.split('@')[0]
+            };
+
+            console.log('User object created:', currentUser);
+
+            // Show dashboard (next page) - FIXED
+            try {
+                showDashboard();
+            } catch (error) {
+                console.error('Error showing dashboard:', error);
+                showNotification('ড্যাশবোর্ড লোড করতে সমস্যা হয়েছে', 'error');
+            }
+        }
+
+        // FIXED Show dashboard function
+        function showDashboard() {
+            console.log('showDashboard called with user:', currentUser);
+
+            const loginSection = document.getElementById('loginSection');
+            const dashboardLayout = document.getElementById('dashboardLayout');
+
+            if (!loginSection || !dashboardLayout) {
+                console.error('Login section or dashboard layout not found');
+                console.log('Login section:', loginSection);
+                console.log('Dashboard layout:', dashboardLayout);
+                return;
+            }
+
+            try {
+                // Hide login section and show dashboard
+                loginSection.style.display = 'none';
+                dashboardLayout.style.display = 'block';
+
+                console.log('UI transition completed successfully');
+
+                // Update navbar user info
+                updateNavbarUserInfo();
+
+                // Setup dashboard based on role
+                if (currentUser.role === 'admin') {
+                    setupAdminDashboard();
+                } else {
+                    setupUserDashboard();
+                }
+
+                showNotification('সফলভাবে লগইন হয়েছে', 'success');
+
+            } catch (error) {
+                console.error('Error in showDashboard:', error);
+                showNotification('ড্যাশবোর্ড সেটআপে সমস্যা হয়েছে', 'error');
+            }
+        }
+
+        // Update navbar user info
+        function updateNavbarUserInfo() {
+            const navUserAvatar = document.getElementById('navUserAvatar');
+            const navUserName = document.getElementById('navUserName');
+            const navUserRole = document.getElementById('navUserRole');
+
+            if (navUserAvatar) {
+                navUserAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+            if (navUserName) {
+                navUserName.textContent = currentUser.name;
+            }
+            if (navUserRole) {
+                navUserRole.textContent = getRoleText(currentUser.role);
+            }
+        }
+
+        // Setup admin dashboard
+        function setupAdminDashboard() {
+            console.log('Setting up admin dashboard');
+
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.innerHTML = `
+                    <div class="sidebar-menu">
+                        <div class="sidebar-item active" onclick="showAdminPanel()">
+                            <i>🛠️</i>
+                            <span>অ্যাডমিন প্যানেল</span>
+                        </div>
+                        <div class="sidebar-item" onclick="manageUsers()">
+                            <i>👥</i>
+                            <span>ইউজার ব্যবস্থাপনা</span>
+                        </div>
+                        <div class="sidebar-item" onclick="manageCourses()">
+                            <i>📚</i>
+                            <span>কোর্স তদারকি</span>
+                        </div>
+                        <div class="sidebar-item" onclick="systemSettings()">
+                            <i>⚙️</i>
+                            <span>সিস্টেম সেটিংস</span>
+                        </div>
+                        <div class="sidebar-item" onclick="viewAnalytics()">
+                            <i>📊</i>
+                            <span>অ্যানালিটিক্স</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Show admin panel
+            const adminPanel = document.getElementById('adminPanel');
+            const emptyDashboard = document.getElementById('emptyDashboard');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const floatingAdd = document.querySelector('.floating-add');
+
+            if (adminPanel) adminPanel.style.display = 'block';
+            if (emptyDashboard) emptyDashboard.style.display = 'none';
+            if (coursesGrid) coursesGrid.style.display = 'none';
+            if (floatingAdd) floatingAdd.style.display = 'none';
+        }
+
+        // Setup user dashboard
+        function setupUserDashboard() {
+            console.log('Setting up user dashboard');
+
+            const userCoursesList = userCourses[currentUser.email] || [];
+            const hasTeacherCourses = courses.some(c => c.teacherEmail === currentUser.email);
+            const hasStudentCourses = userCoursesList.some(courseId => {
+                const course = courses.find(c => c.id === courseId);
+                return course && course.teacherEmail !== currentUser.email;
+            });
+
+            let userType = 'new';
+            if (hasTeacherCourses && hasStudentCourses) {
+                userType = 'both';
+            } else if (hasTeacherCourses) {
+                userType = 'teacher';
+            } else if (hasStudentCourses) {
+                userType = 'student';
+            }
+
+            setupUserSidebar(userType);
+
+            // Show appropriate dashboard content
+            if (userCoursesList.length > 0) {
+                showCourses();
+            } else {
+                showEmptyDashboard();
+            }
+        }
+
+        // Setup user sidebar
+        function setupUserSidebar(userType) {
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebar) return;
+
+            let sidebarContent = `
+                <div class="sidebar-item active" onclick="showUserDashboard()">
+                    <i>🏠</i>
+                    <span>ড্যাশবোর্ড</span>
+                </div>
+            `;
+
+            if (userType === 'teacher' || userType === 'both') {
+                sidebarContent += `
+                    <div class="sidebar-item" onclick="showMyCourses()">
+                        <i>📚</i>
+                        <span>আমার কোর্স</span>
+                    </div>
+                    <div class="sidebar-item" onclick="openCreateModal()">
+                        <i>➕</i>
+                        <span>নতুন কোর্স</span>
+                    </div>
+                `;
+            }
+
+            if (userType === 'student' || userType === 'both') {
+                sidebarContent += `
+                    <div class="sidebar-item" onclick="showMyClasses()">
+                        <i>📖</i>
+                        <span>আমার ক্লাস</span>
+                    </div>
+                `;
+            }
+
+            sidebarContent += `
+                <div class="sidebar-item" onclick="openJoinModal()">
+                    <i>🚀</i>
+                    <span>ক্লাসে যোগদান</span>
+                </div>
+            `;
+
+            sidebar.innerHTML = `<div class="sidebar-menu">${sidebarContent}</div>`;
+        }
+
+        // Show empty dashboard
+        function showEmptyDashboard() {
+            const adminPanel = document.getElementById('adminPanel');
+            const emptyDashboard = document.getElementById('emptyDashboard');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const floatingAdd = document.querySelector('.floating-add');
+
+            if (adminPanel) adminPanel.style.display = 'none';
+            if (emptyDashboard) emptyDashboard.style.display = 'block';
+            if (coursesGrid) coursesGrid.style.display = 'none';
+            if (floatingAdd) floatingAdd.style.display = 'block';
+        }
+
+        // Show courses
+        function showCourses() {
+            const adminPanel = document.getElementById('adminPanel');
+            const emptyDashboard = document.getElementById('emptyDashboard');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const floatingAdd = document.querySelector('.floating-add');
+
+            if (adminPanel) adminPanel.style.display = 'none';
+            if (emptyDashboard) emptyDashboard.style.display = 'none';
+            if (coursesGrid) {
+                coursesGrid.style.display = 'grid';
+                loadCourses();
+            }
+            if (floatingAdd) floatingAdd.style.display = 'block';
+        }
+
+        // Load courses
+        function loadCourses() {
+            const coursesGrid = document.getElementById('coursesGrid');
+            if (!coursesGrid) return;
+
+            coursesGrid.innerHTML = '';
+
+            const userCoursesList = userCourses[currentUser.email] || [];
+            const teacherCourses = courses.filter(c => c.teacherEmail === currentUser.email);
+            const allUserCourses = [...new Set([...userCoursesList, ...teacherCourses.map(c => c.id)])];
+
+            allUserCourses.forEach(courseId => {
+                const course = courses.find(c => c.id === courseId);
+                if (course) {
+                    const courseCard = createCourseCard(course);
+                    coursesGrid.appendChild(courseCard);
+                }
+            });
+
+            if (allUserCourses.length === 0) {
+                showEmptyDashboard();
+            }
+        }
+
+        // Create course card
+        function createCourseCard(course) {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.onclick = () => openCourseDetails(course);
+
+            const isTeacher = course.teacherEmail === currentUser.email;
+            const roleText = isTeacher ? 'শিক্ষক' : 'ছাত্র';
+            const roleColor = isTeacher ? '#48bb78' : '#4299e1';
+
+            card.innerHTML = `
+                <div class="course-header">
+                    <h3 class="course-title">${course.name}</h3>
+                    <div class="course-info">
+                        <p><strong>সেকশন:</strong> ${course.section}</p>
+                        <p><strong>বিষয়:</strong> ${course.subject}</p>
+                        <p><strong>রুম:</strong> ${course.room || 'N/A'}</p>
+                        <p style="color: ${roleColor}; font-weight: 600;">
+                            <strong>আপনার ভূমিকা:</strong> ${roleText}
+                        </p>
+                    </div>
+                </div>
+                <div class="course-body">
+                    <p><strong>বিবরণ:</strong> ${course.description || 'কোন বিবরণ নেই'}</p>
+                    <div class="course-code">
+                        <div style="color: #666; font-size: 14px; margin-bottom: 5px;">কোর্স কোড</div>
+                        <div style="color: #333; font-size: 20px;">${course.code}</div>
+                    </div>
+                    <div style="margin-top: 15px; font-size: 14px; color: #666;">
+                        <p><strong>শিক্ষক:</strong> ${course.teacherName}</p>
+                        <p><strong>ছাত্র সংখ্যা:</strong> ${course.students.length}</p>
+                        <p><strong>তৈরি:</strong> ${new Date(course.createdAt).toLocaleDateString('bn-BD')}</p>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Generate 8-digit course code
+        function generateCourseCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        // Create course
+        function createCourse(e) {
+            e.preventDefault();
+
+            const courseName = document.getElementById('courseName').value.trim();
+            const courseSection = document.getElementById('courseSection').value.trim();
+            const courseRoom = document.getElementById('courseRoom').value.trim();
+            const courseSubject = document.getElementById('courseSubject').value;
+            const courseDescription = document.getElementById('courseDescription').value.trim();
+
+            if (!courseName || !courseSection || !courseSubject) {
+                showNotification('সকল প্রয়োজনীয় তথ্য পূরণ করুন', 'error');
+                return;
+            }
+
+            const newCourse = {
+                id: Date.now().toString(),
+                name: courseName,
+                section: courseSection,
+                room: courseRoom,
+                subject: courseSubject,
+                description: courseDescription,
+                code: generateCourseCode(),
+                teacherEmail: currentUser.email,
+                teacherName: currentUser.name,
+                students: [],
+                createdAt: new Date().toISOString()
+            };
+
+            // Add to courses array
+            courses.push(newCourse);
+            localStorage.setItem('courses', JSON.stringify(courses));
+
+            // Add to user courses
+            if (!userCourses[currentUser.email]) {
+                userCourses[currentUser.email] = [];
+            }
+            userCourses[currentUser.email].push(newCourse.id);
+            localStorage.setItem('userCourses', JSON.stringify(userCourses));
+
+            // Close modal and refresh
+            closeModal('createModal');
+            setupUserDashboard();
+            showCourses();
+
+            showNotification(`কোর্স "${courseName}" সফলভাবে তৈরি হয়েছে! কোড: ${newCourse.code}`, 'success');
+
+            // Reset form
+            document.getElementById('createCourseForm').reset();
+        }
+
+        // Join course
+        function joinCourse(e) {
+            e.preventDefault();
+
+            const classCode = document.getElementById('classCode').value.trim().toUpperCase();
+
+            if (!classCode) {
+                showNotification('ক্লাস কোড লিখুন', 'error');
+                return;
+            }
+
+            if (classCode.length !== 8) {
+                showNotification('ক্লাস কোড 8 অক্ষরের হতে হবে', 'error');
+                return;
+            }
+
+            const course = courses.find(c => c.code === classCode);
+
+            if (!course) {
+                showNotification('ভুল কোর্স কোড! আবার চেষ্টা করুন।', 'error');
+                return;
+            }
+
+            if (course.teacherEmail === currentUser.email) {
+                showNotification('আপনি এই কোর্সের শিক্ষক।', 'warning');
+                return;
+            }
+
+            if (userCourses[currentUser.email] && userCourses[currentUser.email].includes(course.id)) {
+                showNotification('আপনি ইতিমধ্যে এই কোর্সে যোগদান করেছেন।', 'warning');
+                return;
+            }
+
+            // Add student to course
+            if (!course.students.includes(currentUser.email)) {
+                course.students.push(currentUser.email);
+                courses = courses.map(c => c.id === course.id ? course : c);
+                localStorage.setItem('courses', JSON.stringify(courses));
+            }
+
+            // Add to user courses
+            if (!userCourses[currentUser.email]) {
+                userCourses[currentUser.email] = [];
+            }
+            userCourses[currentUser.email].push(course.id);
+            localStorage.setItem('userCourses', JSON.stringify(userCourses));
+
+            closeModal('joinModal');
+            setupUserDashboard();
+            showCourses();
+
+            showNotification(`সফলভাবে "${course.name}" কোর্সে যোগদান করেছেন!`, 'success');
+
+            document.getElementById('joinCourseForm').reset();
+        }
+
+        // Open course details
+        function openCourseDetails(course) {
+            const isTeacher = course.teacherEmail === currentUser.email;
+
+            document.getElementById('courseModalTitle').textContent = course.name;
+
+            let content = `
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #333; margin-bottom: 15px;">📚 কোর্স তথ্য</h3>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <p style="margin-bottom: 10px;"><strong>সেকশন:</strong> ${course.section}</p>
+                        <p style="margin-bottom: 10px;"><strong>রুম:</strong> ${course.room || 'N/A'}</p>
+                        <p style="margin-bottom: 10px;"><strong>বিষয়:</strong> ${course.subject}</p>
+                        <p style="margin-bottom: 10px;"><strong>বিবরণ:</strong> ${course.description || 'কোন বিবরণ নেই'}</p>
+                        <p style="margin-bottom: 10px;"><strong>শিক্ষক:</strong> ${course.teacherName} (${course.teacherEmail})</p>
+                        <p><strong>ছাত্র সংখ্যা:</strong> ${course.students.length}</p>
+                    </div>
+                </div>
+                
+                <div class="captcha-display">
+                    <div style="color: #666; font-size: 14px; margin-bottom: 5px;">কোর্স কোড</div>
+                    <div class="captcha-code">${course.code}</div>
+                    <small style="color: #666;">এই কোডটি শেয়ার করুন ছাত্রদের সাথে</small>
+                </div>
+            `;
+
+            if (isTeacher) {
+                content += `
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #f8f9fa;">
+                        <h4 style="color: #333; margin-bottom: 15px;">🛠️ শিক্ষক অপশন</h4>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button onclick="sendInvitation('${course.id}')" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                                📧 Gmail এ ইনভিটেশন পাঠান
+                            </button>
+                            <button onclick="viewStudents('${course.id}')" style="padding: 10px 20px; background: #48bb78; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                                👥 ছাত্র তালিকা দেখুন
+                            </button>
+                            <button onclick="copyClassCode('${course.code}')" style="padding: 10px 20px; background: #ed8936; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                                📋 কোড কপি করুন
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('courseModalContent').innerHTML = content;
+            document.getElementById('courseModal').style.display = 'block';
+        }
+
+        // Send invitation via Gmail
+        function sendInvitation(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            const subject = encodeURIComponent(`আমন্ত্রণ: "${course.name}" কোর্সে যোগদান করুন`);
+            const body = encodeURIComponent(`আস্সালামু আলাইকুম,
+
+আপনাকে "${course.name}" কোর্সে যোগদানের জন্য আমন্ত্রণ জানানো হচ্ছে।
+
+কোর্সের তথ্য:
+📚 কোর্সের নাম: ${course.name}
+📖 সেকশন: ${course.section}
+🏷️ বিষয়: ${course.subject}
+🏫 রুম: ${course.room || 'N/A'}
+👨‍🏫 শিক্ষক: ${course.teacherName}
+
+🔑 যোগদানের জন্য এই কোড ব্যবহার করুন: ${course.code}
+
+যোগদানের পদ্ধতি:
+1. Classroom Platform এ লগইন করুন
+2. "ক্লাসে যোগদান করুন" বাটনে ক্লিক করুন
+3. কোর্স কোড লিখুন: ${course.code}
+4. "যোগদান" বাটনে ক্লিক করুন
+
+ধন্যবাদ,
+${course.teacherName}
+Classroom Platform`);
+
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
+            window.open(gmailUrl, '_blank');
+
+            showNotification('Gmail এ ইনভিটেশন পাঠানোর জন্য প্রস্তুত!', 'success');
+        }
+
+        // View students
+        function viewStudents(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            let content = `
+                <h3 style="color: #333; margin-bottom: 20px;">👥 ছাত্র তালিকা</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+            `;
+
+            if (course.students.length === 0) {
+                content += '<p style="text-align: center; color: #666;">এখনও কোন ছাত্র যোগদান করেনি।</p>';
+            } else {
+                content += `<div style="margin-bottom: 10px; font-weight: 600;">মোট ছাত্র: ${course.students.length}</div>`;
+                content += '<div style="display: grid; gap: 10px;">';
+                course.students.forEach((email, index) => {
+                    content += `
+                        <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid #4299e1;">
+                            <div style="font-weight: 500;">${index + 1}. ${email}</div>
+                            <div style="font-size: 12px; color: #666;">যোগদানের তারিখ: ${new Date().toLocaleDateString('bn-BD')}</div>
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+
+            content += '</div>';
+            document.getElementById('courseModalContent').innerHTML = content;
+        }
+
+        // Copy class code
+        function copyClassCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification('কোর্স কোড কপি করা হয়েছে!', 'success');
+            }).catch(() => {
+                showNotification('কোর্স কোড কপি করতে সমস্যা হয়েছে', 'error');
+            });
+        }
+
+        // Get role text in Bengali
+        function getRoleText(role) {
+            switch (role) {
+                case 'admin': return 'অ্যাডমিন';
+                case 'user': return 'ইউজার';
+                default: return role;
+            }
+        }
+
+        // Toggle quick actions
+        function toggleQuickActions() {
+            if (quickActionsVisible) {
+                hideQuickActions();
+            } else {
+                showQuickActions();
+            }
+        }
+
+        function showQuickActions() {
+            document.getElementById('quickActions').style.display = 'block';
+            quickActionsVisible = true;
+        }
+
+        function hideQuickActions() {
+            document.getElementById('quickActions').style.display = 'none';
+            quickActionsVisible = false;
+        }
+
+        // Modal functions
+        function openCreateModal() {
+            document.getElementById('createModal').style.display = 'block';
+            hideQuickActions();
+        }
+
+        function openJoinModal() {
+            if (currentUser) {
+                document.getElementById('joinUserAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+                document.getElementById('joinUserEmail').textContent = currentUser.email;
+            }
+            document.getElementById('joinModal').style.display = 'block';
+            hideQuickActions();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Sidebar functions
+        function showAdminPanel() {
+            const adminPanel = document.getElementById('adminPanel');
+            const emptyDashboard = document.getElementById('emptyDashboard');
+            const coursesGrid = document.getElementById('coursesGrid');
+
+            if (adminPanel) adminPanel.style.display = 'block';
+            if (emptyDashboard) emptyDashboard.style.display = 'none';
+            if (coursesGrid) coursesGrid.style.display = 'none';
+
+            updateActiveMenuItem();
+        }
+
+        function showUserDashboard() {
+            const userCoursesList = userCourses[currentUser.email] || [];
+            if (userCoursesList.length > 0) {
+                showCourses();
+            } else {
+                showEmptyDashboard();
+            }
+            updateActiveMenuItem();
+        }
+
+        function showMyCourses() {
+            showCourses();
+            updateActiveMenuItem();
+        }
+
+        function showMyClasses() {
+            showCourses();
+            updateActiveMenuItem();
+        }
+
+        function updateActiveMenuItem() {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            if (event && event.target) {
+                const clickedItem = event.target.closest('.sidebar-item');
+                if (clickedItem) {
+                    clickedItem.classList.add('active');
+                }
+            }
+        }
+
+        // Admin functions
+        function manageUsers() {
+            showNotification('ইউজার ব্যবস্থাপনা ফিচার শীঘ্রই আসছে', 'warning');
+        }
+
+        function manageCourses() {
+            showNotification('কোর্স তদারকি ফিচার শীঘ্রই আসছে', 'warning');
+        }
+
+        function systemSettings() {
+            showNotification('সিস্টেম সেটিংস ফিচার শীঘ্রই আসছে', 'warning');
+        }
+
+        function viewAnalytics() {
+            showNotification('অ্যানালিটিক্স ফিচার শীঘ্রই আসছে', 'warning');
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        // Logout function
+        function logout() {
+            currentUser = null;
+            currentRole = null;
+
+            // Reset UI
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('dashboardLayout').style.display = 'none';
+
+            // Clear form
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+
+            // Clear role selection
+            document.querySelectorAll('.role-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            hideQuickActions();
+
+            showNotification('সফলভাবে লগআউট হয়েছে', 'success');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            // Ctrl+N for new course
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                if (currentUser && currentUser.role !== 'admin') {
+                    openCreateModal();
+                }
+            }
+
+            // Ctrl+J for join course
+            if (e.ctrlKey && e.key === 'j') {
+                e.preventDefault();
+                if (currentUser && currentUser.role !== 'admin') {
+                    openJoinModal();
+                }
+            }
+
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                    }
+                });
+                hideQuickActions();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            if (window.innerWidth < 768) {
+                hideQuickActions();
+            }
+        });
+
+        // Data validation helpers
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validateCourseCode(code) {
+            return code && code.length === 8 && /^[A-Z0-9]+$/.test(code);
+        }
+
+        // Enhanced form validation
+        function validateCreateCourseForm() {
+            const name = document.getElementById('courseName').value.trim();
+            const section = document.getElementById('courseSection').value.trim();
+            const subject = document.getElementById('courseSubject').value;
+
+            if (!name || name.length < 2) {
+                showNotification('কোর্সের নাম কমপক্ষে 2 অক্ষরের হতে হবে', 'error');
+                return false;
+            }
+
+            if (!section || section.length < 1) {
+                showNotification('সেকশন নাম দিন', 'error');
+                return false;
+            }
+
+            if (!subject) {
+                showNotification('বিষয় নির্বাচন করুন', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateJoinCourseForm() {
+            const code = document.getElementById('classCode').value.trim();
+
+            if (!validateCourseCode(code)) {
+                showNotification('সঠিক 8 অক্ষরের কোড লিখুন', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Handle network status
+        function updateNetworkStatus() {
+            if (!navigator.onLine) {
+                showNotification('ইন্টারনেট সংযোগ নেই', 'error');
+            }
+        }
+
+        window.addEventListener('online', function () {
+            showNotification('ইন্টারনেট সংযোগ পুনরায় স্থাপিত হয়েছে', 'success');
+        });
+
+        window.addEventListener('offline', updateNetworkStatus);
+
+        // Initialize tooltips and help text
+        function initializeHelpText() {
+            const helpTexts = {
+                'courseName': 'কোর্সের নামটি স্পষ্ট এবং সহজবোধ্য হতে হবে',
+                'courseSection': 'সেকশন নম্বর বা নাম (যেমন: A, B, 1, 2)',
+                'courseRoom': 'ক্লাসরুম নম্বর বা অবস্থান (ঐচ্ছিক)',
+                'courseSubject': 'বিষয়ের নাম নির্বাচন করুন',
+                'classCode': 'শিক্ষকের দেওয়া 8 অক্ষরের কোড'
+            };
+
+            Object.keys(helpTexts).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.setAttribute('title', helpTexts[id]);
+                }
+            });
+        }
+
+        // Initialize help text on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeHelpText();
+        });
+
+        // Handle Enter key in class code input
+        document.getElementById('classCode').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('joinCourseForm').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Search functionality
+        function searchCourses(query) {
+            const courseCards = document.querySelectorAll('.course-card');
+            courseCards.forEach(card => {
+                const title = card.querySelector('.course-title').textContent.toLowerCase();
+                const info = card.querySelector('.course-info').textContent.toLowerCase();
+                const body = card.querySelector('.course-body').textContent.toLowerCase();
+
+                if (title.includes(query.toLowerCase()) ||
+                    info.includes(query.toLowerCase()) ||
+                    body.includes(query.toLowerCase())) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Auto-save functionality
+        function autoSaveForm(formId) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+
+            const inputs = form.querySelectorAll('input, select, textarea');
+
+            inputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    localStorage.setItem(`${formId}_${input.id}`, input.value);
+                });
+            });
+        }
+
+        // Load saved form data
+        function loadSavedFormData(formId) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+
+            const inputs = form.querySelectorAll('input, select, textarea');
+
+            inputs.forEach(input => {
+                const savedValue = localStorage.getItem(`${formId}_${input.id}`);
+                if (savedValue) {
+                    input.value = savedValue;
+                }
+            });
+        }
+
+        // Clear saved form data
+        function clearSavedFormData(formId) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+
+            const inputs = form.querySelectorAll('input, select, textarea');
+
+            inputs.forEach(input => {
+                localStorage.removeItem(`${formId}_${input.id}`);
+            });
+        }
+
+        // Initialize auto-save for forms
+        setTimeout(() => {
+            autoSaveForm('createCourseForm');
+            autoSaveForm('joinCourseForm');
+        }, 1000);
+
+    </script>
+</body>
+
+</html>

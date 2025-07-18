@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Platform - Complete Implementation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1A237E;
+            --primary-light: #3949AB;
+            --accent: #00B8D4;
+            --accent-light: #26C6DA;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --neutral: #F5F5F5;
+            --neutral-dark: #E0E0E0;
+            --white: #FFFFFF;
+            --text: #212121;
+            --text-secondary: #757575;
+            --shadow: 0 2px 12px rgba(26, 35, 126, 0.08);
+            --shadow-hover: 0 4px 20px rgba(26, 35, 126, 0.12);
+            --radius: 8px;
+            --font: 'Roboto', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--neutral);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--white);
+            border-right: 1px solid var(--neutral-dark);
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            transition: var(--transition);
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 0;
+        }
+
+        .sidebar nav ul li a:hover,
+        .sidebar nav ul li a.active {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--neutral-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+        }
+
+        .btn-secondary {
+            background: var(--neutral-dark);
+            color: var(--text);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--neutral-dark);
+            border-radius: var(--radius);
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.1);
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--neutral-dark);
+        }
+
+        .table th {
+            background: var(--neutral);
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(0, 184, 212, 0.05);
+        }
+
+        /* Grid System */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: -0.75rem;
+        }
+
+        .col {
+            flex: 1;
+            padding: 0.75rem;
+        }
+
+        .col-2 {
+            flex: 0 0 50%;
+            padding: 0.75rem;
+        }
+
+        .col-3 {
+            flex: 0 0 33.333%;
+            padding: 0.75rem;
+        }
+
+        .col-4 {
+            flex: 0 0 25%;
+            padding: 0.75rem;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 12px;
+            color: var(--white);
+        }
+
+        .badge-primary {
+            background: var(--primary);
+        }
+
+        .badge-success {
+            background: var(--success);
+        }
+
+        .badge-warning {
+            background: var(--warning);
+        }
+
+        .badge-danger {
+            background: var(--danger);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--neutral-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--neutral-dark);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* Role Selection */
+        .role-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--neutral);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .role-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Course Cards */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .course-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .course-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            padding: 1.5rem;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-code {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .course-body {
+            padding: 1.5rem;
+        }
+
+        /* Assignment List */
+        .assignment-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid var(--neutral-dark);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            background: var(--white);
+        }
+
+        .assignment-info h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .assignment-meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Live Class */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-1 {
+            margin-top: 1rem;
+        }
+
+        .mt-2 {
+            margin-top: 2rem;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .gap-1 {
+            gap: 1rem;
+        }
+
+        /* Feature Table Styles */
+        .feature-table {
+            font-size: 0.9rem;
+        }
+
+        .feature-table th {
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .feature-table td {
+            text-align: center;
+        }
+
+        .feature-table .checkmark {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Analytics Charts */
+        .chart-container {
+            height: 300px;
+            background: var(--neutral);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Notification Styles */
+        .notification {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .notification.info {
+            background: rgba(0, 184, 212, 0.1);
+            border-color: var(--accent);
+        }
+
+        .notification.success {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: var(--success);
+        }
+
+        .notification.warning {
+            background: rgba(255, 152, 0, 0.1);
+            border-color: var(--warning);
+        }
+
+        .notification.danger {
+            background: rgba(244, 67, 54, 0.1);
+            border-color: var(--danger);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Role Selection Modal -->
+    <div id="roleSelector" class="role-selector">
+        <div class="role-card">
+            <h2 class="mb-2">Select Your Role</h2>
+            <p class="mb-2">Choose your role to access the appropriate dashboard and features.</p>
+            <div class="form-group">
+                <select id="roleSelect" class="form-control">
+                    <option value="">Select Role</option>
+                    <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="selectRole()">
+                <i class="fas fa-sign-in-alt"></i> Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            Classroom Platform
+        </div>
+        <div class="nav-actions">
+            <div class="user-info">
+                <i class="fas fa-user"></i>
+                <span id="currentUser">User</span>
+                <span class="badge badge-primary" id="currentRole">Role</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <nav id="sidebarNav">
+            <!-- Navigation will be populated by JavaScript -->
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Content will be populated by JavaScript -->
+    </main>
+
+    <!-- Modals -->
+    <!-- Course Creation Modal -->
+    <div id="courseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Course</h3>
+                <button class="close" onclick="closeModal('courseModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="courseForm">
+                    <div class="form-group">
+                        <label class="form-label">Course Name</label>
+                        <input type="text" class="form-control" id="courseName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Course Code</label>
+                        <input type="text" class="form-control" id="courseCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="courseDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <select class="form-control" id="courseSubject">
+                            <option value="mathematics">Mathematics</option>
+                            <option value="science">Science</option>
+                            <option value="english">English</option>
+                            <option value="history">History</option>
+                            <option value="computer">Computer Science</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('courseModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="createCourse()">Create Course</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div id="assignmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Assignment</h3>
+                <button class="close" onclick="closeModal('assignmentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="assignmentForm">
+                    <div class="form-group">
+                        <label class="form-label">Assignment Title</label>
+                        <input type="text" class="form-control" id="assignmentTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Instructions</label>
+                        <textarea class="form-control" id="assignmentInstructions" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Due Date</label>
+                        <input type="datetime-local" class="form-control" id="assignmentDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Points</label>
+                        <input type="number" class="form-control" id="assignmentPoints" min="0" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Attachments</label>
+                        <input type="file" class="form-control" id="assignmentFiles" multiple>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('assignmentModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="createAssignment()">Create Assignment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Management Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New User</h3>
+                <button class="close" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="userEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <select class="form-control" id="userRole">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="userPassword" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="addUser()">Add User</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let currentRole = localStorage.getItem('currentRole') || '';
+        let currentUser = localStorage.getItem('currentUser') || 'Demo User';
+        let courses = JSON.parse(localStorage.getItem('courses')) || [];
+        let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let announcements = JSON.parse(localStorage.getItem('announcements')) || [];
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!currentRole) {
+                showRoleSelector();
+            } else {
+                hideRoleSelector();
+                initializeApp();
+            }
+        });
+
+        // Role Selection
+        function showRoleSelector() {
+            document.getElementById('roleSelector').style.display = 'flex';
+        }
+
+        function hideRoleSelector() {
+            document.getElementById('roleSelector').style.display = 'none';
+        }
+
+        function selectRole() {
+            const selectedRole = document.getElementById('roleSelect').value;
+            if (!selectedRole) {
+                alert('Please select a role');
+                return;
+            }
+
+            currentRole = selectedRole;
+            localStorage.setItem('currentRole', currentRole);
+            localStorage.setItem('currentUser', currentUser);
+
+            hideRoleSelector();
+            initializeApp();
+        }
+
+        function logout() {
+            localStorage.removeItem('currentRole');
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+
+        // Initialize Application
+        function initializeApp() {
+            document.getElementById('currentUser').textContent = currentUser;
+            document.getElementById('currentRole').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
+
+            generateSidebar();
+            showDashboard();
+
+            // Initialize sample data if empty
+            if (courses.length === 0) {
+                initializeSampleData();
+            }
+        }
+
+        // Generate Sidebar Navigation
+        function generateSidebar() {
+            const sidebarNav = document.getElementById('sidebarNav');
+            let navHTML = '<ul>';
+
+            // Common navigation items
+            navHTML += `
+                <li><a href="#" onclick="showDashboard()" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" onclick="showCourses()" class="nav-link"><i class="fas fa-book"></i> Courses</a></li>
+                <li><a href="#" onclick="showAssignments()" class="nav-link"><i class="fas fa-tasks"></i> Assignments</a></li>
+                <li><a href="#" onclick="showLibrary()" class="nav-link"><i class="fas fa-folder"></i> Resource Library</a></li>
+                <li><a href="#" onclick="showCalendar()" class="nav-link"><i class="fas fa-calendar"></i> Calendar</a></li>
+                <li><a href="#" onclick="showAnalytics()" class="nav-link"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="#" onclick="showLiveClasses()" class="nav-link"><i class="fas fa-video"></i> Live Classes</a></li>
+                <li><a href="#" onclick="showAnnouncements()" class="nav-link"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+                <li><a href="#" onclick="showDiscussions()" class="nav-link"><i class="fas fa-comments"></i> Discussions</a></li>
+                <li><a href="#" onclick="showGrading()" class="nav-link"><i class="fas fa-star"></i> Grading</a></li>
+                <li><a href="#" onclick="showNotifications()" class="nav-link"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="#" onclick="showSettings()" class="nav-link"><i class="fas fa-cog"></i> Settings</a></li>
+            `;
+
+            // Role-specific navigation
+            if (currentRole === 'admin') {
+                navHTML += `
+                    <li><a href="#" onclick="showUserManagement()" class="nav-link"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="#" onclick="showAuditLogs()" class="nav-link"><i class="fas fa-clipboard-list"></i> Audit Logs</a></li>
+                    <li><a href="#" onclick="showCustomization()" class="nav-link"><i class="fas fa-palette"></i> Customization</a></li>
+                    <li><a href="#" onclick="showBackupReliability()" class="nav-link"><i class="fas fa-shield-alt"></i> Backup & Reliability</a></li>
+                `;
+            }
+
+            navHTML += `
+                <li><a href="#" onclick="showFeatureTable()" class="nav-link"><i class="fas fa-table"></i> Feature Table</a></li>
+            `;
+
+            navHTML += '</ul>';
+            sidebarNav.innerHTML = navHTML;
+        }
+
+        // Dashboard
+        function showDashboard() {
+            setActiveNav('Dashboard');
+            let dashboardHTML = `
+                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${courses.length}</div>
+                        <div class="stat-label">Total Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${assignments.length}</div>
+                        <div class="stat-label">Assignments</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${users.length}</div>
+                        <div class="stat-label">Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${announcements.length}</div>
+                        <div class="stat-label">Announcements</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Courses</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="course-grid">
+                                    ${courses.slice(0, 3).map(course => `
+                                        <div class="course-card">
+                                            <div class="course-header">
+                                                <div class="course-title">${course.name}</div>
+                                                <div class="course-code">${course.code}</div>
+                                            </div>
+                                            <div class="course-body">
+                                                <p>${course.description}</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="badge badge-primary">${course.subject}</span>
+                                                    <button class="btn btn-sm btn-primary" onclick="viewCourse('${course.id}')">View</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ${(currentRole !== 'student') ? `
+                                    <button class="btn btn-primary mt-1" onclick="openModal('courseModal')">
+                                        <i class="fas fa-plus"></i> Create Course
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">To-Do List</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>Review Assignment Submissions</li>
+                                    <li>Prepare Quiz for Chapter 5</li>
+                                    <li>Update Course Materials</li>
+                                    <li>Schedule Parent-Teacher Meeting</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Activity</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="notification info">
+                                    <strong>New Assignment:</strong> Math Quiz 3 has been created
+                                </div>
+                                <div class="notification success">
+                                    <strong>Submission:</strong> John submitted Essay Assignment
+                                </div>
+                                <div class="notification warning">
+                                    <strong>Reminder:</strong> Assignment due tomorrow
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Gamification & Engagement</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-2">
+                                <h4>Leaderboard</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>Name</th>
+                                                <th>Points</th>
+                                                <th>Badges</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Alice Johnson</td>
+                                                <td>1,250</td>
+                                                <td><span class="badge badge-success">Quiz Master</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>Bob Smith</td>
+                                                <td>1,180</td>
+                                                <td><span class="badge badge-primary">Consistent</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>Carol Davis</td>
+                                                <td>1,120</td>
+                                                <td><span class="badge badge-warning">Rising Star</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <h4>Your Achievements</h4>
+                                <div class="d-flex gap-1">
+                                    <span class="badge badge-success">Perfect Attendance</span>
+                                    <span class="badge badge-primary">Assignment Pro</span>
+                                    <span class="badge badge-warning">Discussion Leader</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = dashboardHTML;
+        }
+
+        // Courses Page
+        function showCourses() {
+            setActiveNav('Courses');
+            let coursesHTML = `
+                <h2><i class="fas fa-book"></i> Courses</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Course Management</h3>
+                        ${(currentRole !== 'student') ? `
+                            <button class="btn btn-primary" onclick="openModal('courseModal')">
+                                <i class="fas fa-plus"></i> Create Course
+                            </button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="joinCourse()">
+                                <i class="fas fa-sign-in-alt"></i> Join Course
+                            </button>
+                        `}
+                    </div>
+                    <div class="card-body">
+                        <div class="course-grid">
+                            ${courses.map(course => `
+                                <div class="course-card">
+                                    <div class="course-header">
+                                        <div class="course-title">${course.name}</div>
+                                        <div class="course-code">${course.code}</div>
+                                    </div>
+                                    <div class="course-body">
+                                        <p>${course.description}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge badge-primary">${course.subject}</span>
+                                            <div>
+                                                <button class="btn btn-sm btn-primary" onclick="viewCourse('${course.id}')">View</button>
+                                                ${(currentRole !== 'student') ? `
+                                                    <button class="btn btn-sm btn-secondary" onclick="editCourse('${course.id}')">Edit</button>
+                                                    <button class="btn btn-sm btn-danger" onclick="archiveCourse('${course.id}')">Archive</button>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Course Organization Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <h4>Class Stream</h4>
+                                <p>Central feed for all class activity, announcements, and discussions.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Topics & Folders</h4>
+                                <p>Organize materials and assignments by topic or folder for easier navigation.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Calendar Integration</h4>
+                                <p>Automatic calendar creation with all due dates and events visible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = coursesHTML;
+        }
+
+        // Assignments Page
+        function showAssignments() {
+            setActiveNav('Assignments');
+            let assignmentsHTML = `
+                <h2><i class="fas fa-tasks"></i> Assignments & Assessments</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Assignment Management</h3>
+                        ${(currentRole !== 'student') ? `
+                            <div>
+                                <button class="btn btn-primary" onclick="openModal('assignmentModal')">
+                                    <i class="fas fa-plus"></i> Create Assignment
+                                </button>
+                                <button class="btn btn-success" onclick="createQuiz()">
+                                    <i class="fas fa-question-circle"></i> Create Quiz
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="card-body">
+                        ${assignments.map(assignment => `
+                            <div class="assignment-item">
+                                <div class="assignment-info">
+                                    <h4>${assignment.title}</h4>
+                                    <div class="assignment-meta">
+                                        Due: ${assignment.dueDate} | Points: ${assignment.points}
+                                        <span class="badge badge-primary">${assignment.course}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    ${currentRole === 'student' ? `
+                                        <button class="btn btn-sm btn-primary" onclick="submitAssignment('${assignment.id}')">Submit</button>
+                                    ` : `
+                                        <button class="btn btn-sm btn-secondary" onclick="viewSubmissions('${assignment.id}')">View Submissions</button>
+                                        <button class="btn btn-sm btn-primary" onclick="editAssignment('${assignment.id}')">Edit</button>
+                                    `}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Assignment Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-2">
+                                <h4>Rich Attachments</h4>
+                                <ul>
+                                    <li>YouTube videos integration</li>
+                                    <li>Google Forms embedding</li>
+                                    <li>PDF and document attachments</li>
+                                    <li>Link sharing capabilities</li>
+                                </ul>
+                            </div>
+                            <div class="col-2">
+                                <h4>Advanced Features</h4>
+                                <ul>
+                                    <li>Assignment scheduling</li>
+                                    <li>Reusability across classes</li>
+                                    <li>Self-grading quizzes</li>
+                                    <li>Locked quiz mode for security</li>
+                                    <li>Originality reports</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = assignmentsHTML;
+        }
+
+        // Resource Library
+        function showLibrary() {
+            setActiveNav('Resource Library');
+            let libraryHTML = `
+                <h2><i class="fas fa-folder"></i> Resource Library</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">File Management</h3>
+                        ${(currentRole !== 'student') ? `
+                            <div>
+                                <button class="btn btn-primary" onclick="uploadFile()">
+                                    <i class="fas fa-upload"></i> Upload File
+                                </button>
+                                <button class="btn btn-success" onclick="bulkUpload()">
+                                    <i class="fas fa-cloud-upload-alt"></i> Bulk Upload
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search resources..." onkeyup="searchResources(this.value)">
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Size</th>
+                                        <th>Modified</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><i class="fas fa-file-pdf"></i> Lecture_Slides_Chapter1.pdf</td>
+                                        <td>PDF</td>
+                                        <td>2.5 MB</td>
+                                        <td>2025-07-10</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="downloadFile('lecture1')">Download</button>
+                                            ${(currentRole !== 'student') ? `<button class="btn btn-sm btn-danger" onclick="deleteFile('lecture1')">Delete</button>` : ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-file-word"></i> Assignment_Rubric.docx</td>
+                                        <td>Word</td>
+                                        <td>1.2 MB</td>
+                                        <td>2025-07-12</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="downloadFile('rubric1')">Download</button>
+                                            ${(currentRole !== 'student') ? `<button class="btn btn-sm btn-danger" onclick="deleteFile('rubric1')">Delete</button>` : ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-file-video"></i> Recorded_Lecture_Session1.mp4</td>
+                                        <td>Video</td>
+                                        <td>125 MB</td>
+                                        <td>2025-07-14</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="playVideo('session1')">Play</button>
+                                            <button class="btn btn-sm btn-primary" onclick="downloadFile('session1')">Download</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">File Organization</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <h4>Automatic Folders</h4>
+                                <p>System automatically creates folders for each assignment and student submissions.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Centralized Access</h4>
+                                <p>All class files and media accessible from one location with proper organization.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Version Control</h4>
+                                <p>Track file versions and maintain history of document changes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = libraryHTML;
+        }
+
+        // Calendar
+        function showCalendar() {
+            setActiveNav('Calendar');
+            let calendarHTML = `
+                <h2><i class="fas fa-calendar"></i> Calendar Integration</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Class Calendar</h3>
+                        <button class="btn btn-primary" onclick="addEvent()">
+                            <i class="fas fa-plus"></i> Add Event
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <i class="fas fa-calendar-alt" style="font-size: 3rem;"></i>
+                            <p>Interactive Calendar View</p>
+                            <p>All due dates and events visible to students and teachers</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-2">
+                                <h4>Upcoming Events</h4>
+                                <ul>
+                                    <li><strong>July 16:</strong> Math Quiz 3 Due</li>
+                                    <li><strong>July 18:</strong> Science Project Presentation</li>
+                                    <li><strong>July 20:</strong> Parent-Teacher Conference</li>
+                                    <li><strong>July 22:</strong> Final Exam - English</li>
+                                </ul>
+                            </div>
+                            <div class="col-2">
+                                <h4>Calendar Features</h4>
+                                <ul>
+                                    <li>Automatic calendar creation for each class</li>
+                                    <li>Due dates and events synchronization</li>
+                                    <li>Personal and class calendar integration</li>
+                                    <li>Reminder notifications</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = calendarHTML;
+        }
+
+        // Analytics & Reporting
+        function showAnalytics() {
+            setActiveNav('Analytics');
+            let analyticsHTML = `
+                <h2><i class="fas fa-chart-bar"></i> Analytics & Reporting</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Classroom Analytics</h3>
+                        <button class="btn btn-primary" onclick="exportAnalytics()">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-2">
+                                <h4>Assignment Completion</h4>
+                                <div class="chart-container">
+                                    <i class="fas fa-chart-pie" style="font-size: 3rem;"></i>
+                                    <p>85% Completion Rate</p>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <h4>Grade Distribution</h4>
+                                <div class="chart-container">
+                                    <i class="fas fa-chart-bar" style="font-size: 3rem;"></i>
+                                    <p>Average Grade: B+</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Assignments Completed</th>
+                                        <th>Average Grade</th>
+                                        <th>Engagement Score</th>
+                                        <th>Last Activity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Alice Johnson</td>
+                                        <td>15/16</td>
+                                        <td>A-</td>
+                                        <td>92%</td>
+                                        <td>2 hours ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bob Smith</td>
+                                        <td>14/16</td>
+                                        <td>B+</td>
+                                        <td>88%</td>
+                                        <td>1 day ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Carol Davis</td>
+                                        <td>16/16</td>
+                                        <td>A</td>
+                                        <td>95%</td>
+                                        <td>30 minutes ago</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                ${currentRole === 'admin' ? `
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">System Analytics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="stat-card">
+                                    <div class="stat-number">1,247</div>
+                                    <div class="stat-label">Total Users</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-card">
+                                    <div class="stat-number">89</div>
+                                    <div class="stat-label">Active Courses</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-card">
+                                    <div class="stat-number">99.8%</div>
+                                    <div class="stat-label">System Uptime</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+
+            document.getElementById('mainContent').innerHTML = analyticsHTML;
+        }
+
+        // Live Classes
+        function showLiveClasses() {
+            setActiveNav('Live Classes');
+            let liveHTML = `
+                <h2><i class="fas fa-video"></i> Live & Interactive Learning</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Live Class Sessions</h3>
+                        ${(currentRole !== 'student') ? `
+                            <button class="btn btn-primary" onclick="startLiveClass()">
+                                <i class="fas fa-video"></i> Start Live Class
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-2">
+                                <h4>Current Live Sessions</h4>
+                                <div class="assignment-item">
+                                    <div class="assignment-info">
+                                        <h4>Mathematics 101 - Algebra Review</h4>
+                                        <div class="assignment-meta">
+                                            <span class="live-indicator">
+                                                <span class="live-dot"></span>
+                                                LIVE
+                                            </span>
+                                            Started: 2:00 PM | Duration: 45 min
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-success" onclick="joinLiveClass('math101')">Join</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <h4>Recorded Sessions</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Session</th>
+                                                <th>Date</th>
+                                                <th>Duration</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Intro to Calculus</td>
+                                                <td>July 10</td>
+                                                <td>52 min</td>
+                                                <td><button class="btn btn-sm btn-primary" onclick="playRecording('calc1')">Play</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Physics Lab Demo</td>
+                                                <td>July 12</td>
+                                                <td>38 min</td>
+                                                <td><button class="btn btn-sm btn-primary" onclick="playRecording('physics1')">Play</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Interactive Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <h4>Video Conferencing</h4>
+                                <p>Integration with Google Meet, Zoom, and other platforms for seamless live lectures.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Interactive Polls</h4>
+                                <p>Real-time polling and voting during live sessions to engage students.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Q&A Sessions</h4>
+                                <p>Live question and answer functionality with moderation capabilities.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = liveHTML;
+        }
+
+        // Announcements
+        function showAnnouncements() {
+            setActiveNav('Announcements');
+            let announcementsHTML = `
+                <h2><i class="fas fa-bullhorn"></i> Announcements</h2>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Class Announcements</h3>
+                        ${(currentRole !== 'student') ? `
+                            <button class="btn btn-primary" onclick="createAnnouncement()">
+                                <i class="fas fa-plus"></i> Create Announcement
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="card-body">
+                        <div class="assignment-item">
+                            <div class="assignment-info">
+                                <h4>Project Deadline Extended</h4>
+                                <div class="assignment-meta">
+                                    Posted by: Prof. Johnson | July 14, 2025 | 
+                                    <span class="badge badge-primary">Mathematics 101</span>
+                                </div>
+                                <p>The final project deadline has been extended to July 25th due to the upcoming holiday. Please use this extra time to refine your submissions.</p>
+                            </div>
+                            <div>
+                                ${(currentRole !== 'student') ? `
+                                    <button class="btn btn-sm btn-secondary" onclick="editAnnouncement('1')">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteAnnouncement('1')">Delete</button>
+                                ` : ''}
+                                <button class="btn btn-sm btn-primary" onclick="replyToAnnouncement('1')">Reply</button>
+                            </div>
+                        </div>
+                        
+                        <div class="assignment-item">
+                            <div class="assignment-info">
+                                <h4>New Study Materials Available</h4>
+                                <div class="assignment-meta">
+                                    Posted by: Dr. Smith | July 12, 2025 | 
+                                    <span class="badge badge-success">Science 201</span>
+                                </div>
+                                <p>I've uploaded additional study materials for the upcoming exam. Check the Resource Library for the latest files.</p>
+                            </div>
+                            <div>
+                                ${(currentRole !== 'student') ? `
+                                    <button class="btn btn-sm btn-secondary" onclick="editAnnouncement('2')">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteAnnouncement('2')">Delete</button>
+                                ` : ''}
+                                <button class="btn btn-sm btn-primary" onclick="replyToAnnouncement('2')">Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Announcement Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <h4>Scheduling</h4>
+                                <p>Schedule announcements to post at specific times for better timing.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Reply Control</h4>
+                                <p>Teachers can control whether students can reply to announcements.</p>
+                            </div>
+                            <div class="col-3">
+                                <h4>Multi-Class Posting</h4>
+                                <p>Post announcements to multiple classes simultaneously.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = announcementsHTML;
+        }
+
+        // Discussions
+        function showDiscussions() {
+            setActiveNav('Discussions');
+            let discussionsHTML = `
+        <h2><i class="fas fa-comments"></i> Discussion Threads & Q&A</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Discussion Management</h3>
+                ${(currentRole !== 'student') ? `
+                    <button class="btn btn-primary" onclick="createDiscussion()">
+                        <i class="fas fa-plus"></i> Create Discussion
+                    </button>
+                ` : ''}
+            </div>
+            <div class="card-body">
+                <div class="assignment-item">
+                    <div class="assignment-info">
+                        <h4>Chapter 5: Calculus Applications Discussion</h4>
+                        <div class="assignment-meta">
+                            Started by: Prof. Johnson | July 14, 2025 | 
+                            <span class="badge badge-primary">Mathematics 101</span>
+                            <span class="badge badge-success">12 Replies</span>
+                        </div>
+                        <p>Discuss the real-world applications of calculus in engineering and physics. Share examples and ask questions.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary" onclick="viewDiscussion('calc_apps')">View Discussion</button>
+                        ${(currentRole !== 'student') ? `
+                            <button class="btn btn-sm btn-secondary" onclick="moderateDiscussion('calc_apps')">Moderate</button>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <div class="assignment-item">
+                    <div class="assignment-info">
+                        <h4>Q&A: Assignment 3 Questions</h4>
+                        <div class="assignment-meta">
+                            Started by: Student Alice | July 13, 2025 | 
+                            <span class="badge badge-warning">Science 201</span>
+                            <span class="badge badge-primary">8 Replies</span>
+                        </div>
+                        <p>Questions and clarifications about Assignment 3 requirements and submission format.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary" onclick="viewDiscussion('assignment3_qa')">View Q&A</button>
+                        <button class="btn btn-sm btn-success" onclick="replyToDiscussion('assignment3_qa')">Reply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Discussion Features</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <h4>Question-Driven Discussions</h4>
+                        <p>Students can ask questions and engage in meaningful academic discussions[2][3].</p>
+                    </div>
+                    <div class="col-3">
+                        <h4>Reply Management</h4>
+                        <p>Teachers can control whether students can reply to each other's posts[2][3].</p>
+                    </div>
+                    <div class="col-3">
+                        <h4>Threaded Conversations</h4>
+                        <p>Organized discussion threads with proper moderation and engagement tracking.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = discussionsHTML;
+        }
+
+        // Grading & Feedback
+        function showGrading() {
+            setActiveNav('Grading');
+            let gradingHTML = `
+        <h2><i class="fas fa-star"></i> Grading & Feedback</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Grading System</h3>
+                ${(currentRole !== 'student') ? `
+                    <button class="btn btn-primary" onclick="setupGradingSystem()">
+                        <i class="fas fa-cog"></i> Configure Grading
+                    </button>
+                ` : ''}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Grading Options</h4>
+                        <ul>
+                            <li>Total Points System</li>
+                            <li>Weighted Categories</li>
+                            <li>Proficiency Scales</li>
+                            <li>Custom Rubrics</li>
+                        </ul>
+                    </div>
+                    <div class="col-2">
+                        <h4>Comment Bank</h4>
+                        <p>Save frequently used feedback comments for quick reuse across assignments.</p>
+                        ${(currentRole !== 'student') ? `
+                            <button class="btn btn-sm btn-secondary" onclick="manageCommentBank()">Manage Comments</button>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Assignment</th>
+                                <th>Grade</th>
+                                <th>Feedback</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Alice Johnson</td>
+                                <td>Essay Assignment</td>
+                                <td>92/100</td>
+                                <td>Excellent analysis, minor grammar issues</td>
+                                <td><span class="badge badge-success">Graded</span></td>
+                                <td>
+                                    ${(currentRole !== 'student') ? `
+                                        <button class="btn btn-sm btn-primary" onclick="editGrade('alice_essay')">Edit</button>
+                                    ` : `
+                                        <button class="btn btn-sm btn-primary" onclick="viewFeedback('alice_essay')">View</button>
+                                    `}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Bob Smith</td>
+                                <td>Math Quiz 3</td>
+                                <td>78/100</td>
+                                <td>Good effort, review chapter 4</td>
+                                <td><span class="badge badge-warning">Pending Review</span></td>
+                                <td>
+                                    ${(currentRole !== 'student') ? `
+                                        <button class="btn btn-sm btn-primary" onclick="gradeSubmission('bob_quiz3')">Grade</button>
+                                    ` : `
+                                        <button class="btn btn-sm btn-primary" onclick="viewFeedback('bob_quiz3')">View</button>
+                                    `}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Originality Reports & Plagiarism Detection</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Originality Checking</h4>
+                        <p>Built-in plagiarism detection for both teachers and students to ensure academic integrity.</p>
+                    </div>
+                    <div class="col-2">
+                        <h4>Recent Reports</h4>
+                        <ul>
+                            <li>Essay Assignment - Alice: 98% Original</li>
+                            <li>Research Paper - Bob: 85% Original</li>
+                            <li>Lab Report - Carol: 92% Original</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = gradingHTML;
+        }
+
+        // Notifications
+        function showNotifications() {
+            setActiveNav('Notifications');
+            let notificationsHTML = `
+        <h2><i class="fas fa-bell"></i> Notifications & Reminders</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Notification Center</h3>
+                <button class="btn btn-secondary" onclick="markAllRead()">
+                    <i class="fas fa-check"></i> Mark All Read
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="notification info">
+                    <strong>New Assignment Posted:</strong> Mathematics Quiz 4 has been posted and is due July 20th.
+                    <small class="text-right">2 hours ago</small>
+                </div>
+                <div class="notification success">
+                    <strong>Assignment Graded:</strong> Your Essay Assignment has been graded. Score: 92/100
+                    <small class="text-right">1 day ago</small>
+                </div>
+                <div class="notification warning">
+                    <strong>Reminder:</strong> Science Lab Report is due tomorrow at 11:59 PM
+                    <small class="text-right">3 hours ago</small>
+                </div>
+                <div class="notification danger">
+                    <strong>Late Submission:</strong> Math Homework 5 was submitted late
+                    <small class="text-right">2 days ago</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Notification Settings</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Email Notifications</h4>
+                        <label><input type="checkbox" checked> Assignment Due Reminders</label><br>
+                        <label><input type="checkbox" checked> Grade Notifications</label><br>
+                        <label><input type="checkbox"> Announcement Alerts</label><br>
+                        <label><input type="checkbox" checked> Discussion Replies</label>
+                    </div>
+                    <div class="col-2">
+                        <h4>Real-time Notifications</h4>
+                        <label><input type="checkbox" checked> New Assignments</label><br>
+                        <label><input type="checkbox" checked> Feedback Received</label><br>
+                        <label><input type="checkbox"> Class Announcements</label><br>
+                        <label><input type="checkbox" checked> Live Class Starting</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-1" onclick="saveNotificationSettings()">Save Settings</button>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = notificationsHTML;
+        }
+
+        // Settings & Accessibility
+        function showSettings() {
+            setActiveNav('Settings');
+            let settingsHTML = `
+        <h2><i class="fas fa-cog"></i> Settings & Accessibility</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Accessibility Settings</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Display Settings</h4>
+                        <div class="form-group">
+                            <label class="form-label">Language</label>
+                            <select class="form-control">
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                                <option value="fr">Français</option>
+                                <option value="bn">বাংলা</option>
+                                <option value="hi">हिन्दी</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Font Size</label>
+                            <input type="range" class="form-control" min="12" max="24" value="16">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Color Contrast</label>
+                            <select class="form-control">
+                                <option value="normal">Normal</option>
+                                <option value="high">High Contrast</option>
+                                <option value="dark">Dark Mode</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <h4>Accessibility Features</h4>
+                        <label><input type="checkbox"> Enable Screen Reader Mode</label><br>
+                        <label><input type="checkbox"> Keyboard Navigation</label><br>
+                        <label><input type="checkbox"> Reduced Motion</label><br>
+                        <label><input type="checkbox"> Audio Descriptions</label><br>
+                        <label><input type="checkbox"> Closed Captions</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="saveAccessibilitySettings()">Save Settings</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Personalization & Learning Paths</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Differentiated Assignments</h4>
+                        <p>Assign different tasks or materials to individual students or groups based on their learning needs.</p>
+                    </div>
+                    <div class="col-2">
+                        <h4>Adaptive Learning</h4>
+                        <p>Personalized learning journeys that adapt to student progress and performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = settingsHTML;
+        }
+
+        // Admin: User Management
+        function showUserManagement() {
+            if (currentRole !== 'admin') return;
+            setActiveNav('User Management');
+            let userManagementHTML = `
+        <h2><i class="fas fa-users"></i> User Management</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">User Administration</h3>
+                <div>
+                    <button class="btn btn-primary" onclick="openModal('userModal')">
+                        <i class="fas fa-user-plus"></i> Add User
+                    </button>
+                    <button class="btn btn-success" onclick="bulkUploadUsers()">
+                        <i class="fas fa-upload"></i> Bulk Upload
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>john.doe@school.edu</td>
+                                <td><span class="badge badge-primary">Teacher</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>2 hours ago</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary" onclick="editUser('john_doe')">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deactivateUser('john_doe')">Deactivate</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>jane.smith@school.edu</td>
+                                <td><span class="badge badge-warning">Student</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>1 day ago</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary" onclick="editUser('jane_smith')">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deactivateUser('jane_smith')">Deactivate</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = userManagementHTML;
+        }
+
+        // Admin: Audit Logs
+        function showAuditLogs() {
+            if (currentRole !== 'admin') return;
+            setActiveNav('Audit Logs');
+            let auditHTML = `
+        <h2><i class="fas fa-clipboard-list"></i> Audit Logs & Activity Tracking</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">System Activity Logs</h3>
+                <button class="btn btn-primary" onclick="exportAuditLogs()">
+                    <i class="fas fa-download"></i> Export Logs
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Resource</th>
+                                <th>IP Address</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-07-15 10:30:15</td>
+                                <td>jane.smith@school.edu</td>
+                                <td>Assignment Submission</td>
+                                <td>Math Quiz 3</td>
+                                <td>192.168.1.100</td>
+                                <td><span class="badge badge-success">Success</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-07-15 09:45:22</td>
+                                <td>john.doe@school.edu</td>
+                                <td>Course Creation</td>
+                                <td>Advanced Physics</td>
+                                <td>192.168.1.50</td>
+                                <td><span class="badge badge-success">Success</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-07-15 08:20:33</td>
+                                <td>admin@school.edu</td>
+                                <td>User Management</td>
+                                <td>Add New Teacher</td>
+                                <td>192.168.1.10</td>
+                                <td><span class="badge badge-success">Success</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = auditHTML;
+        }
+
+        // Admin: Customization & Branding
+        function showCustomization() {
+            if (currentRole !== 'admin') return;
+            setActiveNav('Customization');
+            let customizationHTML = `
+        <h2><i class="fas fa-palette"></i> Customization & Branding</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Institution Branding</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Basic Settings</h4>
+                        <div class="form-group">
+                            <label class="form-label">Institution Name</label>
+                            <input type="text" class="form-control" value="My School" placeholder="Enter institution name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Logo Upload</label>
+                            <input type="file" class="form-control" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Primary Color</label>
+                            <input type="color" class="form-control" value="#1A237E">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Accent Color</label>
+                            <input type="color" class="form-control" value="#00B8D4">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <h4>Interface Customization</h4>
+                        <div class="form-group">
+                            <label class="form-label">Theme</label>
+                            <select class="form-control">
+                                <option value="light">Light Theme</option>
+                                <option value="dark">Dark Theme</option>
+                                <option value="auto">Auto (System)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Default Language</label>
+                            <select class="form-control">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><input type="checkbox" checked> Show Institution Logo</label><br>
+                            <label><input type="checkbox" checked> Custom Welcome Message</label><br>
+                            <label><input type="checkbox"> Hide Google Branding</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="saveBrandingSettings()">Save Branding</button>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = customizationHTML;
+        }
+
+        // Admin: Backup & Reliability
+        function showBackupReliability() {
+            if (currentRole !== 'admin') return;
+            setActiveNav('Backup & Reliability');
+            let backupHTML = `
+        <h2><i class="fas fa-shield-alt"></i> Data Backup & System Reliability</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Backup Management</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Backup Status</h4>
+                        <div class="stat-card">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">System Uptime</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">Daily</div>
+                            <div class="stat-label">Backup Frequency</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">30 Days</div>
+                            <div class="stat-label">Retention Period</div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <h4>Backup Controls</h4>
+                        <button class="btn btn-primary mb-1" onclick="initiateBackup()">
+                            <i class="fas fa-database"></i> Start Backup Now
+                        </button>
+                        <button class="btn btn-secondary mb-1" onclick="restoreFromBackup()">
+                            <i class="fas fa-undo"></i> Restore from Backup
+                        </button>
+                        <button class="btn btn-success mb-1" onclick="downloadBackup()">
+                            <i class="fas fa-download"></i> Download Backup
+                        </button>
+                        <button class="btn btn-warning mb-1" onclick="scheduleBackup()">
+                            <i class="fas fa-clock"></i> Schedule Backup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">System Reliability</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <h4>Performance Metrics</h4>
+                        <ul>
+                            <li>Average Response Time: 150ms</li>
+                            <li>Concurrent Users: 1,247</li>
+                            <li>Data Integrity: 100%</li>
+                        </ul>
+                    </div>
+                    <div class="col-3">
+                        <h4>Security Features</h4>
+                        <ul>
+                            <li>Data Encryption at Rest</li>
+                            <li>SSL/TLS Encryption</li>
+                            <li>Regular Security Audits</li>
+                        </ul>
+                    </div>
+                    <div class="col-3">
+                        <h4>Compliance</h4>
+                        <ul>
+                            <li>FERPA Compliant</li>
+                            <li>GDPR Compliant</li>
+                            <li>SOC 2 Type II</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = backupHTML;
+        }
+
+        // Feature Table (Complete Implementation)
+        function showFeatureTable() {
+            setActiveNav('Feature Table');
+            let featureTableHTML = `
+        <h2><i class="fas fa-table"></i> Complete Feature Implementation Table</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">All 30 Features - Role-Based Access Matrix</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table feature-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 50%;">Feature</th>
+                                <th style="width: 15%;">Admin</th>
+                                <th style="width: 15%;">Teacher</th>
+                                <th style="width: 15%;">Student</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Login/Authentication</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>2</td><td>Profile Management</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>3</td><td>User Management (Add/Remove/Update Users)</td><td class="checkmark">✓</td><td></td><td></td></tr>
+                            <tr><td>4</td><td>Course Creation</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>5</td><td>Course Editing/Archiving</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>6</td><td>Course Joining</td><td></td><td></td><td class="checkmark">✓</td></tr>
+                            <tr><td>7</td><td>Course Listing & Oversight</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>8</td><td>Material Upload/Download</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>9</td><td>Assignment Creation/Scheduling</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>10</td><td>Assignment Editing/Deletion</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>11</td><td>Assignment Submission</td><td></td><td></td><td class="checkmark">✓</td></tr>
+                            <tr><td>12</td><td>Quiz Creation/Self-Grading</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>13</td><td>Grading & Feedback</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>14</td><td>Rubric/Comment Bank</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>15</td><td>Originality Reports/Plagiarism Detection</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>16</td><td>Announcements</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>17</td><td>Discussion Threads/Q&A</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>18</td><td>Private Comments on Assignments</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>19</td><td>Guardian/Parent Email Summaries</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>20</td><td>System Analytics & Reporting</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>21</td><td>Calendar Integration</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>22</td><td>Notifications</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>23</td><td>Accessibility Settings</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>24</td><td>Resource Library</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>25</td><td>Bulk Upload (Users/Files)</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>26</td><td>Audit Logs & Activity Tracking</td><td class="checkmark">✓</td><td></td><td></td></tr>
+                            <tr><td>27</td><td>Live Classes/Session Recording</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                            <tr><td>28</td><td>Integration with Third-party Tools</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td></td></tr>
+                            <tr><td>29</td><td>Customization & Branding</td><td class="checkmark">✓</td><td></td><td></td></tr>
+                            <tr><td>30</td><td>Data Backup & System Reliability</td><td class="checkmark">✓</td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+
+            document.getElementById('mainContent').innerHTML = featureTableHTML;
+        }
+
+        // Utility Functions
+        function setActiveNav(pageName) {
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Add active class to current nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.textContent.trim().includes(pageName)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Sample Data Initialization
+        function initializeSampleData() {
+            courses = [
+                {
+                    id: 'math101',
+                    name: 'Mathematics 101',
+                    code: 'MATH101',
+                    description: 'Introduction to Algebra and Calculus',
+                    subject: 'mathematics',
+                    teacher: 'Prof. Johnson'
+                },
+                {
+                    id: 'sci201',
+                    name: 'Science 201',
+                    code: 'SCI201',
+                    description: 'Advanced Physics and Chemistry',
+                    subject: 'science',
+                    teacher: 'Dr. Smith'
+                },
+                {
+                    id: 'eng101',
+                    name: 'English Literature',
+                    code: 'ENG101',
+                    description: 'Classic and Modern Literature Analysis',
+                    subject: 'english',
+                    teacher: 'Ms. Davis'
+                }
+            ];
+
+            assignments = [
+                {
+                    id: 'assign1',
+                    title: 'Algebra Problem Set',
+                    course: 'Mathematics 101',
+                    dueDate: '2025-07-20',
+                    points: 100,
+                    status: 'active'
+                },
+                {
+                    id: 'assign2',
+                    title: 'Physics Lab Report',
+                    course: 'Science 201',
+                    dueDate: '2025-07-22',
+                    points: 150,
+                    status: 'active'
+                },
+                {
+                    id: 'assign3',
+                    title: 'Essay on Shakespeare',
+                    course: 'English Literature',
+                    dueDate: '2025-07-25',
+                    points: 200,
+                    status: 'active'
+                }
+            ];
+
+            users = [
+                {
+                    id: 'user1',
+                    name: 'John Doe',
+                    email: 'john.doe@school.edu',
+                    role: 'teacher',
+                    status: 'active'
+                },
+                {
+                    id: 'user2',
+                    name: 'Jane Smith',
+                    email: 'jane.smith@school.edu',
+                    role: 'student',
+                    status: 'active'
+                },
+                {
+                    id: 'user3',
+                    name: 'Alice Johnson',
+                    email: 'alice.johnson@school.edu',
+                    role: 'student',
+                    status: 'active'
+                }
+            ];
+
+            announcements = [
+                {
+                    id: 'ann1',
+                    title: 'Project Deadline Extended',
+                    content: 'The final project deadline has been extended to July 25th.',
+                    course: 'Mathematics 101',
+                    author: 'Prof. Johnson',
+                    date: '2025-07-14'
+                },
+                {
+                    id: 'ann2',
+                    title: 'New Study Materials Available',
+                    content: 'Additional study materials have been uploaded to the Resource Library.',
+                    course: 'Science 201',
+                    author: 'Dr. Smith',
+                    date: '2025-07-12'
+                }
+            ];
+
+            // Save to localStorage
+            localStorage.setItem('courses', JSON.stringify(courses));
+            localStorage.setItem('assignments', JSON.stringify(assignments));
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('announcements', JSON.stringify(announcements));
+        }
+
+        // Event Handlers for Modal Actions
+        function createCourse() {
+            const courseName = document.getElementById('courseName').value;
+            const courseCode = document.getElementById('courseCode').value;
+            const courseDescription = document.getElementById('courseDescription').value;
+            const courseSubject = document.getElementById('courseSubject').value;
+
+            if (courseName && courseCode) {
+                const newCourse = {
+                    id: 'course_' + Date.now(),
+                    name: courseName,
+                    code: courseCode,
+                    description: courseDescription,
+                    subject: courseSubject,
+                    teacher: currentUser
+                };
+
+                courses.push(newCourse);
+                localStorage.setItem('courses', JSON.stringify(courses));
+                closeModal('courseModal');
+                showCourses();
+                alert('Course created successfully!');
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        function createAssignment() {
+            const title = document.getElementById('assignmentTitle').value;
+            const instructions = document.getElementById('assignmentInstructions').value;
+            const dueDate = document.getElementById('assignmentDueDate').value;
+            const points = document.getElementById('assignmentPoints').value;
+
+            if (title && dueDate) {
+                const newAssignment = {
+                    id: 'assign_' + Date.now(),
+                    title: title,
+                    instructions: instructions,
+                    dueDate: dueDate,
+                    points: points,
+                    course: 'Current Course',
+                    status: 'active'
+                };
+
+                assignments.push(newAssignment);
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+                closeModal('assignmentModal');
+                showAssignments();
+                alert('Assignment created successfully!');
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        function addUser() {
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const role = document.getElementById('userRole').value;
+            const password = document.getElementById('userPassword').value;
+
+            if (name && email && password) {
+                const newUser = {
+                    id: 'user_' + Date.now(),
+                    name: name,
+                    email: email,
+                    role: role,
+                    status: 'active'
+                };
+
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                closeModal('userModal');
+                showUserManagement();
+                alert('User added successfully!');
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        // Additional Event Handlers (Placeholder Functions)
+        function joinCourse() { alert('Join course functionality (demo)'); }
+        function editCourse(id) { alert('Edit course functionality (demo)'); }
+        function archiveCourse(id) { alert('Archive course functionality (demo)'); }
+        function viewCourse(id) { alert('View course functionality (demo)'); }
+        function createQuiz() { alert('Create quiz functionality (demo)'); }
+        function editAssignment(id) { alert('Edit assignment functionality (demo)'); }
+        function submitAssignment(id) { alert('Submit assignment functionality (demo)'); }
+        function viewSubmissions(id) { alert('View submissions functionality (demo)'); }
+        function uploadFile() { alert('Upload file functionality (demo)'); }
+        function bulkUpload() { alert('Bulk upload functionality (demo)'); }
+        function downloadFile(id) { alert('Download file functionality (demo)'); }
+        function deleteFile(id) { alert('Delete file functionality (demo)'); }
+        function playVideo(id) { alert('Play video functionality (demo)'); }
+        function searchResources(query) { alert('Search resources: ' + query); }
+        function addEvent() { alert('Add calendar event functionality (demo)'); }
+        function exportAnalytics() { alert('Export analytics functionality (demo)'); }
+        function startLiveClass() { alert('Start live class functionality (demo)'); }
+        function joinLiveClass(id) { alert('Join live class functionality (demo)'); }
+        function playRecording(id) { alert('Play recording functionality (demo)'); }
+        function createAnnouncement() { alert('Create announcement functionality (demo)'); }
+        function editAnnouncement(id) { alert('Edit announcement functionality (demo)'); }
+        function deleteAnnouncement(id) { alert('Delete announcement functionality (demo)'); }
+        function replyToAnnouncement(id) { alert('Reply to announcement functionality (demo)'); }
+        function createDiscussion() { alert('Create discussion functionality (demo)'); }
+        function viewDiscussion(id) { alert('View discussion functionality (demo)'); }
+        function moderateDiscussion(id) { alert('Moderate discussion functionality (demo)'); }
+        function replyToDiscussion(id) { alert('Reply to discussion functionality (demo)'); }
+        function setupGradingSystem() { alert('Setup grading system functionality (demo)'); }
+        function manageCommentBank() { alert('Manage comment bank functionality (demo)'); }
+        function editGrade(id) { alert('Edit grade functionality (demo)'); }
+        function gradeSubmission(id) { alert('Grade submission functionality (demo)'); }
+        function viewFeedback(id) { alert('View feedback functionality (demo)'); }
+        function markAllRead() { alert('Mark all notifications read functionality (demo)'); }
+        function saveNotificationSettings() { alert('Save notification settings functionality (demo)'); }
+        function saveAccessibilitySettings() { alert('Save accessibility settings functionality (demo)'); }
+        function editUser(id) { alert('Edit user functionality (demo)'); }
+        function deactivateUser(id) { alert('Deactivate user functionality (demo)'); }
+        function bulkUploadUsers() { alert('Bulk upload users functionality (demo)'); }
+        function exportAuditLogs() { alert('Export audit logs functionality (demo)'); }
+        function saveBrandingSettings() { alert('Save branding settings functionality (demo)'); }
+        function initiateBackup() { alert('Initiate backup functionality (demo)'); }
+        function restoreFromBackup() { alert('Restore from backup functionality (demo)'); }
+        function downloadBackup() { alert('Download backup functionality (demo)'); }
+        function scheduleBackup() { alert('Schedule backup functionality (demo)'); }
+
+        // Initialize the application
+        window.onload = function () {
+            if (currentRole) {
+                initializeApp();
+            }
+        };
+
+    </script>
+</body>
+
+</html>

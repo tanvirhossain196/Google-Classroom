@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সেটিংস - ক্লাসরুম</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body class="light-theme font-medium font-inter" id="mainBody">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link p-2 me-3" id="menuToggle">
+                    <i class="fas fa-bars fs-5"></i>
+                </button>
+                <a class="navbar-brand fw-normal text-muted" href="#">
+                    <span id="navbarTitle">ক্লাসরুম</span>
+                </a>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="current-time me-3" id="currentTime"></div>
+                <div class="dropdown">
+                    <button class="btn btn-link p-0 me-3" type="button" data-bs-toggle="dropdown">
+                        <div class="user-avatar-header" id="headerAvatar">
+                            <span id="headerUserInitial">U</span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html">
+                                <i class="fas fa-user me-2"></i><span data-translate="profile">প্রোফাইল</span>
+                            </a></li>
+                        <li><a class="dropdown-item" href="settings.html">
+                                <i class="fas fa-cog me-2"></i><span data-translate="settings">সেটিংস</span>
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i><span data-translate="logout">লগআউট</span>
+                            </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h5 class="sidebar-title" data-translate="menu">মেনু</h5>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span class="nav-text" data-translate="dashboard">ড্যাশবোর্ড</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span class="nav-text" data-translate="courses">কোর্স</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span class="nav-text" data-translate="profile">প্রোফাইল</span>
+            </a>
+            <a href="settings.html" class="nav-item active">
+                <i class="fas fa-cog"></i>
+                <span class="nav-text" data-translate="settings">সেটিংস</span>
+            </a>
+            <a href="reports.html" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span class="nav-text" data-translate="reports">রিপোর্ট</span>
+            </a>
+            <a href="help.html" class="nav-item">
+                <i class="fas fa-question-circle"></i>
+                <span class="nav-text" data-translate="help">সাহায্য</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h1 class="page-title" data-translate="settings">সেটিংস</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="dashboard.html" data-translate="dashboard">ড্যাশবোর্ড</a>
+                                </li>
+                                <li class="breadcrumb-item active" data-translate="settings">সেটিংস</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <div class="card settings-sidebar-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-cogs me-2"></i><span data-translate="settings_menu">সেটিংস মেনু</span>
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <nav class="settings-nav">
+                                <a href="#general" class="settings-nav-item active" data-section="general">
+                                    <i class="fas fa-sliders-h"></i>
+                                    <span data-translate="general_settings">সাধারণ সেটিংস</span>
+                                </a>
+                                <a href="#notifications" class="settings-nav-item" data-section="notifications">
+                                    <i class="fas fa-bell"></i>
+                                    <span data-translate="notifications">বিজ্ঞপ্তি</span>
+                                </a>
+                                <a href="#security" class="settings-nav-item" data-section="security">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span data-translate="security">নিরাপত্তা</span>
+                                </a>
+                                <a href="#privacy" class="settings-nav-item" data-section="privacy">
+                                    <i class="fas fa-user-secret"></i>
+                                    <span data-translate="privacy">গোপনীয়তা</span>
+                                </a>
+                                <a href="#system" class="settings-nav-item" data-section="system">
+                                    <i class="fas fa-server"></i>
+                                    <span data-translate="system">সিস্টেম</span>
+                                </a>
+                                <a href="#backup" class="settings-nav-item" data-section="backup">
+                                    <i class="fas fa-database"></i>
+                                    <span data-translate="backup">ব্যাকআপ</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="settings-section active" id="general">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-sliders-h me-2"></i><span data-translate="general_settings">সাধারণ
+                                        সেটিংস</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="language_region">ভাষা এবং
+                                                অঞ্চল</h6>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="system_language">সিস্টেম
+                                                    ভাষা</label>
+                                                <select class="form-select" id="systemLanguage">
+                                                    <option value="bn">বাংলা</option>
+                                                    <option value="en">English</option>
+                                                </select>
+                                            </div>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="date_format">তারিখ
+                                                    ফরম্যাট</label>
+                                                <select class="form-select" id="dateFormat">
+                                                    <option value="dd/mm/yyyy">দিন/মাস/বছর (DD/MM/YYYY)</option>
+                                                    <option value="mm/dd/yyyy">মাস/দিন/বছর (MM/DD/YYYY)</option>
+                                                    <option value="yyyy-mm-dd">বছর-মাস-দিন (YYYY-MM-DD)</option>
+                                                </select>
+                                            </div>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="time_format">সময়
+                                                    ফরম্যাট</label>
+                                                <select class="form-select" id="timeFormat">
+                                                    <option value="24">২৪ ঘণ্টা</option>
+                                                    <option value="12">১২ ঘণ্টা</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="display">প্রদর্শন</h6>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="theme">থিম</label>
+                                                <select class="form-select" id="theme">
+                                                    <option value="light">হালকা</option>
+                                                    <option value="dark">গাঢ়</option>
+                                                    <option value="auto">স্বয়ংক্রিয়</option>
+                                                </select>
+                                            </div>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="font_size">ফন্ট সাইজ</label>
+                                                <select class="form-select" id="fontSize">
+                                                    <option value="small">ছোট</option>
+                                                    <option value="medium">মাঝারি</option>
+                                                    <option value="large">বড়</option>
+                                                </select>
+                                            </div>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="font_family">ফন্ট
+                                                    ফ্যামিলি</label>
+                                                <select class="form-select" id="fontFamily">
+                                                    <option value="inter">Inter</option>
+                                                    <option value="poppins">Poppins</option>
+                                                    <option value="roboto">Roboto</option>
+                                                    <option value="system">System Default</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="settings-preview">
+                                            <h6 class="preview-title" data-translate="preview">প্রিভিউ</h6>
+                                            <div class="preview-content">
+                                                <div class="preview-item">
+                                                    <span class="preview-label" data-translate="current_time">বর্তমান
+                                                        সময়:</span>
+                                                    <span class="preview-value" id="previewTime"></span>
+                                                </div>
+                                                <div class="preview-item">
+                                                    <span class="preview-label" data-translate="current_date">বর্তমান
+                                                        তারিখ:</span>
+                                                    <span class="preview-value" id="previewDate"></span>
+                                                </div>
+                                                <div class="preview-item">
+                                                    <span class="preview-label" data-translate="sample_text">নমুনা
+                                                        টেক্সট:</span>
+                                                    <span class="preview-value" id="previewText">এটি একটি নমুনা
+                                                        টেক্সট</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section" id="notifications">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-bell me-2"></i><span
+                                        data-translate="notification_settings">বিজ্ঞপ্তি সেটিংস</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="email_notifications">ইমেইল
+                                                বিজ্ঞপ্তি</h6>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="emailCourse">
+                                                <label class="form-check-label" for="emailCourse"
+                                                    data-translate="new_course_notifications">
+                                                    নতুন কোর্স বিজ্ঞপ্তি
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="emailAssignment">
+                                                <label class="form-check-label" for="emailAssignment"
+                                                    data-translate="assignment_notifications">
+                                                    এসাইনমেন্ট বিজ্ঞপ্তি
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="emailSystem">
+                                                <label class="form-check-label" for="emailSystem"
+                                                    data-translate="system_updates">
+                                                    সিস্টেম আপডেট
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="push_notifications">পুশ
+                                                বিজ্ঞপ্তি</h6>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="pushMessages">
+                                                <label class="form-check-label" for="pushMessages"
+                                                    data-translate="new_messages">
+                                                    নতুন বার্তা
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="pushDeadlines">
+                                                <label class="form-check-label" for="pushDeadlines"
+                                                    data-translate="deadline_reminders">
+                                                    সময়সীমা অনুস্মারক
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section" id="security">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-shield-alt me-2"></i><span
+                                        data-translate="security_settings">নিরাপত্তা সেটিংস</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="account_security">অ্যাকাউন্ট
+                                                নিরাপত্তা</h6>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="twoFactor">
+                                                <label class="form-check-label" for="twoFactor"
+                                                    data-translate="two_factor_auth">
+                                                    দুই-ফ্যাক্টর অথেন্টিকেশন
+                                                </label>
+                                                <div class="form-text" data-translate="two_factor_desc">অতিরিক্ত
+                                                    নিরাপত্তার জন্য SMS কোড প্রয়োজন</div>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="loginNotifications">
+                                                <label class="form-check-label" for="loginNotifications"
+                                                    data-translate="login_notifications">
+                                                    লগইন বিজ্ঞপ্তি
+                                                </label>
+                                                <div class="form-text" data-translate="login_desc">নতুন ডিভাইস থেকে
+                                                    লগইনের জন্য বিজ্ঞপ্তি</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="session_management">সেশন
+                                                ব্যবস্থাপনা</h6>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="session_timeout">সেশন টাইমআউট
+                                                    (মিনিট)</label>
+                                                <input type="number" class="form-control" id="sessionTimeout" value="60"
+                                                    min="15" max="480">
+                                            </div>
+                                            <div class="mt-3">
+                                                <button class="btn btn-warning" id="clearSessions">
+                                                    <i class="fas fa-sign-out-alt me-2"></i><span
+                                                        data-translate="clear_all_sessions">সব সেশন বাতিল করুন</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section" id="privacy">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-user-secret me-2"></i><span
+                                        data-translate="privacy_settings">গোপনীয়তা সেটিংস</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="profile_visibility">প্রোফাইল
+                                                দৃশ্যমানতা</h6>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="who_can_view">প্রোফাইল দেখতে
+                                                    পারবেন</label>
+                                                <select class="form-select" id="profileVisibility">
+                                                    <option value="everyone">সবাই</option>
+                                                    <option value="contacts">শুধু পরিচিতরা</option>
+                                                    <option value="private">শুধু আমি</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="showEmail">
+                                                <label class="form-check-label" for="showEmail"
+                                                    data-translate="show_email">
+                                                    ইমেইল প্রদর্শন করুন
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="showPhone">
+                                                <label class="form-check-label" for="showPhone"
+                                                    data-translate="show_phone">
+                                                    ফোন নম্বর প্রদর্শন করুন
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="data_collection">ডেটা সংগ্রহ
+                                            </h6>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="analytics">
+                                                <label class="form-check-label" for="analytics"
+                                                    data-translate="analytics_data">
+                                                    অ্যানালিটিক্স ডেটা
+                                                </label>
+                                                <div class="form-text" data-translate="analytics_desc">সিস্টেম উন্নতির
+                                                    জন্য বেনামী ডেটা সংগ্রহ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section" id="system">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-server me-2"></i><span data-translate="system_settings">সিস্টেম
+                                        সেটিংস</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="system_info">সিস্টেম তথ্য
+                                            </h6>
+                                            <div class="system-info">
+                                                <div class="info-item">
+                                                    <span class="info-label" data-translate="system_version">সিস্টেম
+                                                        ভার্সন:</span>
+                                                    <span class="info-value">v2.1.0</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label" data-translate="last_update">সর্বশেষ
+                                                        আপডেট:</span>
+                                                    <span class="info-value">১৫ জানুয়ারি, ২০২৪</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label" data-translate="server_status">সার্ভার
+                                                        স্ট্যাটাস:</span>
+                                                    <span class="info-value status-online"
+                                                        data-translate="online">অনলাইন</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="maintenance">রক্ষণাবেক্ষণ
+                                            </h6>
+                                            <div class="d-flex flex-column gap-2">
+                                                <button class="btn btn-primary" id="checkUpdates">
+                                                    <i class="fas fa-sync me-2"></i><span
+                                                        data-translate="check_updates">আপডেট চেক করুন</span>
+                                                </button>
+                                                <button class="btn btn-info" id="clearCache">
+                                                    <i class="fas fa-trash me-2"></i><span
+                                                        data-translate="clear_cache">ক্যাশ পরিষ্কার করুন</span>
+                                                </button>
+                                                <button class="btn btn-danger" id="resetSettings">
+                                                    <i class="fas fa-undo me-2"></i><span
+                                                        data-translate="reset_settings">সেটিংস রিসেট করুন</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section" id="backup">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-database me-2"></i><span data-translate="backup_settings">ব্যাকআপ
+                                        সেটিংস</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="auto_backup">স্বয়ংক্রিয়
+                                                ব্যাকআপ</h6>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="autoBackup">
+                                                <label class="form-check-label" for="autoBackup"
+                                                    data-translate="enable_auto_backup">
+                                                    স্বয়ংক্রিয় ব্যাকআপ সক্রিয় করুন
+                                                </label>
+                                            </div>
+                                            <div class="setting-item">
+                                                <label class="form-label" data-translate="backup_frequency">ব্যাকআপ
+                                                    ফ্রিকোয়েন্সি</label>
+                                                <select class="form-select" id="backupFrequency">
+                                                    <option value="daily">দৈনিক</option>
+                                                    <option value="weekly">সাপ্তাহিক</option>
+                                                    <option value="monthly">মাসিক</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="setting-group">
+                                            <h6 class="setting-group-title" data-translate="backup_management">ব্যাকআপ
+                                                পরিচালনা</h6>
+                                            <div class="d-flex flex-column gap-2">
+                                                <button class="btn btn-success" id="createBackup">
+                                                    <i class="fas fa-plus me-2"></i><span
+                                                        data-translate="create_backup">নতুন ব্যাকআপ তৈরি করুন</span>
+                                                </button>
+                                                <button class="btn btn-warning" id="restoreBackup">
+                                                    <i class="fas fa-upload me-2"></i><span
+                                                        data-translate="restore_backup">ব্যাকআপ পুনরুদ্ধার করুন</span>
+                                                </button>
+                                                <button class="btn btn-info" id="downloadBackup">
+                                                    <i class="fas fa-download me-2"></i><span
+                                                        data-translate="download_backup">ব্যাকআপ ডাউনলোড করুন</span>
+                                                </button>
+                                            </div>
+                                            <div class="backup-status mt-3" id="backupStatus">
+                                                <div class="text-muted" data-translate="last_backup">সর্বশেষ ব্যাকআপ:
+                                                    আজ, ২:৩০ AM</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-footer">
+                <div class="d-flex justify-content-end gap-3">
+                    <button class="btn btn-secondary" id="cancelSettings">
+                        <i class="fas fa-times me-2"></i><span data-translate="cancel">বাতিল</span>
+                    </button>
+                    <button class="btn btn-primary" id="saveSettings">
+                        <i class="fas fa-save me-2"></i><span data-translate="save_settings">সেটিংস সংরক্ষণ করুন</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="settings.js"></script>
+</body>
+
+</html>

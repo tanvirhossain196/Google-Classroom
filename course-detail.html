@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Detail - Classroom</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="course-detail.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn">
+                    <span class="material-icons">menu</span>
+                </button>
+                <span class="logo-text">Classroom</span>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <span class="material-icons">apps</span>
+                </button>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <!-- Current Course Section -->
+                <div class="current-course-section">
+                    <div class="current-course-header">
+                        <span class="material-icons">class</span>
+                        <span class="course-name-text" id="currentCourseName">Current Course</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Section -->
+                <div class="sidebar-section">
+                    <div class="sidebar-item" id="classesLink" data-tooltip="Classes">
+                        <span class="material-icons">home</span>
+                        <span class="sidebar-text">Classes</span>
+                    </div>
+                    <div class="sidebar-item" data-tooltip="Calendar">
+                        <span class="material-icons">calendar_today</span>
+                        <span class="sidebar-text">Calendar</span>
+                    </div>
+                    <div class="sidebar-item" data-tooltip="Assignments">
+                        <span class="material-icons">assignment</span>
+                        <span class="sidebar-text">Assignments</span>
+                    </div>
+                    <div class="sidebar-item" data-tooltip="Grades">
+                        <span class="material-icons">grade</span>
+                        <span class="sidebar-text">Grades</span>
+                    </div>
+                    <div class="sidebar-item" id="settingsLink" data-tooltip="Settings">
+                        <span class="material-icons">settings</span>
+                        <span class="sidebar-text">Settings</span>
+                    </div>
+                </div>
+
+                <!-- Enrolled Classes Section -->
+                <div class="sidebar-section">
+                    <div class="sidebar-header" data-tooltip="Enrolled Classes">
+                        <span class="material-icons">folder</span>
+                        <span class="sidebar-text">Enrolled Classes</span>
+                    </div>
+                    <div id="enrolledClasses">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper" id="contentWrapper">
+            <div class="content-inner">
+                <!-- Course Header -->
+                <div class="course-header-section">
+                    <div class="course-banner" id="courseBanner">
+                        <div class="banner-content">
+                            <h1 class="course-title" id="courseTitle">Course Title</h1>
+                            <p class="course-section" id="courseSection">Section</p>
+                        </div>
+                        <button class="banner-menu-btn">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                    </div>
+                    <div class="course-nav">
+                        <div class="nav-tabs">
+                            <button class="nav-tab active" data-tab="stream">Stream</button>
+                            <button class="nav-tab" data-tab="classwork">Classwork</button>
+                            <button class="nav-tab" data-tab="people">People</button>
+                            <button class="nav-tab" data-tab="grades">Grades</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Stream Tab -->
+                    <div class="tab-content active" id="stream">
+                        <div class="stream-layout">
+                            <div class="stream-sidebar">
+                                <div class="upcoming-section">
+                                    <h2>Upcoming</h2>
+                                    <div class="upcoming-content">
+                                        <div class="upcoming-message">
+                                            No work due soon
+                                        </div>
+                                        <div class="view-all">
+                                            <a href="#" class="view-all-link">View all</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stream-main">
+                                <!-- Announcement Input -->
+                                <div class="announcement-input" id="announcementTrigger">
+                                    <div class="input-container">
+                                        <div class="input-avatar" id="teacherInitial">T</div>
+                                        <input type="text" placeholder="Announce something to your class" readonly>
+                                    </div>
+                                    <div class="announcement-form-expanded" id="announcementFormExpanded"
+                                        style="display: none;">
+                                        <div class="rich-editor">
+                                            <div class="editor-toolbar">
+                                                <button class="toolbar-btn" data-command="bold">
+                                                    <span class="material-icons">format_bold</span>
+                                                </button>
+                                                <button class="toolbar-btn" data-command="italic">
+                                                    <span class="material-icons">format_italic</span>
+                                                </button>
+                                                <button class="toolbar-btn" data-command="underline">
+                                                    <span class="material-icons">format_underlined</span>
+                                                </button>
+                                                <div class="toolbar-separator"></div>
+                                                <button class="toolbar-btn" data-command="insertUnorderedList">
+                                                    <span class="material-icons">format_list_bulleted</span>
+                                                </button>
+                                                <button class="toolbar-btn" data-command="insertOrderedList">
+                                                    <span class="material-icons">format_list_numbered</span>
+                                                </button>
+                                            </div>
+                                            <div class="editor-content" id="editorContent" contenteditable="true"
+                                                placeholder="Announce something to your class"></div>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button class="btn-cancel" id="cancelAnnouncement">Cancel</button>
+                                            <button class="btn-primary" id="postAnnouncement">Post</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Stream Posts -->
+                                <div class="stream-posts" id="streamPosts">
+                                    <!-- Dynamic content will be loaded here -->
+                                </div>
+
+                                <!-- No Posts -->
+                                <div class="no-posts" id="noPosts">
+                                    <div class="no-posts-icon">
+                                        <span class="material-icons">forum</span>
+                                    </div>
+                                    <h3>This is where you'll assign and discuss classwork</h3>
+                                    <p>You can share announcements, assignments, and materials with your class</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classwork Tab -->
+                    <div class="tab-content" id="classwork">
+                        <div class="tab-empty">
+                            <div class="empty-icon">
+                                <span class="material-icons">assignment</span>
+                            </div>
+                            <h3>No classwork yet</h3>
+                            <p>Assignments and materials will appear here</p>
+                        </div>
+                    </div>
+
+                    <!-- People Tab -->
+                    <div class="tab-content" id="people">
+                        <div class="tab-empty">
+                            <div class="empty-icon">
+                                <span class="material-icons">people</span>
+                            </div>
+                            <h3>Class roster</h3>
+                            <p>Students and teachers will appear here</p>
+                        </div>
+                    </div>
+
+                    <!-- Grades Tab -->
+                    <div class="tab-content" id="grades">
+                        <div class="tab-empty">
+                            <div class="empty-icon">
+                                <span class="material-icons">grade</span>
+                            </div>
+                            <h3>No grades yet</h3>
+                            <p>Student grades will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="course-detail.js"></script>
+</body>
+
+</html>

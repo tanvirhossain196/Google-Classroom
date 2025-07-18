@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রিপোর্ট - ক্লাসরুম</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="reports.css">
+</head>
+
+<body class="light-theme font-medium font-inter" id="mainBody">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link p-2 me-3" id="menuToggle">
+                    <i class="fas fa-bars fs-5"></i>
+                </button>
+                <a class="navbar-brand fw-normal text-muted" href="#">
+                    <span>ক্লাসরুম</span>
+                </a>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-link p-0 me-3" type="button" data-bs-toggle="dropdown">
+                        <div class="user-avatar-header" id="headerAvatar">
+                            <span id="headerUserInitial">U</span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html">
+                                <i class="fas fa-user me-2"></i>প্রোফাইল
+                            </a></li>
+                        <li><a class="dropdown-item" href="settings.html">
+                                <i class="fas fa-cog me-2"></i>সেটিংস
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>লগআউট
+                            </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h5 class="sidebar-title">মেনু</h5>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">ড্যাশবোর্ড</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span class="nav-text">কোর্স</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span class="nav-text">প্রোফাইল</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span class="nav-text">সেটিংস</span>
+            </a>
+            <a href="reports.html" class="nav-item active">
+                <i class="fas fa-chart-bar"></i>
+                <span class="nav-text">রিপোর্ট</span>
+            </a>
+            <a href="help.html" class="nav-item">
+                <i class="fas fa-question-circle"></i>
+                <span class="nav-text">সাহায্য</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h1 class="page-title">রিপোর্ট এবং বিশ্লেষণ</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="dashboard.html">ড্যাশবোর্ড</a></li>
+                                <li class="breadcrumb-item active">রিপোর্ট</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-auto">
+                        <div class="d-flex gap-2">
+                            <select class="form-select" id="reportPeriod">
+                                <option value="week">সাপ্তাহিক</option>
+                                <option value="month" selected>মাসিক</option>
+                                <option value="quarter">ত্রৈমাসিক</option>
+                                <option value="year">বার্ষিক</option>
+                            </select>
+                            <button class="btn btn-primary" id="exportReport">
+                                <i class="fas fa-download me-2"></i>রিপোর্ট ডাউনলোড
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-primary">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="card-subtitle mb-1">মোট শিক্ষার্থী</h6>
+                                    <h3 class="card-title mb-0" id="totalStudents">১২৫</h3>
+                                    <small class="text-success">+১৫% গত মাসের তুলনায়</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-success">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="card-subtitle mb-1">সক্রিয় কোর্স</h6>
+                                    <h3 class="card-title mb-0" id="activeCourses">১৮</h3>
+                                    <small class="text-success">+৩ নতুন কোর্স</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-warning">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="card-subtitle mb-1">সম্পন্ন অ্যাসাইনমেন্ট</h6>
+                                    <h3 class="card-title mb-0" id="completedAssignments">৮৪</h3>
+                                    <small class="text-danger">-৫% গত সপ্তাহের তুলনায়</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-info">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="card-subtitle mb-1">গড় রেটিং</h6>
+                                    <h3 class="card-title mb-0" id="averageRating">৪.৬</h3>
+                                    <small class="text-success">+০.২ উন্নতি</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-pie me-2"></i>কোর্স পারফরম্যান্স
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="courseChart"></canvas>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color bg-success"></div>
+                                    <span>সম্পন্ন</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color bg-danger"></div>
+                                    <span>অসম্পন্ন</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color bg-warning"></div>
+                                    <span>চলমান</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-users me-2"></i>শিক্ষার্থীর অংশগ্রহণ
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="participation-stats">
+                                <div class="stat-item">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>দৈনিক সক্রিয়তা</span>
+                                        <span class="fw-bold">৭৮%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" style="width: 78%"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>অ্যাসাইনমেন্ট জমা</span>
+                                        <span class="fw-bold">৬৫%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>ফোরাম অংশগ্রহণ</span>
+                                        <span class="fw-bold">৪২%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" style="width: 42%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-trophy me-2"></i>জনপ্রিয় কোর্স
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="popular-courses">
+                                <div class="course-item">
+                                    <div class="course-rank">১</div>
+                                    <div class="course-details">
+                                        <h6 class="course-name">প্রোগ্রামিং বেসিক</h6>
+                                        <small class="text-muted">৪৫ জন শিক্ষার্থী</small>
+                                    </div>
+                                </div>
+                                <div class="course-item">
+                                    <div class="course-rank">২</div>
+                                    <div class="course-details">
+                                        <h6 class="course-name">ওয়েব ডেভেলপমেন্ট</h6>
+                                        <small class="text-muted">৩৮ জন শিক্ষার্থী</small>
+                                    </div>
+                                </div>
+                                <div class="course-item">
+                                    <div class="course-rank">৩</div>
+                                    <div class="course-details">
+                                        <h6 class="course-name">ডেটা সায়েন্স</h6>
+                                        <small class="text-muted">৩২ জন শিক্ষার্থী</small>
+                                    </div>
+                                </div>
+                                <div class="course-item">
+                                    <div class="course-rank">৪</div>
+                                    <div class="course-details">
+                                        <h6 class="course-name">গ্রাফিক ডিজাইন</h6>
+                                        <small class="text-muted">২৮ জন শিক্ষার্থী</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-clock me-2"></i>সাম্প্রতিক কার্যক্রম
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="recent-activities">
+                                <div class="activity-item">
+                                    <div class="activity-time">২ ঘণ্টা আগে</div>
+                                    <div class="activity-text">২৫ জন শিক্ষার্থী "প্রোগ্রামিং বেসিক" কোর্সে যোগ দিয়েছেন
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-time">৫ ঘণ্টা আগে</div>
+                                    <div class="activity-text">নতুন কোর্স "ডেটা সায়েন্স" চালু করা হয়েছে</div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-time">১ দিন আগে</div>
+                                    <div class="activity-text">৫০টি অ্যাসাইনমেন্ট সফলভাবে জমা দেওয়া হয়েছে</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-calendar-alt me-2"></i>মাসিক অগ্রগতি
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="monthly-progress">
+                                <div class="progress-item">
+                                    <div class="month-info">
+                                        <h6 class="month-name">জানুয়ারি</h6>
+                                        <div class="progress-stats">
+                                            <span class="completion-rate">৮৫% সম্পন্ন</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-item">
+                                    <div class="month-info">
+                                        <h6 class="month-name">ফেব্রুয়ারি</h6>
+                                        <div class="progress-stats">
+                                            <span class="completion-rate">৯২% সম্পন্ন</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-item">
+                                    <div class="month-info">
+                                        <h6 class="month-name">মার্চ</h6>
+                                        <div class="progress-stats">
+                                            <span class="completion-rate">৮৮% সম্পন্ন</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 88%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="reports.js"></script>
+</body>
+
+</html>

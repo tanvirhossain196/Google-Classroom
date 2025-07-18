@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রশাসক প্যানেল - শিক্ষা ব্যবস্থাপনা</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>সিস্টেম ব্যবস্থাপনা ও নিয়ন্ত্রণ</h1>
+            <div class="user-info">
+                <span id="adminName">প্রশাসক</span>
+                <button id="logoutBtn">লগআউট</button>
+            </div>
+        </header>
+
+        <nav class="navigation">
+            <a href="admin.html" class="nav-link active">প্রশাসক প্যানেল</a>
+            <a href="dashboard.html" class="nav-link">ড্যাশবোর্ড</a>
+            <a href="courses.html" class="nav-link">কোর্স</a>
+            <a href="reports.html" class="nav-link">রিপোর্ট</a>
+            <a href="settings.html" class="nav-link">সেটিংস</a>
+        </nav>
+
+        <main class="main-content">
+            <div class="admin-overview">
+                <h2>সিস্টেম ব্যবস্থাপনা এবং নিয়ন্ত্রণ</h2>
+
+                <div class="admin-grid">
+                    <div class="admin-card" id="manageUsers">
+                        <div class="admin-icon">👥</div>
+                        <h3>সকল ইউজার দেখুন ও পরিচালনা করুন</h3>
+                        <p>ব্যবহারকারীদের তথ্য দেখুন এবং অ্যাকাউন্ট পরিচালনা করুন</p>
+                    </div>
+
+                    <div class="admin-card" id="monitorCourses">
+                        <div class="admin-icon">📚</div>
+                        <h3>সকল কোর্স মনিটর করুন</h3>
+                        <p>সমস্ত কোর্সের কার্যক্রম এবং অগ্রগতি পর্যবেক্ষণ করুন</p>
+                    </div>
+
+                    <div class="admin-card" id="platformConfig">
+                        <div class="admin-icon">⚙️</div>
+                        <h3>প্ল্যাটফর্ম কনফিগারেশন</h3>
+                        <p>সিস্টেম সেটিংস এবং কনফিগারেশন পরিবর্তন করুন</p>
+                    </div>
+
+                    <div class="admin-card" id="usageStats">
+                        <div class="admin-icon">📊</div>
+                        <h3>ব্যবহারের পরিসংখ্যান</h3>
+                        <p>বিস্তারিত রিপোর্ট এবং ব্যবহারের পরিসংখ্যান দেখুন</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="users-management" id="usersSection" style="display: none;">
+                <h3>ব্যবহারকারী পরিচালনা</h3>
+                <div class="users-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>নাম</th>
+                                <th>ইমেইল</th>
+                                <th>ভূমিকা</th>
+                                <th>অবস্থা</th>
+                                <th>কার্যক্রম</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
