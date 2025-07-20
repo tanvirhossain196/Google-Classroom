@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>গ্রেড - Course Detail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="course-detail.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Same header as course-detail -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn">
+                    <i class="material-icons">menu</i>
+                </button>
+                <div class="logo-text">EduPlatform</div>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <i class="material-icons">notifications</i>
+                </button>
+                <button class="header-icon-btn">
+                    <i class="material-icons">apps</i>
+                </button>
+                <div class="user-avatar">
+                    <span id="userInitial">A</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Same sidebar as course-detail -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="current-course-section">
+                    <div class="current-course-header">
+                        <i class="material-icons">class</i>
+                        <span class="course-name-text" id="currentCourseName">কোর্স লোড হচ্ছে...</span>
+                    </div>
+                </div>
+                <a href="dashboard.html" class="sidebar-item" id="classesLink">
+                    <i class="material-icons">dashboard</i>
+                    <span class="sidebar-text">ড্যাশবোর্ড</span>
+                </a>
+                <a href="settings.html" class="sidebar-item" id="settingsLink">
+                    <i class="material-icons">settings</i>
+                    <span class="sidebar-text">সেটিংস</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main content for Grades -->
+        <main class="content-wrapper" id="contentWrapper">
+            <div class="content-inner">
+                <div class="main-content">
+                    <!-- Course Header Section -->
+                    <div class="course-header-section">
+                        <div class="course-banner programming">
+                            <div class="banner-content">
+                                <h1 class="course-title" id="courseTitle">গ্রেড</h1>
+                                <p class="course-section" id="courseSection">শিক্ষার্থীদের গ্রেড এবং মূল্যায়ন</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grades Content -->
+                    <div class="tab-content active" id="grades">
+                        <div class="tab-empty">
+                            <div class="empty-icon">
+                                <i class="material-icons">grade</i>
+                            </div>
+                            <h3>এখনও কোন গ্রেড নেই</h3>
+                            <p>শিক্ষার্থীদের গ্রেড এখানে প্রদর্শিত হবে</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="course-detail.js"></script>
+    <script>
+        // Initialize grades page
+        document.addEventListener('DOMContentLoaded', function () {
+            const manager = new CourseDetailManager();
+            manager.initGradesPage();
+        });
+    </script>
+</body>
+
+</html>

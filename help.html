@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সাহায্য - ক্লাসরুম</title>
+    <title>Help - Classroom</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
                     <i class="fas fa-bars fs-5"></i>
                 </button>
                 <a class="navbar-brand fw-normal text-muted" href="#">
-                    <span>ক্লাসরুম</span>
+                    <span>Classroom</span>
                 </a>
             </div>
             <div class="d-flex align-items-center">
@@ -31,16 +31,16 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="profile.html">
-                                <i class="fas fa-user me-2"></i>প্রোফাইল
+                                <i class="fas fa-user me-2"></i>Profile
                             </a></li>
                         <li><a class="dropdown-item" href="settings.html">
-                                <i class="fas fa-cog me-2"></i>সেটিংস
+                                <i class="fas fa-cog me-2"></i>Settings
                             </a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
-                                <i class="fas fa-sign-out-alt me-2"></i>লগআউট
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
                             </a></li>
                     </ul>
                 </div>
@@ -50,32 +50,28 @@
 
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h5 class="sidebar-title">মেনু</h5>
+            <h5 class="sidebar-title">Menu</h5>
         </div>
         <nav class="sidebar-nav">
             <a href="dashboard.html" class="nav-item">
                 <i class="fas fa-home"></i>
-                <span class="nav-text">ড্যাশবোর্ড</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-book"></i>
-                <span class="nav-text">কোর্স</span>
+                <span class="nav-text">Dashboard</span>
             </a>
             <a href="profile.html" class="nav-item">
                 <i class="fas fa-user"></i>
-                <span class="nav-text">প্রোফাইল</span>
+                <span class="nav-text">Profile</span>
             </a>
             <a href="settings.html" class="nav-item">
                 <i class="fas fa-cog"></i>
-                <span class="nav-text">সেটিংস</span>
+                <span class="nav-text">Settings</span>
             </a>
             <a href="reports.html" class="nav-item">
                 <i class="fas fa-chart-bar"></i>
-                <span class="nav-text">রিপোর্ট</span>
+                <span class="nav-text">Reports</span>
             </a>
             <a href="help.html" class="nav-item active">
                 <i class="fas fa-question-circle"></i>
-                <span class="nav-text">সাহায্য</span>
+                <span class="nav-text">Help</span>
             </a>
         </nav>
     </div>
@@ -85,18 +81,19 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h1 class="page-title">সাহায্য কেন্দ্র</h1>
+                        <h1 class="page-title">Help Center</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="dashboard.html">ড্যাশবোর্ড</a></li>
-                                <li class="breadcrumb-item active">সাহায্য</li>
+                                <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                                <li class="breadcrumb-item active">Help</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-auto">
                         <div class="search-box">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="helpSearch" placeholder="কিছু খুঁজুন...">
+                                <input type="text" class="form-control" id="helpSearch"
+                                    placeholder="Search for something...">
                                 <button class="btn btn-primary" id="searchBtn">
                                     <i class="fas fa-search"></i>
                                 </button>
@@ -111,34 +108,34 @@
                     <div class="card help-sidebar-card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">
-                                <i class="fas fa-list me-2"></i>বিষয়সমূহ
+                                <i class="fas fa-list me-2"></i>Topics
                             </h5>
                         </div>
                         <div class="card-body p-0">
                             <nav class="help-nav">
                                 <a href="#getting-started" class="help-link active" data-section="getting-started">
                                     <i class="fas fa-rocket"></i>
-                                    <span>শুরু করুন</span>
+                                    <span>Getting Started</span>
                                 </a>
                                 <a href="#user-guide" class="help-link" data-section="user-guide">
                                     <i class="fas fa-book-open"></i>
-                                    <span>ব্যবহারকারী গাইড</span>
+                                    <span>User Guide</span>
                                 </a>
                                 <a href="#features" class="help-link" data-section="features">
                                     <i class="fas fa-star"></i>
-                                    <span>বৈশিষ্ট্যসমূহ</span>
+                                    <span>Features</span>
                                 </a>
                                 <a href="#troubleshooting" class="help-link" data-section="troubleshooting">
                                     <i class="fas fa-wrench"></i>
-                                    <span>সমস্যা সমাধান</span>
+                                    <span>Troubleshooting</span>
                                 </a>
                                 <a href="#faq" class="help-link" data-section="faq">
                                     <i class="fas fa-question"></i>
-                                    <span>প্রশ্ন ও উত্তর</span>
+                                    <span>FAQ</span>
                                 </a>
                                 <a href="#contact" class="help-link" data-section="contact">
                                     <i class="fas fa-phone"></i>
-                                    <span>যোগাযোগ</span>
+                                    <span>Contact</span>
                                 </a>
                             </nav>
                         </div>
@@ -150,38 +147,39 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-rocket me-2"></i>শুরু করুন
+                                    <i class="fas fa-rocket me-2"></i>Getting Started
                                 </h5>
                             </div>
                             <div class="card-body">
                                 <div class="welcome-section">
-                                    <h3 class="mb-4">স্বাগতম! শিক্ষা ব্যবস্থাপনা সিস্টেমে</h3>
-                                    <p class="lead">আমাদের প্ল্যাটফর্মে আপনাকে স্বাগতম। এখানে আপনি কীভাবে শুরু করবেন তার
-                                        একটি সহজ গাইড:</p>
+                                    <h3 class="mb-4">Welcome to Education Management System!</h3>
+                                    <p class="lead">Welcome to our platform. Here's a simple guide on how to get
+                                        started:</p>
                                 </div>
 
                                 <div class="step-guide">
                                     <div class="step-item">
-                                        <div class="step-number">১</div>
+                                        <div class="step-number">1</div>
                                         <div class="step-content">
-                                            <h4>লগইন করুন</h4>
-                                            <p>আপনার ইমেইল এবং পাসওয়ার্ড দিয়ে লগইন করুন। আপনার ভূমিকা
-                                                (শিক্ষক/ছাত্র/প্রশাসক) নির্বাচন করুন।</p>
+                                            <h4>Login</h4>
+                                            <p>Log in with your email and password. Select your role
+                                                (teacher/student/admin).</p>
                                         </div>
                                     </div>
                                     <div class="step-item">
-                                        <div class="step-number">২</div>
+                                        <div class="step-number">2</div>
                                         <div class="step-content">
-                                            <h4>প্রোফাইল সেটআপ</h4>
-                                            <p>আপনার প্রোফাইল সম্পূর্ণ করুন। ব্যক্তিগত তথ্য, যোগাযোগ বিবরণ এবং
-                                                প্রাথমিকতা সেট করুন।</p>
+                                            <h4>Setup Profile</h4>
+                                            <p>Complete your profile. Set personal information, contact details, and
+                                                preferences.</p>
                                         </div>
                                     </div>
                                     <div class="step-item">
-                                        <div class="step-number">৩</div>
+                                        <div class="step-number">3</div>
                                         <div class="step-content">
-                                            <h4>কোর্স শুরু করুন</h4>
-                                            <p>শিক্ষক হলে নতুন কোর্স তৈরি করুন, ছাত্র হলে কোর্স কোড দিয়ে যোগ দিন।</p>
+                                            <h4>Start Course</h4>
+                                            <p>If you're a teacher, create new courses. If you're a student, join
+                                                courses using course codes.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -193,43 +191,43 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-book-open me-2"></i>ব্যবহারকারী গাইড
+                                    <i class="fas fa-book-open me-2"></i>User Guide
                                 </h5>
                             </div>
                             <div class="card-body">
                                 <div class="guide-tabs">
                                     <div class="tab-buttons">
-                                        <button class="tab-btn active" data-tab="student">শিক্ষার্থী</button>
-                                        <button class="tab-btn" data-tab="teacher">শিক্ষক</button>
-                                        <button class="tab-btn" data-tab="admin">প্রশাসক</button>
+                                        <button class="tab-btn active" data-tab="student">Student</button>
+                                        <button class="tab-btn" data-tab="teacher">Teacher</button>
+                                        <button class="tab-btn" data-tab="admin">Admin</button>
                                     </div>
 
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="student-tab">
-                                            <h4>শিক্ষার্থীদের জন্য গাইড</h4>
+                                            <h4>Guide for Students</h4>
                                             <ul>
-                                                <li>কোর্স কোড দিয়ে কোর্সে যোগ দিন</li>
-                                                <li>অ্যাসাইনমেন্ট দেখুন এবং জমা দিন</li>
-                                                <li>ক্লাস নোট এবং ম্যাটেরিয়াল ডাউনলোড করুন</li>
-                                                <li>শিক্ষক এবং সহপাঠীদের সাথে যোগাযোগ করুন</li>
+                                                <li>Join courses using course codes</li>
+                                                <li>View and submit assignments</li>
+                                                <li>Download class notes and materials</li>
+                                                <li>Communicate with teachers and classmates</li>
                                             </ul>
                                         </div>
                                         <div class="tab-pane" id="teacher-tab">
-                                            <h4>শিক্ষকদের জন্য গাইড</h4>
+                                            <h4>Guide for Teachers</h4>
                                             <ul>
-                                                <li>নতুন কোর্স তৈরি করুন</li>
-                                                <li>শিক্ষার্থীদের কোর্স কোড শেয়ার করুন</li>
-                                                <li>অ্যাসাইনমেন্ট তৈরি এবং পরিচালনা করুন</li>
-                                                <li>গ্রেড এবং ফিডব্যাক প্রদান করুন</li>
+                                                <li>Create new courses</li>
+                                                <li>Share course codes with students</li>
+                                                <li>Create and manage assignments</li>
+                                                <li>Provide grades and feedback</li>
                                             </ul>
                                         </div>
                                         <div class="tab-pane" id="admin-tab">
-                                            <h4>প্রশাসকদের জন্য গাইড</h4>
+                                            <h4>Guide for Administrators</h4>
                                             <ul>
-                                                <li>ব্যবহারকারী অ্যাকাউন্ট পরিচালনা করুন</li>
-                                                <li>সিস্টেম সেটিংস কনফিগার করুন</li>
-                                                <li>রিপোর্ট এবং অ্যানালিটিক্স দেখুন</li>
-                                                <li>ডেটা ব্যাকআপ এবং রিস্টোর করুন</li>
+                                                <li>Manage user accounts</li>
+                                                <li>Configure system settings</li>
+                                                <li>View reports and analytics</li>
+                                                <li>Backup and restore data</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -242,7 +240,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-star me-2"></i>বৈশিষ্ট্যসমূহ
+                                    <i class="fas fa-star me-2"></i>Features
                                 </h5>
                             </div>
                             <div class="card-body">
@@ -252,12 +250,12 @@
                                             <i class="fas fa-graduation-cap"></i>
                                         </div>
                                         <div class="feature-content">
-                                            <h4>কোর্স ব্যবস্থাপনা</h4>
+                                            <h4>Course Management</h4>
                                             <ul>
-                                                <li>অনলাইন কোর্স তৈরি</li>
-                                                <li>শিক্ষার্থী তালিকা</li>
-                                                <li>কোর্স ম্যাটেরিয়াল আপলোড</li>
-                                                <li>ক্লাস শিডিউল</li>
+                                                <li>Create online courses</li>
+                                                <li>Student enrollment</li>
+                                                <li>Upload course materials</li>
+                                                <li>Class scheduling</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -266,12 +264,12 @@
                                             <i class="fas fa-tasks"></i>
                                         </div>
                                         <div class="feature-content">
-                                            <h4>অ্যাসাইনমেন্ট</h4>
+                                            <h4>Assignments</h4>
                                             <ul>
-                                                <li>অ্যাসাইনমেন্ট তৈরি</li>
-                                                <li>সাবমিশন ট্র্যাক</li>
-                                                <li>গ্রেডিং সিস্টেম</li>
-                                                <li>ফিডব্যাক প্রদান</li>
+                                                <li>Create assignments</li>
+                                                <li>Track submissions</li>
+                                                <li>Grading system</li>
+                                                <li>Provide feedback</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -280,12 +278,12 @@
                                             <i class="fas fa-comments"></i>
                                         </div>
                                         <div class="feature-content">
-                                            <h4>যোগাযোগ</h4>
+                                            <h4>Communication</h4>
                                             <ul>
-                                                <li>ইনস্ট্যান্ট মেসেজিং</li>
-                                                <li>ফোরাম আলোচনা</li>
-                                                <li>ভিডিও কনফারেন্স</li>
-                                                <li>ইমেইল নোটিফিকেশন</li>
+                                                <li>Instant messaging</li>
+                                                <li>Forum discussions</li>
+                                                <li>Video conferencing</li>
+                                                <li>Email notifications</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -294,12 +292,12 @@
                                             <i class="fas fa-chart-line"></i>
                                         </div>
                                         <div class="feature-content">
-                                            <h4>রিপোর্ট</h4>
+                                            <h4>Reports</h4>
                                             <ul>
-                                                <li>পারফরম্যান্স রিপোর্ট</li>
-                                                <li>অ্যাটেন্ডেন্স ট্র্যাকিং</li>
-                                                <li>প্রোগ্রেস মনিটরিং</li>
-                                                <li>ডেটা এক্সপোর্ট</li>
+                                                <li>Performance reports</li>
+                                                <li>Attendance tracking</li>
+                                                <li>Progress monitoring</li>
+                                                <li>Data export</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -312,50 +310,50 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-wrench me-2"></i>সমস্যা সমাধান
+                                    <i class="fas fa-wrench me-2"></i>Troubleshooting
                                 </h5>
                             </div>
                             <div class="card-body">
                                 <div class="troubleshoot-list">
                                     <div class="problem-item">
                                         <div class="problem-header">
-                                            <h4>লগইন করতে পারছি না</h4>
+                                            <h4>Cannot login</h4>
                                         </div>
                                         <div class="problem-solution">
-                                            <p><strong>সমাধান:</strong></p>
+                                            <p><strong>Solution:</strong></p>
                                             <ul>
-                                                <li>আপনার ইমেইল এবং পাসওয়ার্ড চেক করুন</li>
-                                                <li>ব্রাউজার ক্যাশ ক্লিয়ার করুন</li>
-                                                <li>পাসওয়ার্ড রিসেট করার চেষ্টা করুন</li>
-                                                <li>সাপোর্ট টিমের সাথে যোগাযোগ করুন</li>
+                                                <li>Check your email and password</li>
+                                                <li>Clear browser cache</li>
+                                                <li>Try resetting your password</li>
+                                                <li>Contact support team</li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="problem-item">
                                         <div class="problem-header">
-                                            <h4>কোর্স কোড কাজ করছে না</h4>
+                                            <h4>Course code not working</h4>
                                         </div>
                                         <div class="problem-solution">
-                                            <p><strong>সমাধান:</strong></p>
+                                            <p><strong>Solution:</strong></p>
                                             <ul>
-                                                <li>কোর্স কোড সঠিকভাবে লিখেছেন কিনা চেক করুন</li>
-                                                <li>স্পেস বা অতিরিক্ত ক্যারেক্টার আছে কিনা দেখুন</li>
-                                                <li>কোর্স কোড এখনও সক্রিয় আছে কিনা নিশ্চিত করুন</li>
-                                                <li>শিক্ষকের সাথে যোগাযোগ করুন</li>
+                                                <li>Check if course code is entered correctly</li>
+                                                <li>Look for spaces or extra characters</li>
+                                                <li>Make sure course code is still active</li>
+                                                <li>Contact the teacher</li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="problem-item">
                                         <div class="problem-header">
-                                            <h4>ফাইল আপলোড হচ্ছে না</h4>
+                                            <h4>File not uploading</h4>
                                         </div>
                                         <div class="problem-solution">
-                                            <p><strong>সমাধান:</strong></p>
+                                            <p><strong>Solution:</strong></p>
                                             <ul>
-                                                <li>ফাইল সাইজ ১০MB এর কম রাখুন</li>
-                                                <li>সমর্থিত ফাইল ফরম্যাট ব্যবহার করুন</li>
-                                                <li>ইন্টারনেট কানেকশন চেক করুন</li>
-                                                <li>ব্রাউজার রিফ্রেশ করুন</li>
+                                                <li>Keep file size under 10MB</li>
+                                                <li>Use supported file formats</li>
+                                                <li>Check internet connection</li>
+                                                <li>Refresh the browser</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -368,49 +366,50 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-question me-2"></i>প্রশ্ন ও উত্তর
+                                    <i class="fas fa-question me-2"></i>FAQ
                                 </h5>
                             </div>
                             <div class="card-body">
                                 <div class="faq-list">
                                     <div class="faq-item">
                                         <div class="faq-question">
-                                            <h4>কিভাবে নতুন কোর্স তৈরি করব?</h4>
+                                            <h4>How do I create a new course?</h4>
                                             <div class="faq-toggle">+</div>
                                         </div>
                                         <div class="faq-answer">
-                                            <p>ড্যাশবোর্ড থেকে "কোর্স তৈরি করুন" বাটনে ক্লিক করুন। কোর্সের নাম, বিষয়,
-                                                এবং অন্যান্য তথ্য পূরণ করুন। তারপর "তৈরি করুন" বাটনে ক্লিক করুন।</p>
+                                            <p>Click "Create Course" button from the dashboard. Fill in the course name,
+                                                subject, and other details. Then click "Create" button.</p>
                                         </div>
                                     </div>
                                     <div class="faq-item">
                                         <div class="faq-question">
-                                            <h4>আমার কোর্স কোড কোথায় পাবো?</h4>
+                                            <h4>Where can I find my course code?</h4>
                                             <div class="faq-toggle">+</div>
                                         </div>
                                         <div class="faq-answer">
-                                            <p>কোর্স তৈরি করার পর আপনি একটি ইউনিক কোর্স কোড পাবেন। এটি আপনার কোর্স
-                                                কার্ডে দেখানো হবে। এই কোডটি শিক্ষার্থীদের সাথে শেয়ার করুন।</p>
+                                            <p>After creating a course, you'll receive a unique course code. It will be
+                                                displayed on your course card. Share this code with students.</p>
                                         </div>
                                     </div>
                                     <div class="faq-item">
                                         <div class="faq-question">
-                                            <h4>কিভাবে অ্যাসাইনমেন্ট তৈরি করব?</h4>
+                                            <h4>How do I create an assignment?</h4>
                                             <div class="faq-toggle">+</div>
                                         </div>
                                         <div class="faq-answer">
-                                            <p>কোর্স পেজে গিয়ে "অ্যাসাইনমেন্ট" সেকশনে ক্লিক করুন। "নতুন অ্যাসাইনমেন্ট"
-                                                বাটনে ক্লিক করে অ্যাসাইনমেন্টের বিবরণ, সময়সীমা এবং নির্দেশনা দিন।</p>
+                                            <p>Go to the course page and click on "Assignment" section. Click "New
+                                                Assignment" button and provide assignment details, deadline, and
+                                                instructions.</p>
                                         </div>
                                     </div>
                                     <div class="faq-item">
                                         <div class="faq-question">
-                                            <h4>পাসওয়ার্ড রিসেট করব কিভাবে?</h4>
+                                            <h4>How to reset password?</h4>
                                             <div class="faq-toggle">+</div>
                                         </div>
                                         <div class="faq-answer">
-                                            <p>লগইন পেজে "পাসওয়ার্ড ভুলে গেছেন?" লিংকে ক্লিক করুন। আপনার ইমেইল এড্রেস
-                                                দিন এবং পাসওয়ার্ড রিসেট লিংক পেতে ইমেইল চেক করুন।</p>
+                                            <p>Click "Forgot Password?" link on the login page. Enter your email address
+                                                and check your email for password reset link.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -422,7 +421,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-phone me-2"></i>যোগাযোগ
+                                    <i class="fas fa-phone me-2"></i>Contact
                                 </h5>
                             </div>
                             <div class="card-body">
@@ -432,9 +431,9 @@
                                             <i class="fas fa-envelope"></i>
                                         </div>
                                         <div class="contact-info">
-                                            <h4>ইমেইল</h4>
+                                            <h4>Email</h4>
                                             <p>support@classroom.com</p>
-                                            <p>২৪ ঘণ্টার মধ্যে উত্তর</p>
+                                            <p>Response within 24 hours</p>
                                         </div>
                                     </div>
                                     <div class="contact-method">
@@ -442,9 +441,9 @@
                                             <i class="fas fa-phone"></i>
                                         </div>
                                         <div class="contact-info">
-                                            <h4>ফোন</h4>
-                                            <p>+৮৮০-১৭১২-৩৪৫৬৭৮</p>
-                                            <p>সকাল ৯টা - রাত ৬টা</p>
+                                            <h4>Phone</h4>
+                                            <p>+880-1712-345678</p>
+                                            <p>9 AM - 6 PM</p>
                                         </div>
                                     </div>
                                     <div class="contact-method">
@@ -452,43 +451,43 @@
                                             <i class="fas fa-comments"></i>
                                         </div>
                                         <div class="contact-info">
-                                            <h4>লাইভ চ্যাট</h4>
-                                            <p>তাৎক্ষণিক সাহায্য</p>
-                                            <button class="btn btn-primary chat-btn">চ্যাট শুরু করুন</button>
+                                            <h4>Live Chat</h4>
+                                            <p>Instant help</p>
+                                            <button class="btn btn-primary chat-btn">Start Chat</button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="contact-form">
-                                    <h4>আমাদের কাছে লিখুন</h4>
+                                    <h4>Write to Us</h4>
                                     <form id="contactForm">
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <label class="form-label">নাম</label>
+                                                <label class="form-label">Name</label>
                                                 <input type="text" class="form-control" id="contactName" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">ইমেইল</label>
+                                                <label class="form-label">Email</label>
                                                 <input type="email" class="form-control" id="contactEmail" required>
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label">বিষয়</label>
+                                                <label class="form-label">Subject</label>
                                                 <select class="form-select" id="contactSubject" required>
-                                                    <option value="">বিষয় নির্বাচন করুন</option>
-                                                    <option value="technical">প্রযুক্তিগত সমস্যা</option>
-                                                    <option value="account">অ্যাকাউন্ট সমস্যা</option>
-                                                    <option value="course">কোর্স সংক্রান্ত</option>
-                                                    <option value="other">অন্যান্য</option>
+                                                    <option value="">Select Subject</option>
+                                                    <option value="technical">Technical Issue</option>
+                                                    <option value="account">Account Issue</option>
+                                                    <option value="course">Course Related</option>
+                                                    <option value="other">Other</option>
                                                 </select>
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label">বার্তা</label>
+                                                <label class="form-label">Message</label>
                                                 <textarea class="form-control" id="contactMessage" rows="4"
                                                     required></textarea>
                                             </div>
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary">
-                                                    <i class="fas fa-paper-plane me-2"></i>বার্তা পাঠান
+                                                    <i class="fas fa-paper-plane me-2"></i>Send Message
                                                 </button>
                                             </div>
                                         </div>

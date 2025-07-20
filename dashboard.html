@@ -4,98 +4,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ড্যাশবোর্ড - শিক্ষা ব্যবস্থাপনা</title>
+    <title>ড্যাশবোর্ড - ক্লাসরুম</title>
     <link rel="stylesheet" href="dashboard.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
+        <!-- Header -->
         <header class="header">
             <div class="header-left">
-                <div class="menu-icon" id="menuIcon">
-                    <i class="material-icons">menu</i>
-                </div>
-                <h1>Classroom</h1>
+                <span class="material-icons menu-icon" id="menuIcon">menu</span>
+                <h1>ক্লাসরুম</h1>
             </div>
             <div class="header-right">
-                <div class="user-avatar" id="userAvatar">
+                <div class="user-info">
+                    <div id="currentUserEmail" class="user-email">user@email.com</div>
+                    <div id="userRoleBadge" class="role-badge new">নতুন ব্যবহারকারী</div>
+                </div>
+                <div class="user-avatar">
                     <span id="userInitial">U</span>
                 </div>
-                <button id="logoutBtn" class="logout-btn">লগআউট</button>
+                <button class="logout-btn" id="logoutBtn">লগ আউট</button>
             </div>
         </header>
 
-        <nav class="sidebar" id="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h2>মেনু</h2>
+                <h2>নেভিগেশন</h2>
             </div>
-            <ul class="sidebar-menu">
-                <li><a href="dashboard.html" class="nav-link active"><i class="material-icons">home</i>
-                        <span>ড্যাশবোর্ড</span></a></li>
-                <!-- <li><a href="course-detail.html" class="nav-link"><i class="material-icons">book</i>
-                        <span>কোর্স</span></a></li> -->
-                <li><a href="profile.html" class="nav-link"><i class="material-icons">person</i>
-                        <span>প্রোফাইল</span></a></li>
-                <li><a href="settings.html" class="nav-link"><i class="material-icons">settings</i>
-                        <span>সেটিংস</span></a></li>
-                <li><a href="reports.html" class="nav-link"><i class="material-icons">bar_chart</i>
-                        <span>রিপোর্ট</span></a></li>
-                <li><a href="help.html" class="nav-link"><i class="material-icons">help_outline</i>
-                        <span>সাহায্য</span></a></li>
-            </ul>
-        </nav>
+            <nav class="sidebar-menu">
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html" class="nav-link active">
+                            <i class="material-icons">home</i>
+                            <span>Dashboard</span>
+                        </a></li>
+                    <li><a href="profile.html" class="nav-link">
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a></li>
+                    <li><a href="settings.html" class="nav-link">
+                            <i class="material-icons">settings</i>
+                            <span>Settings</span>
+                        </a></li>
+                    <li><a href="report.html" class="nav-link">
+                            <i class="material-icons">bar_chart</i>
+                            <span>Reports</span>
+                        </a></li>
+                    <li><a href="help.html" class="nav-link">
+                            <i class="material-icons">help_outline</i>
+                            <span>Help</span>
+                        </a></li>
+                </ul>
+            </nav>
+        </aside>
 
+        <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Course Grid -->
             <div class="courses-container">
-                <div class="courses-header">
-                    <h2>আমার ক্লাসরুম</h2>
-                    <div class="add-course-btn" id="addCourseBtn">+</div>
+                <!-- Header Section -->
+                <section class="courses-header">
+                    <h2 id="dashboardTitle">আমার ড্যাশবোর্ড</h2>
+                    <div class="dropdown">
+                        <button class="add-course-btn" id="addCourseBtn">
+                            <span class="material-icons">add</span>
+                        </button>
+                        <div class="dropdown-menu" id="courseActionMenu">
+                            <!-- Dynamic menu items will be added here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <span class="material-icons">school</span>
+                    </div>
+                    <h3>কোনো কোর্স নেই</h3>
+                    <p id="emptyStateText">আপনার প্রথম কোর্স তৈরি করুন অথবা একটি কোর্সে যোগ দিন</p>
                 </div>
 
+                <!-- Courses Grid -->
                 <div class="courses-grid" id="coursesGrid">
-                    <!-- Default courses will be loaded here -->
-                </div>
-            </div>
-
-            <!-- Empty State -->
-            <div class="empty-state" id="emptyState" style="display: none;">
-                <div class="empty-icon">📚</div>
-                <h3>কোন কোর্স নেই</h3>
-                <p>আপনার প্রথম কোর্স তৈরি করুন অথবা একটি কোর্সে যোগ দিন</p>
-                <div class="empty-actions">
-                    <button class="btn-primary" id="createCourseBtn">কোর্স তৈরি করুন</button>
-                    <button class="btn-secondary" id="joinCourseBtn">কোর্সে যোগ দিন</button>
+                    <!-- Course cards will be dynamically added here -->
                 </div>
             </div>
         </main>
     </div>
 
     <!-- Create Course Modal -->
-    <div id="createCourseModal" class="modal">
+    <div class="modal" id="createCourseModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>নতুন কোর্স তৈরি করুন</h3>
-                <button class="close-btn" id="closeCreateModal">&times;</button>
+                <button class="close-btn" id="closeCreateModal">
+                    <span class="material-icons">close</span>
+                </button>
             </div>
             <form id="createCourseForm">
                 <div class="form-group">
                     <label for="courseName">কোর্সের নাম *</label>
-                    <input type="text" id="courseName" required placeholder="যেমন: গণিত - ক্লাস ১০">
+                    <input type="text" id="courseName" name="courseName" required>
                 </div>
                 <div class="form-group">
                     <label for="courseSection">সেকশন</label>
-                    <input type="text" id="courseSection" placeholder="যেমন: সেকশন-১">
+                    <input type="text" id="courseSection" name="section" placeholder="যেমন: ক, খ, A, B">
                 </div>
                 <div class="form-group">
                     <label for="courseSubject">বিষয়</label>
-                    <input type="text" id="courseSubject" placeholder="যেমন: গণিত">
+                    <input type="text" id="courseSubject" name="subject" placeholder="যেমন: গণিত, বিজ্ঞান, ইংরেজি">
                 </div>
                 <div class="form-group">
                     <label for="courseRoom">রুম</label>
-                    <input type="text" id="courseRoom" placeholder="যেমন: রুম-১০১">
+                    <input type="text" id="courseRoom" name="room" placeholder="যেমন: ১০১, ক্লাসরুম ১">
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" id="cancelCreate">বাতিল</button>
@@ -106,17 +130,22 @@
     </div>
 
     <!-- Join Course Modal -->
-    <div id="joinCourseModal" class="modal">
+    <div class="modal" id="joinCourseModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>কোর্সে যোগ দিন</h3>
-                <button class="close-btn" id="closeJoinModal">&times;</button>
+                <button class="close-btn" id="closeJoinModal">
+                    <span class="material-icons">close</span>
+                </button>
             </div>
             <form id="joinCourseForm">
                 <div class="form-group">
                     <label for="courseCode">কোর্স কোড *</label>
-                    <input type="text" id="courseCode" required placeholder="কোর্স কোড লিখুন">
-                    <small>শিক্ষকের কাছ থেকে কোর্স কোড সংগ্রহ করুন</small>
+                    <input type="text" id="courseCode" name="courseCode" required placeholder="কোর্স কোড লিখুন">
+                    <small>
+                        <span class="material-icons" style="font-size: 14px; vertical-align: middle;">info</span>
+                        আপনার শিক্ষক থেকে কোর্স কোডটি চান এবং এখানে লিখুন
+                    </small>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" id="cancelJoin">বাতিল</button>
@@ -126,6 +155,41 @@
         </div>
     </div>
 
+    <!-- Edit Course Modal -->
+    <div class="modal" id="editCourseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>কোর্স সম্পাদনা করুন</h3>
+                <button class="close-btn" id="closeEditModal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="editCourseForm">
+                <div class="form-group">
+                    <label for="editCourseName">কোর্সের নাম *</label>
+                    <input type="text" id="editCourseName" name="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCourseSection">সেকশন</label>
+                    <input type="text" id="editCourseSection" name="section">
+                </div>
+                <div class="form-group">
+                    <label for="editCourseSubject">বিষয়</label>
+                    <input type="text" id="editCourseSubject" name="subject">
+                </div>
+                <div class="form-group">
+                    <label for="editCourseRoom">রুম</label>
+                    <input type="text" id="editCourseRoom" name="room">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelEdit">বাতিল</button>
+                    <button type="submit" class="btn-primary">আপডেট করুন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="storage-manager.js"></script>
     <script src="dashboard.js"></script>
 </body>
 

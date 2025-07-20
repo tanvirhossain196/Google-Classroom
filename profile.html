@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>প্রোফাইল - ক্লাসরুম</title>
+    <title>Profile - Classroom</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -21,7 +21,7 @@
                 <button class="btn btn-link p-2 me-3" id="menuToggle">
                     <i class="fas fa-bars fs-5"></i>
                 </button>
-                <a class="navbar-brand fw-normal text-muted" href="#">ক্লাসরুম</a>
+                <a class="navbar-brand fw-normal text-muted" href="#">Classroom</a>
             </div>
 
             <div class="d-flex align-items-center">
@@ -32,14 +32,14 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>প্রোফাইল</a>
+                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a>
                         </li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>সেটিংস</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i
-                                    class="fas fa-sign-out-alt me-2"></i>লগআউট</a></li>
+                                    class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -49,33 +49,29 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h5 class="sidebar-title">মেনু</h5>
+            <h5 class="sidebar-title">Menu</h5>
         </div>
 
         <nav class="sidebar-nav">
             <a href="dashboard.html" class="nav-item">
                 <i class="fas fa-home"></i>
-                <span class="nav-text">ড্যাশবোর্ড</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-book"></i>
-                <span class="nav-text">কোর্স</span>
+                <span class="nav-text">Dashboard</span>
             </a>
             <a href="profile.html" class="nav-item active">
                 <i class="fas fa-user"></i>
-                <span class="nav-text">প্রোফাইল</span>
+                <span class="nav-text">Profile</span>
             </a>
             <a href="settings.html" class="nav-item">
                 <i class="fas fa-cog"></i>
-                <span class="nav-text">সেটিংস</span>
+                <span class="nav-text">Settings</span>
             </a>
             <a href="reports.html" class="nav-item">
                 <i class="fas fa-chart-bar"></i>
-                <span class="nav-text">রিপোর্ট</span>
+                <span class="nav-text">Reports</span>
             </a>
             <a href="help.html" class="nav-item">
                 <i class="fas fa-question-circle"></i>
-                <span class="nav-text">সাহায্য</span>
+                <span class="nav-text">Help</span>
             </a>
         </nav>
     </div>
@@ -87,11 +83,11 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h1 class="page-title">প্রোফাইল</h1>
+                        <h1 class="page-title">Profile</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="dashboard.html">ড্যাশবোর্ড</a></li>
-                                <li class="breadcrumb-item active">প্রোফাইল</li>
+                                <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                                <li class="breadcrumb-item active">Profile</li>
                             </ol>
                         </nav>
                     </div>
@@ -115,27 +111,27 @@
                                 </div>
                             </div>
 
-                            <h4 class="profile-name mt-3" id="profileName">ব্যবহারকারী</h4>
+                            <h4 class="profile-name mt-3" id="profileName">User</h4>
                             <p class="profile-email text-muted" id="profileEmail">user@example.com</p>
 
                             <div class="profile-stats mt-4">
                                 <div class="row text-center">
                                     <div class="col-4">
                                         <div class="stat-item">
-                                            <h5 class="stat-value" id="totalCourses">৫</h5>
-                                            <small class="stat-label">কোর্স</small>
+                                            <h5 class="stat-value" id="totalCourses">5</h5>
+                                            <small class="stat-label">Courses</small>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="stat-item">
-                                            <h5 class="stat-value" id="totalAssignments">১২</h5>
-                                            <small class="stat-label">এসাইনমেন্ট</small>
+                                            <h5 class="stat-value" id="totalAssignments">12</h5>
+                                            <small class="stat-label">Assignments</small>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="stat-item">
-                                            <h5 class="stat-value" id="totalStudents">৮৫</h5>
-                                            <small class="stat-label">শিক্ষার্থী</small>
+                                            <h5 class="stat-value" id="totalStudents">85</h5>
+                                            <small class="stat-label">Students</small>
                                         </div>
                                     </div>
                                 </div>
@@ -144,11 +140,11 @@
                             <div class="profile-details mt-4">
                                 <div class="detail-item">
                                     <i class="fas fa-calendar-alt text-primary"></i>
-                                    <span>যোগদান: <span id="joinDate">জানুয়ারি ২০২৪</span></span>
+                                    <span>Joined: <span id="joinDate">January 2024</span></span>
                                 </div>
                                 <div class="detail-item">
                                     <i class="fas fa-clock text-success"></i>
-                                    <span>সর্বশেষ সক্রিয়: <span id="lastActive">আজ</span></span>
+                                    <span>Last Active: <span id="lastActive">Today</span></span>
                                 </div>
                             </div>
                         </div>
@@ -163,44 +159,44 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">
-                                        <i class="fas fa-user-edit me-2"></i>ব্যক্তিগত তথ্য
+                                        <i class="fas fa-user-edit me-2"></i>Personal Information
                                     </h5>
                                 </div>
                                 <div class="card-body">
                                     <form id="profileForm">
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <label class="form-label">পূর্ণ নাম</label>
+                                                <label class="form-label">Full Name</label>
                                                 <input type="text" class="form-control" id="fullName"
-                                                    placeholder="আপনার পূর্ণ নাম">
+                                                    placeholder="Your full name">
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">ইমেইল</label>
+                                                <label class="form-label">Email</label>
                                                 <input type="email" class="form-control" id="email" readonly>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">ফোন নম্বর</label>
+                                                <label class="form-label">Phone Number</label>
                                                 <input type="tel" class="form-control" id="phone"
-                                                    placeholder="০১৭xxxxxxxx">
+                                                    placeholder="01xxxxxxxx">
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">জন্ম তারিখ</label>
+                                                <label class="form-label">Date of Birth</label>
                                                 <input type="date" class="form-control" id="dateOfBirth">
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label">ঠিকানা</label>
+                                                <label class="form-label">Address</label>
                                                 <input type="text" class="form-control" id="address"
-                                                    placeholder="আপনার ঠিকানা">
+                                                    placeholder="Your address">
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label">সম্পর্কে</label>
+                                                <label class="form-label">About</label>
                                                 <textarea class="form-control" id="bio" rows="3"
-                                                    placeholder="আপনার সম্পর্কে কিছু লিখুন"></textarea>
+                                                    placeholder="Write something about yourself"></textarea>
                                             </div>
                                         </div>
                                         <div class="mt-4">
                                             <button type="submit" class="btn btn-primary">
-                                                <i class="fas fa-save me-2"></i>পরিবর্তন সংরক্ষণ করুন
+                                                <i class="fas fa-save me-2"></i>Save Changes
                                             </button>
                                         </div>
                                     </form>
@@ -213,25 +209,25 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">
-                                        <i class="fas fa-shield-alt me-2"></i>নিরাপত্তা
+                                        <i class="fas fa-shield-alt me-2"></i>Security
                                     </h5>
                                 </div>
                                 <div class="card-body">
                                     <form id="passwordForm">
                                         <div class="mb-3">
-                                            <label class="form-label">বর্তমান পাসওয়ার্ড</label>
+                                            <label class="form-label">Current Password</label>
                                             <input type="password" class="form-control" id="currentPassword" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">নতুন পাসওয়ার্ড</label>
+                                            <label class="form-label">New Password</label>
                                             <input type="password" class="form-control" id="newPassword" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">পাসওয়ার্ড নিশ্চিত করুন</label>
+                                            <label class="form-label">Confirm Password</label>
                                             <input type="password" class="form-control" id="confirmPassword" required>
                                         </div>
                                         <button type="submit" class="btn btn-warning">
-                                            <i class="fas fa-key me-2"></i>পাসওয়ার্ড পরিবর্তন
+                                            <i class="fas fa-key me-2"></i>Change Password
                                         </button>
                                     </form>
                                 </div>
@@ -243,40 +239,40 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">
-                                        <i class="fas fa-cogs me-2"></i>প্রাথমিকতা
+                                        <i class="fas fa-cogs me-2"></i>Preferences
                                     </h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <label class="form-label">ভাষা</label>
+                                        <label class="form-label">Language</label>
                                         <select class="form-select" id="language">
-                                            <option value="bn">বাংলা</option>
+                                            <option value="bn">Bengali</option>
                                             <option value="en">English</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">সময় অঞ্চল</label>
+                                        <label class="form-label">Time Zone</label>
                                         <select class="form-select" id="timezone">
-                                            <option value="Asia/Dhaka">ঢাকা (GMT+6)</option>
-                                            <option value="Asia/Kolkata">কলকাতা (GMT+5:30)</option>
+                                            <option value="Asia/Dhaka">Dhaka (GMT+6)</option>
+                                            <option value="Asia/Kolkata">Kolkata (GMT+5:30)</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="emailNotifications">
                                             <label class="form-check-label" for="emailNotifications">
-                                                ইমেইল বিজ্ঞপ্তি
+                                                Email Notifications
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="smsNotifications">
                                             <label class="form-check-label" for="smsNotifications">
-                                                SMS বিজ্ঞপ্তি
+                                                SMS Notifications
                                             </label>
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-success" id="savePreferences">
-                                        <i class="fas fa-check me-2"></i>সংরক্ষণ করুন
+                                        <i class="fas fa-check me-2"></i>Save Preferences
                                     </button>
                                 </div>
                             </div>

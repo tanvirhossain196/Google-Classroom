@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .return-btn {
+            background: #e5e5e5;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .return-btn:hover {
+            background: #d5d5d5;
+        }
+
+        .points-selector {
+            position: relative;
+        }
+
+        .points-dropdown {
+            background: white;
+            border: 2px solid #4285f4;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+
+        .points-dropdown:hover {
+            background: #f8f9fa;
+        }
+
+        .points-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .points-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .points-option:hover {
+            background: #f8f9fa;
+        }
+
+        .points-option:last-child {
+            border-bottom: none;
+        }
+
+        .blue-dot {
+            width: 8px;
+            height: 8px;
+            background: #4285f4;
+            border-radius: 50%;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover {
+            background: #f8f9fa;
+            margin: 0 -20px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .sidebar-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .sort-dropdown {
+            background: #e5e5e5;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .project-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .submission-toggle {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #4285f4;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            right: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .students-section {
+            border-top: 1px solid #f0f0f0;
+            padding-top: 20px;
+        }
+
+        .students-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-dropdown {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        .student-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .student-item:hover {
+            background: #e8f0fe;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .student-status {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .bulk-actions {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 15px 20px;
+            z-index: 1000;
+        }
+
+        .bulk-actions button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .bulk-actions button:hover {
+            background: #3367d6;
+        }
+
+        .points-display {
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .dropdown-icon {
+            margin-left: auto;
+            transform: rotate(0deg);
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-icon.active {
+            transform: rotate(180deg);
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            background: #666;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            cursor: help;
+        }
+
+        .select-all-text {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="return-btn">
+                <span>←</span>
+                Return
+            </button>
+
+            <div class="blue-dot"></div>
+
+            <div class="points-selector">
+                <div class="points-dropdown" onclick="togglePointsDropdown()">
+                    <span id="selected-points">100 points</span>
+                    <span class="dropdown-icon" id="points-icon">▼</span>
+                </div>
+                <div class="points-options" id="points-options">
+                    <!-- Points options will be dynamically generated -->
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="sidebar-item" onclick="toggleAllStudents()">
+                    <input type="checkbox" class="checkbox" id="all-students">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+                        <path
+                            d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-1c0-2.66 5.33-4 8-4s8 1.34 8 4v1H4z" />
+                        <circle cx="12" cy="11" r="4" />
+                    </svg>
+                    <span class="select-all-text">All students</span>
+                </div>
+
+                <div class="sort-dropdown" onclick="toggleSortDropdown()">
+                    <span id="current-sort">Sort by status</span>
+                    <span class="dropdown-icon" id="sort-icon">▼</span>
+                </div>
+                <div class="points-options" id="sort-options" style="position: relative; margin-top: 5px;">
+                    <div class="points-option" onclick="sortStudents('status')">Sort by status</div>
+                    <div class="points-option" onclick="sortStudents('lastName')">Sort by last name</div>
+                    <div class="points-option" onclick="sortStudents('firstName')">Sort by first name</div>
+                    <div class="points-option" onclick="sortStudents('group')">Sort by group</div>
+                    <div class="points-option" onclick="sortStudents('points')">Sort by points</div>
+                </div>
+
+                <div class="sidebar-item">
+                    <input type="checkbox" class="checkbox" id="filter-assigned">
+                    <span>Assigned</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="project-header">
+                    <h1 class="project-title">Project-1</h1>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number" id="turned-in-count">0</div>
+                        <div class="stat-label">Turned in</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="assigned-count">3</div>
+                        <div class="stat-label">Assigned</div>
+                    </div>
+                </div>
+
+                <div class="submission-toggle">
+                    <div class="toggle-switch" onclick="toggleSubmissions()"></div>
+                    <span>Accepting submissions</span>
+                    <div class="info-icon">i</div>
+                </div>
+
+                <div class="students-section">
+                    <div class="students-header">
+                        <div class="filter-dropdown" onclick="toggleFilterDropdown()">
+                            <span id="current-filter">All</span>
+                            <span class="dropdown-icon" id="filter-icon">▼</span>
+                        </div>
+                        <input type="checkbox" class="checkbox" id="select-all-visible">
+                    </div>
+
+                    <div class="student-list" id="student-list">
+                        <!-- Students will be dynamically generated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bulk-actions" id="bulk-actions">
+            <span id="selected-count">0 selected</span>
+            <button onclick="assignPoints()">Assign Points</button>
+            <button onclick="updateStatus()">Update Status</button>
+        </div>
+    </div>
+
+    <script>
+        // Student data
+        let students = [
+            {
+                id: 1,
+                firstName: "Tanvir",
+                lastName: "Hossain",
+                fullName: "MD. TANVIR HOSSAIN",
+                status: "Assigned",
+                group: "Group A",
+                points: 0,
+                selected: false
+            },
+            {
+                id: 2,
+                firstName: "Sara",
+                lastName: "Ahmed",
+                fullName: "SARA AHMED",
+                status: "Turned in",
+                group: "Group B",
+                points: 85,
+                selected: false
+            },
+            {
+                id: 3,
+                firstName: "John",
+                lastName: "Smith",
+                fullName: "JOHN SMITH",
+                status: "Assigned",
+                group: "Group A",
+                points: 0,
+                selected: false
+            }
+        ];
+
+        let selectedPoints = 100;
+        let currentSort = 'status';
+        let currentFilter = 'all';
+
+        // Initialize the page
+        function init() {
+            generatePointsOptions();
+            renderStudents();
+            updateStats();
+        }
+
+        // Generate points options (10 to 100)
+        function generatePointsOptions() {
+            const container = document.getElementById('points-options');
+            container.innerHTML = '';
+
+            for (let i = 10; i <= 100; i += 5) {
+                const option = document.createElement('div');
+                option.className = 'points-option';
+                option.textContent = `${i} points`;
+                option.onclick = () => selectPoints(i);
+                container.appendChild(option);
+            }
+        }
+
+        // Select points value
+        function selectPoints(points) {
+            selectedPoints = points;
+            document.getElementById('selected-points').textContent = `${points} points`;
+            togglePointsDropdown();
+        }
+
+        // Toggle points dropdown
+        function togglePointsDropdown() {
+            const options = document.getElementById('points-options');
+            const icon = document.getElementById('points-icon');
+
+            if (options.style.display === 'block') {
+                options.style.display = 'none';
+                icon.classList.remove('active');
+            } else {
+                options.style.display = 'block';
+                icon.classList.add('active');
+            }
+        }
+
+        // Toggle sort dropdown
+        function toggleSortDropdown() {
+            const options = document.getElementById('sort-options');
+            const icon = document.getElementById('sort-icon');
+
+            if (options.style.display === 'block') {
+                options.style.display = 'none';
+                icon.classList.remove('active');
+            } else {
+                options.style.display = 'block';
+                icon.classList.add('active');
+            }
+        }
+
+        // Sort students
+        function sortStudents(sortBy) {
+            currentSort = sortBy;
+            document.getElementById('current-sort').textContent = `Sort by ${sortBy}`;
+
+            students.sort((a, b) => {
+                switch (sortBy) {
+                    case 'lastName':
+                        return a.lastName.localeCompare(b.lastName);
+                    case 'firstName':
+                        return a.firstName.localeCompare(b.firstName);
+                    case 'status':
+                        return a.status.localeCompare(b.status);
+                    case 'group':
+                        return a.group.localeCompare(b.group);
+                    case 'points':
+                        return b.points - a.points;
+                    default:
+                        return 0;
+                }
+            });
+
+            renderStudents();
+            toggleSortDropdown();
+        }
+
+        // Toggle filter dropdown
+        function toggleFilterDropdown() {
+            // Simple filter toggle for demo
+            const filterElement = document.getElementById('current-filter');
+            if (filterElement.textContent === 'All') {
+                filterElement.textContent = 'Assigned';
+                currentFilter = 'assigned';
+            } else {
+                filterElement.textContent = 'All';
+                currentFilter = 'all';
+            }
+            renderStudents();
+        }
+
+        // Render students list
+        function renderStudents() {
+            const container = document.getElementById('student-list');
+            container.innerHTML = '';
+
+            let filteredStudents = students;
+            if (currentFilter === 'assigned') {
+                filteredStudents = students.filter(s => s.status === 'Assigned');
+            }
+
+            filteredStudents.forEach(student => {
+                const studentDiv = document.createElement('div');
+                studentDiv.className = 'student-item';
+                studentDiv.innerHTML = `
+                    <input type="checkbox" class="checkbox" id="student-${student.id}" 
+                           ${student.selected ? 'checked' : ''} 
+                           onchange="toggleStudentSelection(${student.id})">
+                    <div class="student-info">
+                        <div class="student-name">${student.fullName}</div>
+                        <div class="student-status">${student.status}</div>
+                    </div>
+                    ${student.points > 0 ? `<div class="points-display">${student.points} points</div>` : ''}
+                `;
+                container.appendChild(studentDiv);
+            });
+
+            updateSelectionCount();
+        }
+
+        // Toggle student selection
+        function toggleStudentSelection(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                student.selected = !student.selected;
+                updateSelectionCount();
+            }
+        }
+
+        // Toggle all students selection
+        function toggleAllStudents() {
+            const checkbox = document.getElementById('all-students');
+            const allSelected = students.every(s => s.selected);
+
+            students.forEach(s => {
+                s.selected = !allSelected;
+            });
+
+            checkbox.checked = !allSelected;
+            renderStudents();
+        }
+
+        // Update selection count and show/hide bulk actions
+        function updateSelectionCount() {
+            const selectedCount = students.filter(s => s.selected).length;
+            const bulkActions = document.getElementById('bulk-actions');
+            const selectedCountSpan = document.getElementById('selected-count');
+
+            if (selectedCount > 0) {
+                bulkActions.style.display = 'block';
+                selectedCountSpan.textContent = `${selectedCount} selected`;
+            } else {
+                bulkActions.style.display = 'none';
+            }
+
+            // Update all students checkbox
+            const allCheckbox = document.getElementById('all-students');
+            const allSelected = students.every(s => s.selected);
+            const someSelected = students.some(s => s.selected);
+
+            allCheckbox.checked = allSelected;
+            allCheckbox.indeterminate = someSelected && !allSelected;
+        }
+
+        // Assign points to selected students
+        function assignPoints() {
+            const selectedStudents = students.filter(s => s.selected);
+            selectedStudents.forEach(student => {
+                student.points = selectedPoints;
+                student.selected = false;
+            });
+
+            renderStudents();
+            updateStats();
+        }
+
+        // Update status of selected students
+        function updateStatus() {
+            const selectedStudents = students.filter(s => s.selected);
+            selectedStudents.forEach(student => {
+                student.status = student.status === 'Assigned' ? 'Turned in' : 'Assigned';
+                student.selected = false;
+            });
+
+            renderStudents();
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const turnedInCount = students.filter(s => s.status === 'Turned in').length;
+            const assignedCount = students.filter(s => s.status === 'Assigned').length;
+
+            document.getElementById('turned-in-count').textContent = turnedInCount;
+            document.getElementById('assigned-count').textContent = assignedCount;
+        }
+
+        // Toggle submissions
+        function toggleSubmissions() {
+            // Toggle visual state only for demo
+            const toggle = document.querySelector('.toggle-switch');
+            toggle.classList.toggle('off');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.points-selector')) {
+                document.getElementById('points-options').style.display = 'none';
+                document.getElementById('points-icon').classList.remove('active');
+            }
+
+            if (!event.target.closest('.sort-dropdown') && !event.target.closest('#sort-options')) {
+                document.getElementById('sort-options').style.display = 'none';
+                document.getElementById('sort-icon').classList.remove('active');
+            }
+        });
+
+        // Initialize the page
+        init();
+    </script>
+</body>
+
+</html>

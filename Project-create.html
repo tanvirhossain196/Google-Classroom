@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: white;
+            border: 2px solid #4a90e2;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .project-header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .project-header:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        .project-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .project-icon {
+            width: 32px;
+            height: 32px;
+            background: #6c757d;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .project-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .due-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .menu-container {
+            position: relative;
+        }
+
+        .menu-dots {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .menu-dots:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 120px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 5px 5px 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 5px 5px;
+        }
+
+        .dropdown-item+.dropdown-item {
+            border-top: 1px solid #e9ecef;
+        }
+
+        .project-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+        }
+
+        .project-content.expanded {
+            max-height: 300px;
+        }
+
+        .project-details {
+            padding: 20px;
+        }
+
+        .posted-time {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .content-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .left-content {
+            flex: 1;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 300;
+            color: #333;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: capitalize;
+        }
+
+        .view-instructions {
+            color: #4a90e2;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            padding: 8px 0;
+            border: none;
+            background: none;
+            transition: color 0.2s ease;
+            margin-top: 15px;
+        }
+
+        .view-instructions:hover {
+            color: #357abd;
+            text-decoration: underline;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e9ecef;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="project-card">
+            <div class="project-header" onclick="toggleProject(event)">
+                <div class="project-info">
+                    <div class="project-icon">📋</div>
+                    <div class="project-title">Project-1</div>
+                </div>
+                <div class="project-meta">
+                    <div class="due-date">Due Tomorrow</div>
+                    <div class="menu-container">
+                        <div class="menu-dots" onclick="toggleDropdown(event)">⋮</div>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <button class="dropdown-item" onclick="editProject(event)">Edit</button>
+                            <button class="dropdown-item" onclick="deleteProject(event)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-content" id="projectContent">
+                <div class="project-details">
+                    <div class="posted-time">Posted 10:21 AM</div>
+
+                    <div class="content-layout">
+                        <div class="left-content">
+                            <button class="view-instructions" onclick="viewInstructions()">
+                                View instructions
+                            </button>
+                        </div>
+
+                        <div class="stats-container">
+                            <div class="stat-item">
+                                <div class="stat-number">0</div>
+                                <div class="stat-label">Turned in</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">1</div>
+                                <div class="stat-label">Assigned</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleProject(event) {
+            // Don't toggle if clicking on menu dots or dropdown
+            if (event.target.closest('.menu-container')) {
+                return;
+            }
+
+            const content = document.getElementById('projectContent');
+            content.classList.toggle('expanded');
+
+            // Close dropdown if open
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.remove('active');
+        }
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('active');
+        }
+
+        function editProject(event) {
+            event.stopPropagation();
+            alert('Edit project functionality');
+            closeDropdown();
+        }
+
+        function deleteProject(event) {
+            event.stopPropagation();
+            if (confirm('Are you sure you want to delete this project?')) {
+                alert('Project deleted');
+            }
+            closeDropdown();
+        }
+
+        function viewInstructions() {
+            alert('View instructions clicked!');
+        }
+
+        function closeDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.remove('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const menuContainer = document.querySelector('.menu-container');
+            if (!menuContainer.contains(event.target)) {
+                closeDropdown();
+            }
+        });
+    </script>
+</body>
+
+</html>
