@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ক্লাসরুম - স্ট্রিম</title>
+    <link rel="stylesheet" href="stream.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Enhanced Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn">
+                    <span class="material-icons">menu</span>
+                </button>
+                <h1 class="logo-text">ক্লাসরুম</h1>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <span class="material-icons">notifications</span>
+                </button>
+                <button class="header-icon-btn">
+                    <span class="material-icons">apps</span>
+                </button>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Enhanced Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="current-course-section">
+                    <div class="current-course-header">
+                        <span class="material-icons">class</span>
+                        <span class="course-name-text" id="currentCourseName">কোর্স লোড হচ্ছে...</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-header">
+                    <span class="material-icons">dashboard</span>
+                    <span class="sidebar-text">মেনু</span>
+                </div>
+
+                <a href="#" class="sidebar-item" id="classesLink">
+                    <span class="material-icons">home</span>
+                    <span class="sidebar-text">ক্লাসরুম</span>
+                </a>
+
+                <a href="classwork.html" class="sidebar-item">
+                    <span class="material-icons">assignment</span>
+                    <span class="sidebar-text">ক্লাসওয়ার্ক</span>
+                </a>
+
+                <a href="people.html" class="sidebar-item">
+                    <span class="material-icons">people</span>
+                    <span class="sidebar-text">ব্যক্তিগত</span>
+                </a>
+
+                <a href="grades.html" class="sidebar-item">
+                    <span class="material-icons">grade</span>
+                    <span class="sidebar-text">গ্রেড</span>
+                </a>
+
+                <a href="#" class="sidebar-item" id="settingsLink">
+                    <span class="material-icons">settings</span>
+                    <span class="sidebar-text">সেটিংস</span>
+                </a>
+
+                <div class="sidebar-header">
+                    <span class="material-icons">school</span>
+                    <span class="sidebar-text">নথিভুক্ত ক্লাস</span>
+                </div>
+
+                <div id="enrolledClasses">
+                    <!-- Enrolled classes will be populated here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Enhanced Top Navigation -->
+        <nav class="course-top-nav" id="courseTopNav">
+            <div class="top-nav-tabs">
+                <button class="top-nav-tab active" data-tab="stream">
+                    <i class="material-icons">dynamic_feed</i>
+                    <span>Stream</span>
+                </button>
+                <button class="top-nav-tab" data-tab="classwork" onclick="window.location.href='classwork.html'">
+                    <i class="material-icons">assignment</i>
+                    <span>Classwork</span>
+                </button>
+                <button class="top-nav-tab" data-tab="people" onclick="window.location.href='people.html'">
+                    <i class="material-icons">people</i>
+                    <span>People</span>
+                </button>
+                <button class="top-nav-tab" data-tab="grades" onclick="window.location.href='grades.html'">
+                    <i class="material-icons">grade</i>
+                    <span>Grades</span>
+                </button>
+            </div>
+        </nav>
+
+
+        <!-- Enhanced Content Wrapper -->
+        <main class="content-wrapper" id="contentWrapper">
+            <div class="content-inner">
+                <!-- Enhanced Course Header -->
+                <section class="course-header-section">
+                    <div class="course-banner" id="courseBanner">
+                        <div class="banner-content">
+                            <h1 class="course-title" id="courseTitle">Course loading...</h1>
+                            <p class="course-section" id="courseSection">Section loading...</p>
+
+                            <!-- Course additional info -->
+                            <div class="course-additional-info">
+                                <!-- Course code will be handled by JS and not displayed here -->
+                                <p id="studentsCount">Students: ---</p>
+                                <p id="teacherName">Teacher: ---</p>
+                            </div>
+                        </div>
+                        <button class="banner-menu-btn">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Enhanced Main Content -->
+                <section class="main-content">
+                    <!-- Stream Tab -->
+                    <div id="stream" class="tab-content active">
+                        <div class="stream-layout">
+                            <div class="stream-sidebar">
+                                <!-- Course Code Section -->
+                                <div class="course-code-section">
+                                    <div class="course-code-header">
+                                        <h3>Class code</h3>
+                                        <button class="course-code-menu-btn">
+                                            <span class="material-icons">more_vert</span>
+                                        </button>
+                                    </div>
+                                    <div class="course-code-display" id="courseCodeDisplay">
+                                        <span class="course-code-text" id="courseCodeText">vwqisoz6</span>
+                                        <button class="course-code-copy-btn" onclick="streamManager.copyCourseCode()"
+                                            title="Copy class code">
+                                            <span class="material-icons">content_copy</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="upcoming-section">
+                                    <h2>Upcoming</h2>
+                                    <div class="upcoming-message">
+                                        <p>No work due soon</p>
+                                    </div>
+                                    <a href="#" class="view-all-link">
+                                        View all
+                                        <span class="material-icons">arrow_forward</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="stream-main">
+                                <!-- Enhanced Announcement Input -->
+                                <div class="announcement-input-card">
+                                    <div class="announcement-header">
+                                        <div class="announcement-for-section">
+                                            <label class="announcement-label">For</label>
+                                            <div class="dropdown">
+                                                <button class="btn dropdown-toggle announcement-dropdown" type="button"
+                                                    id="forDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span id="selectedCourse">CSE479 1</span>
+                                                    <span
+                                                        class="material-icons dropdown-arrow">keyboard_arrow_down</span>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="forDropdown">
+                                                    <li><a class="dropdown-item" href="#"
+                                                            onclick="streamManager.selectCourse('CSE479 1')">CSE479
+                                                            1</a></li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            onclick="streamManager.selectCourse('All courses')">All
+                                                            courses</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="announcement-students-section">
+                                            <button class="btn students-btn" type="button"
+                                                onclick="streamManager.openStudentSelector()">
+                                                <span class="material-icons">people</span>
+                                                <span>All students</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="announcement-input-area">
+                                        <div class="announcement-placeholder" id="announcementPlaceholder"
+                                            onclick="streamManager.expandAnnouncement()">
+                                            <span>Announce something to your class</span>
+                                        </div>
+
+                                        <div class="announcement-editor-expanded" id="announcementEditorExpanded"
+                                            style="display: none;">
+                                            <!-- Rich Text Editor Toolbar -->
+                                            <div class="editor-toolbar">
+                                                <button type="button" class="toolbar-btn" data-command="bold"
+                                                    title="Bold">
+                                                    <strong>B</strong>
+                                                </button>
+                                                <button type="button" class="toolbar-btn" data-command="italic"
+                                                    title="Italic">
+                                                    <em>I</em>
+                                                </button>
+                                                <button type="button" class="toolbar-btn" data-command="underline"
+                                                    title="Underline">
+                                                    <u>U</u>
+                                                </button>
+                                                <button type="button" class="toolbar-btn"
+                                                    data-command="insertUnorderedList" title="Bullet List">
+                                                    <span class="material-icons">format_list_bulleted</span>
+                                                </button>
+                                                <button type="button" class="toolbar-btn" data-command="createLink"
+                                                    title="Insert Link">
+                                                    <span class="material-icons">link</span>
+                                                </button>
+                                            </div>
+
+                                            <!-- Editor Content -->
+                                            <div class="editor-content" id="editorContent" contenteditable="true"
+                                                placeholder="Share something with your class..."></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Attachment and Action Buttons -->
+                                    <div class="announcement-actions" id="announcementActions" style="display: none;">
+                                        <div class="attachment-buttons">
+                                            <button type="button" class="attachment-btn"
+                                                onclick="streamManager.attachFromDrive()" title="Attach from Drive">
+                                                <span class="material-icons">attachment</span>
+                                            </button>
+                                            <button type="button" class="attachment-btn"
+                                                onclick="streamManager.attachYouTube()" title="Attach YouTube">
+                                                <span class="material-icons">smart_display</span>
+                                            </button>
+                                            <button type="button" class="attachment-btn"
+                                                onclick="streamManager.attachFile()" title="Upload file">
+                                                <span class="material-icons">file_upload</span>
+                                            </button>
+                                            <button type="button" class="attachment-btn"
+                                                onclick="streamManager.attachLink()" title="Insert link">
+                                                <span class="material-icons">link</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="action-buttons">
+                                            <button type="button" class="btn btn-outline-secondary cancel-btn"
+                                                onclick="streamManager.cancelAnnouncement()">
+                                                Cancel
+                                            </button>
+                                            <div class="post-dropdown">
+                                                <button type="button" class="btn btn-primary post-btn"
+                                                    onclick="streamManager.postAnnouncement()">
+                                                    Post
+                                                </button>
+                                                <button type="button"
+                                                    class="btn btn-primary dropdown-toggle dropdown-toggle-split post-dropdown-btn"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#"
+                                                            onclick="streamManager.postAnnouncement()">Post</a></li>
+                                                    <li><a class="dropdown-item" href="#"
+                                                            onclick="streamManager.schedulePost()">Schedule for
+                                                            later</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Attached Files Display -->
+                                    <div class="attached-files-display" id="attachedFilesDisplay"
+                                        style="display: none;">
+                                        <div class="attached-files-list" id="attachedFilesList"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Enhanced Stream Posts -->
+                                <div class="stream-posts" id="streamPosts">
+                                    <!-- Posts will be populated here -->
+                                </div>
+
+                                <!-- Enhanced No Posts -->
+                                <div class="no-posts" id="noPosts" style="display: none;">
+                                    <div class="no-posts-icon">
+                                        <span class="material-icons">forum</span>
+                                    </div>
+                                    <h3>No Posts</h3>
+                                    <p>Assignments and announcements will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Course Code Modal -->
+        <div class="modal fade" id="courseCodeModal" tabindex="-1" aria-labelledby="courseCodeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="courseCodeModalLabel">Class code</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="course-code-large" id="courseCodeLarge">vwqisoz6</div>
+                        <p class="course-code-description">Share this code with students so they can join your class.
+                        </p>
+                        <button type="button" class="btn btn-outline-primary" onclick="streamManager.copyCourseCode()">
+                            <span class="material-icons">content_copy</span>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Selector Modal -->
+        <div class="modal fade" id="studentSelectorModal" tabindex="-1" aria-labelledby="studentSelectorModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="studentSelectorModalLabel">Select students</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="student-selector-content">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="studentSelection" id="allStudents"
+                                    value="all" checked>
+                                <label class="form-check-label" for="allStudents">
+                                    All students
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="studentSelection"
+                                    id="specificStudents" value="specific">
+                                <label class="form-check-label" for="specificStudents">
+                                    Specific students
+                                </label>
+                            </div>
+                            <div class="specific-students-list" id="specificStudentsList" style="display: none;">
+                                <!-- Student list will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary"
+                            onclick="streamManager.confirmStudentSelection()">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignment Detail View Modal -->
+        <div class="assignment-detail-modal" id="assignmentDetailModal" style="display: none;">
+            <div class="assignment-detail-content">
+                <div class="assignment-detail-header">
+                    <button class="close-assignment-detail" id="closeAssignmentDetail">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <div class="assignment-detail-body" id="assignmentDetailBody">
+                    <!-- Assignment detail content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="stream.js"></script>
+</body>
+
+</html>

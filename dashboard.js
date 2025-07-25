@@ -913,7 +913,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function openCourse(course) {
     localStorage.setItem("selectedCourse", JSON.stringify(course));
-    window.location.href = "course-detail.html";
+    window.location.href = "stream.html";
   }
 
   function debugCourses() {
