@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ড্যাশবোর্ড - ক্লাসরুম</title>
+    <title>Dashboard - Classroom</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -17,24 +17,24 @@
         <header class="header">
             <div class="header-left">
                 <span class="material-icons menu-icon" id="menuIcon">menu</span>
-                <h1>ক্লাসরুম</h1>
+                <h1>Classroom</h1>
             </div>
             <div class="header-right">
                 <div class="user-info">
                     <div id="currentUserEmail" class="user-email">user@email.com</div>
-                    <div id="userRoleBadge" class="role-badge new">নতুন ব্যবহারকারী</div>
+                    <div id="userRoleBadge" class="role-badge new">New User</div>
                 </div>
                 <div class="user-avatar">
                     <span id="userInitial">U</span>
                 </div>
-                <button class="logout-btn" id="logoutBtn">লগ আউট</button>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
             </div>
         </header>
 
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h2>নেভিগেশন</h2>
+                <h2>Navigation</h2>
             </div>
             <nav class="sidebar-menu">
                 <ul class="sidebar-menu">
@@ -67,7 +67,7 @@
             <div class="courses-container">
                 <!-- Header Section -->
                 <section class="courses-header">
-                    <h2 id="dashboardTitle">আমার ড্যাশবোর্ড</h2>
+                    <h2 id="dashboardTitle">My Dashboard</h2>
                     <div class="dropdown">
                         <button class="add-course-btn" id="addCourseBtn">
                             <span class="material-icons">add</span>
@@ -83,8 +83,8 @@
                     <div class="empty-icon">
                         <span class="material-icons">school</span>
                     </div>
-                    <h3>কোনো কোর্স নেই</h3>
-                    <p id="emptyStateText">আপনার প্রথম কোর্স তৈরি করুন অথবা একটি কোর্সে যোগ দিন</p>
+                    <h3>No Courses Available</h3>
+                    <p id="emptyStateText">Create your first course or join an existing course</p>
                 </div>
 
                 <!-- Courses Grid -->
@@ -99,31 +99,32 @@
     <div class="modal" id="createCourseModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>নতুন কোর্স তৈরি করুন</h3>
+                <h3>Create New Course</h3>
                 <button class="close-btn" id="closeCreateModal">
                     <span class="material-icons">close</span>
                 </button>
             </div>
             <form id="createCourseForm">
                 <div class="form-group">
-                    <label for="courseName">কোর্সের নাম *</label>
+                    <label for="courseName">Course Name *</label>
                     <input type="text" id="courseName" name="courseName" required>
                 </div>
                 <div class="form-group">
-                    <label for="courseSection">সেকশন</label>
-                    <input type="text" id="courseSection" name="section" placeholder="যেমন: ক, খ, A, B">
+                    <label for="courseSection">Section</label>
+                    <input type="text" id="courseSection" name="section" placeholder="e.g., A, B, 1, 2">
                 </div>
                 <div class="form-group">
-                    <label for="courseSubject">বিষয়</label>
-                    <input type="text" id="courseSubject" name="subject" placeholder="যেমন: গণিত, বিজ্ঞান, ইংরেজি">
+                    <label for="courseSubject">Subject</label>
+                    <input type="text" id="courseSubject" name="subject"
+                        placeholder="e.g., Mathematics, Science, English">
                 </div>
                 <div class="form-group">
-                    <label for="courseRoom">রুম</label>
-                    <input type="text" id="courseRoom" name="room" placeholder="যেমন: ১০১, ক্লাসরুম ১">
+                    <label for="courseRoom">Room</label>
+                    <input type="text" id="courseRoom" name="room" placeholder="e.g., 101, Classroom 1">
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="cancelCreate">বাতিল</button>
-                    <button type="submit" class="btn-primary">তৈরি করুন</button>
+                    <button type="button" class="btn-cancel" id="cancelCreate">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Course</button>
                 </div>
             </form>
         </div>
@@ -133,23 +134,23 @@
     <div class="modal" id="joinCourseModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>কোর্সে যোগ দিন</h3>
+                <h3>Join Course</h3>
                 <button class="close-btn" id="closeJoinModal">
                     <span class="material-icons">close</span>
                 </button>
             </div>
             <form id="joinCourseForm">
                 <div class="form-group">
-                    <label for="courseCode">কোর্স কোড *</label>
-                    <input type="text" id="courseCode" name="courseCode" required placeholder="কোর্স কোড লিখুন">
+                    <label for="courseCode">Course Code *</label>
+                    <input type="text" id="courseCode" name="courseCode" required placeholder="Enter course code">
                     <small>
                         <span class="material-icons" style="font-size: 14px; vertical-align: middle;">info</span>
-                        আপনার শিক্ষক থেকে কোর্স কোডটি চান এবং এখানে লিখুন
+                        Ask your teacher for the course code and enter it here
                     </small>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="cancelJoin">বাতিল</button>
-                    <button type="submit" class="btn-primary">যোগ দিন</button>
+                    <button type="button" class="btn-cancel" id="cancelJoin">Cancel</button>
+                    <button type="submit" class="btn-primary">Join Course</button>
                 </div>
             </form>
         </div>
@@ -159,31 +160,31 @@
     <div class="modal" id="editCourseModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>কোর্স সম্পাদনা করুন</h3>
+                <h3>Edit Course</h3>
                 <button class="close-btn" id="closeEditModal">
                     <span class="material-icons">close</span>
                 </button>
             </div>
             <form id="editCourseForm">
                 <div class="form-group">
-                    <label for="editCourseName">কোর্সের নাম *</label>
+                    <label for="editCourseName">Course Name *</label>
                     <input type="text" id="editCourseName" name="courseName" required>
                 </div>
                 <div class="form-group">
-                    <label for="editCourseSection">সেকশন</label>
+                    <label for="editCourseSection">Section</label>
                     <input type="text" id="editCourseSection" name="section">
                 </div>
                 <div class="form-group">
-                    <label for="editCourseSubject">বিষয়</label>
+                    <label for="editCourseSubject">Subject</label>
                     <input type="text" id="editCourseSubject" name="subject">
                 </div>
                 <div class="form-group">
-                    <label for="editCourseRoom">রুম</label>
+                    <label for="editCourseRoom">Room</label>
                     <input type="text" id="editCourseRoom" name="room">
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="cancelEdit">বাতিল</button>
-                    <button type="submit" class="btn-primary">আপডেট করুন</button>
+                    <button type="button" class="btn-cancel" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="btn-primary">Update Course</button>
                 </div>
             </form>
         </div>

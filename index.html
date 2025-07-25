@@ -1,50 +1,61 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>শিক্ষা ব্যবস্থাপনা সিস্টেম</title>
+    <title>Education Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="login-container">
-        <div class="login-form">
-            <h1>শিক্ষা ব্যবস্থাপনা সিস্টেম</h1>
+        <div class="brand-section">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+        </div>
 
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">ইমেইল:</label>
-                    <input type="email" id="email" name="email" required>
+        <form id="loginForm">
+            <div class="form-group">
+                <input type="email" class="form-control" id="email" placeholder="Email Address" required>
+                <label class="form-label" for="email"><i class="fas fa-envelope me-2"></i>Email Address</label>
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                <label class="form-label" for="password"><i class="fas fa-lock me-2"></i>Password</label>
+            </div>
+
+            <button type="submit" class="btn login-btn">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="role-section">
+            <h3 class="role-title">
+                <i class="fas fa-users me-2"></i>
+                Select User Type
+            </h3>
+            <div class="role-cards">
+                <div class="role-card" data-role="user">
+                    <i class="fas fa-user-graduate role-icon"></i>
+                    <div class="role-name">User</div>
                 </div>
-
-                <div class="form-group">
-                    <label for="password">পাসওয়ার্ড:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-
-                <button type="submit" class="login-btn">লগইন করুন</button>
-            </form>
-
-            <a href="#" id="forgotPassword">পাসওয়ার্ড ভুলে গেছেন?</a>
-
-            <div class="role-selection">
-                <h3>ব্যবহারকারীর ধরন নির্বাচন করুন</h3>
-                <div class="role-cards">
-                    <div class="role-card" data-role="user">
-                        <div class="role-icon">👨🎓</div>
-                        <div class="role-title">ব্যবহারকারী</div>
-                    </div>
-                    <div class="role-card" data-role="admin">
-                        <div class="role-icon">⚙️</div>
-                        <div class="role-title">প্রশাসক</div>
-                    </div>
+                <div class="role-card" data-role="admin">
+                    <i class="fas fa-user-shield role-icon"></i>
+                    <div class="role-name">Administrator</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 
