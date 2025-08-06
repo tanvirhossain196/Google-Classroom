@@ -19,6 +19,7 @@ class StreamManager {
     this.loadPosts();
     this.setupNotificationSystem();
     this.loadAvailableCoursesAndStudents(); // এই ফাংশনটি ব্যবহারকারীর কোর্স এবং শিক্ষার্থীদের লোড করবে
+    this.loadUpcomingAssignments(); // Load upcoming assignments
   }
 
   setupElements() {
@@ -47,6 +48,7 @@ class StreamManager {
       selectedCourse: document.getElementById("selectedCourse"),
       attachedFilesDisplay: document.getElementById("attachedFilesDisplay"),
       attachedFilesList: document.getElementById("attachedFilesList"),
+      upcomingContent: document.getElementById("upcomingContent"),
       // Add elements for student selector modal
       studentSelectorModal: document.getElementById("studentSelectorModal"),
       allStudentsRadio: document.getElementById("allStudents"),
@@ -134,9 +136,13 @@ class StreamManager {
       }
 
       this.courseId = this.currentCourse.id;
+      console.log("Course loaded with ID:", this.courseId); // Debug log
+      console.log("Current course:", this.currentCourse); // Debug log
+
       this.updateCourseDisplay();
       this.loadEnrolledClasses();
     } catch (error) {
+      console.error("Error loading course data:", error); // Debug log
       this.showErrorAndRedirect("কোর্স লোড করতে সমস্যা হয়েছে");
     }
   }
@@ -184,6 +190,64 @@ class StreamManager {
     // Selected course clear করুন
     localStorage.removeItem("selectedCourse");
     this.navigateWithAnimation("dashboard.html");
+  }
+
+  // Load upcoming assignments from classwork
+  loadUpcomingAssignments() {
+    const assignmentsKey = `assignments_${this.courseId}`;
+    const assignments = JSON.parse(
+      localStorage.getItem(assignmentsKey) || "[]"
+    );
+
+    // Filter assignments that are due soon (within next 7 days)
+    const now = new Date();
+    const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    const upcomingAssignments = assignments.filter((assignment) => {
+      if (!assignment.dueDate) return false;
+      const dueDate = new Date(assignment.dueDate);
+      return dueDate >= now && dueDate <= sevenDaysFromNow;
+    });
+
+    // Update upcoming section
+    if (this.elements.upcomingContent) {
+      if (upcomingAssignments.length === 0) {
+        this.elements.upcomingContent.innerHTML = "<p>No work due soon</p>";
+      } else {
+        let upcomingHTML = "";
+        upcomingAssignments.slice(0, 3).forEach((assignment) => {
+          const dueDate = new Date(assignment.dueDate);
+          const isToday = dueDate.toDateString() === now.toDateString();
+          const isTomorrow =
+            dueDate.toDateString() ===
+            new Date(now.getTime() + 24 * 60 * 60 * 1000).toDateString();
+
+          let dueDateText = "";
+          if (isToday) {
+            dueDateText = "Due today";
+          } else if (isTomorrow) {
+            dueDateText = "Due tomorrow";
+          } else {
+            dueDateText = `Due ${dueDate.toLocaleDateString()}`;
+          }
+
+          upcomingHTML += `
+            <div style="padding: 8px 0; border-bottom: 1px solid #eee; cursor: pointer;" onclick="streamManager.openAssignment('${assignment.id}')">
+              <div style="font-weight: 500; color: #1976d2;">${assignment.title}</div>
+              <div style="font-size: 12px; color: #666;">${dueDateText}</div>
+            </div>
+          `;
+        });
+        this.elements.upcomingContent.innerHTML = upcomingHTML;
+      }
+    }
+  }
+
+  // Open assignment details
+  openAssignment(assignmentId) {
+    // Navigate to assignment page or show modal
+    this.showNotification("Opening assignment...", "info");
+    // In a real implementation, this would navigate to the assignment details
   }
 
   // New announcement expansion method
@@ -796,21 +860,109 @@ class StreamManager {
   }
 
   loadPosts() {
-    const posts = this.getCourseAnnouncements();
+    console.log("Loading posts for course ID:", this.courseId); // Debug log
 
-    if (posts.length === 0) {
+    const posts = this.getCourseAnnouncements();
+    const assignments = this.getCourseAssignments();
+
+    console.log("Found announcements:", posts.length); // Debug log
+    console.log("Found assignments:", assignments.length); // Debug log
+    console.log("Assignments data:", assignments); // Debug log
+
+    // Combine announcements and assignments
+    const allPosts = [...posts];
+
+    // Add assignment notifications
+    assignments.forEach((assignment) => {
+      console.log("Processing assignment:", assignment); // Debug log
+
+      const assignmentPost = {
+        id: `assignment_${assignment.id}`,
+        type: "assignment",
+        author: assignment.author || this.currentUser || "SurePay",
+        content: `posted a new assignment: <strong>${assignment.title}</strong>`,
+        timestamp: this.formatTimestamp(assignment.createdAt),
+        assignment: assignment,
+        comments: [],
+        likes: 0,
+        isEditable: true,
+        originalText: `posted a new assignment: ${assignment.title}`,
+      };
+      allPosts.push(assignmentPost);
+    });
+
+    console.log("Total posts after combining:", allPosts.length); // Debug log
+
+    // Sort by timestamp (newest first)
+    allPosts.sort((a, b) => {
+      const timeA = a.assignment
+        ? new Date(a.assignment.createdAt)
+        : new Date(a.timestamp);
+      const timeB = b.assignment
+        ? new Date(b.assignment.createdAt)
+        : new Date(b.timestamp);
+      return timeB - timeA;
+    });
+
+    if (allPosts.length === 0) {
       if (this.elements.noPosts) this.elements.noPosts.style.display = "block";
       if (this.elements.streamPosts) this.elements.streamPosts.innerHTML = "";
       return;
     }
 
     if (this.elements.noPosts) this.elements.noPosts.style.display = "none";
-    this.renderPosts(posts);
+    this.renderPosts(allPosts);
   }
 
   getCourseAnnouncements() {
     const courseKey = `announcements_${this.courseId}`;
     return JSON.parse(localStorage.getItem(courseKey) || "[]");
+  }
+
+  getCourseAssignments() {
+    if (!this.courseId) {
+      console.log("No course ID found"); // Debug log
+      return [];
+    }
+
+    const assignmentsKey = `assignments_${this.courseId}`;
+    console.log("Looking for assignments with key:", assignmentsKey); // Debug log
+
+    const assignments = JSON.parse(
+      localStorage.getItem(assignmentsKey) || "[]"
+    );
+    console.log("Retrieved assignments:", assignments); // Debug log
+
+    return assignments;
+  }
+
+  formatTimestamp(dateString) {
+    if (!dateString)
+      return new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = (now - date) / (1000 * 60 * 60);
+
+    if (diffInHours < 24) {
+      return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } else if (diffInHours < 48) {
+      return "Yesterday";
+    } else {
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
   }
 
   renderPosts(posts) {
@@ -828,73 +980,448 @@ class StreamManager {
     const postDiv = document.createElement("div");
     postDiv.className = "stream-post";
 
-    const postHeader = document.createElement("div");
-    postHeader.className = "post-header";
+    if (post.type === "assignment") {
+      // Create notification-style header for assignments
+      const notificationHeader = document.createElement("div");
+      notificationHeader.className = "notification-header";
+      notificationHeader.id = `notification-${post.id}`;
 
-    const avatar = document.createElement("div");
-    avatar.className = "post-avatar";
-    avatar.textContent = post.author.charAt(0).toUpperCase();
+      const notificationContent = document.createElement("div");
+      notificationContent.className = "notification-content";
+      notificationContent.onclick = () =>
+        this.navigateToAssignment(post.assignment);
 
-    const postInfo = document.createElement("div");
-    postInfo.className = "post-info";
+      const avatar = document.createElement("div");
+      avatar.className = "notification-avatar";
+      avatar.textContent = "📄";
 
-    const author = document.createElement("div");
-    author.className = "post-author";
-    author.textContent = post.author;
+      const notificationText = document.createElement("div");
+      notificationText.className = "notification-text";
+      notificationText.id = `notification-text-${post.id}`;
+      notificationText.innerHTML = `<strong>SurePay</strong> ${post.content}`;
 
-    const date = document.createElement("div");
-    date.className = "post-date";
-    date.textContent = post.timestamp;
+      const timeDiv = document.createElement("div");
+      timeDiv.className = "time";
+      timeDiv.textContent = post.timestamp;
 
-    postInfo.appendChild(author);
-    postInfo.appendChild(date);
+      notificationText.appendChild(timeDiv);
 
-    const postMenu = document.createElement("div");
-    postMenu.className = "post-menu";
-    postMenu.innerHTML = '<span class="material-icons">more_vert</span>';
+      notificationContent.appendChild(avatar);
+      notificationContent.appendChild(notificationText);
 
-    postHeader.appendChild(avatar);
-    postHeader.appendChild(postInfo);
-    postHeader.appendChild(postMenu);
+      // Menu container
+      const menuContainer = document.createElement("div");
+      menuContainer.className = "notification-menu-container";
 
-    const postContent = document.createElement("div");
-    postContent.className = "post-content";
-    postContent.innerHTML = post.content;
+      const menuButton = document.createElement("button");
+      menuButton.className = "notification-menu-dots";
+      menuButton.textContent = "⋮";
+      menuButton.style.cssText = `
+        cursor: pointer;
+        padding: 8px;
+        color: #666;
+        font-size: 20px;
+        font-weight: bold;
+        border: none;
+        background: none;
+        border-radius: 50%;
+        transition: background-color 0.2s;
+      `;
+      menuButton.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        console.log("Menu button clicked for post:", post.id); // Debug log
+        this.toggleNotificationMenu(post.id);
+      };
 
-    // Add attachments if any
-    if (post.attachments && post.attachments.length > 0) {
-      const attachmentsDiv = document.createElement("div");
-      attachmentsDiv.className = "post-attachments";
+      const dropdownMenu = document.createElement("div");
+      dropdownMenu.className = "notification-dropdown-menu";
+      dropdownMenu.id = `dropdown-${post.id}`;
+      dropdownMenu.style.cssText = `
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        z-index: 10000;
+        min-width: 140px;
+        display: none;
+        overflow: visible;
+        margin-top: 4px;
+      `;
 
-      post.attachments.forEach((attachment) => {
-        const attachmentElement = this.createAttachmentElement(attachment);
-        attachmentsDiv.appendChild(attachmentElement);
+      const editButton = document.createElement("button");
+      editButton.className = "notification-dropdown-item";
+      editButton.innerHTML = "<span>✏️</span> Edit";
+      editButton.style.cssText = `
+        padding: 12px 16px;
+        cursor: pointer;
+        font-size: 14px;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #333;
+        transition: background-color 0.2s;
+      `;
+      editButton.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        console.log("Edit button clicked"); // Debug log
+        this.editNotification(post.id, post.originalText);
+      };
+
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "notification-dropdown-item delete";
+      deleteButton.innerHTML = "<span>🗑️</span> Delete";
+      deleteButton.style.cssText = `
+        padding: 12px 16px;
+        cursor: pointer;
+        font-size: 14px;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #d32f2f;
+        transition: background-color 0.2s;
+      `;
+      deleteButton.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        console.log("Delete button clicked"); // Debug log
+        this.deleteNotification(post.id);
+      };
+
+      // Add hover effects
+      editButton.addEventListener("mouseenter", () => {
+        editButton.style.backgroundColor = "#f5f5f5";
+      });
+      editButton.addEventListener("mouseleave", () => {
+        editButton.style.backgroundColor = "transparent";
       });
 
-      postDiv.appendChild(attachmentsDiv);
+      deleteButton.addEventListener("mouseenter", () => {
+        deleteButton.style.backgroundColor = "#ffebee";
+      });
+      deleteButton.addEventListener("mouseleave", () => {
+        deleteButton.style.backgroundColor = "transparent";
+      });
+
+      dropdownMenu.appendChild(editButton);
+      dropdownMenu.appendChild(deleteButton);
+
+      menuContainer.appendChild(menuButton);
+      menuContainer.appendChild(dropdownMenu);
+
+      notificationHeader.appendChild(notificationContent);
+      notificationHeader.appendChild(menuContainer);
+
+      postDiv.appendChild(notificationHeader);
+
+      // Store original text for editing
+      postDiv.setAttribute("data-original-text", post.originalText);
+      postDiv.setAttribute("data-assignment-id", post.assignment.id);
+    } else {
+      // Regular announcement post
+      const postHeader = document.createElement("div");
+      postHeader.className = "post-header";
+
+      const avatar = document.createElement("div");
+      avatar.className = "post-avatar";
+      avatar.textContent = post.author.charAt(0).toUpperCase();
+
+      const postInfo = document.createElement("div");
+      postInfo.className = "post-info";
+
+      const author = document.createElement("div");
+      author.className = "post-author";
+      author.textContent = post.author;
+
+      const date = document.createElement("div");
+      date.className = "post-date";
+      date.textContent = post.timestamp;
+
+      postInfo.appendChild(author);
+      postInfo.appendChild(date);
+
+      const postMenu = document.createElement("div");
+      postMenu.className = "post-menu";
+      postMenu.innerHTML = '<span class="material-icons">more_vert</span>';
+
+      postHeader.appendChild(avatar);
+      postHeader.appendChild(postInfo);
+      postHeader.appendChild(postMenu);
+
+      const postContent = document.createElement("div");
+      postContent.className = "post-content";
+      postContent.innerHTML = post.content;
+
+      // Add attachments if any
+      if (post.attachments && post.attachments.length > 0) {
+        const attachmentsDiv = document.createElement("div");
+        attachmentsDiv.className = "post-attachments";
+
+        post.attachments.forEach((attachment) => {
+          const attachmentElement = this.createAttachmentElement(attachment);
+          attachmentsDiv.appendChild(attachmentElement);
+        });
+
+        postDiv.appendChild(attachmentsDiv);
+      }
+
+      const postActions = document.createElement("div");
+      postActions.className = "post-actions";
+
+      const likeCount = document.createElement("span");
+      likeCount.className = "like-count";
+      likeCount.innerHTML =
+        '<span class="material-icons">thumb_up</span> ' + post.likes;
+
+      const commentCount = document.createElement("span");
+      commentCount.className = "comment-count";
+      commentCount.innerHTML =
+        '<span class="material-icons">comment</span> ' + post.comments.length;
+
+      postActions.appendChild(likeCount);
+      postActions.appendChild(commentCount);
+
+      postDiv.appendChild(postHeader);
+      postDiv.appendChild(postContent);
+      postDiv.appendChild(postActions);
     }
 
-    const postActions = document.createElement("div");
-    postActions.className = "post-actions";
-
-    const likeCount = document.createElement("span");
-    likeCount.className = "like-count";
-    likeCount.innerHTML =
-      '<span class="material-icons">thumb_up</span> ' + post.likes;
-
-    const commentCount = document.createElement("span");
-    commentCount.className = "comment-count";
-    commentCount.innerHTML =
-      '<span class="material-icons">comment</span> ' + post.comments.length;
-
-    postActions.appendChild(likeCount);
-    postActions.appendChild(commentCount);
-
-    postDiv.appendChild(postHeader);
-    postDiv.appendChild(postContent);
-    postDiv.appendChild(postActions);
-
     return postDiv;
+  }
+
+  // Notification menu methods
+  toggleNotificationMenu(postId) {
+    console.log("Toggling menu for post:", postId); // Debug log
+
+    const dropdown = document.getElementById(`dropdown-${postId}`);
+    const allDropdowns = document.querySelectorAll(
+      ".notification-dropdown-menu"
+    );
+
+    console.log("Found dropdown:", dropdown); // Debug log
+
+    // Close all other dropdowns
+    allDropdowns.forEach((menu) => {
+      if (menu.id !== `dropdown-${postId}`) {
+        menu.classList.remove("show");
+      }
+    });
+
+    // Toggle current dropdown
+    if (dropdown) {
+      const isCurrentlyShowing = dropdown.classList.contains("show");
+      console.log("Currently showing:", isCurrentlyShowing); // Debug log
+
+      if (isCurrentlyShowing) {
+        dropdown.classList.remove("show");
+      } else {
+        dropdown.classList.add("show");
+
+        // Ensure dropdown appears above everything
+        dropdown.style.position = "absolute";
+        dropdown.style.top = "100%";
+        dropdown.style.right = "0";
+        dropdown.style.left = "auto";
+        dropdown.style.bottom = "auto";
+        dropdown.style.zIndex = "10000";
+        console.log("Dropdown should now be visible"); // Debug log
+      }
+    } else {
+      console.error("Dropdown not found for ID:", `dropdown-${postId}`);
+    }
+  }
+
+  editNotification(postId, originalText) {
+    // Close dropdown first
+    const dropdown = document.getElementById(`dropdown-${postId}`);
+    if (dropdown) {
+      dropdown.classList.remove("show");
+    }
+
+    const notificationText = document.getElementById(
+      `notification-text-${postId}`
+    );
+    if (!notificationText) return;
+
+    // Get current text without HTML tags for editing
+    const currentText = originalText || notificationText.textContent;
+
+    // Create edit interface
+    const editHtml = `
+      <div class="notification-edit-mode">
+        <input type="text" class="notification-edit-input" id="editInput-${postId}" value="${currentText}">
+        <div class="notification-edit-actions">
+          <button class="notification-edit-btn notification-cancel-btn" onclick="streamManager.cancelEdit('${postId}')">Cancel</button>
+          <button class="notification-edit-btn notification-save-btn" onclick="streamManager.saveEdit('${postId}')">Save</button>
+        </div>
+      </div>
+    `;
+
+    const originalHTML = notificationText.innerHTML;
+    notificationText.setAttribute("data-original-html", originalHTML);
+    notificationText.innerHTML = editHtml;
+
+    // Focus on input and select text
+    const editInput = document.getElementById(`editInput-${postId}`);
+    if (editInput) {
+      editInput.focus();
+      editInput.select();
+
+      // Save on Enter key
+      editInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          streamManager.saveEdit(postId);
+        }
+      });
+
+      // Cancel on Escape key
+      editInput.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          streamManager.cancelEdit(postId);
+        }
+      });
+    }
+  }
+
+  cancelEdit(postId) {
+    const notificationText = document.getElementById(
+      `notification-text-${postId}`
+    );
+    if (!notificationText) return;
+
+    const originalHTML = notificationText.getAttribute("data-original-html");
+    notificationText.innerHTML = originalHTML;
+    notificationText.removeAttribute("data-original-html");
+  }
+
+  saveEdit(postId) {
+    const editInput = document.getElementById(`editInput-${postId}`);
+    const notificationText = document.getElementById(
+      `notification-text-${postId}`
+    );
+
+    if (!editInput || !notificationText) return;
+
+    const newText = editInput.value.trim();
+    const notificationHeader = document.getElementById(
+      `notification-${postId}`
+    );
+    const assignmentId = notificationHeader
+      ?.closest(".stream-post")
+      ?.getAttribute("data-assignment-id");
+
+    if (newText) {
+      // Update the notification text
+      const timeElement = notificationText.querySelector(".time");
+      const timeHTML = timeElement ? timeElement.outerHTML : "";
+      notificationText.innerHTML = `<strong>SurePay</strong> posted a new assignment: <strong>${newText}</strong>${timeHTML}`;
+
+      // Update the assignment title in localStorage
+      if (assignmentId) {
+        this.updateAssignmentTitle(assignmentId, newText);
+      }
+    } else {
+      // If empty, revert to original
+      const originalHTML = notificationText.getAttribute("data-original-html");
+      notificationText.innerHTML = originalHTML;
+    }
+
+    notificationText.removeAttribute("data-original-html");
+  }
+
+  updateAssignmentTitle(assignmentId, newTitle) {
+    const assignmentsKey = `assignments_${this.courseId}`;
+    const assignments = JSON.parse(
+      localStorage.getItem(assignmentsKey) || "[]"
+    );
+
+    const assignmentIndex = assignments.findIndex((a) => a.id == assignmentId);
+    if (assignmentIndex !== -1) {
+      assignments[assignmentIndex].title = newTitle;
+      localStorage.setItem(assignmentsKey, JSON.stringify(assignments));
+
+      // Reload upcoming assignments
+      this.loadUpcomingAssignments();
+    }
+  }
+
+  deleteNotification(postId) {
+    // Close dropdown first
+    const dropdown = document.getElementById(`dropdown-${postId}`);
+    if (dropdown) {
+      dropdown.classList.remove("show");
+    }
+
+    if (confirm("Are you sure you want to delete this notification?")) {
+      const notificationHeader = document.getElementById(
+        `notification-${postId}`
+      );
+      const streamPost = notificationHeader?.closest(".stream-post");
+      const assignmentId = streamPost?.getAttribute("data-assignment-id");
+
+      // Add fade out animation
+      if (streamPost) {
+        streamPost.classList.add("notification-fade-out");
+
+        // Remove the notification after animation
+        setTimeout(() => {
+          streamPost.remove();
+
+          // Delete the assignment from localStorage
+          if (assignmentId) {
+            this.deleteAssignment(assignmentId);
+          }
+
+          // Show success message
+          this.showNotification("Notification deleted successfully", "success");
+
+          // Check if no posts remain
+          this.checkForNoPosts();
+        }, 300);
+      }
+    }
+  }
+
+  deleteAssignment(assignmentId) {
+    const assignmentsKey = `assignments_${this.courseId}`;
+    const assignments = JSON.parse(
+      localStorage.getItem(assignmentsKey) || "[]"
+    );
+
+    const filteredAssignments = assignments.filter((a) => a.id != assignmentId);
+    localStorage.setItem(assignmentsKey, JSON.stringify(filteredAssignments));
+
+    // Reload upcoming assignments
+    this.loadUpcomingAssignments();
+  }
+
+  checkForNoPosts() {
+    const streamPosts = document.getElementById("streamPosts");
+    const noPosts = document.getElementById("noPosts");
+
+    if (streamPosts && streamPosts.children.length === 0) {
+      if (noPosts) noPosts.style.display = "block";
+    }
+  }
+
+  navigateToAssignment(assignment) {
+    // Store assignment details and navigate
+    localStorage.setItem("selectedAssignment", JSON.stringify(assignment));
+    window.location.href = "assignment-page.html";
   }
 
   createAttachmentElement(attachment) {
@@ -1050,15 +1577,6 @@ class StreamManager {
       if (e.key === "Escape" && this.isAnnouncementExpanded) {
         this.cancelAnnouncement();
       }
-
-      // Ctrl/Cmd + K to focus on search (example, assuming a search input exists)
-      // if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-      //   e.preventDefault();
-      //   const searchInput = document.getElementById("searchInput"); // Replace with your search input ID
-      //   if (searchInput) {
-      //     searchInput.focus();
-      //   }
-      // }
     });
   }
 
@@ -1093,17 +1611,8 @@ class StreamManager {
     // Dark/Light theme detection and application
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-    // No dark theme application as per request, but keeping the listener for future extensibility
-    // if (prefersDarkScheme.matches) {
-    //   document.body.classList.add("dark-theme");
-    // }
-
     prefersDarkScheme.addEventListener("change", (e) => {
-      // if (e.matches) {
-      //   document.body.classList.add("dark-theme");
-      // } else {
-      //   document.body.classList.remove("dark-theme");
-      // }
+      // Theme handling if needed in future
     });
   }
 
@@ -1111,7 +1620,6 @@ class StreamManager {
     // Loading progress indicators for better UX
     const showLoading = (element) => {
       element.classList.add("loading");
-      // Example: Add a spinner or overlay
       const spinner = document.createElement("div");
       spinner.className = "loading-spinner";
       element.appendChild(spinner);
@@ -1125,7 +1633,6 @@ class StreamManager {
       }
     };
 
-    // Add loading states to various elements
     this.showLoading = showLoading;
     this.hideLoading = hideLoading;
 
@@ -1170,8 +1677,8 @@ class StreamManager {
         this.showNotification(message, type);
         setTimeout(() => {
           this.isShowingNotification = false;
-          processQueue(); // Process next notification after current one finishes
-        }, 3500); // Notification display time + a small delay
+          processQueue();
+        }, 3500);
       }
     };
 
@@ -1181,15 +1688,50 @@ class StreamManager {
       this.notificationQueue.push({ message, type });
       processQueue();
     };
+
+    // Close dropdown menus when clicking outside or scrolling
+    document.addEventListener("click", (e) => {
+      // Check if click is outside any notification menu
+      if (
+        !e.target.closest(".notification-menu-container") &&
+        !e.target.closest(".notification-dropdown-menu")
+      ) {
+        const allDropdowns = document.querySelectorAll(
+          ".notification-dropdown-menu"
+        );
+        allDropdowns.forEach((menu) => {
+          menu.classList.remove("show");
+        });
+      }
+    });
+
+    // Close dropdowns on scroll
+    document.addEventListener("scroll", () => {
+      const allDropdowns = document.querySelectorAll(
+        ".notification-dropdown-menu"
+      );
+      allDropdowns.forEach((menu) => {
+        menu.classList.remove("show");
+      });
+    });
+
+    // Close dropdowns on window resize
+    window.addEventListener("resize", () => {
+      const allDropdowns = document.querySelectorAll(
+        ".notification-dropdown-menu"
+      );
+      allDropdowns.forEach((menu) => {
+        menu.classList.remove("show");
+      });
+    });
   }
 
   handleClickOutside(e) {
     // Enhanced click outside handling
     if (this.isAnnouncementExpanded) {
       const announcementCard = e.target.closest(".announcement-input-card");
-      const modal = e.target.closest(".modal"); // Check if click is inside a modal
+      const modal = e.target.closest(".modal");
       if (!announcementCard && !modal) {
-        // Don't auto-cancel if user has typed content
         const content = this.elements.editorContent?.innerHTML?.trim();
         if (!content) {
           this.cancelAnnouncement();
@@ -1209,6 +1751,70 @@ class StreamManager {
       contentWrapper.classList.remove("sidebar-open");
       courseTopNav.classList.remove("sidebar-open");
     }
+  }
+
+  setupAccessibility() {
+    // Add ARIA labels and roles
+    const interactiveElements = document.querySelectorAll(
+      'button, [role="button"], input, textarea, a'
+    );
+    interactiveElements.forEach((element) => {
+      if (
+        !element.getAttribute("aria-label") &&
+        !element.getAttribute("aria-labelledby") &&
+        !element.hasAttribute("title")
+      ) {
+        const text = element.textContent?.trim() || element.placeholder?.trim();
+        if (text) {
+          element.setAttribute("aria-label", text);
+        }
+      }
+    });
+
+    // Improve focus management
+    document.body.addEventListener("keydown", (e) => {
+      if (e.key === "Tab") {
+        document.body.classList.add("keyboard-navigation");
+      }
+    });
+
+    document.body.addEventListener("mousedown", () => {
+      document.body.classList.remove("keyboard-navigation");
+    });
+
+    // Add CSS for keyboard-navigation focus outline
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .keyboard-navigation *:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  setupPerformanceOptimizations() {
+    // Lazy load images
+    const images = document.querySelectorAll("img[data-src]");
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src;
+          img.removeAttribute("data-src");
+          observer.unobserve(img);
+        }
+      });
+    });
+
+    images.forEach((img) => imageObserver.observe(img));
+
+    // Debounce resize handler
+    const debouncedResize = this.debounce(() => {
+      this.handleResize();
+    }, 250);
+
+    window.addEventListener("resize", debouncedResize);
   }
 
   // Utility methods
@@ -1235,72 +1841,6 @@ class StreamManager {
         setTimeout(() => (inThrottle = false), limit);
       }
     };
-  }
-
-  // Accessibility improvements
-  setupAccessibility() {
-    // Add ARIA labels and roles
-    const interactiveElements = document.querySelectorAll(
-      'button, [role="button"], input, textarea, a' // Added 'a' for links
-    );
-    interactiveElements.forEach((element) => {
-      if (
-        !element.getAttribute("aria-label") &&
-        !element.getAttribute("aria-labelledby") &&
-        !element.hasAttribute("title") // Check if title already exists
-      ) {
-        const text = element.textContent?.trim() || element.placeholder?.trim();
-        if (text) {
-          element.setAttribute("aria-label", text);
-        }
-      }
-    });
-
-    // Improve focus management (visual outline for keyboard users)
-    document.body.addEventListener("keydown", (e) => {
-      if (e.key === "Tab") {
-        document.body.classList.add("keyboard-navigation");
-      }
-    });
-
-    document.body.addEventListener("mousedown", () => {
-      document.body.classList.remove("keyboard-navigation");
-    });
-
-    // Add CSS for keyboard-navigation focus outline
-    const style = document.createElement("style");
-    style.innerHTML = `
-      .keyboard-navigation *:focus-visible {
-        outline: 2px solid var(--primary-color);
-        outline-offset: 2px;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  // Performance optimization
-  setupPerformanceOptimizations() {
-    // Lazy load images (if any, though not explicitly in this HTML)
-    const images = document.querySelectorAll("img[data-src]");
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          img.src = img.dataset.src;
-          img.removeAttribute("data-src");
-          observer.unobserve(img);
-        }
-      });
-    });
-
-    images.forEach((img) => imageObserver.observe(img));
-
-    // Debounce resize handler
-    const debouncedResize = this.debounce(() => {
-      this.handleResize();
-    }, 250);
-
-    window.addEventListener("resize", debouncedResize);
   }
 }
 
@@ -1382,7 +1922,32 @@ document.addEventListener("visibilitychange", () => {
   } else {
     // Page is visible - resume operations
     if (streamManager) {
+      console.log("Page became visible, refreshing posts..."); // Debug log
       streamManager.loadPosts(); // Refresh posts when user returns
+      streamManager.loadUpcomingAssignments(); // Refresh upcoming assignments
     }
   }
 });
+
+// Add a manual refresh function for testing
+window.refreshPosts = function () {
+  if (streamManager) {
+    console.log("Manual refresh triggered");
+    streamManager.loadPosts();
+    streamManager.loadUpcomingAssignments();
+  }
+};
+
+// Debug function to check localStorage
+window.checkAssignments = function () {
+  if (streamManager && streamManager.courseId) {
+    const key = `assignments_${streamManager.courseId}`;
+    const assignments = localStorage.getItem(key);
+    console.log("Assignment key:", key);
+    console.log("Stored assignments:", assignments);
+    console.log("Parsed assignments:", JSON.parse(assignments || "[]"));
+  } else {
+    console.log("No stream manager or course ID found");
+    console.log("All localStorage keys:", Object.keys(localStorage));
+  }
+};

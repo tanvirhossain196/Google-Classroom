@@ -5,28 +5,431 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project-1 Assignment</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Enhanced Professional Design - From stream.css */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f5f5f5;
-            line-height: 1.4;
+        :root {
+            --primary-color: #1976d2;
+            --primary-hover: #1565c0;
+            --secondary-color: #4caf50;
+            --background-color: #f8f9fa;
+            --surface-color: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #5f6368;
+            --border-color: #e8eaed;
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.16);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        body {
+            font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Enhanced Header */
+        .app-header {
+            background: var(--surface-color);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-light);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .menu-btn:hover {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            transform: scale(1.02);
+        }
+
+        .menu-btn .material-icons {
+            font-size: 22px;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .menu-btn:hover .material-icons {
+            color: var(--primary-color);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon-btn {
+            background: none;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .header-icon-btn:hover {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            transform: scale(1.02);
+        }
+
+        .header-icon-btn .material-icons {
+            font-size: 22px;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .header-icon-btn:hover .material-icons {
+            color: var(--primary-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 12px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        #userInitial {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Enhanced Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 72px;
+            height: calc(100vh - 64px);
+            background: var(--surface-color);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 999;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .sidebar.open {
+            width: 300px;
+        }
+
+        .sidebar-content {
+            padding: 20px 0;
+        }
+
+        .current-course-section {
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .current-course-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            margin: 0 12px;
+            border-radius: var(--border-radius);
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .current-course-header:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .current-course-header .material-icons {
+            font-size: 24px;
+            min-width: 24px;
+        }
+
+        .course-name-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .sidebar-header:hover {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            color: var(--primary-color);
+            transform: translateX(2px);
+        }
+
+        .sidebar-header .material-icons {
+            font-size: 24px;
+            min-width: 24px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 24px;
+            margin: 6px 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 15px;
+            position: relative;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-item:hover {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            color: var(--primary-color);
+            transform: translateX(2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .sidebar-item.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .sidebar-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            min-width: 32px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .sidebar-text {
+            white-space: nowrap;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .sidebar:not(.open) .sidebar-text,
+        .sidebar:not(.open) .course-name-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .sidebar:not(.open) .sidebar-item,
+        .sidebar:not(.open) .sidebar-header,
+        .sidebar:not(.open) .current-course-header {
+            justify-content: center;
+            padding: 12px 0;
+        }
+
+        /* Enhanced Top Navigation */
+        .course-top-nav {
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 64px;
+            left: 72px;
+            right: 0;
+            z-index: 998;
+            box-shadow: none;
+            border-radius: 0;
+            padding: 0;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .course-top-nav.sidebar-open {
+            left: 300px;
+        }
+
+        .top-nav-tabs {
+            display: flex;
+            gap: 0;
+            max-width: 100%;
+            margin: 0;
+            padding: 0 24px;
+            height: 100%;
+            align-items: center;
+            width: 100%;
+        }
+
+        .top-nav-tab {
+            background: none;
+            border: none;
+            padding: 0 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            height: 48px;
+            min-width: auto;
+            text-decoration: none;
+            background: transparent;
+        }
+
+        .top-nav-tab:hover {
+            color: var(--primary-color);
+            background: rgba(25, 118, 210, 0.04);
+            transform: none;
+        }
+
+        .top-nav-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: 500;
+            background: transparent;
+        }
+
+        .top-nav-tab span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .top-nav-tab .material-icons {
+            font-size: 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Content Wrapper - Updated for fixed top nav */
+        .content-wrapper {
+            margin-top: calc(64px + 48px);
+            margin-left: 72px;
+            width: calc(100% - 72px - 50px);
+            padding: 0 32px 32px 32px;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            min-height: calc(100vh - 64px - 48px);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .content-wrapper.sidebar-open {
+            margin-left: 300px;
+            width: calc(100% - 300px - 50px);
+        }
+
+        .content-inner {
+            width: 100%;
+            max-width: 1150px;
+            transition: var(--transition);
+        }
+
+        /* Assignment Page Styles - Keep all original styles */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 1px;
         }
 
         .assignment-container {
             display: flex;
-            gap: 20px;
+            gap: 10px;
             align-items: flex-start;
         }
 
@@ -334,7 +737,7 @@
             background: #f5f5f5;
         }
 
-        .sidebar {
+        .assignment-sidebar {
             width: 300px;
             flex-shrink: 0;
         }
@@ -381,6 +784,7 @@
             gap: 8px;
             font-size: 14px;
             font-weight: 500;
+            position: relative;
         }
 
         .add-work-btn:hover {
@@ -402,6 +806,85 @@
 
         .mark-done-btn:hover {
             background: #1565c0;
+        }
+
+        .unsubmitted-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 14px 20px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .unsubmitted-btn:hover {
+            background: #f57c00;
+        }
+
+        .add-work-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            margin-top: 4px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .add-work-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-section {
+            padding: 8px 0;
+        }
+
+        .dropdown-section:not(:last-child) {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #333;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-option:hover {
+            background: #f5f5f5;
+        }
+
+        .option-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .section-title {
+            padding: 8px 16px;
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .private-comments {
@@ -486,11 +969,41 @@
         }
 
         @media (max-width: 768px) {
+            .course-top-nav {
+                left: 0;
+                padding: 0 16px;
+            }
+
+            .course-top-nav.sidebar-open {
+                left: 0;
+            }
+
+            .content-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 0 16px 16px 16px;
+                margin-top: calc(64px + 48px);
+            }
+
+            .content-wrapper.sidebar-open {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                width: 300px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
             .assignment-container {
                 flex-direction: column;
             }
 
-            .sidebar {
+            .assignment-sidebar {
                 width: 100%;
             }
         }
@@ -498,361 +1011,664 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="assignment-container">
-            <!-- Main Assignment Card -->
-            <div class="assignment-card">
-                <div class="assignment-header">
-                    <div class="assignment-title">
-                        <div class="avatar">📄</div>
-                        <div>
-                            <h1>Project-1</h1>
-                            <div class="assignment-info">SurePay • 12:53 AM</div>
-                            <div class="assignment-points">100 points</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: flex-start;">
-                        <div class="assignment-due">Due Jul 22</div>
-                        <div class="menu-dots">⋮</div>
-                    </div>
-                </div>
-
-                <div class="comments-section">
-                    <div class="comments-header">
-                        <span>👥</span>
-                        <span>Class comments</span>
-                    </div>
-                    <a href="#" class="add-comment-link" id="addCommentLink">Add a class comment</a>
-
-                    <!-- Comment Input Area -->
-                    <div class="comment-input-area" id="commentInputArea">
-                        <textarea class="comment-input" id="commentInput"
-                            placeholder="Add a class comment..."></textarea>
-                        <div class="comment-actions">
-                            <button class="comment-btn cancel-btn" id="cancelComment">Cancel</button>
-                            <button class="comment-btn post-btn" id="postComment" disabled>Post</button>
-                        </div>
-                    </div>
-
-                    <!-- Comments List -->
-                    <div class="comments-list" id="commentsList"></div>
+    <div class="app-container">
+        <!-- Enhanced Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn">
+                    <span class="material-icons">menu</span>
+                </button>
+                <h1 class="logo-text">Classroom</h1>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <span class="material-icons">notifications</span>
+                </button>
+                <button class="header-icon-btn">
+                    <span class="material-icons">apps</span>
+                </button>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
                 </div>
             </div>
+        </header>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Your Work Section -->
-                <div class="work-section">
-                    <div class="work-header">
-                        <div class="work-title">Your work</div>
-                        <div class="assigned-tab">Assigned</div>
+        <!-- Enhanced Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="current-course-section">
+                    <div class="current-course-header">
+                        <span class="material-icons">class</span>
+                        <span class="course-name-text" id="currentCourseName">Project-1 Course</span>
                     </div>
-
-                    <button class="add-work-btn">
-                        <span>+</span>
-                        <span>Add or create</span>
-                    </button>
-
-                    <button class="mark-done-btn">Mark as done</button>
                 </div>
 
-                <!-- Private Comments Section -->
-                <div class="private-comments">
-                    <div class="private-header">
-                        <span>🔒</span>
-                        <span>Private comments</span>
-                    </div>
+                <div class="sidebar-header">
+                    <span class="material-icons">dashboard</span>
+                    <span class="sidebar-text">মেনু</span>
+                </div>
 
-                    <div class="private-input">
-                        <input type="text" id="privateCommentInput" placeholder="Add private comment...">
-                        <button class="send-btn" id="sendPrivateComment" disabled>▶</button>
-                    </div>
+                <a href="#" class="sidebar-item">
+                    <span class="material-icons">home</span>
+                    <span class="sidebar-text">Classroom</span>
+                </a>
 
-                    <!-- Private Comments List -->
-                    <div class="private-comments-list" id="privateCommentsList"></div>
+                <a href="#" class="sidebar-item">
+                    <span class="material-icons">assignment</span>
+                    <span class="sidebar-text">Classwork</span>
+                </a>
+
+                <a href="#" class="sidebar-item">
+                    <span class="material-icons">people</span>
+                    <span class="sidebar-text">People</span>
+                </a>
+
+                <a href="#" class="sidebar-item">
+                    <span class="material-icons">grade</span>
+                    <span class="sidebar-text">Grades</span>
+                </a>
+
+                <a href="#" class="sidebar-item" id="settingsLink">
+                    <span class="material-icons">settings</span>
+                    <span class="sidebar-text">Settings</span>
+                </a>
+
+                <div class="sidebar-header">
+                    <span class="material-icons">school</span>
+                    <span class="sidebar-text">Enrolled Classes</span>
+                </div>
+
+                <div id="enrolledClasses">
+                    <!-- Enrolled classes will be populated here -->
                 </div>
             </div>
-        </div>
+        </aside>
+
+        <!-- Enhanced Top Navigation -->
+        <!-- <nav class="course-top-nav" id="courseTopNav">
+            <div class="top-nav-tabs">
+                <button class="top-nav-tab" data-tab="stream" onclick="window.location.href='stream.html'">
+                    <i class="material-icons">dynamic_feed</i>
+                    <span>Stream</span>
+                </button>
+                <button class="top-nav-tab active" data-tab="classwork">
+                    <i class="material-icons">assignment</i>
+                    <span>Classwork</span>
+                </button>
+                <button class="top-nav-tab" data-tab="people" onclick="window.location.href='people.html'">
+                    <i class="material-icons">people</i>
+                    <span>People</span>
+                </button>
+                <button class="top-nav-tab" data-tab="grades" onclick="window.location.href='grades.html'">
+                    <i class="material-icons">grade</i>
+                    <span>Grades</span>
+                </button>
+            </div>
+        </nav> -->
+
+        <!-- Content Wrapper -->
+        <main class="content-wrapper" id="contentWrapper">
+            <div class="content-inner">
+                <div class="container">
+                    <div class="assignment-container">
+                        <!-- Main Assignment Card -->
+                        <div class="assignment-card">
+                            <div class="assignment-header">
+                                <div class="assignment-title">
+                                    <div class="avatar">📄</div>
+                                    <div>
+                                        <h1>Project-1</h1>
+                                        <div class="assignment-info">SurePay • 12:53 AM</div>
+                                        <div class="assignment-points">100 points</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: flex-start;">
+                                    <div class="assignment-due">Due Jul 22</div>
+                                    <div class="menu-dots">⋮</div>
+                                </div>
+                            </div>
+
+                            <div class="comments-section">
+                                <div class="comments-header">
+                                    <span>👥</span>
+                                    <span>Class comments</span>
+                                </div>
+                                <a href="#" class="add-comment-link" id="addCommentLink">Add a class comment</a>
+
+                                <!-- Comment Input Area -->
+                                <div class="comment-input-area" id="commentInputArea">
+                                    <textarea class="comment-input" id="commentInput"
+                                        placeholder="Add a class comment..."></textarea>
+                                    <div class="comment-actions">
+                                        <button class="comment-btn cancel-btn" id="cancelComment">Cancel</button>
+                                        <button class="comment-btn post-btn" id="postComment" disabled>Post</button>
+                                    </div>
+                                </div>
+
+                                <!-- Comments List -->
+                                <div class="comments-list" id="commentsList"></div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar -->
+                        <div class="assignment-sidebar">
+                            <!-- Your Work Section -->
+                            <div class="work-section">
+                                <div class="work-header">
+                                    <div class="work-title">Your work</div>
+                                    <div class="assigned-tab">Assigned</div>
+                                </div>
+
+                                <div style="position: relative;">
+                                    <button class="add-work-btn" id="addWorkBtn">
+                                        <span>+</span>
+                                        <span>Add or create</span>
+                                    </button>
+
+                                    <!-- Add Work Dropdown -->
+                                    <div class="add-work-dropdown" id="addWorkDropdown">
+                                        <div class="dropdown-section">
+                                            <button class="dropdown-option" onclick="selectOption('gdrive')">
+                                                <div class="option-icon">📁</div>
+                                                <span>Google Drive</span>
+                                            </button>
+                                            <button class="dropdown-option" onclick="selectOption('link')">
+                                                <div class="option-icon">🔗</div>
+                                                <span>Link</span>
+                                            </button>
+                                            <button class="dropdown-option" onclick="selectOption('file')">
+                                                <div class="option-icon">📎</div>
+                                                <span>File</span>
+                                            </button>
+                                        </div>
+                                        <div class="dropdown-section">
+                                            <div class="section-title">Create new</div>
+                                            <button class="dropdown-option" onclick="selectOption('docs')">
+                                                <div class="option-icon">📄</div>
+                                                <span>Docs</span>
+                                            </button>
+                                            <button class="dropdown-option" onclick="selectOption('slides')">
+                                                <div class="option-icon">📊</div>
+                                                <span>Slides</span>
+                                            </button>
+                                            <button class="dropdown-option" onclick="selectOption('sheets')">
+                                                <div class="option-icon">📋</div>
+                                                <span>Sheets</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="mark-done-btn" id="markDoneBtn">Mark as done</button>
+                            </div>
+
+                            <!-- Private Comments Section -->
+                            <div class="private-comments">
+                                <div class="private-header">
+                                    <span>🔒</span>
+                                    <span>Private comments</span>
+                                </div>
+
+                                <div class="private-input">
+                                    <input type="text" id="privateCommentInput" placeholder="Add private comment...">
+                                    <button class="send-btn" id="sendPrivateComment" disabled>▶</button>
+                                </div>
+
+                                <!-- Private Comments List -->
+                                <div class="private-comments-list" id="privateCommentsList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
-        // Class Comments Functionality
-        const addCommentLink = document.getElementById('addCommentLink');
-        const commentInputArea = document.getElementById('commentInputArea');
-        const commentInput = document.getElementById('commentInput');
-        const cancelComment = document.getElementById('cancelComment');
-        const postComment = document.getElementById('postComment');
-        const commentsList = document.getElementById('commentsList');
-
-        // Private Comments Functionality
-        const privateCommentInput = document.getElementById('privateCommentInput');
-        const sendPrivateComment = document.getElementById('sendPrivateComment');
-        const privateCommentsList = document.getElementById('privateCommentsList');
-
-        // Show comment input area
-        addCommentLink.addEventListener('click', function (e) {
-            e.preventDefault();
-            commentInputArea.style.display = 'block';
-            addCommentLink.style.display = 'none';
-            commentInput.focus();
-        });
-
-        // Cancel comment
-        cancelComment.addEventListener('click', function () {
-            commentInputArea.style.display = 'none';
-            addCommentLink.style.display = 'block';
-            commentInput.value = '';
-            postComment.disabled = true;
-        });
-
-        // Enable/disable post button based on input
-        commentInput.addEventListener('input', function () {
-            postComment.disabled = this.value.trim() === '';
-        });
-
-        // Post class comment
-        postComment.addEventListener('click', function () {
-            const commentText = commentInput.value.trim();
-            if (commentText) {
-                addClassComment(commentText);
-                commentInput.value = '';
-                commentInputArea.style.display = 'none';
-                addCommentLink.style.display = 'block';
-                postComment.disabled = true;
+        // Enhanced Assignment Page with Navigation
+        class AssignmentPageManager {
+            constructor() {
+                this.init();
             }
-        });
 
-        // Add class comment to the list
-        function addClassComment(text) {
-            const commentDiv = document.createElement('div');
-            commentDiv.className = 'comment-item';
-
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-
-            const commentId = 'comment-' + Date.now();
-            commentDiv.id = commentId;
-
-            commentDiv.innerHTML = `
-                <div class="comment-avatar">👤</div>
-                <div class="comment-content">
-                    <div class="comment-author">You</div>
-                    <div class="comment-text">${text}</div>
-                    <div class="comment-time">${timeString}</div>
-                </div>
-                <div class="comment-actions-menu">
-                    <button class="comment-menu-btn" onclick="toggleCommentMenu('${commentId}')">⋮</button>
-                    <div class="comment-dropdown" id="dropdown-${commentId}">
-                        <button class="dropdown-item" onclick="editComment('${commentId}')">
-                            <span>✏️</span> Edit
-                        </button>
-                        <button class="dropdown-item" onclick="deleteComment('${commentId}')">
-                            <span>🗑️</span> Delete
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            commentsList.appendChild(commentDiv);
-        }
-
-        // Private comment input handling
-        privateCommentInput.addEventListener('input', function () {
-            sendPrivateComment.disabled = this.value.trim() === '';
-        });
-
-        // Handle Enter key for private comments
-        privateCommentInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && !sendPrivateComment.disabled) {
-                sendPrivateComment.click();
+            init() {
+                this.setupElements();
+                this.setupEventListeners();
+                this.loadUserData();
+                this.loadCourseData();
+                this.setupAssignmentFunctionality();
             }
-        });
 
-        // Send private comment
-        sendPrivateComment.addEventListener('click', function () {
-            const commentText = privateCommentInput.value.trim();
-            if (commentText) {
-                addPrivateComment(commentText);
-                privateCommentInput.value = '';
-                sendPrivateComment.disabled = true;
+            setupElements() {
+                this.elements = {
+                    menuBtn: document.getElementById("menuBtn"),
+                    sidebar: document.getElementById("sidebar"),
+                    contentWrapper: document.getElementById("contentWrapper"),
+                    courseTopNav: document.getElementById("courseTopNav"),
+                    userInitial: document.getElementById("userInitial"),
+                    currentCourseName: document.getElementById("currentCourseName"),
+                    // Assignment specific elements
+                    addCommentLink: document.getElementById('addCommentLink'),
+                    commentInputArea: document.getElementById('commentInputArea'),
+                    commentInput: document.getElementById('commentInput'),
+                    cancelComment: document.getElementById('cancelComment'),
+                    postComment: document.getElementById('postComment'),
+                    commentsList: document.getElementById('commentsList'),
+                    privateCommentInput: document.getElementById('privateCommentInput'),
+                    sendPrivateComment: document.getElementById('sendPrivateComment'),
+                    privateCommentsList: document.getElementById('privateCommentsList'),
+                    addWorkBtn: document.getElementById('addWorkBtn'),
+                    addWorkDropdown: document.getElementById('addWorkDropdown'),
+                    markDoneBtn: document.getElementById('markDoneBtn')
+                };
             }
-        });
 
-        // Add private comment to the list
-        function addPrivateComment(text) {
-            const commentDiv = document.createElement('div');
-            commentDiv.className = 'private-comment-item';
+            setupEventListeners() {
+                // Navigation functionality
+                this.elements.menuBtn.addEventListener("click", () => this.toggleSidebar());
 
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
+                // Assignment functionality - keeping all original functionality
+                this.setupAssignmentEventListeners();
+            }
 
-            const commentId = 'private-comment-' + Date.now();
-            commentDiv.id = commentId;
+            toggleSidebar() {
+                this.elements.sidebar.classList.toggle("open");
+                this.elements.contentWrapper.classList.toggle("sidebar-open");
+                this.elements.courseTopNav.classList.toggle("sidebar-open");
 
-            commentDiv.innerHTML = `
-                <div class="private-comment-header">
-                    <div>
-                        <div class="private-comment-text">${text}</div>
-                        <div class="private-comment-time">${timeString}</div>
+                // Add smooth animation effect
+                this.elements.sidebar.style.transition = "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+                this.elements.contentWrapper.style.transition = "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+                this.elements.courseTopNav.style.transition = "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+            }
+
+            loadUserData() {
+                this.currentUser = localStorage.getItem("currentUser") || "User";
+                this.setUserInitials();
+            }
+
+            loadCourseData() {
+                const selectedCourse = localStorage.getItem("selectedCourse");
+                if (selectedCourse) {
+                    try {
+                        this.currentCourse = JSON.parse(selectedCourse);
+                        this.updateCourseDisplay();
+                    } catch (error) {
+                        console.error("Error loading course data:", error);
+                    }
+                }
+            }
+
+            setUserInitials() {
+                const initial = this.currentUser.charAt(0).toUpperCase();
+                if (this.elements.userInitial) {
+                    this.elements.userInitial.textContent = initial;
+                }
+            }
+
+            updateCourseDisplay() {
+                if (this.currentCourse && this.elements.currentCourseName) {
+                    this.elements.currentCourseName.textContent = this.currentCourse.name || "Project-1 Course";
+                }
+            }
+
+            setupAssignmentFunctionality() {
+                // All original assignment functionality
+                let isSubmitted = false;
+
+                // Show comment input area
+                this.elements.addCommentLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.elements.commentInputArea.style.display = 'block';
+                    this.elements.addCommentLink.style.display = 'none';
+                    this.elements.commentInput.focus();
+                });
+
+                // Cancel comment
+                this.elements.cancelComment.addEventListener('click', () => {
+                    this.elements.commentInputArea.style.display = 'none';
+                    this.elements.addCommentLink.style.display = 'block';
+                    this.elements.commentInput.value = '';
+                    this.elements.postComment.disabled = true;
+                });
+
+                // Enable/disable post button based on input
+                this.elements.commentInput.addEventListener('input', () => {
+                    this.elements.postComment.disabled = this.elements.commentInput.value.trim() === '';
+                });
+
+                // Post class comment
+                this.elements.postComment.addEventListener('click', () => {
+                    const commentText = this.elements.commentInput.value.trim();
+                    if (commentText) {
+                        this.addClassComment(commentText);
+                        this.elements.commentInput.value = '';
+                        this.elements.commentInputArea.style.display = 'none';
+                        this.elements.addCommentLink.style.display = 'block';
+                        this.elements.postComment.disabled = true;
+                    }
+                });
+
+                // Private comment input handling
+                this.elements.privateCommentInput.addEventListener('input', () => {
+                    this.elements.sendPrivateComment.disabled = this.elements.privateCommentInput.value.trim() === '';
+                });
+
+                // Handle Enter key for private comments
+                this.elements.privateCommentInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !this.elements.sendPrivateComment.disabled) {
+                        this.elements.sendPrivateComment.click();
+                    }
+                });
+
+                // Send private comment
+                this.elements.sendPrivateComment.addEventListener('click', () => {
+                    const commentText = this.elements.privateCommentInput.value.trim();
+                    if (commentText) {
+                        this.addPrivateComment(commentText);
+                        this.elements.privateCommentInput.value = '';
+                        this.elements.sendPrivateComment.disabled = true;
+                    }
+                });
+
+                // Add Work Button Click Handler
+                this.elements.addWorkBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isVisible = this.elements.addWorkDropdown.classList.contains('show');
+
+                    // Close all other dropdowns
+                    document.querySelectorAll('.comment-dropdown.show').forEach(d => {
+                        d.classList.remove('show');
+                    });
+
+                    // Toggle current dropdown
+                    if (!isVisible) {
+                        this.elements.addWorkDropdown.classList.add('show');
+                    } else {
+                        this.elements.addWorkDropdown.classList.remove('show');
+                    }
+                });
+
+                // Mark as Done / Unsubmitted Toggle
+                this.elements.markDoneBtn.addEventListener('click', () => {
+                    if (!isSubmitted) {
+                        // Mark as done
+                        this.elements.markDoneBtn.style.background = '#4caf50';
+                        this.elements.markDoneBtn.textContent = 'Marked as done ✓';
+                        this.elements.markDoneBtn.classList.remove('mark-done-btn');
+                        this.elements.markDoneBtn.classList.add('unsubmitted-btn');
+
+                        // Hide add work button and dropdown
+                        this.elements.addWorkBtn.style.display = 'none';
+                        this.elements.addWorkDropdown.classList.remove('show');
+
+                        // Show unsubmitted button
+                        setTimeout(() => {
+                            this.elements.markDoneBtn.style.background = '#ff9800';
+                            this.elements.markDoneBtn.textContent = 'Unsubmitted';
+                            this.elements.markDoneBtn.classList.remove('mark-done-btn');
+                            this.elements.markDoneBtn.classList.add('unsubmitted-btn');
+                        }, 1000);
+
+                        isSubmitted = true;
+                    } else {
+                        // Unsubmit - go back to original state
+                        this.elements.markDoneBtn.style.background = '#1976d2';
+                        this.elements.markDoneBtn.textContent = 'Mark as done';
+                        this.elements.markDoneBtn.classList.remove('unsubmitted-btn');
+                        this.elements.markDoneBtn.classList.add('mark-done-btn');
+
+                        // Show add work button
+                        this.elements.addWorkBtn.style.display = 'flex';
+
+                        isSubmitted = false;
+                    }
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.comment-actions-menu') && !e.target.closest('.add-work-btn')) {
+                        document.querySelectorAll('.comment-dropdown.show').forEach(d => {
+                            d.classList.remove('show');
+                        });
+                        this.elements.addWorkDropdown.classList.remove('show');
+                    }
+                });
+
+                // Setup global functions for dropdown options
+                window.selectOption = (option) => {
+                    this.elements.addWorkDropdown.classList.remove('show');
+
+                    switch (option) {
+                        case 'gdrive':
+                            alert('Google Drive selected');
+                            break;
+                        case 'link':
+                            alert('Link selected');
+                            break;
+                        case 'file':
+                            alert('File selected');
+                            break;
+                        case 'docs':
+                            alert('Create new Docs');
+                            break;
+                        case 'slides':
+                            alert('Create new Slides');
+                            break;
+                        case 'sheets':
+                            alert('Create new Sheets');
+                            break;
+                    }
+                };
+
+                // Setup global functions for comment management
+                window.toggleCommentMenu = (commentId) => {
+                    const dropdown = document.getElementById(`dropdown-${commentId}`);
+                    const isVisible = dropdown.classList.contains('show');
+
+                    // Close all other dropdowns including add work dropdown
+                    document.querySelectorAll('.comment-dropdown.show').forEach(d => {
+                        d.classList.remove('show');
+                    });
+                    this.elements.addWorkDropdown.classList.remove('show');
+
+                    // Toggle current dropdown
+                    if (!isVisible) {
+                        dropdown.classList.add('show');
+                    }
+                };
+
+                window.editComment = (commentId) => {
+                    const commentDiv = document.getElementById(commentId);
+                    const commentTextElement = commentDiv.querySelector('.comment-text');
+                    const originalText = commentTextElement.textContent;
+
+                    // Hide dropdown
+                    document.getElementById(`dropdown-${commentId}`).classList.remove('show');
+
+                    // Create edit interface
+                    const editHtml = `
+                        <div class="edit-mode">
+                            <textarea class="edit-input" id="edit-input-${commentId}">${originalText}</textarea>
+                            <div class="edit-actions">
+                                <button class="edit-btn cancel-edit-btn" onclick="cancelEdit('${commentId}', '${originalText}')">Cancel</button>
+                                <button class="edit-btn save-edit-btn" onclick="saveEdit('${commentId}')">Save</button>
+                            </div>
+                        </div>
+                    `;
+
+                    commentTextElement.innerHTML = editHtml;
+                };
+
+                window.editPrivateComment = (commentId) => {
+                    const commentDiv = document.getElementById(commentId);
+                    const commentTextElement = commentDiv.querySelector('.private-comment-text');
+                    const originalText = commentTextElement.textContent;
+
+                    // Hide dropdown
+                    document.getElementById(`dropdown-${commentId}`).classList.remove('show');
+
+                    // Create edit interface
+                    const editHtml = `
+                        <div class="edit-mode">
+                            <textarea class="edit-input" id="edit-input-${commentId}">${originalText}</textarea>
+                            <div class="edit-actions">
+                                <button class="edit-btn cancel-edit-btn" onclick="cancelPrivateEdit('${commentId}', '${originalText}')">Cancel</button>
+                                <button class="edit-btn save-edit-btn" onclick="savePrivateEdit('${commentId}')">Save</button>
+                            </div>
+                        </div>
+                    `;
+
+                    commentTextElement.innerHTML = editHtml;
+                };
+
+                window.cancelEdit = (commentId, originalText) => {
+                    const commentDiv = document.getElementById(commentId);
+                    const commentTextElement = commentDiv.querySelector('.comment-text');
+                    commentTextElement.textContent = originalText;
+                };
+
+                window.cancelPrivateEdit = (commentId, originalText) => {
+                    const commentDiv = document.getElementById(commentId);
+                    const commentTextElement = commentDiv.querySelector('.private-comment-text');
+                    commentTextElement.textContent = originalText;
+                };
+
+                window.saveEdit = (commentId) => {
+                    const commentDiv = document.getElementById(commentId);
+                    const editInput = document.getElementById(`edit-input-${commentId}`);
+                    const newText = editInput.value.trim();
+
+                    if (newText) {
+                        const commentTextElement = commentDiv.querySelector('.comment-text');
+                        commentTextElement.textContent = newText;
+                    }
+                };
+
+                window.savePrivateEdit = (commentId) => {
+                    const commentDiv = document.getElementById(commentId);
+                    const editInput = document.getElementById(`edit-input-${commentId}`);
+                    const newText = editInput.value.trim();
+
+                    if (newText) {
+                        const commentTextElement = commentDiv.querySelector('.private-comment-text');
+                        commentTextElement.textContent = newText;
+                    }
+                };
+
+                window.deleteComment = (commentId) => {
+                    if (confirm('Are you sure you want to delete this comment?')) {
+                        const commentDiv = document.getElementById(commentId);
+                        commentDiv.remove();
+                    }
+                };
+
+                window.deletePrivateComment = (commentId) => {
+                    if (confirm('Are you sure you want to delete this private comment?')) {
+                        const commentDiv = document.getElementById(commentId);
+                        commentDiv.remove();
+                    }
+                };
+            }
+
+            setupAssignmentEventListeners() {
+                // Enhanced resize handling
+                window.addEventListener("resize", () => this.handleResize());
+            }
+
+            handleResize() {
+                // Enhanced responsive behavior
+                const sidebar = this.elements.sidebar;
+                const contentWrapper = this.elements.contentWrapper;
+                const courseTopNav = this.elements.courseTopNav;
+
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.remove("open");
+                    contentWrapper.classList.remove("sidebar-open");
+                    courseTopNav.classList.remove("sidebar-open");
+                }
+            }
+
+            // Add class comment to the list
+            addClassComment(text) {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-item';
+
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                const commentId = 'comment-' + Date.now();
+                commentDiv.id = commentId;
+
+                commentDiv.innerHTML = `
+                    <div class="comment-avatar">👤</div>
+                    <div class="comment-content">
+                        <div class="comment-author">You</div>
+                        <div class="comment-text">${text}</div>
+                        <div class="comment-time">${timeString}</div>
                     </div>
                     <div class="comment-actions-menu">
                         <button class="comment-menu-btn" onclick="toggleCommentMenu('${commentId}')">⋮</button>
                         <div class="comment-dropdown" id="dropdown-${commentId}">
-                            <button class="dropdown-item" onclick="editPrivateComment('${commentId}')">
+                            <button class="dropdown-item" onclick="editComment('${commentId}')">
                                 <span>✏️</span> Edit
                             </button>
-                            <button class="dropdown-item" onclick="deletePrivateComment('${commentId}')">
+                            <button class="dropdown-item" onclick="deleteComment('${commentId}')">
                                 <span>🗑️</span> Delete
                             </button>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
 
-            privateCommentsList.appendChild(commentDiv);
-        }
-
-        // Toggle comment dropdown menu
-        function toggleCommentMenu(commentId) {
-            const dropdown = document.getElementById(`dropdown-${commentId}`);
-            const isVisible = dropdown.classList.contains('show');
-
-            // Close all other dropdowns
-            document.querySelectorAll('.comment-dropdown.show').forEach(d => {
-                d.classList.remove('show');
-            });
-
-            // Toggle current dropdown
-            if (!isVisible) {
-                dropdown.classList.add('show');
+                this.elements.commentsList.appendChild(commentDiv);
             }
-        }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('.comment-actions-menu')) {
-                document.querySelectorAll('.comment-dropdown.show').forEach(d => {
-                    d.classList.remove('show');
+            // Add private comment to the list
+            addPrivateComment(text) {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'private-comment-item';
+
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
                 });
-            }
-        });
 
-        // Edit class comment
-        function editComment(commentId) {
-            const commentDiv = document.getElementById(commentId);
-            const commentTextElement = commentDiv.querySelector('.comment-text');
-            const originalText = commentTextElement.textContent;
+                const commentId = 'private-comment-' + Date.now();
+                commentDiv.id = commentId;
 
-            // Hide dropdown
-            document.getElementById(`dropdown-${commentId}`).classList.remove('show');
-
-            // Create edit interface
-            const editHtml = `
-                <div class="edit-mode">
-                    <textarea class="edit-input" id="edit-input-${commentId}">${originalText}</textarea>
-                    <div class="edit-actions">
-                        <button class="edit-btn cancel-edit-btn" onclick="cancelEdit('${commentId}', '${originalText}')">Cancel</button>
-                        <button class="edit-btn save-edit-btn" onclick="saveEdit('${commentId}')">Save</button>
+                commentDiv.innerHTML = `
+                    <div class="private-comment-header">
+                        <div>
+                            <div class="private-comment-text">${text}</div>
+                            <div class="private-comment-time">${timeString}</div>
+                        </div>
+                        <div class="comment-actions-menu">
+                            <button class="comment-menu-btn" onclick="toggleCommentMenu('${commentId}')">⋮</button>
+                            <div class="comment-dropdown" id="dropdown-${commentId}">
+                                <button class="dropdown-item" onclick="editPrivateComment('${commentId}')">
+                                    <span>✏️</span> Edit
+                                </button>
+                                <button class="dropdown-item" onclick="deletePrivateComment('${commentId}')">
+                                    <span>🗑️</span> Delete
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
 
-            commentTextElement.innerHTML = editHtml;
-        }
-
-        // Edit private comment
-        function editPrivateComment(commentId) {
-            const commentDiv = document.getElementById(commentId);
-            const commentTextElement = commentDiv.querySelector('.private-comment-text');
-            const originalText = commentTextElement.textContent;
-
-            // Hide dropdown
-            document.getElementById(`dropdown-${commentId}`).classList.remove('show');
-
-            // Create edit interface
-            const editHtml = `
-                <div class="edit-mode">
-                    <textarea class="edit-input" id="edit-input-${commentId}">${originalText}</textarea>
-                    <div class="edit-actions">
-                        <button class="edit-btn cancel-edit-btn" onclick="cancelPrivateEdit('${commentId}', '${originalText}')">Cancel</button>
-                        <button class="edit-btn save-edit-btn" onclick="savePrivateEdit('${commentId}')">Save</button>
-                    </div>
-                </div>
-            `;
-
-            commentTextElement.innerHTML = editHtml;
-        }
-
-        // Cancel edit for class comment
-        function cancelEdit(commentId, originalText) {
-            const commentDiv = document.getElementById(commentId);
-            const commentTextElement = commentDiv.querySelector('.comment-text');
-            commentTextElement.textContent = originalText;
-        }
-
-        // Cancel edit for private comment
-        function cancelPrivateEdit(commentId, originalText) {
-            const commentDiv = document.getElementById(commentId);
-            const commentTextElement = commentDiv.querySelector('.private-comment-text');
-            commentTextElement.textContent = originalText;
-        }
-
-        // Save edit for class comment
-        function saveEdit(commentId) {
-            const commentDiv = document.getElementById(commentId);
-            const editInput = document.getElementById(`edit-input-${commentId}`);
-            const newText = editInput.value.trim();
-
-            if (newText) {
-                const commentTextElement = commentDiv.querySelector('.comment-text');
-                commentTextElement.textContent = newText;
+                this.elements.privateCommentsList.appendChild(commentDiv);
             }
         }
 
-        // Save edit for private comment
-        function savePrivateEdit(commentId) {
-            const commentDiv = document.getElementById(commentId);
-            const editInput = document.getElementById(`edit-input-${commentId}`);
-            const newText = editInput.value.trim();
-
-            if (newText) {
-                const commentTextElement = commentDiv.querySelector('.private-comment-text');
-                commentTextElement.textContent = newText;
-            }
-        }
-
-        // Delete class comment
-        function deleteComment(commentId) {
-            if (confirm('Are you sure you want to delete this comment?')) {
-                const commentDiv = document.getElementById(commentId);
-                commentDiv.remove();
-            }
-        }
-
-        // Delete private comment
-        function deletePrivateComment(commentId) {
-            if (confirm('Are you sure you want to delete this private comment?')) {
-                const commentDiv = document.getElementById(commentId);
-                commentDiv.remove();
-            }
-        }
-
-        // Existing functionality
-        document.querySelector('.mark-done-btn').addEventListener('click', function () {
-            this.style.background = '#4caf50';
-            this.textContent = 'Marked as done ✓';
-        });
-
-        document.querySelector('.add-work-btn').addEventListener('click', function () {
-            alert('Add work functionality');
+        // Initialize the assignment page manager
+        document.addEventListener("DOMContentLoaded", () => {
+            new AssignmentPageManager();
         });
     </script>
 </body>

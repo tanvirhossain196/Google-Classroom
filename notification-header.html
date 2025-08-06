@@ -39,6 +39,18 @@
             align-items: center;
             gap: 12px;
             flex: 1;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .notification-content:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-content:active {
+            background-color: #e9ecef;
         }
 
         .avatar {
@@ -210,7 +222,7 @@
 <body>
     <div class="notification-container">
         <div class="notification-header" id="notificationHeader">
-            <div class="notification-content">
+            <div class="notification-content" id="notificationContent">
                 <div class="avatar">📄</div>
                 <div class="notification-text">
                     <div id="notificationText"><strong>SurePay</strong> posted a new assignment:
@@ -238,9 +250,26 @@
         const dropdownMenu = document.getElementById('dropdownMenu');
         const notificationHeader = document.getElementById('notificationHeader');
         const notificationText = document.getElementById('notificationText');
+        const notificationContent = document.getElementById('notificationContent');
 
         let originalText = notificationText.innerHTML;
         let isEditing = false;
+
+        // Navigate to assignment page when clicking on notification content
+        notificationContent.addEventListener('click', function (e) {
+            // Don't navigate if we're in edit mode or if the dropdown is open
+            if (isEditing || dropdownMenu.classList.contains('show')) {
+                return;
+            }
+
+            // Don't navigate if clicking on the edit input
+            if (e.target.closest('.edit-mode')) {
+                return;
+            }
+
+            // Navigate to assignment page
+            window.location.href = 'assignment-page.html';
+        });
 
         // Toggle dropdown menu
         menuButton.addEventListener('click', function (e) {
