@@ -12,14 +12,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const avatarText = document.getElementById("avatarText");
   const headerUserInitial = document.getElementById("headerUserInitial");
 
-  // User data
-  const currentUserEmail = localStorage.getItem("userEmail");
+  // Navigation links
+  const navLinks = document.querySelectorAll(".nav-item");
+
+  // User data - Get both keys for compatibility
+  const currentUserEmail =
+    localStorage.getItem("userEmail") || localStorage.getItem("currentUser");
   const userRole = localStorage.getItem("userRole");
 
   // Check authentication
   if (!currentUserEmail) {
     window.location.href = "index.html";
     return;
+  }
+
+  // Ensure both keys are set for compatibility
+  if (!localStorage.getItem("userEmail")) {
+    localStorage.setItem("userEmail", currentUserEmail);
+  }
+  if (!localStorage.getItem("currentUser")) {
+    localStorage.setItem("currentUser", currentUserEmail);
   }
 
   // Initialize page
@@ -33,10 +45,49 @@ document.addEventListener("DOMContentLoaded", function () {
   savePreferences.addEventListener("click", handlePreferencesSubmit);
   avatarUpload.addEventListener("change", handleAvatarUpload);
 
-  // Close sidebar on mobile when clicking outside
+  // Navigation event listeners - Dashboard style
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      const currentPage =
+        window.location.pathname.split("/").pop() || "profile.html";
+
+      // Only prevent navigation to the same page
+      if (
+        href === currentPage ||
+        (href === "profile.html" && currentPage === "")
+      ) {
+        e.preventDefault();
+        return;
+      }
+
+      // For different pages, allow normal navigation
+      // Remove any active class from current page
+      navLinks.forEach((l) => l.classList.remove("active"));
+      // Add active class to clicked link
+      this.classList.add("active");
+
+      // Store current sidebar state before navigation
+      const sidebarIsOpen = sidebar.classList.contains("show");
+      localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
+
+      // Store navigation intent to prevent automatic redirects
+      localStorage.setItem("intentionalNavigation", "true");
+      localStorage.setItem("targetPage", href);
+    });
+  });
+
+  // Close sidebar when clicking outside (but don't interfere with navigation)
   document.addEventListener("click", function (e) {
-    if (window.innerWidth <= 768) {
-      if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+    // Check if click is on a navigation link
+    const isNavLink = e.target.closest(".nav-item");
+
+    if (
+      !isNavLink &&
+      !sidebar.contains(e.target) &&
+      !menuToggle.contains(e.target)
+    ) {
+      if (window.innerWidth <= 1024) {
         sidebar.classList.remove("show");
       }
     }
@@ -44,8 +95,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Responsive sidebar handling
   window.addEventListener("resize", function () {
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > 1024) {
       sidebar.classList.remove("show");
+      localStorage.setItem("sidebarState", "closed");
+    }
+  });
+
+  // Handle page visibility change to preserve sidebar state
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+      // Restore sidebar state when page becomes visible again
+      const savedSidebarState = localStorage.getItem("sidebarState");
+      const intentionalNavigation = localStorage.getItem(
+        "intentionalNavigation"
+      );
+
+      if (intentionalNavigation === "true" && savedSidebarState === "open") {
+        sidebar.classList.add("show");
+        if (window.innerWidth > 1024) {
+          mainContent.classList.add("collapsed");
+        }
+        // Clear the navigation flag
+        localStorage.removeItem("intentionalNavigation");
+      }
     }
   });
 
@@ -60,6 +132,25 @@ document.addEventListener("DOMContentLoaded", function () {
     headerUserInitial.textContent = userInitial;
     avatarText.textContent = userInitial;
 
+    // Handle sidebar state on page load
+    const savedSidebarState = localStorage.getItem("sidebarState");
+    const intentionalNavigation = localStorage.getItem("intentionalNavigation");
+
+    // If coming from intentional navigation and sidebar was open, restore it
+    if (intentionalNavigation === "true" && savedSidebarState === "open") {
+      sidebar.classList.add("show");
+      if (window.innerWidth > 1024) {
+        mainContent.classList.add("collapsed");
+      }
+      // Clear the navigation flag
+      localStorage.removeItem("intentionalNavigation");
+    } else {
+      // Default closed state (for refresh or direct access)
+      sidebar.classList.remove("show");
+      mainContent.classList.remove("collapsed");
+      localStorage.setItem("sidebarState", "closed");
+    }
+
     // Load saved data
     loadProfileData();
     loadPreferences();
@@ -73,17 +164,22 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function toggleSidebar() {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
       sidebar.classList.toggle("show");
     } else {
-      sidebar.classList.toggle("collapsed");
+      sidebar.classList.toggle("show");
       mainContent.classList.toggle("collapsed");
     }
+
+    // Save sidebar state
+    const sidebarIsOpen = sidebar.classList.contains("show");
+    localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
   }
 
   function handleLogout() {
     if (confirm("আপনি কি লগআউট করতে চান?")) {
       localStorage.removeItem("userEmail");
+      localStorage.removeItem("currentUser");
       localStorage.removeItem("userRole");
       window.location.href = "index.html";
     }
@@ -242,14 +338,20 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateStats() {
-    const courses = JSON.parse(localStorage.getItem("courses") || "[]");
-    let userCourseCount = 0;
+    // Get courses from dashboard data structure
+    const dashboardKey = `dashboard_${currentUserEmail}`;
+    const dashboard = JSON.parse(
+      localStorage.getItem(dashboardKey) || '{"courses": [], "role": null}'
+    );
+    const courses = dashboard.courses || [];
+
+    let userCourseCount = courses.length;
     let totalAssignments = 0;
     let totalStudents = 0;
 
     if (userRole === "teacher") {
       const userCourses = courses.filter(
-        (course) => course.teacher === currentUserEmail.split("@")[0]
+        (course) => course.teacher === currentUserEmail
       );
       userCourseCount = userCourses.length;
       totalAssignments = userCourses.reduce(
@@ -257,7 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
         0
       );
       totalStudents = userCourses.reduce(
-        (sum, course) => sum + (course.students || 0),
+        (sum, course) => sum + (course.students ? course.students.length : 0),
         0
       );
     } else {
@@ -287,9 +389,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const notification = document.createElement("div");
     notification.className = `notification ${type}`;
     notification.innerHTML = `
-            <i class="fas fa-${
-              type === "success" ? "check-circle" : "exclamation-circle"
-            } me-2"></i>
+            <i class="material-icons me-2">${
+              type === "success" ? "check_circle" : "error"
+            }</i>
             ${message}
         `;
 

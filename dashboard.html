@@ -33,30 +33,46 @@
 
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
+            <!-- <div class="sidebar-header">
                 <h2>Navigation</h2>
-            </div>
+            </div> -->
             <nav class="sidebar-menu">
                 <ul class="sidebar-menu">
-                    <li><a href="dashboard.html" class="nav-link active">
+                    <li><a href="dashboard.html" class="nav-link active" data-nav-link>
                             <i class="material-icons">home</i>
                             <span>Dashboard</span>
                         </a></li>
-                    <li><a href="profile.html" class="nav-link">
+                    <li><a href="profile.html" class="nav-link" data-nav-link>
                             <i class="material-icons">person</i>
                             <span>Profile</span>
                         </a></li>
-                    <li><a href="settings.html" class="nav-link">
-                            <i class="material-icons">settings</i>
-                            <span>Settings</span>
-                        </a></li>
-                    <li><a href="report.html" class="nav-link">
+                    <!-- New Enrolled Classes Dropdown -->
+                    <li class="sidebar-dropdown">
+                        <a href="#" class="nav-link" id="enrolledClassesDropdownToggle">
+                            <i class="material-icons">school</i>
+                            <span>Enrolled Classes</span>
+                            <i class="material-icons dropdown-arrow">keyboard_arrow_down</i>
+                        </a>
+                        <ul class="dropdown-menu-sidebar" id="enrolledClassesDropdown">
+                            <!-- Course names will be dynamically inserted here -->
+                        </ul>
+                    </li>
+                    <li><a href="reports.html" class="nav-link" data-nav-link>
                             <i class="material-icons">bar_chart</i>
                             <span>Reports</span>
                         </a></li>
-                    <li><a href="help.html" class="nav-link">
+                    <li><a href="help.html" class="nav-link" data-nav-link>
                             <i class="material-icons">help_outline</i>
                             <span>Help</span>
+                        </a></li>
+
+                    <li><a href="archive.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">archive</i>
+                            <span>Archive classes</span>
+                        </a></li>
+                    <li><a href="settings.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">settings</i>
+                            <span>Settings</span>
                         </a></li>
                 </ul>
             </nav>
@@ -90,6 +106,240 @@
                 <!-- Courses Grid -->
                 <div class="courses-grid" id="coursesGrid">
                     <!-- Course cards will be dynamically added here -->
+                    <div class="course-card">
+                        <div class="course-header default-1">
+                            <div class="course-header-content">
+                                <h3 class="course-title">CSE101</h3>
+                                <p class="course-section">Section A</p>
+                                <p class="course-subtitle">Intro to AI</p>
+                            </div>
+                            <div class="course-header-menu">
+                                <div class="course-card-menu">
+                                    <button class="course-menu">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                    <div class="course-menu-dropdown" id="courseMenu_sample1">
+                                        <div class="course-menu-item" onclick="editCourse('sample1')">
+                                            <span class="material-icons">edit</span>সম্পাদনা
+                                        </div>
+                                        <div class="course-menu-item archive" onclick="toggleArchiveCourse('sample1')">
+                                            <span class="material-icons">archive</span>আর্কাইভ
+                                        </div>
+                                        <div class="course-menu-item delete" onclick="deleteCourse('sample1')">
+                                            <span class="material-icons">delete</span>মুছুন
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-profile-initial">A</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="course-body-content">
+                                <div class="course-info">
+                                    <p class="course-code">Code: ABC1234</p>
+                                </div>
+                            </div>
+                            <div class="course-bottom-actions">
+                                <button class="course-action-icon" title="Stream">
+                                    <span class="material-icons">dynamic_feed</span>
+                                </button>
+                                <button class="course-action-icon" title="Classwork">
+                                    <span class="material-icons">assignment</span>
+                                </button>
+                                <button class="course-action-icon" title="People">
+                                    <span class="material-icons">people</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header default-2">
+                            <div class="course-header-content">
+                                <h3 class="course-title">PHY201</h3>
+                                <p class="course-section">Section B</p>
+                                <p class="course-subtitle">Quantum Physics</p>
+                            </div>
+                            <div class="course-header-menu">
+                                <div class="course-card-menu">
+                                    <button class="course-menu">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                    <div class="course-menu-dropdown" id="courseMenu_sample2">
+                                        <div class="course-menu-item" onclick="editCourse('sample2')">
+                                            <span class="material-icons">edit</span>সম্পাদনা
+                                        </div>
+                                        <div class="course-menu-item archive" onclick="toggleArchiveCourse('sample2')">
+                                            <span class="material-icons">archive</span>আর্কাইভ
+                                        </div>
+                                        <div class="course-menu-item delete" onclick="deleteCourse('sample2')">
+                                            <span class="material-icons">delete</span>মুছুন
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-profile-initial">S</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="course-body-content">
+                                <div class="course-info">
+                                    <p class="course-code">Code: XYZ5678</p>
+                                </div>
+                            </div>
+                            <div class="course-bottom-actions">
+                                <button class="course-action-icon" title="Stream">
+                                    <span class="material-icons">dynamic_feed</span>
+                                </button>
+                                <button class="course-action-icon" title="Classwork">
+                                    <span class="material-icons">assignment</span>
+                                </button>
+                                <button class="course-action-icon" title="People">
+                                    <span class="material-icons">people</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header default-3">
+                            <div class="course-header-content">
+                                <h3 class="course-title">ENG301</h3>
+                                <p class="course-section">Section C</p>
+                                <p class="course-subtitle">Creative Writing</p>
+                            </div>
+                            <div class="course-header-menu">
+                                <div class="course-card-menu">
+                                    <button class="course-menu">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                    <div class="course-menu-dropdown" id="courseMenu_sample3">
+                                        <div class="course-menu-item" onclick="editCourse('sample3')">
+                                            <span class="material-icons">edit</span>সম্পادনা
+                                        </div>
+                                        <div class="course-menu-item archive" onclick="toggleArchiveCourse('sample3')">
+                                            <span class="material-icons">archive</span>আর্কাইভ
+                                        </div>
+                                        <div class="course-menu-item delete" onclick="deleteCourse('sample3')">
+                                            <span class="material-icons">delete</span>মুছুন
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-profile-initial">M</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="course-body-content">
+                                <div class="course-info">
+                                    <p class="course-code">Code: QWE9876</p>
+                                </div>
+                            </div>
+                            <div class="course-bottom-actions">
+                                <button class="course-action-icon" title="Stream">
+                                    <span class="material-icons">dynamic_feed</span>
+                                </button>
+                                <button class="course-action-icon" title="Classwork">
+                                    <span class="material-icons">assignment</span>
+                                </button>
+                                <button class="course-action-icon" title="People">
+                                    <span class="material-icons">people</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header default-4">
+                            <div class="course-header-content">
+                                <h3 class="course-title">HIS401</h3>
+                                <p class="course-section">Section D</p>
+                                <p class="course-subtitle">World History</p>
+                            </div>
+                            <div class="course-header-menu">
+                                <div class="course-card-menu">
+                                    <button class="course-menu">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                    <div class="course-menu-dropdown" id="courseMenu_sample4">
+                                        <div class="course-menu-item" onclick="editCourse('sample4')">
+                                            <span class="material-icons">edit</span>সম্পادনা
+                                        </div>
+                                        <div class="course-menu-item archive" onclick="toggleArchiveCourse('sample4')">
+                                            <span class="material-icons">archive</span>আর্কাইভ
+                                        </div>
+                                        <div class="course-menu-item delete" onclick="deleteCourse('sample4')">
+                                            <span class="material-icons">delete</span>মুছুন
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-profile-initial">J</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="course-body-content">
+                                <div class="course-info">
+                                    <p class="course-code">Code: RTY3210</p>
+                                </div>
+                            </div>
+                            <div class="course-bottom-actions">
+                                <button class="course-action-icon" title="Stream">
+                                    <span class="material-icons">dynamic_feed</span>
+                                </button>
+                                <button class="course-action-icon" title="Classwork">
+                                    <span class="material-icons">assignment</span>
+                                </button>
+                                <button class="course-action-icon" title="People">
+                                    <span class="material-icons">people</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header default-5">
+                            <div class="course-header-content">
+                                <h3 class="course-title">ART101</h3>
+                                <p class="course-section">Section E</p>
+                                <p class="course-subtitle">Digital Painting</p>
+                            </div>
+                            <div class="course-header-menu">
+                                <div class="course-card-menu">
+                                    <button class="course-menu">
+                                        <span class="material-icons">more_vert</span>
+                                    </button>
+                                    <div class="course-menu-dropdown" id="courseMenu_sample5">
+                                        <div class="course-menu-item" onclick="editCourse('sample5')">
+                                            <span class="material-icons">edit</span>সম্পাদনা
+                                        </div>
+                                        <div class="course-menu-item archive" onclick="toggleArchiveCourse('sample5')">
+                                            <span class="material-icons">archive</span>আর্কাইভ
+                                        </div>
+                                        <div class="course-menu-item delete" onclick="deleteCourse('sample5')">
+                                            <span class="material-icons">delete</span>মুছুন
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-profile-initial">L</div>
+                        </div>
+                        <div class="course-body">
+                            <div class="course-body-content">
+                                <div class="course-info">
+                                    <p class="course-code">Code: FGH6543</p>
+                                </div>
+                            </div>
+                            <div class="course-bottom-actions">
+                                <button class="course-action-icon" title="Stream">
+                                    <span class="material-icons">dynamic_feed</span>
+                                </button>
+                                <button class="course-action-icon" title="Classwork">
+                                    <span class="material-icons">assignment</span>
+                                </button>
+                                <button class="course-action-icon" title="People">
+                                    <span class="material-icons">people</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -190,7 +440,7 @@
         </div>
     </div>
 
-    <script src="storage-manager.js"></script>
+
     <script src="dashboard.js"></script>
 </body>
 
