@@ -10,9 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-
-    </style>
 </head>
 
 <body>
@@ -47,27 +44,10 @@
                         <span class="course-name-text" id="currentCourseName">কোর্স লোড হচ্ছে...</span>
                     </div>
                 </div>
-
-                <div class="sidebar-header">
-                    <span class="material-icons">dashboard</span>
-                    <span class="sidebar-text">Menu</span>
-                </div>
-
                 <a href="#" class="sidebar-item" id="classesLink">
                     <span class="material-icons">home</span>
                     <span class="sidebar-text">Classes</span>
                 </a>
-
-                <a href="classwork.html" class="sidebar-item">
-                    <span class="material-icons">assignment</span>
-                    <span class="sidebar-text">Classwork</span>
-                </a>
-
-                <a href="people.html" class="sidebar-item">
-                    <span class="material-icons">people</span>
-                    <span class="sidebar-text">People</span>
-                </a>
-
                 <!-- <a href="grades.html" class="sidebar-item">
                     <span class="material-icons">grade</span>
                     <span class="sidebar-text">Grades</span>
@@ -78,13 +58,16 @@
                     <span class="sidebar-text">Settings</span>
                 </a>
 
-                <div class="sidebar-header">
-                    <span class="material-icons">school</span>
-                    <span class="sidebar-text">Enrolled Classes</span>
-                </div>
-
-                <div id="enrolledClasses">
-                    <!-- Enrolled classes will be populated here -->
+                <!-- Enrolled Classes Dropdown -->
+                <div class="sidebar-dropdown">
+                    <div class="sidebar-header sidebar-dropdown-toggle" id="enrolledClassesDropdownToggle">
+                        <span class="material-icons">school</span>
+                        <span class="sidebar-text">Enrolled Classes</span>
+                        <span class="material-icons dropdown-arrow-icon">keyboard_arrow_down</span>
+                    </div>
+                    <div id="enrolledClasses" class="sidebar-dropdown-content">
+                        <!-- Enrolled classes will be populated here -->
+                    </div>
                 </div>
             </div>
         </aside>
@@ -104,10 +87,7 @@
                     <i class="material-icons">people</i>
                     <span>People</span>
                 </button>
-                <button class="top-nav-tab" data-tab="grades" onclick="window.location.href='grades.html'">
-                    <i class="material-icons">grade</i>
-                    <span>Grades</span>
-                </button>
+
             </div>
         </nav>
 
@@ -171,9 +151,10 @@
                             </div>
 
                             <div class="stream-main">
-                                <!-- Enhanced Announcement Input -->
+                                <!-- ENHANCED ANNOUNCEMENT INPUT - COLLAPSED BY DEFAULT -->
                                 <div class="announcement-input-card">
-                                    <div class="announcement-header">
+                                    <!-- COLLAPSED HEADER (HIDDEN BY DEFAULT) -->
+                                    <div class="announcement-header" id="announcementHeader">
                                         <div class="announcement-for-section">
                                             <label class="announcement-label">For</label>
                                             <div class="dropdown">
@@ -203,11 +184,12 @@
                                     </div>
 
                                     <div class="announcement-input-area">
-                                        <div class="announcement-placeholder" id="announcementPlaceholder"
-                                            onclick="streamManager.expandAnnouncement()">
+                                        <!-- COLLAPSED PLACEHOLDER (VISIBLE BY DEFAULT) -->
+                                        <div class="announcement-placeholder" id="announcementPlaceholder">
                                             <span>Announce something to your class</span>
                                         </div>
 
+                                        <!-- EXPANDED EDITOR (HIDDEN BY DEFAULT) -->
                                         <div class="announcement-editor-expanded" id="announcementEditorExpanded">
                                             <!-- Rich Text Editor Toolbar -->
                                             <div class="editor-toolbar">
@@ -239,8 +221,8 @@
                                         </div>
                                     </div>
 
-                                    <!-- Attachment and Action Buttons -->
-                                    <div class="announcement-actions" id="announcementActions" style="display: none;">
+                                    <!-- COLLAPSED ACTIONS (HIDDEN BY DEFAULT) -->
+                                    <div class="announcement-actions" id="announcementActions">
                                         <div class="attachment-buttons">
                                             <button type="button" class="attachment-btn"
                                                 onclick="streamManager.attachFromDrive()" title="Attach from Drive">
@@ -295,7 +277,65 @@
 
                                 <!-- Enhanced Stream Posts -->
                                 <div class="stream-posts" id="streamPosts">
-                                    <!-- Posts will be populated here -->
+                                    <!-- Sample Assignment Post with Fixed Dropdown -->
+                                    <div class="stream-post">
+                                        <div class="notification-header" id="notification-assignment_1">
+                                            <div class="notification-content">
+                                                <div class="notification-avatar">📄</div>
+                                                <div class="notification-text" id="notification-text-assignment_1">
+                                                    <strong>MD. TANVIR HOSSAIN</strong> posted a new assignment:
+                                                    <strong>Assignment-2</strong>
+                                                    <div class="time">12:01 AM</div>
+                                                </div>
+                                            </div>
+                                            <div class="notification-menu-container">
+                                                <button class="notification-menu-dots"
+                                                    onclick="streamManager.toggleNotificationMenu('assignment_1')">
+                                                    ⋮
+                                                </button>
+                                                <div class="notification-dropdown-menu" id="dropdown-assignment_1">
+                                                    <button class="notification-dropdown-item"
+                                                        onclick="streamManager.editNotification('assignment_1', 'Assignment-2')">
+                                                        <span>✏️</span> Edit
+                                                    </button>
+                                                    <button class="notification-dropdown-item delete"
+                                                        onclick="streamManager.deleteNotification('assignment_1')">
+                                                        <span>🗑️</span> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sample Assignment Post 2 -->
+                                    <div class="stream-post">
+                                        <div class="notification-header" id="notification-assignment_2">
+                                            <div class="notification-content">
+                                                <div class="notification-avatar">📄</div>
+                                                <div class="notification-text" id="notification-text-assignment_2">
+                                                    <strong>MD. TANVIR HOSSAIN</strong> posted a new assignment:
+                                                    <strong>Assignment-1</strong>
+                                                    <div class="time">12:01 AM</div>
+                                                </div>
+                                            </div>
+                                            <div class="notification-menu-container">
+                                                <button class="notification-menu-dots"
+                                                    onclick="streamManager.toggleNotificationMenu('assignment_2')">
+                                                    ⋮
+                                                </button>
+                                                <div class="notification-dropdown-menu" id="dropdown-assignment_2">
+                                                    <button class="notification-dropdown-item"
+                                                        onclick="streamManager.editNotification('assignment_2', 'Assignment-1')">
+                                                        <span>✏️</span> Edit
+                                                    </button>
+                                                    <button class="notification-dropdown-item delete"
+                                                        onclick="streamManager.deleteNotification('assignment_2')">
+                                                        <span>🗑️</span> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Enhanced No Posts -->
@@ -384,6 +424,25 @@
                 </div>
                 <div class="assignment-detail-body" id="assignmentDetailBody">
                     <!-- Assignment detail content will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- CONFIRMATION MODAL -->
+        <div class="confirmation-modal" id="confirmationModal">
+            <div class="confirmation-modal-content">
+                <div class="confirmation-modal-title">Confirm Delete</div>
+                <div class="confirmation-modal-message" id="confirmationMessage">
+                    Are you sure you want to delete this item? This action cannot be undone.
+                </div>
+                <div class="confirmation-modal-actions">
+                    <button class="confirmation-btn confirmation-btn-cancel"
+                        onclick="streamManager.hideConfirmationModal()">
+                        Cancel
+                    </button>
+                    <button class="confirmation-btn confirmation-btn-delete" id="confirmDeleteBtn">
+                        Delete
+                    </button>
                 </div>
             </div>
         </div>

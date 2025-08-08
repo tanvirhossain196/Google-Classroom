@@ -325,6 +325,35 @@ body {
   padding: 12px 0;
 }
 
+/* Enrolled Classes Dropdown Specific Styles */
+.sidebar-header .dropdown-icon {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header.open .dropdown-icon {
+  transform: rotate(90deg);
+}
+
+.enrolled-classes-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.enrolled-classes-list.open {
+  max-height: 500px; /* Adjust as needed to fit content */
+  transition: max-height 0.5s ease-in;
+}
+
+.sidebar:not(.open) .enrolled-classes-list {
+  max-height: 0 !important; /* Force hide when sidebar is collapsed */
+}
+
+.sidebar:not(.open) .sidebar-header .dropdown-icon {
+  display: none; /* Hide dropdown icon when sidebar is collapsed */
+}
+
 /* Enhanced Course Header Section - Classroom Header */
 .course-header-section {
   background: var(--surface-color);
@@ -431,7 +460,7 @@ body {
   border-bottom: 1px solid var(--border-color);
   position: fixed;
   top: 64px;
-  left: 72px;
+  left: 72px; /* Initial position when sidebar is closed */
   right: 0;
   z-index: 998;
   box-shadow: none;
@@ -444,7 +473,7 @@ body {
 }
 
 .course-top-nav.sidebar-open {
-  left: 300px;
+  left: 300px; /* Position when sidebar is open */
 }
 
 .top-nav-tabs {
@@ -480,7 +509,7 @@ body {
 }
 
 .top-nav-tab::before {
-  display: none ;
+  display: none;
 }
 
 .top-nav-tab:hover::before,
@@ -517,10 +546,9 @@ body {
   display: none;
 }
 
-
 .content-wrapper {
-  margin-top: calc(64px + 48px); 
-  margin-left: 72px;
+  margin-top: calc(64px + 48px);
+  margin-left: 72px; /* Initial position when sidebar is closed */
   width: calc(100% - 72px - 50px);
   padding: 0 32px 32px 32px;
   transition: var(--transition);
@@ -532,7 +560,7 @@ body {
 }
 
 .content-wrapper.sidebar-open {
-  margin-left: 300px;
+  margin-left: 300px; /* Position when sidebar is open */
   width: calc(100% - 300px - 50px);
 }
 

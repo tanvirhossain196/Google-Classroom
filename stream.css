@@ -328,17 +328,84 @@ body {
   transition: var(--transition);
 }
 
+/* When sidebar is closed, hide text and center icons */
 .sidebar:not(.open) .sidebar-text,
 .sidebar:not(.open) .course-name-text {
   opacity: 0;
   width: 0;
+  padding: 0; /* Ensure no extra padding pushes content */
+  margin: 0; /* Ensure no extra margin pushes content */
 }
 
 .sidebar:not(.open) .sidebar-item,
 .sidebar:not(.open) .sidebar-header,
 .sidebar:not(.open) .current-course-header {
   justify-content: center;
+  padding: 12px 0; /* Center icons vertically */
+}
+
+/* Enrolled Classes Dropdown */
+.sidebar-dropdown {
+  margin-top: 10px;
+}
+
+.sidebar-dropdown-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.sidebar-dropdown-toggle:hover {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  color: var(--primary-color);
+  transform: translateX(2px);
+}
+
+.sidebar-dropdown-toggle .material-icons {
+  font-size: 24px;
+  min-width: 24px;
+}
+
+.sidebar-dropdown-toggle .dropdown-arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.sidebar-dropdown-toggle.open .dropdown-arrow-icon {
+  transform: rotate(180deg);
+}
+
+.sidebar-dropdown-content {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height 0.4s ease-out, opacity 0.4s ease-out;
+  opacity: 0;
+}
+
+.sidebar-dropdown-content.open {
+  max-height: 300px; /* Adjust as needed based on content */
+  opacity: 1;
+  overflow-y: auto;
+}
+
+/* When sidebar is closed, adjust dropdown toggle and hide content */
+.sidebar:not(.open) .sidebar-dropdown-toggle {
+  justify-content: center; /* Center the icon */
   padding: 12px 0;
+}
+
+.sidebar:not(.open) .sidebar-dropdown-toggle .dropdown-arrow-icon {
+  display: none; /* Hide the arrow */
+}
+
+.sidebar:not(.open) .sidebar-dropdown-content {
+  display: none; /* Hide content completely when sidebar is collapsed */
 }
 
 /* Enhanced Course Header Section - Classroom Header */
@@ -762,6 +829,7 @@ body {
   margin-bottom: 32px;
   transition: var(--transition);
   border: 1px solid var(--border-color);
+  position: relative; /* Added for dropdown positioning */
 }
 
 .announcement-input-card:hover {
@@ -769,13 +837,23 @@ body {
   box-shadow: var(--shadow-heavy);
 }
 
+/* COLLAPSED STATE - Hide header and actions by default */
 .announcement-header {
-  display: flex;
+  display: flex; /* Changed to flex to allow transition */
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border-color);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.announcement-header.expanded {
+  opacity: 1;
+  max-height: 100px; /* Adjust based on content height when expanded */
 }
 
 .announcement-for-section {
@@ -845,6 +923,7 @@ body {
   margin-bottom: 20px;
 }
 
+/* COLLAPSED PLACEHOLDER (VISIBLE BY DEFAULT) */
 .announcement-placeholder {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border: 2px solid var(--border-color);
@@ -854,20 +933,33 @@ body {
   cursor: pointer;
   transition: var(--transition);
   font-size: 16px;
+  display: block; /* Ensure it's block by default */
 }
 
 .announcement-placeholder:hover {
   border-color: var(--primary-color);
   background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  transform: translateY(-1px);
 }
 
-/* New: Hide announcement editor expanded by default */
+.announcement-placeholder.hidden {
+  display: none; /* Hide when expanded */
+}
+
+/* EXPANDED EDITOR (HIDDEN BY DEFAULT) */
 .announcement-editor-expanded {
-  display: none; /* Add this line */
+  display: block; /* Changed to block to allow transition */
   border: 2px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
-  transition: var(--transition);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  max-height: 0; /* Hidden by default */
+}
+
+.announcement-editor-expanded.expanded {
+  opacity: 1;
+  max-height: 300px; /* Adjust based on content */
 }
 
 .announcement-editor-expanded:focus-within {
@@ -924,12 +1016,22 @@ body {
   pointer-events: none;
 }
 
+/* COLLAPSED ACTIONS (HIDDEN BY DEFAULT) */
 .announcement-actions {
-  display: flex;
+  display: flex; /* Changed to flex to allow transition */
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.announcement-actions.expanded {
+  opacity: 1;
+  max-height: 100px; /* Adjust based on content height */
 }
 
 .attachment-buttons {
@@ -1016,6 +1118,7 @@ body {
   overflow: hidden;
   transition: var(--transition);
   border: 1px solid var(--border-color);
+  position: relative; /* Added for dropdown positioning */
 }
 
 .stream-post:hover {
@@ -1121,6 +1224,259 @@ body {
   background: #f8f9fa;
 }
 
+/* Assignment Post Styling */
+.notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  border-bottom: 1px solid var(--border-color);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  position: relative;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.notification-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  box-shadow: var(--shadow-light);
+  flex-shrink: 0;
+}
+
+.notification-text {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+.notification-text strong {
+  color: var(--primary-color);
+}
+
+.notification-text .time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ENHANCED DROPDOWN MENU CONTAINER */
+.notification-menu-container {
+  position: relative;
+  flex-shrink: 0;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.notification-menu-dots {
+  background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  font-size: 18px;
+  font-weight: bold;
+  width: 36px; /* Fixed width for circular button */
+  height: 36px; /* Fixed height for circular button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+}
+
+.notification-menu-dots:hover {
+  background: rgba(255, 255, 255, 0.95); /* Less transparent on hover */
+  color: var(--primary-color);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-light);
+}
+
+/* FIXED DROPDOWN MENU - APPEARS ABOVE POST */
+.notification-dropdown-menu {
+  position: absolute;
+  top: -10px; /* Position above the button */
+  right: 0;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: var(--shadow-heavy); /* Stronger shadow */
+  z-index: 10000; /* Ensure it's above other content */
+  min-width: 180px; /* Wider dropdown */
+  display: none;
+  overflow: hidden;
+  transform-origin: top right;
+  animation: dropdownSlideIn 0.2s ease-out;
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+}
+
+.notification-dropdown-menu.show {
+  display: block;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notification-dropdown-item {
+  padding: 14px 18px; /* More padding */
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* More space between icon and text */
+  color: var(--text-primary);
+  transition: var(--transition);
+  font-weight: 500; /* Slightly bolder text */
+}
+
+.notification-dropdown-item:hover {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  color: var(--primary-color);
+}
+
+.notification-dropdown-item.delete:hover {
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  color: #d32f2f;
+}
+
+.notification-dropdown-item span {
+  font-size: 16px; /* Larger icons */
+  width: 20px; /* Fixed width for icon container */
+  height: 20px; /* Fixed height for icon container */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* INLINE EDIT MODE */
+.notification-edit-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* More space between elements */
+  width: 100%;
+  animation: fadeInScale 0.3s ease; /* Smooth fade-in and scale */
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.notification-edit-input {
+  width: 100%;
+  padding: 12px 16px; /* More padding */
+  border: 2px solid var(--border-color); /* Thicker border */
+  border-radius: 8px; /* More rounded corners */
+  font-size: 15px;
+  color: var(--text-primary);
+  transition: var(--transition);
+  font-family: inherit; /* Inherit font from body */
+  background: var(--surface-color);
+}
+
+.notification-edit-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1); /* Subtle focus ring */
+  outline: none;
+}
+
+.notification-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.notification-edit-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 2px solid transparent; /* Consistent border style */
+}
+
+.notification-cancel-btn {
+  background: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.notification-cancel-btn:hover {
+  background: #f1f3f4;
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.notification-save-btn {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.notification-save-btn:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* FADE OUT ANIMATION */
+.notification-fade-out {
+  animation: fadeOutUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 200px; /* Approximate height of a post */
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-30px);
+    max-height: 0; /* Collapse height */
+    margin-bottom: 0; /* Remove margin */
+    padding-top: 0; /* Remove padding */
+    padding-bottom: 0; /* Remove padding */
+  }
+}
+
 /* Enhanced No Posts */
 .no-posts {
   text-align: center;
@@ -1219,12 +1575,10 @@ body {
   from {
     opacity: 1;
     max-height: 1000px;
-    transform: translateY(0);
   }
   to {
     opacity: 0;
     max-height: 0;
-    transform: translateY(-20px);
   }
 }
 
@@ -1309,6 +1663,113 @@ body {
   gap: 12px;
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
+}
+
+/* CONFIRMATION MODAL STYLES */
+.confirmation-modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 10001; /* Higher than other modals */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Darker overlay */
+  backdrop-filter: blur(5px);
+  animation: modalFadeIn 0.3s ease;
+}
+
+.confirmation-modal.show {
+  display: flex; /* Show as flex to center content */
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmation-modal-content {
+  background-color: var(--surface-color);
+  padding: 32px; /* More padding */
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 450px; /* Slightly smaller max-width */
+  box-shadow: var(--shadow-heavy);
+  animation: modalSlideIn 0.3s ease; /* Slide in animation */
+  text-align: center; /* Center text */
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.confirmation-modal-title {
+  font-size: 20px; /* Larger title */
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.confirmation-modal-message {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 24px; /* More space below message */
+  line-height: 1.5;
+}
+
+.confirmation-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center; /* Center buttons */
+}
+
+.confirmation-btn {
+  padding: 12px 24px; /* More padding */
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 2px solid transparent; /* Consistent border style */
+  min-width: 100px; /* Minimum width for buttons */
+}
+
+.confirmation-btn-cancel {
+  background: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.confirmation-btn-cancel:hover {
+  background: #f1f3f4;
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.confirmation-btn-delete {
+  background: #d32f2f; /* Red for delete */
+  border-color: #d32f2f;
+  color: white;
+}
+
+.confirmation-btn-delete:hover {
+  background: #b71c1c; /* Darker red on hover */
+  border-color: #b71c1c;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 /* Notification Styles */
@@ -1466,6 +1927,13 @@ body {
 
   .top-nav-tab .material-icons {
     font-size: 16px;
+  }
+
+  /* Mobile dropdown positioning */
+  .notification-dropdown-menu {
+    right: -10px; /* Adjust for smaller screens */
+    left: auto;
+    min-width: 160px;
   }
 }
 

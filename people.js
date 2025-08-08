@@ -4,6 +4,7 @@ class PeopleManager {
     this.students = [];
     this.currentSort = "name";
     this.currentFilter = "all";
+    this.isEnrolledClassesOpen = false; // New state for dropdown
     this.init();
   }
 
@@ -16,6 +17,7 @@ class PeopleManager {
     this.setupNotificationSystem();
     this.loadPeopleData();
     this.generateClassCode();
+    this.handleResize(); // Call on init to set initial state
   }
 
   setupElements() {
@@ -28,6 +30,7 @@ class PeopleManager {
       settingsLink: document.getElementById("settingsLink"),
       currentCourseName: document.getElementById("currentCourseName"),
       courseHeaderSection: document.querySelector(".course-header-section"),
+      courseTopNav: document.getElementById("courseTopNav"), // Added for responsive adjustment
 
       // People specific elements
       invitePeopleBtn: document.getElementById("invitePeopleBtn"),
@@ -61,6 +64,13 @@ class PeopleManager {
       personDetailModal: document.getElementById("personDetailModal"),
       closePersonDetail: document.getElementById("closePersonDetail"),
       personDetailBody: document.getElementById("personDetailBody"),
+
+      // Enrolled Classes Dropdown elements
+      enrolledClassesHeader: document.getElementById("enrolledClassesHeader"),
+      enrolledClassesList: document.getElementById("enrolledClasses"),
+      enrolledClassesDropdownIcon: document.getElementById(
+        "enrolledClassesDropdownIcon"
+      ),
     };
   }
 
@@ -175,6 +185,13 @@ class PeopleManager {
         }
       });
     }
+
+    // Enrolled Classes Dropdown event listener
+    if (this.elements.enrolledClassesHeader) {
+      this.elements.enrolledClassesHeader.addEventListener("click", () =>
+        this.toggleEnrolledClasses()
+      );
+    }
   }
 
   loadUserData() {
@@ -227,12 +244,36 @@ class PeopleManager {
   toggleSidebar() {
     this.elements.sidebar.classList.toggle("open");
     this.elements.contentWrapper.classList.toggle("sidebar-open");
+    this.elements.courseTopNav.classList.toggle("sidebar-open"); // Adjust top nav
 
     // Add smooth animation effect
     this.elements.sidebar.style.transition =
       "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
     this.elements.contentWrapper.style.transition =
       "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+    this.elements.courseTopNav.style.transition =
+      "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+
+    // If sidebar is closed, collapse enrolled classes
+    if (!this.elements.sidebar.classList.contains("open")) {
+      this.isEnrolledClassesOpen = false;
+      this.elements.enrolledClassesList.classList.remove("open");
+      this.elements.enrolledClassesDropdownIcon.style.transform =
+        "rotate(0deg)";
+    }
+    this.loadEnrolledClasses(); // Re-render to adjust for collapsed state
+  }
+
+  toggleEnrolledClasses() {
+    this.isEnrolledClassesOpen = !this.isEnrolledClassesOpen;
+    this.elements.enrolledClassesList.classList.toggle(
+      "open",
+      this.isEnrolledClassesOpen
+    );
+    this.elements.enrolledClassesDropdownIcon.style.transform = this
+      .isEnrolledClassesOpen
+      ? "rotate(90deg)"
+      : "rotate(0deg)";
   }
 
   navigateWithAnimation(url) {
@@ -374,7 +415,7 @@ class PeopleManager {
   }
 
   loadEnrolledClasses() {
-    const enrolledClasses = document.getElementById("enrolledClasses");
+    const enrolledClasses = this.elements.enrolledClassesList;
     if (!enrolledClasses) return;
 
     const userDashboard = this.getUserDashboard();
@@ -386,6 +427,8 @@ class PeopleManager {
     }
 
     enrolledClasses.innerHTML = "";
+
+    const isSidebarOpen = this.elements.sidebar.classList.contains("open");
 
     userCourses.slice(0, 5).forEach((course) => {
       const courseItem = document.createElement("div");
@@ -401,7 +444,10 @@ class PeopleManager {
       courseName.textContent = course.name;
 
       courseItem.appendChild(avatar);
-      courseItem.appendChild(courseName);
+      if (isSidebarOpen) {
+        // Only append text if sidebar is open
+        courseItem.appendChild(courseName);
+      }
       enrolledClasses.appendChild(courseItem);
     });
   }
@@ -976,7 +1022,6 @@ class PeopleManager {
           textArea.value = code;
           document.body.appendChild(textArea);
           textArea.select();
-          document.execCommand("copy");
           document.body.removeChild(textArea);
           this.showNotification("ক্লাস কোড কপি করা হয়েছে", "success");
         });
@@ -1058,11 +1103,24 @@ class PeopleManager {
     // Enhanced responsive behavior
     const sidebar = this.elements.sidebar;
     const contentWrapper = this.elements.contentWrapper;
+    const courseTopNav = this.elements.courseTopNav;
 
-    if (window.innerWidth <= 1024) {
+    if (window.innerWidth <= 768) {
+      // Adjusted breakpoint for mobile
       sidebar.classList.remove("open");
       contentWrapper.classList.remove("sidebar-open");
+      courseTopNav.classList.remove("sidebar-open");
+    } else {
+      // For larger screens, ensure correct positioning if sidebar is open
+      if (sidebar.classList.contains("open")) {
+        contentWrapper.classList.add("sidebar-open");
+        courseTopNav.classList.add("sidebar-open");
+      } else {
+        contentWrapper.classList.remove("sidebar-open");
+        courseTopNav.classList.remove("sidebar-open");
+      }
     }
+    this.loadEnrolledClasses(); // Re-render to adjust for collapsed state on resize
   }
 
   // Advanced people management methods
@@ -1212,14 +1270,12 @@ class PeopleManager {
 
   // Accessibility enhancements
   setupAccessibility() {
-    // Add ARIA labels and roles
     const peopleList = document.querySelectorAll(".person-item");
     peopleList.forEach((item, index) => {
       item.setAttribute("role", "listitem");
       item.setAttribute("aria-label", `Person ${index + 1}`);
       item.setAttribute("tabindex", "0");
 
-      // Add keyboard navigation
       item.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -1229,7 +1285,6 @@ class PeopleManager {
       });
     });
 
-    // Add screen reader announcements
     const announcer = document.createElement("div");
     announcer.setAttribute("aria-live", "polite");
     announcer.setAttribute("aria-atomic", "true");
@@ -1260,17 +1315,15 @@ class PeopleManager {
   // Lazy loading for large lists
   setupVirtualScrolling() {
     if (this.students.length > 100) {
-      // Implement virtual scrolling for performance
       this.renderStudentsVirtual();
     }
   }
 
   renderStudentsVirtual() {
-    // Virtual scrolling implementation for large student lists
     const container = this.elements.studentsList;
-    const itemHeight = 80; // Approximate height of each person item
+    const itemHeight = 80;
     const containerHeight = container.clientHeight;
-    const visibleItems = Math.ceil(containerHeight / itemHeight) + 2; // Buffer
+    const visibleItems = Math.ceil(containerHeight / itemHeight) + 2;
 
     let scrollTop = 0;
     let startIndex = 0;
@@ -1318,16 +1371,13 @@ class PeopleManager {
 
   // Cleanup and memory management
   destroy() {
-    // Remove event listeners
     window.removeEventListener("resize", this.handleResize);
     document.removeEventListener("keydown", this.setupKeyboardShortcuts);
 
-    // Clear timers
     if (this.refreshTimer) {
       clearInterval(this.refreshTimer);
     }
 
-    // Remove DOM elements
     if (this.announcer && this.announcer.parentNode) {
       this.announcer.parentNode.removeChild(this.announcer);
     }
@@ -1337,7 +1387,7 @@ class PeopleManager {
   setupAutoRefresh() {
     this.refreshTimer = setInterval(() => {
       this.loadPeopleData();
-    }, 30000); // Refresh every 30 seconds
+    }, 30000);
   }
 
   // Offline support
@@ -1353,12 +1403,10 @@ class PeopleManager {
   }
 
   syncOfflineChanges() {
-    // Sync any changes made while offline
     const offlineChanges = localStorage.getItem("offline_people_changes");
     if (offlineChanges) {
       try {
         const changes = JSON.parse(offlineChanges);
-        // Process offline changes
         this.processOfflineChanges(changes);
         localStorage.removeItem("offline_people_changes");
       } catch (error) {
@@ -1368,7 +1416,6 @@ class PeopleManager {
   }
 
   processOfflineChanges(changes) {
-    // Process changes made while offline
     changes.forEach((change) => {
       switch (change.type) {
         case "add_student":
@@ -1395,23 +1442,18 @@ class PeopleManager {
   }
 }
 
-// Global reference for easy access
 let peopleManager;
 
-// Initialize the people manager
 document.addEventListener("DOMContentLoaded", () => {
   peopleManager = new PeopleManager();
 });
 
-// Additional utility functions
 window.addEventListener("beforeunload", (e) => {
-  // Save any unsaved changes
   if (peopleManager) {
     peopleManager.destroy();
   }
 });
 
-// Service Worker for offline functionality (optional)
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
@@ -1425,7 +1467,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// Performance monitoring
 window.addEventListener("load", () => {
   if (window.performance && window.performance.getEntriesByType) {
     const navigationEntries = window.performance.getEntriesByType("navigation");
@@ -1439,7 +1480,6 @@ window.addEventListener("load", () => {
   }
 });
 
-// Export for module usage
 if (typeof module !== "undefined" && module.exports) {
   module.exports = PeopleManager;
 }

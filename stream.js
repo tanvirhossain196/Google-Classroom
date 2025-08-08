@@ -7,6 +7,8 @@ class StreamManager {
     this.selectedStudents = [];
     this.assignToAll = true; // For classwork assignment
     this.isAnnouncementExpanded = false;
+    this.currentEditingId = null; // Track which post is being edited
+    this.pendingDeleteId = null; // Track which post is pending deletion
     this.init();
   }
 
@@ -20,6 +22,7 @@ class StreamManager {
     this.setupNotificationSystem();
     this.loadAvailableCoursesAndStudents(); // এই ফাংশনটি ব্যবহারকারীর কোর্স এবং শিক্ষার্থীদের লোড করবে
     this.loadUpcomingAssignments(); // Load upcoming assignments
+    this.initializeAnnouncementEditorState(); // New: Initialize editor state
   }
 
   setupElements() {
@@ -35,6 +38,7 @@ class StreamManager {
         "announcementEditorExpanded"
       ),
       announcementActions: document.getElementById("announcementActions"),
+      announcementHeader: document.getElementById("announcementHeader"), // Added
       editorContent: document.getElementById("editorContent"),
       userInitial: document.getElementById("userInitial"),
       streamPosts: document.getElementById("streamPosts"),
@@ -54,6 +58,15 @@ class StreamManager {
       allStudentsRadio: document.getElementById("allStudents"),
       specificStudentsRadio: document.getElementById("specificStudents"),
       specificStudentsList: document.getElementById("specificStudentsList"),
+      // Enrolled Classes Dropdown elements
+      enrolledClassesDropdownToggle: document.getElementById(
+        "enrolledClassesDropdownToggle"
+      ),
+      enrolledClasses: document.getElementById("enrolledClasses"),
+      // Delete Confirmation Modal
+      confirmationModal: document.getElementById("confirmationModal"), // Changed ID
+      confirmationMessage: document.getElementById("confirmationMessage"), // New
+      confirmDeleteBtn: document.getElementById("confirmDeleteBtn"),
     };
   }
 
@@ -105,6 +118,21 @@ class StreamManager {
         this.toggleSpecificStudentsList()
       );
     }
+
+    // Enrolled Classes Dropdown Toggle
+    if (this.elements.enrolledClassesDropdownToggle) {
+      this.elements.enrolledClassesDropdownToggle.addEventListener(
+        "click",
+        () => this.toggleEnrolledClassesDropdown()
+      );
+    }
+
+    // Confirmation modal buttons
+    if (this.elements.confirmDeleteBtn) {
+      this.elements.confirmDeleteBtn.addEventListener("click", () =>
+        this.confirmDelete()
+      );
+    }
   }
 
   loadUserData() {
@@ -140,7 +168,7 @@ class StreamManager {
       console.log("Current course:", this.currentCourse); // Debug log
 
       this.updateCourseDisplay();
-      this.loadEnrolledClasses();
+      this.loadEnrolledClasses(); // Ensure enrolled classes are loaded after current course
     } catch (error) {
       console.error("Error loading course data:", error); // Debug log
       this.showErrorAndRedirect("কোর্স লোড করতে সমস্যা হয়েছে");
@@ -250,35 +278,64 @@ class StreamManager {
     // In a real implementation, this would navigate to the assignment details
   }
 
+  // New: Initialize editor state to collapsed
+  initializeAnnouncementEditorState() {
+    this.isAnnouncementExpanded = false;
+    this.elements.announcementPlaceholder.classList.remove("hidden");
+    this.elements.announcementHeader.classList.remove("expanded");
+    this.elements.announcementEditorExpanded.classList.remove("expanded");
+    this.elements.announcementEditorExpanded.style.display = "none"; // Ensure it's hidden
+    this.elements.announcementActions.classList.remove("expanded");
+  }
+
   // New announcement expansion method
   expandAnnouncement() {
+    if (this.isAnnouncementExpanded) return; // Prevent re-expansion if already expanded
+
     this.isAnnouncementExpanded = true;
-    this.elements.announcementPlaceholder.style.display = "none";
-    this.elements.announcementEditorExpanded.style.display = "block";
-    this.elements.announcementActions.style.display = "flex";
+    this.elements.announcementPlaceholder.classList.add("hidden");
 
-    // Focus on editor content
-    if (this.elements.editorContent) {
-      this.elements.editorContent.focus();
-    }
+    // Expand header
+    this.elements.announcementHeader.classList.add("expanded");
 
-    // Add animation
-    this.elements.announcementEditorExpanded.style.animation =
-      "fadeIn 0.3s ease";
-    this.elements.announcementActions.style.animation =
-      "fadeIn 0.3s ease 0.1s both";
+    // Expand editor
+    this.elements.announcementEditorExpanded.style.display = "block"; // Make it block for transition
+    this.elements.announcementEditorExpanded.classList.add("expanded");
+
+    // Expand actions
+    this.elements.announcementActions.classList.add("expanded");
+
+    // Focus on editor content after a slight delay to allow transition
+    setTimeout(() => {
+      if (this.elements.editorContent) {
+        this.elements.editorContent.focus();
+      }
+    }, 400); // Match transition duration
   }
 
   // Cancel announcement method
   cancelAnnouncement() {
     this.isAnnouncementExpanded = false;
-    this.elements.announcementPlaceholder.style.display = "block";
-    this.elements.announcementEditorExpanded.style.display = "none";
-    this.elements.announcementActions.style.display = "none";
+
+    // Collapse header
+    this.elements.announcementHeader.classList.remove("expanded");
+
+    // Collapse editor
+    this.elements.announcementEditorExpanded.classList.remove("expanded");
+
+    // Collapse actions
+    this.elements.announcementActions.classList.remove("expanded");
+
+    // Hide elements after transition
+    setTimeout(() => {
+      this.elements.announcementPlaceholder.classList.remove("hidden");
+      this.elements.announcementEditorExpanded.style.display = "none";
+    }, 400); // Match transition duration
 
     // Clear content
     if (this.elements.editorContent) {
       this.elements.editorContent.innerHTML = "";
+      localStorage.removeItem("announcement_draft"); // Clear draft on cancel
     }
 
     // Clear attachments
@@ -344,21 +401,18 @@ class StreamManager {
         author: this.currentUser,
         content: content,
         attachments: [...this.attachments],
-        timestamp: new Date().toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        }),
+        timestamp: new Date().toISOString(), // Use ISO string for consistent date parsing
         targetCourses: [this.courseId],
         targetStudents: targetStudents, // Use selected students
         comments: [],
         likes: 0,
+        type: "announcement", // Added type for general posts
       };
 
       // Save announcement
       this.saveAnnouncementToCourse(announcement, this.courseId);
       this.loadPosts();
-      this.cancelAnnouncement();
+      this.cancelAnnouncement(); // This will also clear the draft
 
       // Reset button
       if (postBtn) {
@@ -817,20 +871,20 @@ class StreamManager {
   }
 
   loadEnrolledClasses() {
-    const enrolledClasses = document.getElementById("enrolledClasses");
-    if (!enrolledClasses) return;
+    const enrolledClassesContainer = this.elements.enrolledClasses;
+    if (!enrolledClassesContainer) return;
 
     const userDashboard = this.getUserDashboard();
     const userCourses = userDashboard.courses || [];
 
     if (userCourses.length === 0) {
-      enrolledClasses.innerHTML = "";
+      enrolledClassesContainer.innerHTML = "";
       return;
     }
 
-    enrolledClasses.innerHTML = "";
+    enrolledClassesContainer.innerHTML = "";
 
-    userCourses.slice(0, 5).forEach((course) => {
+    userCourses.forEach((course) => {
       const courseItem = document.createElement("div");
       courseItem.className = "sidebar-item";
       courseItem.onclick = () => this.switchToCourse(course);
@@ -845,8 +899,18 @@ class StreamManager {
 
       courseItem.appendChild(avatar);
       courseItem.appendChild(courseName);
-      enrolledClasses.appendChild(courseItem);
+      enrolledClassesContainer.appendChild(courseItem);
     });
+  }
+
+  toggleEnrolledClassesDropdown() {
+    const dropdownContent = this.elements.enrolledClasses;
+    const dropdownToggle = this.elements.enrolledClassesDropdownToggle;
+
+    if (dropdownContent && dropdownToggle) {
+      dropdownContent.classList.toggle("open");
+      dropdownToggle.classList.toggle("open");
+    }
   }
 
   getUserDashboard() {
@@ -881,12 +945,12 @@ class StreamManager {
         type: "assignment",
         author: assignment.author || this.currentUser || "SurePay",
         content: `posted a new assignment: <strong>${assignment.title}</strong>`,
-        timestamp: this.formatTimestamp(assignment.createdAt),
+        timestamp: assignment.createdAt, // Use ISO string directly
         assignment: assignment,
         comments: [],
         likes: 0,
         isEditable: true,
-        originalText: `posted a new assignment: ${assignment.title}`,
+        originalText: assignment.title, // Store original title for editing
       };
       allPosts.push(assignmentPost);
     });
@@ -895,12 +959,8 @@ class StreamManager {
 
     // Sort by timestamp (newest first)
     allPosts.sort((a, b) => {
-      const timeA = a.assignment
-        ? new Date(a.assignment.createdAt)
-        : new Date(a.timestamp);
-      const timeB = b.assignment
-        ? new Date(b.assignment.createdAt)
-        : new Date(b.timestamp);
+      const timeA = new Date(a.timestamp);
+      const timeB = new Date(b.timestamp);
       return timeB - timeA;
     });
 
@@ -936,19 +996,16 @@ class StreamManager {
     return assignments;
   }
 
-  formatTimestamp(dateString) {
-    if (!dateString)
-      return new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
+  formatTimestamp(isoString) {
+    if (!isoString) return "";
 
-    const date = new Date(dateString);
+    const date = new Date(isoString);
     const now = new Date();
     const diffInHours = (now - date) / (1000 * 60 * 60);
 
-    if (diffInHours < 24) {
+    if (diffInHours < 1) {
+      return "Just now";
+    } else if (diffInHours < 24) {
       return date.toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "2-digit",
@@ -998,11 +1055,15 @@ class StreamManager {
       const notificationText = document.createElement("div");
       notificationText.className = "notification-text";
       notificationText.id = `notification-text-${post.id}`;
-      notificationText.innerHTML = `<strong>SurePay</strong> ${post.content}`;
+      notificationText.innerHTML = `<strong>${
+        post.author
+      }</strong> posted a new assignment: <strong>${
+        post.originalText || post.assignment.title
+      }</strong>`;
 
       const timeDiv = document.createElement("div");
       timeDiv.className = "time";
-      timeDiv.textContent = post.timestamp;
+      timeDiv.textContent = this.formatTimestamp(post.timestamp);
 
       notificationText.appendChild(timeDiv);
 
@@ -1016,17 +1077,6 @@ class StreamManager {
       const menuButton = document.createElement("button");
       menuButton.className = "notification-menu-dots";
       menuButton.textContent = "⋮";
-      menuButton.style.cssText = `
-        cursor: pointer;
-        padding: 8px;
-        color: #666;
-        font-size: 20px;
-        font-weight: bold;
-        border: none;
-        background: none;
-        border-radius: 50%;
-        transition: background-color 0.2s;
-      `;
       menuButton.onclick = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -1037,83 +1087,29 @@ class StreamManager {
       const dropdownMenu = document.createElement("div");
       dropdownMenu.className = "notification-dropdown-menu";
       dropdownMenu.id = `dropdown-${post.id}`;
-      dropdownMenu.style.cssText = `
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-        z-index: 10000;
-        min-width: 140px;
-        display: none;
-        overflow: visible;
-        margin-top: 4px;
-      `;
 
       const editButton = document.createElement("button");
       editButton.className = "notification-dropdown-item";
       editButton.innerHTML = "<span>✏️</span> Edit";
-      editButton.style.cssText = `
-        padding: 12px 16px;
-        cursor: pointer;
-        font-size: 14px;
-        border: none;
-        background: none;
-        width: 100%;
-        text-align: left;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #333;
-        transition: background-color 0.2s;
-      `;
       editButton.onclick = (e) => {
         e.stopPropagation();
         e.preventDefault();
         console.log("Edit button clicked"); // Debug log
-        this.editNotification(post.id, post.originalText);
+        this.editNotification(
+          post.id,
+          post.originalText || post.assignment.title
+        );
       };
 
       const deleteButton = document.createElement("button");
       deleteButton.className = "notification-dropdown-item delete";
       deleteButton.innerHTML = "<span>🗑️</span> Delete";
-      deleteButton.style.cssText = `
-        padding: 12px 16px;
-        cursor: pointer;
-        font-size: 14px;
-        border: none;
-        background: none;
-        width: 100%;
-        text-align: left;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #d32f2f;
-        transition: background-color 0.2s;
-      `;
       deleteButton.onclick = (e) => {
         e.stopPropagation();
         e.preventDefault();
         console.log("Delete button clicked"); // Debug log
-        this.deleteNotification(post.id);
+        this.deleteNotification(post.id); // Call deleteNotification directly
       };
-
-      // Add hover effects
-      editButton.addEventListener("mouseenter", () => {
-        editButton.style.backgroundColor = "#f5f5f5";
-      });
-      editButton.addEventListener("mouseleave", () => {
-        editButton.style.backgroundColor = "transparent";
-      });
-
-      deleteButton.addEventListener("mouseenter", () => {
-        deleteButton.style.backgroundColor = "#ffebee";
-      });
-      deleteButton.addEventListener("mouseleave", () => {
-        deleteButton.style.backgroundColor = "transparent";
-      });
 
       dropdownMenu.appendChild(editButton);
       dropdownMenu.appendChild(deleteButton);
@@ -1127,7 +1123,10 @@ class StreamManager {
       postDiv.appendChild(notificationHeader);
 
       // Store original text for editing
-      postDiv.setAttribute("data-original-text", post.originalText);
+      postDiv.setAttribute(
+        "data-original-text",
+        post.originalText || post.assignment.title
+      );
       postDiv.setAttribute("data-assignment-id", post.assignment.id);
     } else {
       // Regular announcement post
@@ -1147,7 +1146,7 @@ class StreamManager {
 
       const date = document.createElement("div");
       date.className = "post-date";
-      date.textContent = post.timestamp;
+      date.textContent = this.formatTimestamp(post.timestamp);
 
       postInfo.appendChild(author);
       postInfo.appendChild(date);
@@ -1230,16 +1229,26 @@ class StreamManager {
         dropdown.classList.add("show");
 
         // Ensure dropdown appears above everything
-        dropdown.style.position = "absolute";
-        dropdown.style.top = "100%";
-        dropdown.style.right = "0";
-        dropdown.style.left = "auto";
-        dropdown.style.bottom = "auto";
-        dropdown.style.zIndex = "10000";
+        this.positionDropdown(dropdown);
         console.log("Dropdown should now be visible"); // Debug log
       }
     } else {
       console.error("Dropdown not found for ID:", `dropdown-${postId}`);
+    }
+  }
+
+  // New: Position dropdown correctly
+  positionDropdown(dropdown) {
+    const rect = dropdown.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+
+    // If dropdown would go below viewport, position it above
+    if (rect.bottom > viewportHeight) {
+      dropdown.style.top = "auto";
+      dropdown.style.bottom = "45px"; // Adjust as needed to clear the button
+    } else {
+      dropdown.style.top = "-10px"; // Default position above
+      dropdown.style.bottom = "auto";
     }
   }
 
@@ -1254,6 +1263,8 @@ class StreamManager {
       `notification-text-${postId}`
     );
     if (!notificationText) return;
+
+    this.currentEditingId = postId; // Set the currently editing post ID
 
     // Get current text without HTML tags for editing
     const currentText = originalText || notificationText.textContent;
@@ -1306,6 +1317,8 @@ class StreamManager {
     const originalHTML = notificationText.getAttribute("data-original-html");
     notificationText.innerHTML = originalHTML;
     notificationText.removeAttribute("data-original-html");
+    this.currentEditingId = null; // Clear the currently editing post ID
+    this.showNotification("Edit cancelled", "info");
   }
 
   saveEdit(postId) {
@@ -1320,9 +1333,8 @@ class StreamManager {
     const notificationHeader = document.getElementById(
       `notification-${postId}`
     );
-    const assignmentId = notificationHeader
-      ?.closest(".stream-post")
-      ?.getAttribute("data-assignment-id");
+    const streamPostElement = notificationHeader?.closest(".stream-post");
+    const assignmentId = streamPostElement?.getAttribute("data-assignment-id");
 
     if (newText) {
       // Update the notification text
@@ -1334,13 +1346,16 @@ class StreamManager {
       if (assignmentId) {
         this.updateAssignmentTitle(assignmentId, newText);
       }
+      this.showNotification("Assignment updated successfully!", "success");
     } else {
       // If empty, revert to original
       const originalHTML = notificationText.getAttribute("data-original-html");
       notificationText.innerHTML = originalHTML;
+      this.showNotification("Cannot save empty assignment title", "error");
     }
 
     notificationText.removeAttribute("data-original-html");
+    this.currentEditingId = null; // Clear the currently editing post ID
   }
 
   updateAssignmentTitle(assignmentId, newTitle) {
@@ -1359,6 +1374,7 @@ class StreamManager {
     }
   }
 
+  // New: Show confirmation modal for deletion
   deleteNotification(postId) {
     // Close dropdown first
     const dropdown = document.getElementById(`dropdown-${postId}`);
@@ -1366,34 +1382,65 @@ class StreamManager {
       dropdown.classList.remove("show");
     }
 
-    if (confirm("Are you sure you want to delete this notification?")) {
-      const notificationHeader = document.getElementById(
-        `notification-${postId}`
-      );
-      const streamPost = notificationHeader?.closest(".stream-post");
-      const assignmentId = streamPost?.getAttribute("data-assignment-id");
+    this.pendingDeleteId = postId; // Store the ID of the post to be deleted
+    this.showConfirmationModal(
+      "Are you sure you want to delete this item? This action cannot be undone."
+    );
+  }
 
-      // Add fade out animation
-      if (streamPost) {
-        streamPost.classList.add("notification-fade-out");
-
-        // Remove the notification after animation
-        setTimeout(() => {
-          streamPost.remove();
-
-          // Delete the assignment from localStorage
-          if (assignmentId) {
-            this.deleteAssignment(assignmentId);
-          }
-
-          // Show success message
-          this.showNotification("Notification deleted successfully", "success");
-
-          // Check if no posts remain
-          this.checkForNoPosts();
-        }, 300);
-      }
+  // New: Show confirmation modal
+  showConfirmationModal(message) {
+    if (this.elements.confirmationMessage) {
+      this.elements.confirmationMessage.textContent = message;
     }
+    if (this.elements.confirmationModal) {
+      this.elements.confirmationModal.classList.add("show");
+    }
+    document.body.style.overflow = "hidden"; // Prevent scrolling
+  }
+
+  // New: Hide confirmation modal
+  hideConfirmationModal() {
+    if (this.elements.confirmationModal) {
+      this.elements.confirmationModal.classList.remove("show");
+    }
+    this.pendingDeleteId = null; // Clear pending delete ID
+    document.body.style.overflow = "auto"; // Restore scrolling
+  }
+
+  // New: Confirm deletion
+  confirmDelete() {
+    if (!this.pendingDeleteId) return;
+
+    const postIdToDelete = this.pendingDeleteId;
+    const notificationHeader = document.getElementById(
+      `notification-${postIdToDelete}`
+    );
+    const streamPost = notificationHeader?.closest(".stream-post");
+    const assignmentId = streamPost?.getAttribute("data-assignment-id");
+
+    // Add fade out animation
+    if (streamPost) {
+      streamPost.classList.add("notification-fade-out");
+
+      // Remove the notification after animation
+      setTimeout(() => {
+        streamPost.remove();
+
+        // Delete the assignment from localStorage
+        if (assignmentId) {
+          this.deleteAssignment(assignmentId);
+        }
+
+        // Show success message
+        this.showNotification("Notification deleted successfully", "success");
+
+        // Check if no posts remain
+        this.checkForNoPosts();
+      }, 400); // Match animation duration
+    }
+
+    this.hideConfirmationModal(); // Hide the modal after action
   }
 
   deleteAssignment(assignmentId) {
@@ -1410,11 +1457,13 @@ class StreamManager {
   }
 
   checkForNoPosts() {
-    const streamPosts = document.getElementById("streamPosts");
-    const noPosts = document.getElementById("noPosts");
+    const streamPosts = this.elements.streamPosts;
+    const noPosts = this.elements.noPosts;
 
     if (streamPosts && streamPosts.children.length === 0) {
       if (noPosts) noPosts.style.display = "block";
+    } else {
+      if (noPosts) noPosts.style.display = "none";
     }
   }
 
@@ -1489,13 +1538,20 @@ class StreamManager {
   }
 
   showNotification(message, type) {
+    // Remove existing notifications to prevent stacking
+    const existingNotifications = document.querySelectorAll(".notification");
+    existingNotifications.forEach((notification) => notification.remove());
+
     const notification = document.createElement("div");
     notification.className = `notification ${type}`;
     notification.textContent = message;
     document.body.appendChild(notification);
 
     setTimeout(() => {
-      notification.remove();
+      // Add fade out animation before removal
+      notification.style.opacity = "0";
+      notification.style.transform = "translateX(100%)";
+      setTimeout(() => notification.remove(), 300); // Remove after animation
     }, 3000);
   }
 
@@ -1573,9 +1629,17 @@ class StreamManager {
         this.postAnnouncement();
       }
 
-      // Escape to cancel announcement
-      if (e.key === "Escape" && this.isAnnouncementExpanded) {
-        this.cancelAnnouncement();
+      // Escape to cancel announcement or close modal
+      if (e.key === "Escape") {
+        if (
+          this.elements.confirmationModal &&
+          this.elements.confirmationModal.classList.contains("show")
+        ) {
+          this.hideConfirmationModal();
+        } else if (this.isAnnouncementExpanded && !this.currentEditingId) {
+          // Only cancel if not currently editing a post
+          this.cancelAnnouncement();
+        }
       }
     });
   }
@@ -1691,7 +1755,7 @@ class StreamManager {
 
     // Close dropdown menus when clicking outside or scrolling
     document.addEventListener("click", (e) => {
-      // Check if click is outside any notification menu
+      // Close assignment post dropdown menus
       if (
         !e.target.closest(".notification-menu-container") &&
         !e.target.closest(".notification-dropdown-menu")
@@ -1703,6 +1767,23 @@ class StreamManager {
           menu.classList.remove("show");
         });
       }
+
+      // Close sidebar enrolled classes dropdown if open and clicked outside
+      const enrolledClassesDropdown = this.elements.enrolledClasses;
+      const enrolledClassesToggle = this.elements.enrolledClassesDropdownToggle;
+
+      if (enrolledClassesDropdown && enrolledClassesToggle) {
+        const isClickInsideDropdown =
+          enrolledClassesDropdown.contains(e.target) ||
+          enrolledClassesToggle.contains(e.target);
+
+        if (
+          enrolledClassesDropdown.classList.contains("open") &&
+          !isClickInsideDropdown
+        ) {
+          this.toggleEnrolledClassesDropdown();
+        }
+      }
     });
 
     // Close dropdowns on scroll
@@ -1713,6 +1794,15 @@ class StreamManager {
       allDropdowns.forEach((menu) => {
         menu.classList.remove("show");
       });
+
+      // Close sidebar enrolled classes dropdown on scroll
+      const enrolledClassesDropdown = this.elements.enrolledClasses;
+      if (
+        enrolledClassesDropdown &&
+        enrolledClassesDropdown.classList.contains("open")
+      ) {
+        this.toggleEnrolledClassesDropdown();
+      }
     });
 
     // Close dropdowns on window resize
@@ -1723,20 +1813,42 @@ class StreamManager {
       allDropdowns.forEach((menu) => {
         menu.classList.remove("show");
       });
+
+      // Close sidebar enrolled classes dropdown on resize
+      const enrolledClassesDropdown = this.elements.enrolledClasses;
+      if (
+        enrolledClassesDropdown &&
+        enrolledClassesDropdown.classList.contains("open")
+      ) {
+        this.toggleEnrolledClassesDropdown();
+      }
     });
   }
 
   handleClickOutside(e) {
-    // Enhanced click outside handling
+    // Enhanced click outside handling for announcement section
     if (this.isAnnouncementExpanded) {
       const announcementCard = e.target.closest(".announcement-input-card");
-      const modal = e.target.closest(".modal");
-      if (!announcementCard && !modal) {
+      const modal = e.target.closest(".modal"); // Check if click is inside a Bootstrap modal
+      const confirmationModal = e.target.closest(".confirmation-modal"); // Check if click is inside custom confirmation modal
+
+      // If click is outside the announcement card AND not inside any modal
+      if (!announcementCard && !modal && !confirmationModal) {
         const content = this.elements.editorContent?.innerHTML?.trim();
-        if (!content) {
+        if (!content && !this.currentEditingId) {
+          // Only cancel if the editor is empty and not currently editing a post
           this.cancelAnnouncement();
         }
       }
+    }
+
+    // Close confirmation modal if clicking outside its content
+    if (
+      this.elements.confirmationModal &&
+      this.elements.confirmationModal.classList.contains("show") &&
+      !e.target.closest(".confirmation-modal-content")
+    ) {
+      this.hideConfirmationModal();
     }
   }
 
@@ -1888,6 +2000,10 @@ window.addEventListener("load", () => {
         "ms"
       );
     }
+  }
+  // Ensure initial state of announcement editor is collapsed
+  if (streamManager && !localStorage.getItem("announcement_draft")) {
+    streamManager.cancelAnnouncement(); // This will collapse it
   }
 });
 

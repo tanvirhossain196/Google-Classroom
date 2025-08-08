@@ -45,29 +45,10 @@
                     </div>
                 </div>
 
-                <div class="sidebar-header">
-                    <span class="material-icons">dashboard</span>
-                    <span class="sidebar-text">Menu</span>
-                </div>
 
                 <a href="stream.html" class="sidebar-item" id="classesLink">
                     <span class="material-icons">home</span>
                     <span class="sidebar-text">Classroom</span>
-                </a>
-
-                <a href="classwork.html" class="sidebar-item">
-                    <span class="material-icons">assignment</span>
-                    <span class="sidebar-text">Classwork</span>
-                </a>
-
-                <a href="#" class="sidebar-item">
-                    <span class="material-icons">people</span>
-                    <span class="sidebar-text">People</span>
-                </a>
-
-                <a href="grades.html" class="sidebar-item">
-                    <span class="material-icons">grade</span>
-                    <span class="sidebar-text">Grades</span>
                 </a>
 
                 <a href="#" class="sidebar-item" id="settingsLink">
@@ -75,12 +56,14 @@
                     <span class="sidebar-text">Settings</span>
                 </a>
 
-                <div class="sidebar-header">
+                <!-- Enrolled Classes Dropdown -->
+                <div class="sidebar-header" id="enrolledClassesHeader">
                     <span class="material-icons">school</span>
                     <span class="sidebar-text">Enrolled Classes</span>
+                    <span class="material-icons dropdown-icon" id="enrolledClassesDropdownIcon">chevron_right</span>
                 </div>
 
-                <div id="enrolledClasses">
+                <div id="enrolledClasses" class="enrolled-classes-list">
                     <!-- Enrolled classes will be populated here -->
                 </div>
             </div>
@@ -100,10 +83,6 @@
                 <button class="top-nav-tab active" data-tab="people">
                     <i class="material-icons">people</i>
                     <span>People</span>
-                </button>
-                <button class="top-nav-tab" data-tab="grades" onclick="window.location.href='grades.html'">
-                    <i class="material-icons">grade</i>
-                    <span>Grades</span>
                 </button>
             </div>
         </nav>
@@ -312,22 +291,14 @@
                                                 <input type="radio" name="sortBy" value="name" checked>
                                                 By Name
                                             </label>
-                                            <<<<<<< SEARCH <label class="sort-option">
-                                                <input type="radio" name="sortBy" value="name" checked>
-                                                ন
-                                                =======
-                                                <label class="sort-option">
-                                                    <input type="radio" name="sortBy" value="name" checked>
-                                                    By Name
-                                                </label>
-                                                <label class="sort-option">
-                                                    <input type="radio" name="sortBy" value="recent">
-                                                    By Recent Activity
-                                                </label>
-                                                <label class="sort-option">
-                                                    <input type="radio" name="sortBy" value="alphabetical">
-                                                    By Alphabetical Order
-                                                </label>
+                                            <label class="sort-option">
+                                                <input type="radio" name="sortBy" value="recent">
+                                                By Recent Activity
+                                            </label>
+                                            <label class="sort-option">
+                                                <input type="radio" name="sortBy" value="alphabetical">
+                                                By Alphabetical Order
+                                            </label>
                                         </div>
                                     </div>
 
