@@ -8,7 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Check if user is already logged in
   if (localStorage.getItem("currentUser")) {
-    window.location.href = "dashboard.html";
+    const userRole = localStorage.getItem("userRole");
+    if (userRole === "admin") {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "dashboard.html";
+    }
     return;
   }
 
@@ -68,7 +73,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Check for admin login
     if (role === "admin") {
-      if (email === "admin@classroom.com" && password === "admin123") {
+      console.log("Admin login attempt");
+      // Check multiple admin credentials
+      const isValidAdmin =
+        (email === "tanvir479@gmail.com" && password === "111111") ||
+        (email === "admin@classroom.com" && password === "admin123");
+
+      console.log("Admin validation result:", isValidAdmin);
+
+      if (isValidAdmin) {
+        console.log("Admin login successful, redirecting to admin.html");
         // Admin login successful
         localStorage.setItem("currentUser", email);
         localStorage.setItem("userRole", "admin");
@@ -76,10 +90,18 @@ document.addEventListener("DOMContentLoaded", function () {
         showAlert("প্রশাসক হিসেবে সফলভাবে লগইন হয়েছে!", "success");
 
         setTimeout(() => {
-          window.location.href = "admin.html";
+          console.log("Redirecting to admin.html now...");
+          try {
+            window.location.href = "admin.html";
+          } catch (error) {
+            console.error("Redirect error:", error);
+            // Fallback redirect method
+            window.location.replace("admin.html");
+          }
         }, 1500);
         return;
       } else {
+        console.log("Invalid admin credentials");
         showAlert(
           "প্রশাসক লগইনের জন্য সঠিক ইমেইল এবং পাসওয়ার্ড প্রয়োজন",
           "error"
@@ -110,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showAlert("সফলভাবে লগইন হয়েছে!", "success");
 
         setTimeout(() => {
-          window.location.href = "dashboard.html";
+          window.location.href = "dashboard.html"; // Users go to dashboard
         }, 1500);
       } else {
         // User not found, register new user
@@ -148,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
     showAlert("নতুন অ্যাকাউন্ট তৈরি করে লগইন সম্পন্ন হয়েছে!", "success");
 
     setTimeout(() => {
-      window.location.href = "dashboard.html";
+      window.location.href = "dashboard.html"; // New users also go to dashboard
     }, 1500);
   }
 
