@@ -1,3 +1,4 @@
+// MultipleFiles/stream.js
 class StreamManager {
   constructor() {
     this.attachments = [];
@@ -1467,10 +1468,25 @@ class StreamManager {
     }
   }
 
+  /**
+   * Navigates to the assignment details page based on user role.
+   * Teachers are redirected to 'instruction.html', students to 'assignment-page.html'.
+   * @param {object} assignment - The assignment object.
+   */
   navigateToAssignment(assignment) {
-    // Store assignment details and navigate
+    // Store assignment details
     localStorage.setItem("selectedAssignment", JSON.stringify(assignment));
-    window.location.href = "assignment-page.html";
+
+    // Get user role from localStorage
+    const userRole = localStorage.getItem("userRole");
+
+    // Redirect based on role
+    if (userRole === "teacher") {
+      window.location.href = "instruction.html";
+    } else {
+      // Default for students or other roles
+      window.location.href = "assignment-page.html";
+    }
   }
 
   createAttachmentElement(attachment) {

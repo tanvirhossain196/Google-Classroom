@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
-  const forgotPassword = document.getElementById("forgotPassword");
+  const forgotPassword = document.getElementById("forgotPassword"); // This element is not in index.html, but kept for safety
   const roleCards = document.querySelectorAll(".role-card");
   const loginBtn = document.querySelector(".login-btn");
 
@@ -11,8 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const userRole = localStorage.getItem("userRole");
     if (userRole === "admin") {
       window.location.href = "admin.html";
-    } else {
-      window.location.href = "dashboard.html";
+    } else if (userRole === "teacher") {
+      window.location.href = "teacher.html";
+    } else if (userRole === "student") {
+      window.location.href = "student.html";
     }
     return;
   }
@@ -111,38 +113,47 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // For user login
-    if (role === "user") {
-      // Check if user exists in registered users
-      const registeredUsers = JSON.parse(
-        localStorage.getItem("registeredUsers") || "[]"
-      );
-      const user = registeredUsers.find(
-        (u) => u.email === email && u.password === password
-      );
+    // For student and teacher login
+    const registeredUsers = JSON.parse(
+      localStorage.getItem("registeredUsers") || "[]"
+    );
+    const user = registeredUsers.find(
+      (u) => u.email === email && u.password === password
+    );
 
-      if (user) {
-        // User found, login successful
+    if (user) {
+      // User found, check if role matches
+      if (user.role === role) {
         localStorage.setItem("currentUser", email);
-        localStorage.setItem("userRole", "user");
+        localStorage.setItem("userRole", role);
 
         // Initialize user dashboard if doesn't exist
-        initializeUserDashboard(email);
+        initializeUserDashboard(email, role);
 
         showAlert("সফলভাবে লগইন হয়েছে!", "success");
 
         setTimeout(() => {
-          window.location.href = "dashboard.html"; // Users go to dashboard
+          if (role === "teacher") {
+            window.location.href = "teacher.html";
+          } else if (role === "student") {
+            window.location.href = "student.html";
+          }
         }, 1500);
       } else {
-        // User not found, register new user
-        registerNewUser(email, password);
+        showAlert(
+          `এই ইমেইলটি ${user.role} হিসেবে নিবন্ধিত। অনুগ্রহ করে সঠিক ভূমিকা নির্বাচন করুন।`,
+          "error"
+        );
+        resetButton();
       }
+    } else {
+      // User not found, register new user with selected role
+      registerNewUser(email, password, role);
     }
   }
 
-  function registerNewUser(email, password) {
-    console.log("Registering new user:", email);
+  function registerNewUser(email, password, role) {
+    console.log("Registering new user:", email, "with role:", role);
 
     const registeredUsers = JSON.parse(
       localStorage.getItem("registeredUsers") || "[]"
@@ -153,36 +164,47 @@ document.addEventListener("DOMContentLoaded", function () {
       name: email.split("@")[0], // Use email prefix as name
       email: email,
       password: password,
-      role: "user",
+      role: role, // Assign the selected role
       registeredAt: new Date().toISOString(),
     };
 
     registeredUsers.push(newUser);
     localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
 
-    // Initialize dashboard
-    initializeUserDashboard(email);
+    // Initialize dashboard for the new user
+    initializeUserDashboard(email, role);
 
     // Login the new user
     localStorage.setItem("currentUser", email);
-    localStorage.setItem("userRole", "user");
+    localStorage.setItem("userRole", role);
 
     showAlert("নতুন অ্যাকাউন্ট তৈরি করে লগইন সম্পন্ন হয়েছে!", "success");
 
     setTimeout(() => {
-      window.location.href = "dashboard.html"; // New users also go to dashboard
+      if (role === "teacher") {
+        window.location.href = "teacher.html";
+      } else if (role === "student") {
+        window.location.href = "student.html";
+      }
     }, 1500);
   }
 
-  function initializeUserDashboard(email) {
+  function initializeUserDashboard(email, role) {
     const dashboardKey = `dashboard_${email}`;
     if (!localStorage.getItem(dashboardKey)) {
       const emptyDashboard = {
         courses: [],
         createdAt: new Date().toISOString(),
-        role: null,
+        role: role, // Set the role in the dashboard data
       };
       localStorage.setItem(dashboardKey, JSON.stringify(emptyDashboard));
+    } else {
+      // If dashboard exists, ensure role is set/updated
+      const dashboard = JSON.parse(localStorage.getItem(dashboardKey));
+      if (dashboard.role !== role) {
+        dashboard.role = role;
+        localStorage.setItem(dashboardKey, JSON.stringify(dashboard));
+      }
     }
   }
 
@@ -223,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
     alertDiv.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()" 
+            <button onclick="this.parentElement.parentElement.remove()"
                     style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; margin-left: 10px;">
                 ×
             </button>
@@ -264,21 +286,34 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Add demo user if not exists
-    const demoUserExists = registeredUsers.find(
-      (u) => u.email === "user@example.com"
+    // Add demo teacher if not exists
+    const demoTeacherExists = registeredUsers.find(
+      (u) => u.email === "teacher@example.com"
     );
-    if (!demoUserExists) {
+    if (!demoTeacherExists) {
       registeredUsers.push({
-        name: "Demo User",
-        email: "user@example.com",
-        password: "user123",
-        role: "user",
+        name: "Demo Teacher",
+        email: "teacher@example.com",
+        password: "teacher123",
+        role: "teacher",
         registeredAt: new Date().toISOString(),
       });
+      initializeUserDashboard("teacher@example.com", "teacher");
+    }
 
-      // Initialize demo user dashboard
-      initializeUserDashboard("user@example.com");
+    // Add demo student if not exists
+    const demoStudentExists = registeredUsers.find(
+      (u) => u.email === "student@example.com"
+    );
+    if (!demoStudentExists) {
+      registeredUsers.push({
+        name: "Demo Student",
+        email: "student@example.com",
+        password: "student123",
+        role: "student",
+        registeredAt: new Date().toISOString(),
+      });
+      initializeUserDashboard("student@example.com", "student");
     }
 
     localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));

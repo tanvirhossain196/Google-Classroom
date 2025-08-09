@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Classroom</title>
+    <link rel="stylesheet" href="student.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="material-icons menu-icon" id="menuIcon">menu</span>
+                <h1>Classroom</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div id="currentUserEmail" class="user-email">user@email.com</div>
+                    <div id="userRoleBadge" class="role-badge new">New User</div>
+                </div>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
+                </div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-menu">
+                <ul class="sidebar-menu">
+                    <li><a href="student.html" class="nav-link active" data-nav-link>
+                            <i class="material-icons">home</i>
+                            <span>Dashboard</span>
+                        </a></li>
+                    <li><a href="profile.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a></li>
+                    <!-- New Enrolled Classes Dropdown -->
+                    <li class="sidebar-dropdown">
+                        <a href="#" class="nav-link" id="enrolledClassesDropdownToggle">
+                            <i class="material-icons">school</i>
+                            <span>Enrolled</span>
+                            <i class="material-icons dropdown-arrow">keyboard_arrow_down</i>
+                        </a>
+                        <ul class="dropdown-menu-sidebar" id="enrolledClassesDropdown">
+                            <!-- Course names will be dynamically inserted here -->
+                        </ul>
+                    </li>
+                    <li><a href="archive.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">archive</i>
+                            <span>Archive classes</span>
+                        </a></li>
+                    <li><a href="settings.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">settings</i>
+                            <span>Settings</span>
+                        </a></li>
+                    <li><a href="help.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">help_outline</i>
+                            <span>Help</span>
+                        </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="courses-container">
+                <!-- Header Section -->
+                <section class="courses-header">
+                    <h2 id="dashboardTitle">My Dashboard</h2>
+                    <div class="dropdown">
+                        <button class="add-course-btn" id="addCourseBtn">
+                            <span class="material-icons">add</span>
+                        </button>
+                        <div class="dropdown-menu" id="courseActionMenu">
+                            <!-- Dynamic menu items will be added here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <span class="material-icons">school</span>
+                    </div>
+                    <h3>No Courses Available</h3>
+                    <p id="emptyStateText">Create your first course or join an existing course</p>
+                </div>
+
+                <!-- Courses Grid -->
+                <div class="courses-grid" id="coursesGrid">
+                    <!-- Course cards will be dynamically added here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Course Modal (kept for consistency, not used in student.js) -->
+    <div class="modal" id="createCourseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Course</h3>
+                <button class="close-btn" id="closeCreateModal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="createCourseForm">
+                <div class="form-group">
+                    <label for="courseName">Course Name *</label>
+                    <input type="text" id="courseName" name="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseSection">Section</label>
+                    <input type="text" id="courseSection" name="section" placeholder="e.g., A, B, 1, 2">
+                </div>
+                <div class="form-group">
+                    <label for="courseSubject">Subject</label>
+                    <input type="text" id="courseSubject" name="subject"
+                        placeholder="e.g., Mathematics, Science, English">
+                </div>
+                <div class="form-group">
+                    <label for="courseRoom">Room</label>
+                    <input type="text" id="courseRoom" name="room" placeholder="e.g., 101, Classroom 1">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelCreate">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Join Course Modal -->
+    <div class="modal" id="joinCourseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Join Course</h3>
+                <button class="close-btn" id="closeJoinModal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="joinCourseForm">
+                <div class="form-group">
+                    <label for="courseCode">Course Code *</label>
+                    <input type="text" id="courseCode" name="courseCode" required placeholder="Enter course code">
+                    <small>
+                        <span class="material-icons" style="font-size: 14px; vertical-align: middle;">info</span>
+                        Ask your teacher for the course code and enter it here
+                    </small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelJoin">Cancel</button>
+                    <button type="submit" class="btn-primary">Join Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Course Modal (kept for consistency, not used in student.js) -->
+    <div class="modal" id="editCourseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Course</h3>
+                <button class="close-btn" id="closeEditModal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="editCourseForm">
+                <div class="form-group">
+                    <label for="editCourseName">Course Name *</label>
+                    <input type="text" id="editCourseName" name="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCourseSection">Section</label>
+                    <input type="text" id="editCourseSection" name="section">
+                </div>
+                <div class="form-group">
+                    <label for="editCourseSubject">Subject</label>
+                    <input type="text" id="editCourseSubject" name="subject">
+                </div>
+                <div class="form-group">
+                    <label for="editCourseRoom">Room</label>
+                    <input type="text" id="editCourseRoom" name="room">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="btn-primary">Update Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="student.js"></script>
+</body>
+
+</html>
