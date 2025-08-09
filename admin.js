@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const menuToggle = document.getElementById("menuToggle");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("mainContent");
+  const footer = document.querySelector(".footer"); // Get the footer
   const logoutBtn = document.getElementById("logoutBtn");
   const headerUserInitial = document.getElementById("headerUserInitial");
   const adminName = document.getElementById("adminName");
@@ -82,7 +83,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (userRole !== "admin") {
     console.log("User is not admin, access denied");
-    showNotification("প্রশাসনিক প্যানেল অ্যাক্সেস করার অনুমতি নেই!", "error");
+    showNotification(
+      "You are not authorized to access the admin panel!",
+      "error"
+    );
     setTimeout(() => {
       window.location.href = "dashboard.html";
     }, 2000);
@@ -94,7 +98,26 @@ document.addEventListener("DOMContentLoaded", function () {
   initializeDummyData(); // Ensure some data exists for demonstration
 
   // --- Event Listeners ---
-  menuToggle.addEventListener("click", toggleSidebar);
+  // Mobile sidebar toggle (click)
+  menuToggle.addEventListener("click", () => toggleSidebar(true));
+
+  // Desktop sidebar hover functionality
+  sidebar.addEventListener("mouseenter", () => {
+    if (window.innerWidth > 991.98) {
+      sidebar.classList.remove("collapsed");
+      mainContent.classList.remove("collapsed");
+      footer.classList.remove("collapsed");
+    }
+  });
+
+  sidebar.addEventListener("mouseleave", () => {
+    if (window.innerWidth > 991.98) {
+      sidebar.classList.add("collapsed");
+      mainContent.classList.add("collapsed");
+      footer.classList.add("collapsed");
+    }
+  });
+
   logoutBtn.addEventListener("click", handleLogout);
   themeToggle.addEventListener("click", toggleTheme);
   navbarSearchInput.addEventListener("input", handleNavbarSearch);
@@ -104,6 +127,10 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       const section = this.dataset.section;
       switchSection(section);
+      // Close sidebar on mobile after selection
+      if (window.innerWidth <= 991.98) {
+        sidebar.classList.remove("show");
+      }
     });
   });
 
@@ -199,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Close sidebar on mobile when clicking outside
   document.addEventListener("click", function (e) {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 991.98) {
       if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
         sidebar.classList.remove("show");
       }
@@ -219,8 +246,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Reset sidebar state on resize for larger screens
   window.addEventListener("resize", function () {
-    if (window.innerWidth > 768) {
-      sidebar.classList.remove("show");
+    if (window.innerWidth > 991.98) {
+      sidebar.classList.add("collapsed"); // Ensure it starts collapsed on desktop
+      mainContent.classList.add("collapsed");
+      footer.classList.add("collapsed");
+      sidebar.classList.remove("show"); // Remove mobile 'show' class
+    } else {
+      sidebar.classList.remove("collapsed"); // Remove desktop 'collapsed' class on mobile
+      mainContent.classList.remove("collapsed");
+      footer.classList.remove("collapsed");
     }
   });
 
@@ -250,17 +284,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     initializeCharts();
     applySavedTheme(); // Apply theme on load
+
+    // Set initial collapsed state for desktop
+    if (window.innerWidth > 991.98) {
+      sidebar.classList.add("collapsed");
+      mainContent.classList.add("collapsed");
+      footer.classList.add("collapsed");
+    }
   }
 
   /**
    * Toggles the sidebar collapse state for desktop and visibility for mobile.
+   * @param {boolean} isClickEvent - True if triggered by a click event (for mobile).
    */
-  function toggleSidebar() {
-    if (window.innerWidth <= 768) {
+  function toggleSidebar(isClickEvent) {
+    if (window.innerWidth <= 991.98) {
+      // Mobile view: toggle 'show' class
       sidebar.classList.toggle("show");
-    } else {
-      sidebar.classList.toggle("collapsed");
-      mainContent.classList.toggle("collapsed");
+    } else if (isClickEvent) {
+      // Desktop view, but triggered by a click (e.g., menuToggle button)
+      // This allows a click to override hover state temporarily if desired,
+      // but for this implementation, hover is primary for desktop.
+      // If you want click to permanently toggle on desktop, uncomment below:
+      // sidebar.classList.toggle("collapsed");
+      // mainContent.classList.toggle("collapsed");
+      // footer.classList.toggle("collapsed");
     }
   }
 
@@ -268,7 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * Handles user logout, clears local storage, and redirects to the login page.
    */
   function handleLogout() {
-    if (confirm("আপনি কি লগআউট করতে চান?")) {
+    if (confirm("Are you sure you want to log out?")) {
       localStorage.removeItem("currentUser");
       localStorage.removeItem("userRole");
       console.log("Logging out, redirecting to login page");
@@ -337,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function handleNavbarSearch() {
     const query = navbarSearchInput.value.trim();
     if (query) {
-      showNotification(`"${query}" অনুসন্ধান করা হচ্ছে...`, "info");
+      showNotification(`Searching for "${query}"...`, "info");
       // In a real application, this would trigger a global search or filter current view
     }
   }
@@ -368,10 +416,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById(
       "userGrowth"
-    ).textContent = `+${userGrowth} নতুন এই মাসে`;
+    ).textContent = `+${userGrowth} New This Month`;
     document.getElementById(
       "courseGrowth"
-    ).textContent = `+${courseGrowth} নতুন কোর্স`;
+    ).textContent = `+${courseGrowth} New Courses`;
   }
 
   /**
@@ -387,7 +435,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (recentLogs.length === 0) {
       activityFeed.innerHTML =
-        '<div class="text-center text-muted">কোনো সাম্প্রতিক কার্যকলাপ নেই</div>';
+        '<div class="text-center text-muted">No recent activity</div>';
       return;
     }
 
@@ -413,7 +461,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (allUsers.length === 0) {
       tbody.innerHTML =
-        '<tr><td colspan="8" class="text-center">কোনো ব্যবহারকারী নেই</td></tr>';
+        '<tr><td colspan="8" class="text-center">No users found</td></tr>';
       return;
     }
 
@@ -421,7 +469,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const profileData =
         JSON.parse(localStorage.getItem(`profileData_${user.email}`)) || {};
       const lastActivity =
-        localStorage.getItem(`lastActivity_${user.email}`) || "কখনো নয়";
+        localStorage.getItem(`lastActivity_${user.email}`) || "Never";
       const userStatus = user.status || "active"; // Default to active
 
       const row = document.createElement("tr");
@@ -446,11 +494,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td><span class="badge badge-${
                   userStatus === "active" ? "success" : "danger"
                 }">${
-        userStatus === "active" ? "সক্রিয়" : "নিষ্ক্রিয়"
+        userStatus === "active" ? "Active" : "Inactive"
       }</span></td>
                 <td>${
                   user.registeredAt
-                    ? new Date(user.registeredAt).toLocaleDateString("bn-BD")
+                    ? new Date(user.registeredAt).toLocaleDateString("en-US")
                     : "N/A"
                 }</td>
                 <td>${lastActivity}</td>
@@ -897,7 +945,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (assignments.length === 0) {
       tbody.innerHTML =
-        '<tr><td colspan="8" class="text-center">কোনো অ্যাসাইনমেন্ট নেই</td></tr>';
+        '<tr><td colspan="8" class="text-center">No assignments found</td></tr>';
       return;
     }
 
@@ -953,7 +1001,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (announcements.length === 0) {
       announcementsList.innerHTML =
-        '<div class="text-center text-muted">কোনো ঘোষণা নেই</div>';
+        '<div class="text-center text-muted">No announcements found</div>';
       return;
     }
 
@@ -965,7 +1013,9 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="announcement-title">${announcement.title}</div>
           <div class="announcement-meta">
             <span>${announcement.createdAt}</span> |
-            <span>প্রাপক: ${getRecipientText(announcement.recipients)}</span>
+            <span>Recipients: ${getRecipientText(
+              announcement.recipients
+            )}</span>
           </div>
         </div>
         <div class="announcement-content">${announcement.message}</div>
@@ -973,12 +1023,12 @@ document.addEventListener("DOMContentLoaded", function () {
           <button class="btn btn-sm btn-info" onclick="editAnnouncement('${
             announcement.id
           }')">
-            <i class="fas fa-edit"></i> সম্পাদনা
+            <i class="fas fa-edit"></i> Edit
           </button>
           <button class="btn btn-sm btn-danger" onclick="deleteAnnouncement('${
             announcement.id
           }')">
-            <i class="fas fa-trash"></i> মুছুন
+            <i class="fas fa-trash"></i> Delete
           </button>
         </div>
       `;
@@ -1007,8 +1057,8 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     if (announcementId) {
-      formTitle.textContent = "ঘোষণা সম্পাদনা করুন";
-      saveBtn.textContent = "আপডেট করুন";
+      formTitle.textContent = "Edit Announcement";
+      saveBtn.textContent = "Update";
       cancelBtn.classList.remove("d-none");
       const announcements =
         JSON.parse(localStorage.getItem("announcements")) || [];
@@ -1021,18 +1071,18 @@ document.addEventListener("DOMContentLoaded", function () {
         announcementRecipientsSelect.value = announcement.recipients;
         messageWrapper.classList.add("expanded"); // Keep expanded when editing
       } else {
-        showNotification("ঘোষণা খুঁজে পাওয়া যায়নি", "error");
+        showNotification("Announcement not found", "error");
         // Reset form if not found
-        formTitle.textContent = "ঘোষণা পাঠান";
-        saveBtn.textContent = "পাঠান";
+        formTitle.textContent = "Send Announcement";
+        saveBtn.textContent = "Send";
         cancelBtn.classList.add("d-none");
         announcementForm.reset();
         announcementIdInput.value = "";
         messageWrapper.classList.remove("expanded");
       }
     } else {
-      formTitle.textContent = "ঘোষণা পাঠান";
-      saveBtn.textContent = "পাঠান";
+      formTitle.textContent = "Send Announcement";
+      saveBtn.textContent = "Send";
       cancelBtn.classList.add("d-none");
       announcementForm.reset();
       announcementIdInput.value = "";
@@ -1052,7 +1102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const recipients = document.getElementById("announcementRecipients").value;
 
     if (!title || !message || !recipients) {
-      showNotification("সব ফিল্ড পূরণ করুন", "error");
+      showNotification("Please fill in all fields", "error");
       return;
     }
 
@@ -1068,17 +1118,17 @@ document.addEventListener("DOMContentLoaded", function () {
           title: title,
           message: message,
           recipients: recipients,
-          updatedAt: new Date().toLocaleString("bn-BD"),
+          updatedAt: new Date().toLocaleString("en-US"),
         };
-        notificationMessage = "ঘোষণা সফলভাবে আপডেট করা হয়েছে";
+        notificationMessage = "Announcement successfully updated";
         logUserActivity(
           currentUserEmail,
-          "ঘোষণা সম্পাদনা",
+          "Edited Announcement",
           "Announcement",
           title
         );
       } else {
-        showNotification("ঘোষণা খুঁজে পাওয়া যায়না", "error");
+        showNotification("Announcement not found", "error");
         return;
       }
     } else {
@@ -1089,11 +1139,16 @@ document.addEventListener("DOMContentLoaded", function () {
         message: message,
         recipients: recipients,
         createdBy: currentUserEmail,
-        createdAt: new Date().toLocaleString("bn-BD"),
+        createdAt: new Date().toLocaleString("en-US"),
       };
       announcements.unshift(newAnnouncement); // Add to top
-      notificationMessage = "ঘোষণা পাঠানো হয়েছে";
-      logUserActivity(currentUserEmail, "ঘোষণা পাঠানো", "Announcement", title);
+      notificationMessage = "Announcement sent successfully";
+      logUserActivity(
+        currentUserEmail,
+        "Sent Announcement",
+        "Announcement",
+        title
+      );
     }
 
     localStorage.setItem("announcements", JSON.stringify(announcements));
@@ -1107,7 +1162,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @param {string} id - The ID of the announcement to delete.
    */
   window.deleteAnnouncement = function (id) {
-    if (confirm("আপনি কি এই ঘোষণাটি মুছে ফেলতে চান?")) {
+    if (confirm("Are you sure you want to delete this announcement?")) {
       let announcements =
         JSON.parse(localStorage.getItem("announcements")) || [];
       const announcementToDelete = announcements.find((a) => a.id == id);
@@ -1120,12 +1175,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (announcementToDelete) {
         logUserActivity(
           currentUserEmail,
-          "ঘোষণা মুছে ফেলা",
+          "Deleted Announcement",
           "Announcement",
           announcementToDelete.title
         );
       }
-      showNotification("ঘোষণা সফলভাবে মুছে ফেলা হয়েছে", "success");
+      showNotification("Announcement successfully deleted", "success");
       loadAnnouncements();
       openAnnouncementForm(); // Reset form in case it was being edited
     }
@@ -1143,7 +1198,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * Placeholder function for loading analytics data.
    */
   function loadAnalytics() {
-    // showNotification("অ্যানালিটিক্স ডেটা লোড হচ্ছে...", "info");
+    // showNotification("Loading analytics data...", "info");
     // In a real application, this would fetch and process analytics data.
   }
 
@@ -1158,7 +1213,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (auditLogs.length === 0) {
       tbody.innerHTML =
-        '<tr><td colspan="5" class="text-center">কোনো নিরাপত্তা লগ নেই</td></tr>';
+        '<tr><td colspan="5" class="text-center">No security logs found</td></tr>';
       return;
     }
 
@@ -1172,7 +1227,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${log.ipAddress || "N/A"}</td>
                 <td><span class="badge badge-${
                   log.status === "success" ? "success" : "danger"
-                }">${log.status === "success" ? "সফল" : "ব্যর্থ"}</span></td>
+                }">${
+        log.status === "success" ? "Success" : "Failed"
+      }</span></td>
             `;
       tbody.appendChild(row);
     });
@@ -1198,10 +1255,10 @@ document.addEventListener("DOMContentLoaded", function () {
       userActivityChartInstance = new Chart(userActivityCtx, {
         type: "line",
         data: {
-          labels: ["জান", "ফেব", "মার", "এপ্রিল", "মে", "জুন", "জুলাই"],
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
           datasets: [
             {
-              label: "সক্রিয় ব্যবহারকারী",
+              label: "Active Users",
               data: [120, 135, 150, 165, 180, 200, 220], // Dummy data
               borderColor: "#e74c3c",
               backgroundColor: "rgba(231, 76, 60, 0.1)",
@@ -1218,20 +1275,20 @@ document.addEventListener("DOMContentLoaded", function () {
               beginAtZero: true,
               title: {
                 display: true,
-                text: "ব্যবহারকারীর সংখ্যা",
+                text: "Number of Users",
               },
             },
             x: {
               title: {
                 display: true,
-                text: "মাস",
+                text: "Month",
               },
             },
           },
           plugins: {
             title: {
               display: true,
-              text: "মাসিক ব্যবহারকারী সক্রিয়তা",
+              text: "Monthly User Activity",
             },
           },
         },
@@ -1251,7 +1308,7 @@ document.addEventListener("DOMContentLoaded", function () {
       coursePerformanceChartInstance = new Chart(coursePerformanceCtx, {
         type: "doughnut",
         data: {
-          labels: ["সক্রিয়", "আর্কাইভ", "খসড়া"],
+          labels: ["Active", "Archived", "Draft"],
           datasets: [
             {
               data: [activeCourses, archivedCourses, draftCourses],
@@ -1269,7 +1326,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             title: {
               display: true,
-              text: "কোর্স স্ট্যাটাস বিতরণ",
+              text: "Course Status Distribution",
             },
           },
         },
@@ -1287,9 +1344,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const labels = Object.keys(roleCounts).map(getRoleText);
       const data = Object.values(roleCounts);
       const backgroundColors = labels.map((role) => {
-        if (role === "প্রশাসক") return "#e74c3c";
-        if (role === "শিক্ষক") return "#f59e0b";
-        if (role === "শিক্ষার্থী") return "#06b6d4";
+        if (role === "Admin") return "#e74c3c";
+        if (role === "Teacher") return "#f59e0b";
+        if (role === "Student") return "#06b6d4";
         return "#64748b";
       });
 
@@ -1299,7 +1356,7 @@ document.addEventListener("DOMContentLoaded", function () {
           labels: labels,
           datasets: [
             {
-              label: "ব্যবহারকারীর সংখ্যা",
+              label: "Number of Users",
               data: data,
               backgroundColor: backgroundColors,
               borderColor: backgroundColors.map((color) =>
@@ -1317,20 +1374,20 @@ document.addEventListener("DOMContentLoaded", function () {
               beginAtZero: true,
               title: {
                 display: true,
-                text: "সংখ্যা",
+                text: "Count",
               },
             },
             x: {
               title: {
                 display: true,
-                text: "ভূমিকা",
+                text: "Role",
               },
             },
           },
           plugins: {
             title: {
               display: true,
-              text: "ভূমিকা অনুসারে ব্যবহারকারী বিতরণ",
+              text: "User Distribution by Role",
             },
             legend: {
               display: false,
@@ -1352,9 +1409,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const labels = Object.keys(statusCounts).map(getCourseStatusText);
       const data = Object.values(statusCounts);
       const backgroundColors = labels.map((status) => {
-        if (status === "সক্রিয়") return "#10b981";
-        if (status === "আর্কাইভ") return "#64748b";
-        if (status === "খসড়া") return "#f59e0b";
+        if (status === "Active") return "#10b981";
+        if (status === "Archived") return "#64748b";
+        if (status === "Draft") return "#f59e0b";
         return "#06b6d4";
       });
 
@@ -1364,7 +1421,7 @@ document.addEventListener("DOMContentLoaded", function () {
           labels: labels,
           datasets: [
             {
-              label: "কোর্সের সংখ্যা",
+              label: "Number of Courses",
               data: data,
               backgroundColor: backgroundColors,
               hoverOffset: 4,
@@ -1380,7 +1437,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             title: {
               display: true,
-              text: "কোর্স স্ট্যাটাস ওভারভিউ",
+              text: "Course Status Overview",
             },
           },
         },
@@ -1389,16 +1446,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
-   * Returns the Bengali text for a given user role.
+   * Returns the English text for a given user role.
    * @param {string} role - The role string (e.g., "admin", "teacher").
-   * @returns {string} The Bengali equivalent of the role.
+   * @returns {string} The English equivalent of the role.
    */
   function getRoleText(role) {
     const roles = {
-      admin: "প্রশাসক",
-      teacher: "শিক্ষক",
-      student: "শিক্ষার্থী",
-      user: "শিক্ষার্থী", // Assuming 'user' role is equivalent to 'student' for display
+      admin: "Admin",
+      teacher: "Teacher",
+      student: "Student",
+      user: "Student", // Assuming 'user' role is equivalent to 'student' for display
     };
     return roles[role] || role;
   }
@@ -1419,29 +1476,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
-   * Returns the Bengali text for a given course status.
+   * Returns the English text for a given course status.
    * @param {string} status - The status string (e.g., "active", "archived").
-   * @returns {string} The Bengali equivalent of the status.
+   * @returns {string} The English equivalent of the status.
    */
   function getCourseStatusText(status) {
     const statuses = {
-      active: "সক্রিয়",
-      archived: "আর্কাইভ",
-      draft: "খসড়া",
+      active: "Active",
+      archived: "Archived",
+      draft: "Draft",
     };
     return statuses[status] || status;
   }
 
   /**
-   * Returns the Bengali text for a given assignment status.
+   * Returns the English text for a given assignment status.
    * @param {string} status - The status string (e.g., "active", "draft").
-   * @returns {string} The Bengali equivalent of the status.
+   * @returns {string} The English equivalent of the status.
    */
   function getAssignmentStatusText(status) {
     const statuses = {
-      active: "সক্রিয়",
-      draft: "খসড়া",
-      closed: "বন্ধ",
+      active: "Active",
+      draft: "Draft",
+      closed: "Closed",
     };
     return statuses[status] || status;
   }
@@ -1461,15 +1518,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
-   * Returns the Bengali text for announcement recipients.
+   * Returns the English text for announcement recipients.
    * @param {string} recipients - The recipient type (e.g., "all", "students").
-   * @returns {string} The Bengali equivalent.
+   * @returns {string} The English equivalent.
    */
   function getRecipientText(recipients) {
     const map = {
-      all: "সবাই",
-      students: "শিক্ষার্থীরা",
-      teachers: "শিক্ষকরা",
+      all: "All",
+      students: "Students",
+      teachers: "Teachers",
     };
     return map[recipients] || recipients;
   }
@@ -1496,7 +1553,7 @@ document.addEventListener("DOMContentLoaded", function () {
           !roleFilter || role.includes(getRoleText(roleFilter).toLowerCase());
         const matchesStatus =
           !statusFilter ||
-          status.includes(statusFilter === "active" ? "সক্রিয়" : "নিষ্ক্রিয়");
+          status.includes(statusFilter === "active" ? "active" : "inactive");
 
         if (matchesSearch && matchesRole && matchesStatus) {
           row.style.display = "";
@@ -1551,7 +1608,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const teachers = allUsers.filter((user) => user.role === "teacher");
     const teacherFilterSelect = document.getElementById("courseTeacherFilter");
 
-    teacherFilterSelect.innerHTML = '<option value="">সব শিক্ষক</option>'; // Reset options
+    teacherFilterSelect.innerHTML = '<option value="">All Teachers</option>'; // Reset options
     teachers.forEach((teacher) => {
       const option = document.createElement("option");
       option.value = teacher.email;
@@ -1569,7 +1626,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const role = document.getElementById("newUserRole").value;
 
     if (!name || !email || !role) {
-      showNotification("সব ফিল্ড পূরণ করুন", "error");
+      showNotification("Please fill in all fields", "error");
       return;
     }
 
@@ -1577,15 +1634,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const existingUser = allUsers.find((user) => user.email === email);
 
     if (existingUser) {
-      showNotification("এই ইমেইল ইতিমধ্যে ব্যবহৃত হয়েছে", "error");
+      showNotification("This email is already in use", "error");
       return;
     }
 
     const newUser = {
       name: name,
       email: email,
-      role: role,
       password: "defaultPassword123", // Default password for admin-created users
+      role: role,
       registeredAt: new Date().toISOString(),
       status: "active", // New users are active by default
     };
@@ -1610,9 +1667,9 @@ document.addEventListener("DOMContentLoaded", function () {
       JSON.stringify({ courses: [], role: role })
     );
 
-    logUserActivity(currentUserEmail, "নতুন ব্যবহারকারী তৈরি", "User", email);
+    logUserActivity(currentUserEmail, "Created New User", "User", email);
 
-    showNotification("নতুন ব্যবহারকারী যোগ করা হয়েছে", "success");
+    showNotification("New user added successfully", "success");
     addUserModal.hide();
     addUserForm.reset();
     loadUsers(); // Reload users table
@@ -1632,7 +1689,7 @@ document.addEventListener("DOMContentLoaded", function () {
       JSON.parse(localStorage.getItem(`profileData_${email}`)) || {};
 
     if (!userToEdit) {
-      showNotification("ব্যবহারকারী খুঁজে পাওয়া যায়নি", "error");
+      showNotification("User not found", "error");
       return;
     }
 
@@ -1691,15 +1748,15 @@ document.addEventListener("DOMContentLoaded", function () {
       dashboard.role = role;
       localStorage.setItem(dashboardKey, JSON.stringify(dashboard));
 
-      logUserActivity(currentUserEmail, "ব্যবহারকারী সম্পাদনা", "User", email);
-      showNotification("ব্যবহারকারী সফলভাবে আপডেট করা হয়েছে", "success");
+      logUserActivity(currentUserEmail, "Edited User", "User", email);
+      showNotification("User updated successfully", "success");
       editUserModal.hide();
       loadUsers();
       loadDashboardStats();
       populateCourseTeacherFilter(); // Update teacher list if role changed
       initializeCharts(); // Update charts with new user data
     } else {
-      showNotification("ব্যবহারকারী খুঁজে পাওয়া যায়নি", "error");
+      showNotification("User not found", "error");
     }
   }
 
@@ -1707,7 +1764,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * Placeholder for bulk user upload functionality.
    */
   function handleBulkUpload() {
-    showNotification("বাল্ক আপলোড ফিচার শীঘ্রই আসছে", "info");
+    showNotification("Bulk upload feature coming soon", "info");
   }
 
   /**
@@ -1728,7 +1785,7 @@ document.addEventListener("DOMContentLoaded", function () {
     linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
 
-    showNotification("ব্যবহারকারীদের তথ্য এক্সপোর্ট সম্পন্ন", "success");
+    showNotification("User data exported successfully", "success");
   }
 
   /**
@@ -1876,11 +1933,13 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.getItem(teacherDashboardKey) ||
           '{"courses": [], "role": "teacher"}'
       );
-      teacherDashboard.courses.push(newCourse);
-      localStorage.setItem(
-        teacherDashboardKey,
-        JSON.stringify(teacherDashboard)
-      );
+      if (!teacherDashboard.courses.some((c) => c.id === newCourse.id)) {
+        teacherDashboard.courses.push(newCourse);
+        localStorage.setItem(
+          teacherDashboardKey,
+          JSON.stringify(teacherDashboard)
+        );
+      }
     }
 
     localStorage.setItem("allCourses", JSON.stringify(allCourses));
@@ -1930,7 +1989,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Populate courses dropdown
     const courses = JSON.parse(localStorage.getItem("allCourses")) || []; // Use allCourses
     assignmentCourseSelect.innerHTML =
-      '<option value="">কোর্স নির্বাচন করুন</option>';
+      '<option value="">Select Course</option>';
     courses.forEach((course) => {
       const option = document.createElement("option");
       option.value = course.id;
@@ -1939,7 +1998,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (assignmentId) {
-      assignmentModalTitle.textContent = "অ্যাসাইনমেন্ট সম্পাদনা করুন";
+      assignmentModalTitle.textContent = "Edit Assignment";
       const assignments = JSON.parse(localStorage.getItem("assignments")) || [];
       const assignment = assignments.find((a) => a.id === assignmentId);
 
@@ -1951,11 +2010,11 @@ document.addEventListener("DOMContentLoaded", function () {
         assignmentDueDateInput.value = assignment.dueDate || "";
         assignmentStatusSelect.value = assignment.status || "active";
       } else {
-        showNotification("অ্যাসাইনমেন্ট খুঁজে পাওয়া যায়নি", "error");
+        showNotification("Assignment not found", "error");
         return;
       }
     } else {
-      assignmentModalTitle.textContent = "নতুন অ্যাসাইনমেন্ট তৈরি করুন";
+      assignmentModalTitle.textContent = "Create New Assignment";
       assignmentForm.reset();
       assignmentIdInput.value = ""; // Clear hidden ID for new assignment
     }
@@ -1974,7 +2033,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const status = document.getElementById("assignmentStatus").value;
 
     if (!title || !courseId || !dueDate) {
-      showNotification("সব ফিল্ড পূরণ করুন", "error");
+      showNotification("Please fill in all fields", "error");
       return;
     }
 
@@ -1994,17 +2053,17 @@ document.addEventListener("DOMContentLoaded", function () {
           description: description,
           dueDate: dueDate,
           status: status,
-          updatedAt: new Date().toLocaleString("bn-BD"),
+          updatedAt: new Date().toLocaleString("en-US"),
         };
-        message = "অ্যাসাইনমেন্ট সফলভাবে আপডেট করা হয়েছে";
+        message = "Assignment successfully updated";
         logUserActivity(
           currentUserEmail,
-          "অ্যাসাইনমেন্ট সম্পাদনা",
+          "Edited Assignment",
           "Assignment",
           title
         );
       } else {
-        showNotification("অ্যাসাইনমেন্ট খুঁজে পাওয়া যায়নি", "error");
+        showNotification("Assignment not found", "error");
         return;
       }
     } else {
@@ -2019,13 +2078,13 @@ document.addEventListener("DOMContentLoaded", function () {
         status: status,
         submissions: 0,
         graded: 0,
-        createdAt: new Date().toLocaleString("bn-BD"),
+        createdAt: new Date().toLocaleString("en-US"),
       };
       assignments.push(newAssignment);
-      message = "নতুন অ্যাসাইনমেন্ট তৈরি করা হয়েছে";
+      message = "New assignment created";
       logUserActivity(
         currentUserEmail,
-        "নতুন অ্যাসাইনমেন্ট তৈরি",
+        "Created New Assignment",
         "Assignment",
         title
       );
@@ -2064,9 +2123,9 @@ document.addEventListener("DOMContentLoaded", function () {
     linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
 
-    showNotification("রিপোর্ট তৈরি এবং ডাউনলোড সম্পন্ন (JSON)", "success");
+    showNotification("Report generated and downloaded (JSON)", "success");
     showNotification(
-      "PDF/Excel রিপোর্ট তৈরির জন্য সার্ভার-সাইড প্রক্রিয়াকরণ প্রয়োজন।",
+      "PDF/Excel report generation requires server-side processing.",
       "info",
       5000
     );
@@ -2099,7 +2158,7 @@ document.addEventListener("DOMContentLoaded", function () {
     linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
 
-    showNotification("সিস্টেম ব্যাকআপ তৈরি এবং ডাউনলোড সম্পন্ন", "success");
+    showNotification("System backup created and downloaded", "success");
   }
 
   /**
@@ -2111,9 +2170,9 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("maintenanceMode", !isMaintenanceMode);
 
     if (!isMaintenanceMode) {
-      showNotification("রক্ষণাবেক্ষণ মোড সক্রিয় করা হয়েছে", "warning");
+      showNotification("Maintenance mode activated", "warning");
     } else {
-      showNotification("রক্ষণাবেক্ষণ মোড নিষ্ক্রিয় করা হয়েছে", "success");
+      showNotification("Maintenance mode deactivated", "success");
     }
   }
 
@@ -2121,10 +2180,10 @@ document.addEventListener("DOMContentLoaded", function () {
    * Placeholder for checking system updates.
    */
   function checkSystemUpdate() {
-    showNotification("সিস্টেম আপডেট চেক করা হচ্ছে...", "info");
+    showNotification("Checking for system updates...", "info");
     setTimeout(() => {
       showNotification(
-        "সিস্টেম আপডেট হয়েছে! কোনো নতুন আপডেট পাওয়া যায়নি।",
+        "System is up to date! No new updates found.",
         "success"
       );
     }, 2000);
@@ -2182,13 +2241,8 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     localStorage.setItem(`profileData_${email}`, JSON.stringify(profileData));
 
-    logUserActivity(
-      currentUserEmail,
-      "প্রোফাইল সম্পাদনা",
-      "Admin Profile",
-      email
-    );
-    showNotification("প্রোফাইল সফলভাবে আপডেট করা হয়েছে", "success");
+    logUserActivity(currentUserEmail, "Edited Profile", "Admin Profile", email);
+    showNotification("Profile updated successfully", "success");
     adminProfileModal.hide();
     initializePage(); // Re-initialize to update header name etc.
   }
@@ -2205,7 +2259,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const newLog = {
       id: Date.now(),
-      timestamp: new Date().toLocaleString("bn-BD"),
+      timestamp: new Date().toLocaleString("en-US"),
       userEmail: userEmail,
       action: action,
       resource: resource,
@@ -2246,7 +2300,7 @@ document.addEventListener("DOMContentLoaded", function () {
       user?.role || "N/A"
     );
     document.getElementById("profileUserStatus").textContent =
-      user?.status === "active" ? "সক্রিয়" : "নিষ্ক্রিয়";
+      user?.status === "active" ? "Active" : "Inactive";
 
     const createdCourses = userCourses.filter(
       (course) => course.teacher === email
@@ -2266,7 +2320,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.deleteUser = function (email) {
     if (
       confirm(
-        `আপনি কি ${email} ব্যবহারকারীকে সম্পূর্ণভাবে মুছে ফেলতে চান? এই পদক্ষেপটি অপরিবর্তনীয়।`
+        `Are you sure you want to permanently delete user ${email}? This action is irreversible.`
       )
     ) {
       let allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
@@ -2296,9 +2350,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       localStorage.setItem("allCourses", JSON.stringify(allCourses));
 
-      logUserActivity(currentUserEmail, "ব্যবহারকারী মুছে ফেলা", "User", email);
+      logUserActivity(currentUserEmail, "Deleted User", "User", email);
 
-      showNotification("ব্যবহারকারী সফলভাবে মুছে ফেলা হয়েছে", "success");
+      showNotification("User successfully deleted", "success");
       loadUsers(); // Reload users table
       loadCourses(); // Reload courses (if any were deleted)
       loadDashboardStats(); // Update dashboard stats
@@ -2313,7 +2367,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.gradeAssignment = function (assignmentId) {
     showNotification(
-      `অ্যাসাইনমেন্ট ${assignmentId} গ্রেড করার ফিচার শীঘ্রই আসছে`,
+      `Grading feature for assignment ${assignmentId} is coming soon`,
       "info"
     );
     // TODO: Implement grading functionality
@@ -2322,7 +2376,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.deleteAssignment = function (assignmentId) {
     if (
       confirm(
-        "আপনি কি এই অ্যাসাইনমেন্টটি মুছে ফেলতে চান? এই পদক্ষেপটি অপরিবর্তনীয়।"
+        "Are you sure you want to delete this assignment? This action is irreversible."
       )
     ) {
       let assignments = JSON.parse(localStorage.getItem("assignments")) || [];
@@ -2335,13 +2389,13 @@ document.addEventListener("DOMContentLoaded", function () {
       if (assignment) {
         logUserActivity(
           currentUserEmail,
-          "অ্যাসাইনমেন্ট মুছে ফেলা",
+          "Deleted Assignment",
           "Assignment",
           assignment.title
         );
       }
 
-      showNotification("অ্যাসাইনমেন্ট সফলভাবে মুছে ফেলা হয়েছে", "success");
+      showNotification("Assignment successfully deleted", "success");
       loadAssignments(); // Reload assignments table
       loadDashboardStats(); // Update dashboard stats
     }
@@ -2594,9 +2648,9 @@ document.addEventListener("DOMContentLoaded", function () {
           id: 1,
           timestamp: "2023-07-25 10:30:00",
           userEmail: "tanvir479@gmail.com",
-          action: "লগইন",
+          action: "Login",
           resource: "Authentication",
-          details: "সফল লগইন",
+          details: "Successful login",
           status: "success",
           ipAddress: "192.168.1.1",
         },
@@ -2604,7 +2658,7 @@ document.addEventListener("DOMContentLoaded", function () {
           id: 2,
           timestamp: "2023-07-25 10:35:15",
           userEmail: "tanvir479@gmail.com",
-          action: "নতুন ব্যবহারকারী তৈরি",
+          action: "Created New User",
           resource: "User",
           details: "studentC@example.com",
           status: "success",
@@ -2614,7 +2668,7 @@ document.addEventListener("DOMContentLoaded", function () {
           id: 3,
           timestamp: "2023-07-25 10:40:00",
           userEmail: "teacher1@example.com",
-          action: "কোর্স তৈরি",
+          action: "Created Course",
           resource: "Course",
           details: "Introduction to AI",
           status: "success",
@@ -2630,13 +2684,13 @@ document.addEventListener("DOMContentLoaded", function () {
           id: 1,
           sender: "Support Team",
           timestamp: "2023-07-24 14:00:00",
-          content: "আপনার সিস্টেম আপডেটের জন্য একটি নতুন প্যাচ উপলব্ধ।",
+          content: "A new patch is available for your system update.",
         },
         {
           id: 2,
           sender: "teacher1@example.com",
           timestamp: "2023-07-23 09:15:00",
-          content: "কোর্স 101-এ কিছু শিক্ষার্থীর সমস্যা হচ্ছে।",
+          content: "Some students are having issues in Course 101.",
         },
       ];
       localStorage.setItem("messages", JSON.stringify(dummyMessages));
@@ -2646,18 +2700,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const dummyAnnouncements = [
         {
           id: 1,
-          title: "সিস্টেম রক্ষণাবেক্ষণ",
+          title: "System Maintenance",
           message:
-            "আগামীকাল রাত ২টা থেকে ৪টা পর্যন্ত সিস্টেম রক্ষণাবেক্ষণ করা হবে।",
+            "System maintenance will be performed tomorrow from 2 AM to 4 AM.",
           recipients: "all",
           createdBy: "tanvir479@gmail.com",
           createdAt: "2023-07-20 17:00:00",
         },
         {
           id: 2,
-          title: "নতুন কোর্স যোগ করা হয়েছে",
+          title: "New Course Added",
           message:
-            "শিক্ষার্থীদের জন্য নতুন কোর্স 'ডেটা সায়েন্স বেসিকস' যোগ করা হয়েছে।",
+            "A new course 'Data Science Basics' has been added for students.",
           recipients: "students",
           createdBy: "tanvir479@gmail.com",
           createdAt: "2023-07-22 10:00:00",
