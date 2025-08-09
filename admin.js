@@ -38,6 +38,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const editUserForm = document.getElementById("editUserForm");
   const saveEditedUserBtn = document.getElementById("saveEditedUserBtn");
   const announcementForm = document.getElementById("announcementForm");
+  const saveAnnouncementBtn = document.getElementById("saveAnnouncementBtn");
+  const cancelAnnouncementEditBtn = document.getElementById(
+    "cancelAnnouncementEditBtn"
+  );
   const courseForm = document.getElementById("courseForm");
   const saveCourseBtn = document.getElementById("saveCourseBtn");
   const assignmentForm = document.getElementById("assignmentForm");
@@ -46,16 +50,28 @@ document.addEventListener("DOMContentLoaded", function () {
   const saveAdminProfileBtn = document.getElementById("saveAdminProfileBtn");
   const editAdminProfileBtn = document.getElementById("editAdminProfileBtn");
 
-  // Current User Info - FIX: Use correct localStorage keys
-  const currentUserEmail = localStorage.getItem("currentUser"); // Changed from "userEmail"
+  // Course specific elements
+  const coursesGridAdmin = document.getElementById("coursesGridAdmin");
+  const createCourseBtn = document.getElementById("createCourseBtn");
+  const courseTitleInput = document.getElementById("courseTitle");
+  const courseSectionInput = document.getElementById("courseSection");
+  const courseSubjectInput = document.getElementById("courseSubject");
+  const courseRoomInput = document.getElementById("courseRoom");
+  const courseTeacherSelect = document.getElementById("courseTeacher");
+  const courseStatusSelect = document.getElementById("courseStatus");
+  const courseStudentsInput = document.getElementById("courseStudents");
+  const courseIdInput = document.getElementById("courseId");
+  const courseModalTitle = document.getElementById("courseModalTitle");
+
+  // Current User Info
+  const currentUserEmail = localStorage.getItem("currentUser");
   const userRole = localStorage.getItem("userRole");
 
-  console.log(
-    "Admin panel loading with user:",
-    currentUserEmail,
-    "role:",
-    userRole
-  );
+  // Chart Instances
+  let userActivityChartInstance;
+  let coursePerformanceChartInstance;
+  let userRoleChartInstance;
+  let courseStatusChartInstance;
 
   // --- Initialization and Authentication ---
   if (!currentUserEmail) {
@@ -68,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("User is not admin, access denied");
     showNotification("প্রশাসনিক প্যানেল অ্যাক্সেস করার অনুমতি নেই!", "error");
     setTimeout(() => {
-      window.location.href = "dashboard.html"; // Changed from index.html to dashboard.html
+      window.location.href = "dashboard.html";
     }, 2000);
     return;
   }
@@ -112,9 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   // Course Management
-  document
-    .getElementById("createCourseBtn")
-    .addEventListener("click", () => openCourseModal());
+  createCourseBtn.addEventListener("click", () => openCourseModal());
   saveCourseBtn.addEventListener("click", saveCourse);
 
   // Assignment Management
@@ -123,14 +137,19 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", () => openAssignmentModal());
   saveAssignmentBtn.addEventListener("click", saveAssignment);
 
+  // Announcements
+  document
+    .getElementById("newAnnouncementBtn")
+    .addEventListener("click", () => openAnnouncementForm());
+  announcementForm.addEventListener("submit", handleAnnouncementSubmit);
+  cancelAnnouncementEditBtn.addEventListener("click", () =>
+    openAnnouncementForm()
+  ); // Reset form
+
   // Analytics & Communications
   document
     .getElementById("generateReportBtn")
     .addEventListener("click", generateReport);
-  document
-    .getElementById("sendAnnouncementBtn")
-    .addEventListener("click", sendAnnouncement); // Focuses on announcement form
-  announcementForm.addEventListener("submit", handleAnnouncementSubmit);
 
   // System Management
   document
@@ -163,12 +182,38 @@ document.addEventListener("DOMContentLoaded", function () {
   editAdminProfileBtn.addEventListener("click", openAdminProfileModal);
   saveAdminProfileBtn.addEventListener("click", saveAdminProfile);
 
+  // Expandable textarea for announcements
+  document
+    .getElementById("announcementMessage")
+    .addEventListener("focus", function () {
+      this.parentNode.classList.add("expanded");
+    });
+  document
+    .getElementById("announcementMessage")
+    .addEventListener("blur", function () {
+      if (!this.value.trim()) {
+        // Collapse only if empty
+        this.parentNode.classList.remove("expanded");
+      }
+    });
+
   // Close sidebar on mobile when clicking outside
   document.addEventListener("click", function (e) {
     if (window.innerWidth <= 768) {
       if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
         sidebar.classList.remove("show");
       }
+    }
+  });
+
+  // Close course menu dropdowns when clicking outside
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".course-card-admin .course-card-menu")) {
+      document
+        .querySelectorAll(".course-card-admin .course-menu-dropdown")
+        .forEach((menu) => {
+          menu.classList.remove("show");
+        });
     }
   });
 
@@ -196,10 +241,10 @@ document.addEventListener("DOMContentLoaded", function () {
     loadDashboardStats();
     loadActivityFeed();
     loadUsers();
-    loadCourses();
+    loadCourses(); // Load courses for admin panel
     loadAssignments();
+    loadAnnouncements(); // Load announcements
     loadAnalytics(); // Placeholder for actual analytics loading
-    loadMessages();
     loadSecurityLogs();
     populateCourseTeacherFilter(); // Populate teacher filter for courses
 
@@ -224,7 +269,6 @@ document.addEventListener("DOMContentLoaded", function () {
    */
   function handleLogout() {
     if (confirm("আপনি কি লগআউট করতে চান?")) {
-      // FIX: Clear correct localStorage keys
       localStorage.removeItem("currentUser");
       localStorage.removeItem("userRole");
       console.log("Logging out, redirecting to login page");
@@ -234,7 +278,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /**
    * Switches the active section in the main content area based on sidebar navigation.
-   * @param {string} section - The ID of the section to display.
    */
   function switchSection(section) {
     navItems.forEach((item) => item.classList.remove("active"));
@@ -244,6 +287,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     adminSections.forEach((sectionEl) => sectionEl.classList.remove("active"));
     document.getElementById(section).classList.add("active");
+
+    // Re-render charts when analytics section is active to ensure responsiveness
+    if (section === "analytics") {
+      initializeCharts();
+    }
   }
 
   /**
@@ -298,9 +346,8 @@ document.addEventListener("DOMContentLoaded", function () {
    * Loads and displays key statistics on the dashboard.
    */
   function loadDashboardStats() {
-    // FIX: Use correct localStorage key for registered users
     const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
+    const courses = JSON.parse(localStorage.getItem("allCourses")) || []; // Use allCourses
     const assignments = JSON.parse(localStorage.getItem("assignments")) || [];
 
     const totalUsers = allUsers.length;
@@ -359,7 +406,6 @@ document.addEventListener("DOMContentLoaded", function () {
    * Loads and displays user data in the users table.
    */
   function loadUsers() {
-    // FIX: Use correct localStorage key for registered users
     const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
 
     const tbody = document.getElementById("usersTableBody");
@@ -372,12 +418,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     allUsers.forEach((user) => {
-      const row = document.createElement("tr");
       const profileData =
         JSON.parse(localStorage.getItem(`profileData_${user.email}`)) || {};
       const lastActivity =
         localStorage.getItem(`lastActivity_${user.email}`) || "কখনো নয়";
+      const userStatus = user.status || "active"; // Default to active
 
+      const row = document.createElement("tr");
       row.innerHTML = `
                 <td><input type="checkbox" class="user-checkbox" data-email="${
                   user.email
@@ -396,7 +443,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td><span class="badge badge-${getRoleBadgeClass(
                   user.role
                 )}">${getRoleText(user.role)}</span></td>
-                <td><span class="badge badge-success">সক্রিয়</span></td>
+                <td><span class="badge badge-${
+                  userStatus === "active" ? "success" : "danger"
+                }">${
+        userStatus === "active" ? "সক্রিয়" : "নিষ্ক্রিয়"
+      }</span></td>
                 <td>${
                   user.registeredAt
                     ? new Date(user.registeredAt).toLocaleDateString("bn-BD")
@@ -430,80 +481,407 @@ document.addEventListener("DOMContentLoaded", function () {
    * Loads and displays course data in the courses grid.
    */
   function loadCourses() {
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
-    // FIX: Use correct localStorage key for registered users
-    const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+    const allCourses = JSON.parse(localStorage.getItem("allCourses")) || [];
+    coursesGridAdmin.innerHTML = "";
 
-    const coursesGrid = document.getElementById("coursesGrid");
-    coursesGrid.innerHTML = "";
-
-    if (courses.length === 0) {
-      coursesGrid.innerHTML =
-        '<div class="text-center text-muted">কোনো কোর্স নেই</div>';
+    if (allCourses.length === 0) {
+      coursesGridAdmin.innerHTML =
+        '<div class="empty-state"><div class="empty-icon"><span class="material-icons">school</span></div><h3>No Courses Available</h3><p>Create your first course or join an existing course</p></div>';
       return;
     }
 
-    courses.forEach((course) => {
-      const teacher = allUsers.find((user) => user.email === course.createdBy);
-      const teacherName = teacher
-        ? teacher.name || teacher.email.split("@")[0]
-        : "Unknown";
-
-      const courseCard = document.createElement("div");
-      courseCard.className = "course-card";
-      courseCard.innerHTML = `
-                <div class="course-header">
-                    <div class="course-title">${course.title}</div>
-                    <div class="course-teacher">শিক্ষক: ${teacherName}</div>
-                    <div class="course-email">
-                        <small>${course.createdBy}</small>
-                    </div>
-                </div>
-                <div class="course-body">
-                    <div class="course-stats">
-                        <div class="course-stat">
-                            <div class="course-stat-number">${
-                              course.students ? course.students.length : 0
-                            }</div>
-                            <div class="course-stat-label">শিক্ষার্থী</div>
-                        </div>
-                        <div class="course-stat">
-                            <div class="course-stat-number">${
-                              course.assignments ? course.assignments.length : 0
-                            }</div>
-                            <div class="course-stat-label">অ্যাসাইনমেন্ট</div>
-                        </div>
-                        <div class="course-stat">
-                            <span class="badge badge-${
-                              course.status === "active"
-                                ? "success"
-                                : course.status === "archived"
-                                ? "info"
-                                : "warning"
-                            }">${getCourseStatusText(
-        course.status || "active"
-      )}</span>
-                        </div>
-                    </div>
-                    <div class="course-description">
-                        <p>${course.description || "কোর্সের বিবরণ নেই"}</p>
-                    </div>
-                    <div class="course-actions">
-                        <button class="btn btn-sm btn-primary" onclick="viewCourseDetails('${
-                          course.id
-                        }')">বিস্তারিত</button>
-                        <button class="btn btn-sm btn-warning" onclick="editCourse('${
-                          course.id
-                        }')">সম্পাদনা</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteCourse('${
-                          course.id
-                        }')">মুছুন</button>
-                    </div>
-                </div>
-            `;
-      coursesGrid.appendChild(courseCard);
+    allCourses.forEach((course) => {
+      const courseCard = createCourseCardAdmin(course);
+      coursesGridAdmin.appendChild(courseCard);
     });
     filterCourses(); // Apply filters after loading
+  }
+
+  /**
+   * Creates a course card for the admin panel, matching the dashboard style.
+   * @param {object} course - The course object.
+   * @returns {HTMLElement} The created course card element.
+   */
+  function createCourseCardAdmin(course) {
+    const card = document.createElement("div");
+    card.className = `course-card-admin ${course.archived ? "archived" : ""}`;
+
+    const headerClass = getHeaderClass(course.subject, course.id);
+
+    // Archived badge
+    if (course.archived) {
+      const archivedBadge = document.createElement("div");
+      archivedBadge.className = "archived-badge-admin";
+      archivedBadge.textContent = "Archived";
+      card.appendChild(archivedBadge);
+    }
+
+    // Course Header (Top 1/3rd with gradient background)
+    const courseHeader = document.createElement("div");
+    courseHeader.className = `course-header ${headerClass}`;
+
+    const headerContent = document.createElement("div");
+    headerContent.className = "course-header-content";
+
+    const courseTitle = document.createElement("h3");
+    courseTitle.className = "course-title";
+    courseTitle.textContent = course.name;
+
+    const courseSection = document.createElement("p");
+    courseSection.className = "course-section";
+    courseSection.textContent = course.section;
+
+    const courseSubtitle = document.createElement("p");
+    courseSubtitle.className = "course-subtitle";
+    courseSubtitle.textContent = course.teacher; // Display teacher email
+
+    headerContent.appendChild(courseTitle);
+    headerContent.appendChild(courseSection);
+    headerContent.appendChild(courseSubtitle);
+
+    // Header Menu
+    const headerMenu = document.createElement("div");
+    headerMenu.className = "course-header-menu";
+
+    const cardMenu = document.createElement("div");
+    cardMenu.className = "course-card-menu";
+
+    const menuButton = document.createElement("button");
+    menuButton.className = "course-menu";
+    menuButton.innerHTML = '<span class="material-icons">more_vert</span>';
+    menuButton.onclick = (e) => {
+      e.stopPropagation(); // Prevent card click from firing
+      toggleCourseMenuAdmin(course.id);
+    };
+
+    const menuDropdown = document.createElement("div");
+    menuDropdown.className = "course-menu-dropdown";
+    menuDropdown.id = `courseMenuAdmin_${course.id}`;
+
+    // Edit option
+    const editItem = document.createElement("div");
+    editItem.className = "course-menu-item";
+    editItem.onclick = (e) => {
+      e.stopPropagation(); // Prevent card click from firing
+      editCourseAdmin(course.id);
+    };
+    const editIcon = document.createElement("span");
+    editIcon.className = "material-icons";
+    editIcon.textContent = "edit";
+    const editText = document.createTextNode("Edit");
+    editItem.appendChild(editIcon);
+    editItem.appendChild(editText);
+
+    // Archive option
+    const archiveItem = document.createElement("div");
+    archiveItem.className = "course-menu-item archive";
+    archiveItem.onclick = (e) => {
+      e.stopPropagation(); // Prevent card click from firing
+      toggleArchiveCourseAdmin(course.id);
+    };
+    const archiveIcon = document.createElement("span");
+    archiveIcon.className = "material-icons";
+    archiveIcon.textContent = course.archived ? "unarchive" : "archive";
+    const archiveText = document.createTextNode(
+      course.archived ? "Unarchive" : "Archive"
+    );
+    archiveItem.appendChild(archiveIcon);
+    archiveItem.appendChild(archiveText);
+
+    // Delete option
+    const deleteItem = document.createElement("div");
+    deleteItem.className = "course-menu-item delete";
+    deleteItem.onclick = (e) => {
+      e.stopPropagation(); // Prevent card click from firing
+      deleteCourseAdmin(course.id);
+    };
+    const deleteIcon = document.createElement("span");
+    deleteIcon.className = "material-icons";
+    deleteIcon.textContent = "delete";
+    const deleteText = document.createTextNode("Delete");
+    deleteItem.appendChild(deleteIcon);
+    deleteItem.appendChild(deleteText);
+
+    menuDropdown.appendChild(editItem);
+    menuDropdown.appendChild(archiveItem);
+    menuDropdown.appendChild(deleteItem);
+
+    cardMenu.appendChild(menuButton);
+    cardMenu.appendChild(menuDropdown);
+    headerMenu.appendChild(cardMenu);
+
+    courseHeader.appendChild(headerContent);
+    courseHeader.appendChild(headerMenu);
+
+    // Profile Initial Circle (overlapping the header)
+    const profileInitial = document.createElement("div");
+    profileInitial.className = "course-profile-initial";
+    profileInitial.textContent = course.teacher.charAt(0).toUpperCase();
+    profileInitial.style.background = `hsl(${
+      hashString(course.teacher) % 360
+    }, 70%, 40%)`; // Dynamic color for initial
+    courseHeader.appendChild(profileInitial);
+
+    // Course Body (Remaining 2/3rd white area)
+    const courseBody = document.createElement("div");
+    courseBody.className = "course-body";
+
+    const bodyContent = document.createElement("div");
+    bodyContent.className = "course-body-content";
+
+    const courseInfo = document.createElement("div");
+    courseInfo.className = "course-info";
+
+    const courseCode = document.createElement("p");
+    courseCode.className = "course-code";
+    courseCode.textContent = `Code: ${course.code}`;
+    courseInfo.appendChild(courseCode);
+
+    bodyContent.appendChild(courseInfo);
+
+    // Bottom Actions (Google Classroom style icons)
+    const bottomActions = document.createElement("div");
+    bottomActions.className = "course-bottom-actions";
+
+    // Stream icon
+    const streamIcon = document.createElement("button");
+    streamIcon.className = "course-action-icon";
+    streamIcon.innerHTML = '<span class="material-icons">dynamic_feed</span>';
+    streamIcon.title = "Stream";
+    streamIcon.onclick = (e) => {
+      e.stopPropagation(); // Prevent card click from firing
+      showNotification(`Opening stream for ${course.name}`, "info");
+      // In a real app, this would navigate to the course stream page
+    };
+
+    // Classwork icon
+    const classworkIcon = document.createElement("button");
+    classworkIcon.className = "course-action-icon";
+    classworkIcon.innerHTML = '<span class="material-icons">assignment</span>';
+    classworkIcon.title = "Classwork";
+    classworkIcon.onclick = (e) => {
+      e.stopPropagation();
+      showNotification(`Opening classwork for ${course.name}`, "info");
+      // Add classwork functionality here
+    };
+
+    // People icon
+    const peopleIcon = document.createElement("button");
+    peopleIcon.className = "course-action-icon";
+    peopleIcon.innerHTML = '<span class="material-icons">people</span>';
+    peopleIcon.title = "People";
+    peopleIcon.onclick = (e) => {
+      e.stopPropagation();
+      showNotification(`Opening people for ${course.name}`, "info");
+      // Add people management functionality here
+    };
+
+    bottomActions.appendChild(streamIcon);
+    bottomActions.appendChild(classworkIcon);
+    bottomActions.appendChild(peopleIcon);
+
+    courseBody.appendChild(bodyContent);
+    courseBody.appendChild(bottomActions);
+
+    card.appendChild(courseHeader);
+    card.appendChild(courseBody);
+
+    return card;
+  }
+
+  /**
+   * Simple hash function to generate consistent colors for course names.
+   * @param {string} str - The string to hash.
+   * @returns {number} The absolute hash value.
+   */
+  function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
+  }
+
+  /**
+   * Determines the CSS class for a course card header based on subject.
+   * @param {string} subject - The course subject.
+   * @param {string} courseId - The course ID for unique hashing.
+   * @returns {string} The CSS class name.
+   */
+  function getHeaderClass(subject, courseId) {
+    const subjectLower = subject ? subject.toLowerCase() : "";
+
+    // Specific subject mappings
+    if (subjectLower.includes("math") || subjectLower.includes("mathematics"))
+      return "math";
+    if (subjectLower.includes("science")) return "science";
+    if (subjectLower.includes("bangla") || subjectLower.includes("bengali"))
+      return "bangla";
+    if (subjectLower.includes("english")) return "english";
+    if (subjectLower.includes("programming") || subjectLower.includes("coding"))
+      return "programming";
+    // Add more specific mappings as needed
+
+    // For courses without specific subject match, use hash-based color assignment
+    const combinedHash = hashString(subject + courseId);
+    const colorIndex = (combinedHash % 10) + 1; // Use 10 different default classes
+    return `default-${colorIndex}`;
+  }
+
+  /**
+   * Toggles the visibility of a course card's menu dropdown.
+   * @param {string} courseId - The ID of the course.
+   */
+  function toggleCourseMenuAdmin(courseId) {
+    const menu = document.getElementById(`courseMenuAdmin_${courseId}`);
+    document
+      .querySelectorAll(".course-card-admin .course-menu-dropdown")
+      .forEach((m) => {
+        if (m !== menu) m.classList.remove("show");
+      });
+    menu.classList.toggle("show");
+  }
+
+  /**
+   * Opens the course modal for editing an existing course.
+   * @param {string} courseId - The ID of the course to edit.
+   */
+  function editCourseAdmin(courseId) {
+    const allCourses = JSON.parse(localStorage.getItem("allCourses")) || [];
+    const course = allCourses.find((c) => c.id === courseId);
+
+    if (!course) {
+      showNotification("Course not found!", "error");
+      return;
+    }
+
+    courseModalTitle.textContent = "Edit Course";
+    courseIdInput.value = course.id;
+    courseTitleInput.value = course.name;
+    courseSectionInput.value = course.section;
+    courseSubjectInput.value = course.subject;
+    courseRoomInput.value = course.room;
+
+    // Populate teachers dropdown and select current teacher
+    populateCourseTeacherDropdown(course.teacher);
+
+    courseStatusSelect.value = course.archived ? "archived" : "active";
+    courseStudentsInput.value = course.students
+      ? course.students.join(", ")
+      : "";
+
+    courseModal.show();
+  }
+
+  /**
+   * Toggles the archived status of a course.
+   * @param {string} courseId - The ID of the course to archive/unarchive.
+   */
+  function toggleArchiveCourseAdmin(courseId) {
+    let allCourses = JSON.parse(localStorage.getItem("allCourses")) || [];
+    const courseIndex = allCourses.findIndex((c) => c.id === courseId);
+
+    if (courseIndex === -1) {
+      showNotification("Course not found!", "error");
+      return;
+    }
+
+    const course = allCourses[courseIndex];
+    const newArchivedStatus = !course.archived;
+    const actionText = newArchivedStatus ? "archive" : "unarchive";
+    const confirmMessage = `Are you sure you want to ${actionText} this course?`;
+
+    if (!confirm(confirmMessage)) {
+      toggleCourseMenuAdmin(courseId); // Close menu if cancelled
+      return;
+    }
+
+    // Update in global list
+    allCourses[courseIndex].archived = newArchivedStatus;
+    localStorage.setItem("allCourses", JSON.stringify(allCourses));
+
+    // Update in all user dashboards
+    updateCourseInAllDashboards(courseId, { archived: newArchivedStatus });
+
+    showNotification(`Course successfully ${actionText}d!`, "success");
+    loadCourses(); // Re-render admin courses
+    loadDashboardStats(); // Update stats
+  }
+
+  /**
+   * Deletes a course from the system.
+   * @param {string} courseId - The ID of the course to delete.
+   */
+  function deleteCourseAdmin(courseId) {
+    if (
+      !confirm(
+        "Are you sure you want to permanently delete this course? This action cannot be undone."
+      )
+    ) {
+      toggleCourseMenuAdmin(courseId); // Close menu if cancelled
+      return;
+    }
+
+    let allCourses = JSON.parse(localStorage.getItem("allCourses")) || [];
+    const courseToDelete = allCourses.find((c) => c.id === courseId);
+
+    if (!courseToDelete) {
+      showNotification("Course not found!", "error");
+      return;
+    }
+
+    // Remove from global list
+    allCourses = allCourses.filter((c) => c.id !== courseId);
+    localStorage.setItem("allCourses", JSON.stringify(allCourses));
+
+    // Remove from all user dashboards
+    const registeredUsers =
+      JSON.parse(localStorage.getItem("registeredUsers")) || [];
+    registeredUsers.forEach((user) => {
+      const dashboardKey = `dashboard_${user.email}`;
+      const dashboard = JSON.parse(
+        localStorage.getItem(dashboardKey) || '{"courses": []}'
+      );
+      dashboard.courses = dashboard.courses.filter((c) => c.id !== courseId);
+      localStorage.setItem(dashboardKey, JSON.stringify(dashboard));
+    });
+
+    logUserActivity(
+      currentUserEmail,
+      "Course Deleted",
+      "Course",
+      courseToDelete.name
+    );
+    showNotification("Course successfully deleted!", "success");
+    loadCourses(); // Re-render admin courses
+    loadDashboardStats(); // Update stats
+  }
+
+  /**
+   * Updates a course in all relevant user dashboards.
+   * This is crucial for keeping data consistent between admin and dashboard pages.
+   * @param {string} courseId - The ID of the course to update.
+   * @param {object} updates - An object containing the properties to update.
+   */
+  function updateCourseInAllDashboards(courseId, updates) {
+    const registeredUsers =
+      JSON.parse(localStorage.getItem("registeredUsers")) || [];
+    registeredUsers.forEach((user) => {
+      const dashboardKey = `dashboard_${user.email}`;
+      const dashboard = JSON.parse(
+        localStorage.getItem(dashboardKey) || '{"courses": []}'
+      );
+      const courseIndex = dashboard.courses.findIndex((c) => c.id === courseId);
+      if (courseIndex !== -1) {
+        dashboard.courses[courseIndex] = {
+          ...dashboard.courses[courseIndex],
+          ...updates,
+        };
+        localStorage.setItem(dashboardKey, JSON.stringify(dashboard));
+      }
+    });
   }
 
   /**
@@ -511,8 +889,7 @@ document.addEventListener("DOMContentLoaded", function () {
    */
   function loadAssignments() {
     const assignments = JSON.parse(localStorage.getItem("assignments")) || [];
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
-    // FIX: Use correct localStorage key for registered users
+    const courses = JSON.parse(localStorage.getItem("allCourses")) || []; // Use allCourses
     const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
 
     const tbody = document.getElementById("assignmentsTableBody");
@@ -531,7 +908,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const row = document.createElement("tr");
       row.innerHTML = `
                 <td>${assignment.title}</td>
-                <td>${course ? course.title : "Unknown Course"}</td>
+                <td>${course ? course.name : "Unknown Course"}</td>
                 <td>${
                   teacher
                     ? teacher.name || teacher.email.split("@")[0]
@@ -566,40 +943,208 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
+   * Loads and displays announcements.
+   */
+  function loadAnnouncements() {
+    const announcements =
+      JSON.parse(localStorage.getItem("announcements")) || [];
+    const announcementsList = document.getElementById("announcementsList");
+    announcementsList.innerHTML = "";
+
+    if (announcements.length === 0) {
+      announcementsList.innerHTML =
+        '<div class="text-center text-muted">কোনো ঘোষণা নেই</div>';
+      return;
+    }
+
+    announcements.forEach((announcement) => {
+      const announcementItem = document.createElement("div");
+      announcementItem.className = "announcement-item";
+      announcementItem.innerHTML = `
+        <div class="announcement-header">
+          <div class="announcement-title">${announcement.title}</div>
+          <div class="announcement-meta">
+            <span>${announcement.createdAt}</span> |
+            <span>প্রাপক: ${getRecipientText(announcement.recipients)}</span>
+          </div>
+        </div>
+        <div class="announcement-content">${announcement.message}</div>
+        <div class="announcement-actions">
+          <button class="btn btn-sm btn-info" onclick="editAnnouncement('${
+            announcement.id
+          }')">
+            <i class="fas fa-edit"></i> সম্পাদনা
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deleteAnnouncement('${
+            announcement.id
+          }')">
+            <i class="fas fa-trash"></i> মুছুন
+          </button>
+        </div>
+      `;
+      announcementsList.appendChild(announcementItem);
+    });
+  }
+
+  /**
+   * Opens the announcement form for creating a new announcement or editing an existing one.
+   * @param {string} [announcementId] - The ID of the announcement to edit.
+   */
+  window.openAnnouncementForm = function (announcementId = null) {
+    const formTitle = document.getElementById("announcementFormTitle");
+    const announcementIdInput = document.getElementById("announcementId");
+    const announcementTitleInput = document.getElementById("announcementTitle");
+    const announcementMessageInput = document.getElementById(
+      "announcementMessage"
+    );
+    const announcementRecipientsSelect = document.getElementById(
+      "announcementRecipients"
+    );
+    const saveBtn = document.getElementById("saveAnnouncementBtn");
+    const cancelBtn = document.getElementById("cancelAnnouncementEditBtn");
+    const messageWrapper = document.querySelector(
+      ".announcement-textarea-wrapper"
+    );
+
+    if (announcementId) {
+      formTitle.textContent = "ঘোষণা সম্পাদনা করুন";
+      saveBtn.textContent = "আপডেট করুন";
+      cancelBtn.classList.remove("d-none");
+      const announcements =
+        JSON.parse(localStorage.getItem("announcements")) || [];
+      const announcement = announcements.find((a) => a.id == announcementId);
+
+      if (announcement) {
+        announcementIdInput.value = announcement.id;
+        announcementTitleInput.value = announcement.title;
+        announcementMessageInput.value = announcement.message;
+        announcementRecipientsSelect.value = announcement.recipients;
+        messageWrapper.classList.add("expanded"); // Keep expanded when editing
+      } else {
+        showNotification("ঘোষণা খুঁজে পাওয়া যায়নি", "error");
+        // Reset form if not found
+        formTitle.textContent = "ঘোষণা পাঠান";
+        saveBtn.textContent = "পাঠান";
+        cancelBtn.classList.add("d-none");
+        announcementForm.reset();
+        announcementIdInput.value = "";
+        messageWrapper.classList.remove("expanded");
+      }
+    } else {
+      formTitle.textContent = "ঘোষণা পাঠান";
+      saveBtn.textContent = "পাঠান";
+      cancelBtn.classList.add("d-none");
+      announcementForm.reset();
+      announcementIdInput.value = "";
+      messageWrapper.classList.remove("expanded"); // Collapse if new form
+    }
+  };
+
+  /**
+   * Handles the submission of the announcement form (create/edit).
+   * @param {Event} e - The form submission event.
+   */
+  function handleAnnouncementSubmit(e) {
+    e.preventDefault();
+    const announcementId = document.getElementById("announcementId").value;
+    const title = document.getElementById("announcementTitle").value;
+    const message = document.getElementById("announcementMessage").value;
+    const recipients = document.getElementById("announcementRecipients").value;
+
+    if (!title || !message || !recipients) {
+      showNotification("সব ফিল্ড পূরণ করুন", "error");
+      return;
+    }
+
+    let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+    let notificationMessage = "";
+
+    if (announcementId) {
+      // Edit existing announcement
+      const index = announcements.findIndex((a) => a.id == announcementId);
+      if (index > -1) {
+        announcements[index] = {
+          ...announcements[index],
+          title: title,
+          message: message,
+          recipients: recipients,
+          updatedAt: new Date().toLocaleString("bn-BD"),
+        };
+        notificationMessage = "ঘোষণা সফলভাবে আপডেট করা হয়েছে";
+        logUserActivity(
+          currentUserEmail,
+          "ঘোষণা সম্পাদনা",
+          "Announcement",
+          title
+        );
+      } else {
+        showNotification("ঘোষণা খুঁজে পাওয়া যায়না", "error");
+        return;
+      }
+    } else {
+      // Create new announcement
+      const newAnnouncement = {
+        id: Date.now(),
+        title: title,
+        message: message,
+        recipients: recipients,
+        createdBy: currentUserEmail,
+        createdAt: new Date().toLocaleString("bn-BD"),
+      };
+      announcements.unshift(newAnnouncement); // Add to top
+      notificationMessage = "ঘোষণা পাঠানো হয়েছে";
+      logUserActivity(currentUserEmail, "ঘোষণা পাঠানো", "Announcement", title);
+    }
+
+    localStorage.setItem("announcements", JSON.stringify(announcements));
+    showNotification(notificationMessage, "success");
+    loadAnnouncements(); // Reload announcements list
+    openAnnouncementForm(); // Reset form
+  }
+
+  /**
+   * Deletes an announcement after confirmation.
+   * @param {string} id - The ID of the announcement to delete.
+   */
+  window.deleteAnnouncement = function (id) {
+    if (confirm("আপনি কি এই ঘোষণাটি মুছে ফেলতে চান?")) {
+      let announcements =
+        JSON.parse(localStorage.getItem("announcements")) || [];
+      const announcementToDelete = announcements.find((a) => a.id == id);
+      const updatedAnnouncements = announcements.filter((a) => a.id != id);
+      localStorage.setItem(
+        "announcements",
+        JSON.stringify(updatedAnnouncements)
+      );
+
+      if (announcementToDelete) {
+        logUserActivity(
+          currentUserEmail,
+          "ঘোষণা মুছে ফেলা",
+          "Announcement",
+          announcementToDelete.title
+        );
+      }
+      showNotification("ঘোষণা সফলভাবে মুছে ফেলা হয়েছে", "success");
+      loadAnnouncements();
+      openAnnouncementForm(); // Reset form in case it was being edited
+    }
+  };
+
+  /**
+   * Edits an announcement.
+   * @param {string} id - The ID of the announcement to edit.
+   */
+  window.editAnnouncement = function (id) {
+    openAnnouncementForm(id);
+  };
+
+  /**
    * Placeholder function for loading analytics data.
    */
   function loadAnalytics() {
     // showNotification("অ্যানালিটিক্স ডেটা লোড হচ্ছে...", "info");
     // In a real application, this would fetch and process analytics data.
-  }
-
-  /**
-   * Loads and displays recent messages in the messages list.
-   */
-  function loadMessages() {
-    const messages = JSON.parse(localStorage.getItem("messages")) || [];
-
-    const messagesList = document.getElementById("messagesList");
-    messagesList.innerHTML = "";
-
-    if (messages.length === 0) {
-      messagesList.innerHTML =
-        '<div class="text-center text-muted">কোনো বার্তা নেই</div>';
-      return;
-    }
-
-    messages.forEach((message) => {
-      const messageItem = document.createElement("div");
-      messageItem.className = "message-item";
-      messageItem.innerHTML = `
-                <div class="message-header">
-                    <div class="message-sender">${message.sender}</div>
-                    <div class="message-time">${message.timestamp}</div>
-                </div>
-                <div class="message-content">${message.content}</div>
-            `;
-      messagesList.appendChild(messageItem);
-    });
   }
 
   /**
@@ -634,56 +1179,208 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
-   * Initializes Chart.js graphs for user activity and course performance.
+   * Initializes Chart.js graphs for user activity, course performance, user roles, and course status.
    */
   function initializeCharts() {
+    // Destroy existing chart instances to prevent duplicates
+    if (userActivityChartInstance) userActivityChartInstance.destroy();
+    if (coursePerformanceChartInstance)
+      coursePerformanceChartInstance.destroy();
+    if (userRoleChartInstance) userRoleChartInstance.destroy();
+    if (courseStatusChartInstance) courseStatusChartInstance.destroy();
+
+    const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+    const courses = JSON.parse(localStorage.getItem("allCourses")) || []; // Use allCourses
+
+    // User Activity Chart (Line Graph)
     const userActivityCtx = document.getElementById("userActivityChart");
     if (userActivityCtx) {
-      new Chart(userActivityCtx, {
+      userActivityChartInstance = new Chart(userActivityCtx, {
         type: "line",
         data: {
           labels: ["জান", "ফেব", "মার", "এপ্রিল", "মে", "জুন", "জুলাই"],
           datasets: [
             {
               label: "সক্রিয় ব্যবহারকারী",
-              data: [120, 135, 150, 165, 180, 200, 220],
+              data: [120, 135, 150, 165, 180, 200, 220], // Dummy data
               borderColor: "#e74c3c",
               backgroundColor: "rgba(231, 76, 60, 0.1)",
               tension: 0.4,
+              fill: true,
             },
           ],
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           scales: {
             y: {
               beginAtZero: true,
+              title: {
+                display: true,
+                text: "ব্যবহারকারীর সংখ্যা",
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "মাস",
+              },
+            },
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: "মাসিক ব্যবহারকারী সক্রিয়তা",
             },
           },
         },
       });
     }
 
+    // Course Performance Chart (Doughnut Chart)
     const coursePerformanceCtx = document.getElementById(
       "coursePerformanceChart"
     );
     if (coursePerformanceCtx) {
-      new Chart(coursePerformanceCtx, {
+      const activeCourses = courses.filter((c) => !c.archived).length; // Active courses are not archived
+      const archivedCourses = courses.filter((c) => c.archived).length;
+      // Assuming 'draft' status is not directly used in allCourses, adjust if needed
+      const draftCourses = 0; // Placeholder if no draft status in allCourses
+
+      coursePerformanceChartInstance = new Chart(coursePerformanceCtx, {
         type: "doughnut",
         data: {
-          labels: ["সম্পন্ন", "চলমান", "আর্কাইভ"],
+          labels: ["সক্রিয়", "আর্কাইভ", "খসড়া"],
           datasets: [
             {
-              data: [45, 30, 10],
-              backgroundColor: ["#10b981", "#f59e0b", "#64748b"],
+              data: [activeCourses, archivedCourses, draftCourses],
+              backgroundColor: ["#10b981", "#64748b", "#f59e0b"],
+              hoverOffset: 4,
             },
           ],
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: "bottom",
+            },
+            title: {
+              display: true,
+              text: "কোর্স স্ট্যাটাস বিতরণ",
+            },
+          },
+        },
+      });
+    }
+
+    // User Role Chart (Bar Graph)
+    const userRoleCtx = document.getElementById("userRoleChart");
+    if (userRoleCtx) {
+      const roleCounts = allUsers.reduce((acc, user) => {
+        acc[user.role] = (acc[user.role] || 0) + 1;
+        return acc;
+      }, {});
+
+      const labels = Object.keys(roleCounts).map(getRoleText);
+      const data = Object.values(roleCounts);
+      const backgroundColors = labels.map((role) => {
+        if (role === "প্রশাসক") return "#e74c3c";
+        if (role === "শিক্ষক") return "#f59e0b";
+        if (role === "শিক্ষার্থী") return "#06b6d4";
+        return "#64748b";
+      });
+
+      userRoleChartInstance = new Chart(userRoleCtx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "ব্যবহারকারীর সংখ্যা",
+              data: data,
+              backgroundColor: backgroundColors,
+              borderColor: backgroundColors.map((color) =>
+                color.replace("0.1", "1")
+              ),
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "সংখ্যা",
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "ভূমিকা",
+              },
+            },
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: "ভূমিকা অনুসারে ব্যবহারকারী বিতরণ",
+            },
+            legend: {
+              display: false,
+            },
+          },
+        },
+      });
+    }
+
+    // Course Status Chart (Pie Chart - similar to doughnut but different visual)
+    const courseStatusCtx = document.getElementById("courseStatusChart");
+    if (courseStatusCtx) {
+      const statusCounts = courses.reduce((acc, course) => {
+        const status = course.archived ? "archived" : "active"; // Map to active/archived
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {});
+
+      const labels = Object.keys(statusCounts).map(getCourseStatusText);
+      const data = Object.values(statusCounts);
+      const backgroundColors = labels.map((status) => {
+        if (status === "সক্রিয়") return "#10b981";
+        if (status === "আর্কাইভ") return "#64748b";
+        if (status === "খসড়া") return "#f59e0b";
+        return "#06b6d4";
+      });
+
+      courseStatusChartInstance = new Chart(courseStatusCtx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "কোর্সের সংখ্যা",
+              data: data,
+              backgroundColor: backgroundColors,
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+            },
+            title: {
+              display: true,
+              text: "কোর্স স্ট্যাটাস ওভারভিউ",
             },
           },
         },
@@ -701,7 +1398,7 @@ document.addEventListener("DOMContentLoaded", function () {
       admin: "প্রশাসক",
       teacher: "শিক্ষক",
       student: "শিক্ষার্থী",
-      user: "ব্যবহারকারী",
+      user: "শিক্ষার্থী", // Assuming 'user' role is equivalent to 'student' for display
     };
     return roles[role] || role;
   }
@@ -764,6 +1461,20 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
+   * Returns the Bengali text for announcement recipients.
+   * @param {string} recipients - The recipient type (e.g., "all", "students").
+   * @returns {string} The Bengali equivalent.
+   */
+  function getRecipientText(recipients) {
+    const map = {
+      all: "সবাই",
+      students: "শিক্ষার্থীরা",
+      teachers: "শিক্ষকরা",
+    };
+    return map[recipients] || recipients;
+  }
+
+  /**
    * Filters the users table based on search input, role, and status filters.
    */
   function filterUsers() {
@@ -804,22 +1515,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusFilter = document.getElementById("courseStatusFilter").value;
     const teacherFilter = document.getElementById("courseTeacherFilter").value;
 
-    const cards = document.querySelectorAll("#coursesGrid .course-card");
+    const cards = document.querySelectorAll(
+      "#coursesGridAdmin .course-card-admin"
+    );
     cards.forEach((card) => {
       const title = card
         .querySelector(".course-title")
         .textContent.toLowerCase();
       const teacherEmail = card
-        .querySelector(".course-email small")
-        .textContent.toLowerCase();
-      const status = card
-        .querySelector(".course-stat .badge")
-        .textContent.toLowerCase();
+        .querySelector(".course-subtitle")
+        .textContent.toLowerCase(); // Teacher email is in subtitle
+      const isArchived = card.classList.contains("archived");
 
       const matchesSearch = title.includes(search);
       const matchesStatus =
         !statusFilter ||
-        status.includes(getCourseStatusText(statusFilter).toLowerCase());
+        (statusFilter === "active" && !isArchived) ||
+        (statusFilter === "archived" && isArchived);
       const matchesTeacher =
         !teacherFilter || teacherEmail.includes(teacherFilter.toLowerCase());
 
@@ -835,7 +1547,6 @@ document.addEventListener("DOMContentLoaded", function () {
    * Populates the teacher filter dropdown for courses.
    */
   function populateCourseTeacherFilter() {
-    // FIX: Use correct localStorage key for registered users
     const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const teachers = allUsers.filter((user) => user.role === "teacher");
     const teacherFilterSelect = document.getElementById("courseTeacherFilter");
@@ -862,7 +1573,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // FIX: Use correct localStorage key for registered users
     let allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const existingUser = allUsers.find((user) => user.email === email);
 
@@ -877,6 +1587,7 @@ document.addEventListener("DOMContentLoaded", function () {
       role: role,
       password: "defaultPassword123", // Default password for admin-created users
       registeredAt: new Date().toISOString(),
+      status: "active", // New users are active by default
     };
 
     allUsers.push(newUser);
@@ -892,6 +1603,13 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     localStorage.setItem(`profileData_${email}`, JSON.stringify(profileData));
 
+    // Initialize an empty dashboard for the new user
+    const dashboardKey = `dashboard_${email}`;
+    localStorage.setItem(
+      dashboardKey,
+      JSON.stringify({ courses: [], role: role })
+    );
+
     logUserActivity(currentUserEmail, "নতুন ব্যবহারকারী তৈরি", "User", email);
 
     showNotification("নতুন ব্যবহারকারী যোগ করা হয়েছে", "success");
@@ -900,6 +1618,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadUsers(); // Reload users table
     loadDashboardStats(); // Update dashboard stats
     populateCourseTeacherFilter(); // Update teacher list if new teacher added
+    initializeCharts(); // Update charts with new user data
   }
 
   /**
@@ -907,7 +1626,6 @@ document.addEventListener("DOMContentLoaded", function () {
    * @param {string} email - The email of the user to edit.
    */
   window.editUser = function (email) {
-    // FIX: Use correct localStorage key for registered users
     const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const userToEdit = allUsers.find((user) => user.email === email);
     const profileData =
@@ -923,7 +1641,8 @@ document.addEventListener("DOMContentLoaded", function () {
       profileData.fullName || userToEdit.name;
     document.getElementById("editUserEmail").value = userToEdit.email;
     document.getElementById("editUserRole").value = userToEdit.role;
-    document.getElementById("editUserStatus").value = "active"; // Default status
+    document.getElementById("editUserStatus").value =
+      userToEdit.status || "active"; // Set current status
     document.getElementById("editUserPhone").value = profileData.phone || "";
     document.getElementById("editUserAddress").value =
       profileData.address || "";
@@ -945,14 +1664,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const address = document.getElementById("editUserAddress").value;
     const bio = document.getElementById("editUserBio").value;
 
-    // FIX: Use correct localStorage key for registered users
     let allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const userIndex = allUsers.findIndex((user) => user.email === userEmail);
 
     if (userIndex > -1) {
       allUsers[userIndex].name = name;
       allUsers[userIndex].role = role;
-      // Note: status field doesn't exist in registeredUsers structure, but keeping it for consistency
+      allUsers[userIndex].status = status; // Update user status
       localStorage.setItem("registeredUsers", JSON.stringify(allUsers));
 
       // Update profile data
@@ -965,50 +1683,24 @@ document.addEventListener("DOMContentLoaded", function () {
       };
       localStorage.setItem(`profileData_${email}`, JSON.stringify(profileData));
 
+      // Update user's dashboard role
+      const dashboardKey = `dashboard_${email}`;
+      const dashboard = JSON.parse(
+        localStorage.getItem(dashboardKey) || '{"courses": [], "role": null}'
+      );
+      dashboard.role = role;
+      localStorage.setItem(dashboardKey, JSON.stringify(dashboard));
+
       logUserActivity(currentUserEmail, "ব্যবহারকারী সম্পাদনা", "User", email);
       showNotification("ব্যবহারকারী সফলভাবে আপডেট করা হয়েছে", "success");
       editUserModal.hide();
       loadUsers();
       loadDashboardStats();
       populateCourseTeacherFilter(); // Update teacher list if role changed
+      initializeCharts(); // Update charts with new user data
     } else {
       showNotification("ব্যবহারকারী খুঁজে পাওয়া যায়নি", "error");
     }
-  }
-
-  /**
-   * Handles the submission of the announcement form.
-   * @param {Event} e - The form submission event.
-   */
-  function handleAnnouncementSubmit(e) {
-    e.preventDefault();
-    const title = document.getElementById("announcementTitle").value;
-    const message = document.getElementById("announcementMessage").value;
-    const recipients = document.getElementById("announcementRecipients").value;
-
-    if (!title || !message || !recipients) {
-      showNotification("সব ফিল্ড পূরণ করুন", "error");
-      return;
-    }
-
-    const announcements =
-      JSON.parse(localStorage.getItem("announcements")) || [];
-    const newAnnouncement = {
-      id: Date.now(),
-      title: title,
-      message: message,
-      recipients: recipients,
-      createdBy: currentUserEmail,
-      createdAt: new Date().toLocaleString("bn-BD"),
-    };
-
-    announcements.push(newAnnouncement);
-    localStorage.setItem("announcements", JSON.stringify(announcements));
-
-    logUserActivity(currentUserEmail, "ঘোষণা পাঠানো", "Announcement", title);
-
-    showNotification("ঘোষণা পাঠানো হয়েছে", "success");
-    announcementForm.reset();
   }
 
   /**
@@ -1022,7 +1714,6 @@ document.addEventListener("DOMContentLoaded", function () {
    * Exports user data as a JSON file.
    */
   function exportUsers() {
-    // FIX: Use correct localStorage key for registered users
     const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const dataStr = JSON.stringify(allUsers, null, 2);
     const dataUri =
@@ -1041,54 +1732,60 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
-   * Opens the course modal for creating a new course or editing an existing one.
-   * @param {string} [courseId] - The ID of the course to edit. If not provided, a new course is created.
+   * Populates the teacher dropdown in the course modal.
+   * @param {string} [selectedTeacherEmail] - The email of the teacher to pre-select.
    */
-  window.openCourseModal = function (courseId = null) {
-    const courseModalTitle = document.getElementById("courseModalTitle");
-    const courseIdInput = document.getElementById("courseId");
-    const courseTitleInput = document.getElementById("courseTitle");
-    const courseTeacherSelect = document.getElementById("courseTeacher");
-    const courseDescriptionInput = document.getElementById("courseDescription");
-    const courseStatusSelect = document.getElementById("courseStatus");
-    const courseStudentsInput = document.getElementById("courseStudents");
-
-    // Populate teachers dropdown
-    // FIX: Use correct localStorage key for registered users
+  function populateCourseTeacherDropdown(selectedTeacherEmail = null) {
     const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const teachers = allUsers.filter((user) => user.role === "teacher");
-    courseTeacherSelect.innerHTML =
-      '<option value="">শিক্ষক নির্বাচন করুন</option>';
+    courseTeacherSelect.innerHTML = '<option value="">Select Teacher</option>';
     teachers.forEach((teacher) => {
       const option = document.createElement("option");
       option.value = teacher.email;
       option.textContent = teacher.name || teacher.email.split("@")[0];
+      if (selectedTeacherEmail && teacher.email === selectedTeacherEmail) {
+        option.selected = true;
+      }
       courseTeacherSelect.appendChild(option);
     });
+  }
+
+  /**
+   * Opens the course modal for creating a new course or editing an existing one.
+   * @param {string} [courseId] - The ID of the course to edit. If not provided, a new course is created.
+   */
+  window.openCourseModal = function (courseId = null) {
+    courseForm.reset(); // Reset form fields
+    courseIdInput.value = ""; // Clear hidden ID
+
+    populateCourseTeacherDropdown(); // Populate teachers dropdown
 
     if (courseId) {
-      courseModalTitle.textContent = "কোর্স সম্পাদনা করুন";
-      const courses = JSON.parse(localStorage.getItem("courses")) || [];
-      const course = courses.find((c) => c.id === courseId);
+      courseModalTitle.textContent = "Edit Course";
+      const allCourses = JSON.parse(localStorage.getItem("allCourses")) || [];
+      const course = allCourses.find((c) => c.id === courseId);
 
       if (course) {
         courseIdInput.value = course.id;
-        courseTitleInput.value = course.title;
-        courseTeacherSelect.value = course.createdBy;
-        courseDescriptionInput.value = course.description || "";
-        courseStatusSelect.value = course.status || "active";
+        courseTitleInput.value = course.name;
+        courseSectionInput.value = course.section;
+        courseSubjectInput.value = course.subject;
+        courseRoomInput.value = course.room;
+        populateCourseTeacherDropdown(course.teacher); // Select current teacher
+        courseStatusSelect.value = course.archived ? "archived" : "active";
         courseStudentsInput.value = course.students
           ? course.students.join(", ")
           : "";
       } else {
-        showNotification("কোর্স খুঁজে পাওয়া যায়নি", "error");
+        showNotification("Course not found!", "error");
         return;
       }
     } else {
-      courseModalTitle.textContent = "নতুন কোর্স তৈরি করুন";
-      courseForm.reset();
-      courseIdInput.value = ""; // Clear hidden ID for new course
-      courseTeacherSelect.value = currentUserEmail; // Default to current admin as teacher
+      courseModalTitle.textContent = "Create New Course";
+      // Default teacher to current admin if they are a teacher, otherwise leave blank
+      if (userRole === "teacher") {
+        populateCourseTeacherDropdown(currentUserEmail);
+      }
     }
     courseModal.show();
   };
@@ -1097,65 +1794,120 @@ document.addEventListener("DOMContentLoaded", function () {
    * Saves a new course or updates an existing one.
    */
   function saveCourse() {
-    const courseId = document.getElementById("courseId").value;
-    const title = document.getElementById("courseTitle").value;
-    const teacherEmail = document.getElementById("courseTeacher").value;
-    const description = document.getElementById("courseDescription").value;
-    const status = document.getElementById("courseStatus").value;
-    const studentsInput = document.getElementById("courseStudents").value;
+    const courseId = courseIdInput.value;
+    const name = courseTitleInput.value.trim();
+    const section = courseSectionInput.value.trim();
+    const subject = courseSubjectInput.value.trim();
+    const room = courseRoomInput.value.trim();
+    const teacher = courseTeacherSelect.value;
+    const status = courseStatusSelect.value;
+    const studentsInput = courseStudentsInput.value;
     const students = studentsInput
-      ? studentsInput.split(",").map((s) => s.trim())
+      ? studentsInput
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s)
       : [];
 
-    if (!title || !teacherEmail) {
-      showNotification("কোর্সের নাম এবং শিক্ষক নির্বাচন করুন", "error");
+    if (!name || !teacher) {
+      showNotification("Course Name and Teacher are required!", "error");
       return;
     }
 
-    let courses = JSON.parse(localStorage.getItem("courses")) || [];
+    let allCourses = JSON.parse(localStorage.getItem("allCourses")) || [];
     let message = "";
 
     if (courseId) {
       // Edit existing course
-      const courseIndex = courses.findIndex((c) => c.id == courseId);
+      const courseIndex = allCourses.findIndex((c) => c.id === courseId);
       if (courseIndex > -1) {
-        courses[courseIndex] = {
-          ...courses[courseIndex],
-          title: title,
-          createdBy: teacherEmail,
-          description: description,
-          status: status,
+        const oldCourse = allCourses[courseIndex];
+        const updatedCourse = {
+          ...oldCourse,
+          name: name,
+          section: section,
+          subject: subject,
+          room: room,
+          teacher: teacher,
+          archived: status === "archived",
           students: students,
-          updatedAt: new Date().toLocaleString("bn-BD"),
+          modified: new Date().toISOString(),
         };
-        message = "কোর্স সফলভাবে আপডেট করা হয়েছে";
-        logUserActivity(currentUserEmail, "কোর্স সম্পাদনা", "Course", title);
+        allCourses[courseIndex] = updatedCourse;
+        message = "Course updated successfully!";
+        logUserActivity(currentUserEmail, "Course Edited", "Course", name);
+
+        // Update in all user dashboards
+        updateCourseInAllDashboards(courseId, {
+          name: name,
+          section: section,
+          subject: subject,
+          room: room,
+          teacher: teacher,
+          archived: status === "archived",
+          students: students,
+          modified: new Date().toISOString(),
+        });
       } else {
-        showNotification("কোর্স খুঁজে পাওয়া যায়নি", "error");
+        showNotification("Course not found!", "error");
         return;
       }
     } else {
       // Create new course
       const newCourse = {
-        id: `course_${Date.now()}`,
-        title: title,
-        createdBy: teacherEmail,
-        description: description,
-        status: status,
+        id: Date.now().toString(), // Unique ID
+        name: name,
+        section: section,
+        subject: subject,
+        room: room,
+        code: generateCourseCode(), // Generate unique code
+        teacher: teacher,
         students: students,
-        assignments: [], // Initialize with empty assignments
-        createdAt: new Date().toLocaleString("bn-BD"),
+        created: new Date().toISOString(),
+        archived: status === "archived",
       };
-      courses.push(newCourse);
-      message = "নতুন কোর্স তৈরি করা হয়েছে";
-      logUserActivity(currentUserEmail, "নতুন কোর্স তৈরি", "Course", title);
+      allCourses.push(newCourse);
+      message = "New course created successfully!";
+      logUserActivity(currentUserEmail, "Course Created", "Course", name);
+
+      // Add to teacher's dashboard
+      const teacherDashboardKey = `dashboard_${teacher}`;
+      const teacherDashboard = JSON.parse(
+        localStorage.getItem(teacherDashboardKey) ||
+          '{"courses": [], "role": "teacher"}'
+      );
+      teacherDashboard.courses.push(newCourse);
+      localStorage.setItem(
+        teacherDashboardKey,
+        JSON.stringify(teacherDashboard)
+      );
     }
 
-    localStorage.setItem("courses", JSON.stringify(courses));
+    localStorage.setItem("allCourses", JSON.stringify(allCourses));
     showNotification(message, "success");
     courseModal.hide();
-    loadCourses();
-    loadDashboardStats();
+    loadCourses(); // Re-render admin courses
+    loadDashboardStats(); // Update stats
+    initializeCharts(); // Update charts with new course data
+  }
+
+  /**
+   * Generates a unique 7-character alphanumeric course code.
+   * @returns {string} The generated course code.
+   */
+  function generateCourseCode() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let result = "";
+    for (let i = 0; i < 7; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    // Ensure uniqueness against existing codes
+    const allCourses = JSON.parse(localStorage.getItem("allCourses") || "[]");
+    if (allCourses.some((course) => course.code === result)) {
+      return generateCourseCode(); // Regenerate if duplicate
+    }
+    return result;
   }
 
   /**
@@ -1176,13 +1928,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const assignmentStatusSelect = document.getElementById("assignmentStatus");
 
     // Populate courses dropdown
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
+    const courses = JSON.parse(localStorage.getItem("allCourses")) || []; // Use allCourses
     assignmentCourseSelect.innerHTML =
       '<option value="">কোর্স নির্বাচন করুন</option>';
     courses.forEach((course) => {
       const option = document.createElement("option");
       option.value = course.id;
-      option.textContent = course.title;
+      option.textContent = course.name; // Use course.name for display
       assignmentCourseSelect.appendChild(option);
     });
 
@@ -1292,8 +2044,10 @@ document.addEventListener("DOMContentLoaded", function () {
   function generateReport() {
     const reportData = {
       users: JSON.parse(localStorage.getItem("registeredUsers")) || [],
-      courses: JSON.parse(localStorage.getItem("courses")) || [],
+      courses: JSON.parse(localStorage.getItem("allCourses")) || [], // Use allCourses
       assignments: JSON.parse(localStorage.getItem("assignments")) || [],
+      announcements: JSON.parse(localStorage.getItem("announcements")) || [],
+      auditLogs: JSON.parse(localStorage.getItem("auditLogs")) || [],
       generatedAt: new Date().toISOString(),
     };
 
@@ -1310,15 +2064,12 @@ document.addEventListener("DOMContentLoaded", function () {
     linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
 
-    showNotification("রিপোর্ট তৈরি এবং ডাউনলোড সম্পন্ন", "success");
-  }
-
-  /**
-   * Scrolls to and focuses on the announcement form.
-   */
-  function sendAnnouncement() {
-    switchSection("communications"); // Ensure communications section is active
-    document.getElementById("announcementTitle").focus();
+    showNotification("রিপোর্ট তৈরি এবং ডাউনলোড সম্পন্ন (JSON)", "success");
+    showNotification(
+      "PDF/Excel রিপোর্ট তৈরির জন্য সার্ভার-সাইড প্রক্রিয়াকরণ প্রয়োজন।",
+      "info",
+      5000
+    );
   }
 
   /**
@@ -1326,8 +2077,8 @@ document.addEventListener("DOMContentLoaded", function () {
    */
   function createSystemBackup() {
     const backupData = {
-      users: localStorage.getItem("registeredUsers"),
-      courses: localStorage.getItem("courses"),
+      registeredUsers: localStorage.getItem("registeredUsers"),
+      allCourses: localStorage.getItem("allCourses"), // Use allCourses
       assignments: localStorage.getItem("assignments"),
       auditLogs: localStorage.getItem("auditLogs"),
       messages: localStorage.getItem("messages"),
@@ -1385,7 +2136,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function openAdminProfileModal() {
     const adminProfile =
       JSON.parse(localStorage.getItem(`profileData_${currentUserEmail}`)) || {};
-    // FIX: Use correct localStorage key for registered users
     const adminUser = (
       JSON.parse(localStorage.getItem("registeredUsers")) || []
     ).find((u) => u.email === currentUserEmail);
@@ -1415,7 +2165,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const bio = document.getElementById("adminProfileBio").value;
 
     // Update the user's name in the registeredUsers array
-    // FIX: Use correct localStorage key for registered users
     let allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
     const userIndex = allUsers.findIndex((user) => user.email === email);
     if (userIndex > -1) {
@@ -1480,7 +2229,9 @@ document.addEventListener("DOMContentLoaded", function () {
   window.viewUserProfile = function (email) {
     const userProfile =
       JSON.parse(localStorage.getItem(`profileData_${email}`)) || {};
-    const userCourses = JSON.parse(localStorage.getItem("courses")) || [];
+    const userCourses = JSON.parse(localStorage.getItem("allCourses")) || []; // Use allCourses
+    const allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+    const user = allUsers.find((u) => u.email === email);
 
     document.getElementById("profileUserEmail").textContent = email;
     document.getElementById("profileUserName").textContent =
@@ -1491,9 +2242,14 @@ document.addEventListener("DOMContentLoaded", function () {
       userProfile.address || "N/A";
     document.getElementById("profileUserBio").textContent =
       userProfile.bio || "N/A";
+    document.getElementById("profileUserRole").textContent = getRoleText(
+      user?.role || "N/A"
+    );
+    document.getElementById("profileUserStatus").textContent =
+      user?.status === "active" ? "সক্রিয়" : "নিষ্ক্রিয়";
 
     const createdCourses = userCourses.filter(
-      (course) => course.createdBy === email
+      (course) => course.teacher === email
     );
     const enrolledCourses = userCourses.filter(
       (course) => course.students && course.students.includes(email)
@@ -1509,9 +2265,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.deleteUser = function (email) {
     if (
-      confirm(`আপনি কি ${email} ব্যবহারকারীকে সম্পূর্ণভাবে মুছে ফেলতে চান?`)
+      confirm(
+        `আপনি কি ${email} ব্যবহারকারীকে সম্পূর্ণভাবে মুছে ফেলতে চান? এই পদক্ষেপটি অপরিবর্তনীয়।`
+      )
     ) {
-      // FIX: Use correct localStorage key for registered users
       let allUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
       const updatedUsers = allUsers.filter((user) => user.email !== email);
       localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers));
@@ -1520,13 +2277,24 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.removeItem(`profileData_${email}`);
       localStorage.removeItem(`loginHistory_${email}`);
       localStorage.removeItem(`lastActivity_${email}`);
+      localStorage.removeItem(`dashboard_${email}`); // Remove user's dashboard
 
       // Remove courses created by this user (optional, depending on business logic)
-      let courses = JSON.parse(localStorage.getItem("courses")) || [];
-      const updatedCourses = courses.filter(
-        (course) => course.createdBy !== email
+      let allCourses = JSON.parse(localStorage.getItem("allCourses")) || [];
+      const updatedCourses = allCourses.filter(
+        (course) => course.teacher !== email
       );
-      localStorage.setItem("courses", JSON.stringify(updatedCourses));
+      localStorage.setItem("allCourses", JSON.stringify(updatedCourses));
+
+      // Remove user from any enrolled courses
+      allCourses.forEach((course) => {
+        if (course.students && course.students.includes(email)) {
+          course.students = course.students.filter(
+            (studentEmail) => studentEmail !== email
+          );
+        }
+      });
+      localStorage.setItem("allCourses", JSON.stringify(allCourses));
 
       logUserActivity(currentUserEmail, "ব্যবহারকারী মুছে ফেলা", "User", email);
 
@@ -1535,40 +2303,7 @@ document.addEventListener("DOMContentLoaded", function () {
       loadCourses(); // Reload courses (if any were deleted)
       loadDashboardStats(); // Update dashboard stats
       populateCourseTeacherFilter(); // Update teacher list
-    }
-  };
-
-  window.viewCourseDetails = function (courseId) {
-    showNotification(
-      `কোর্স ${courseId} এর বিস্তারিত দেখার ফিচার শীঘ্রই আসছে`,
-      "info"
-    );
-    // TODO: Implement modal or page for course details
-  };
-
-  window.editCourse = function (courseId) {
-    openCourseModal(courseId);
-  };
-
-  window.deleteCourse = function (courseId) {
-    if (confirm("আপনি কি এই কোর্সটি সম্পূর্ণভাবে মুছে ফেলতে চান?")) {
-      let courses = JSON.parse(localStorage.getItem("courses")) || [];
-      const course = courses.find((c) => c.id === courseId); // Get course details for logging
-      const updatedCourses = courses.filter((course) => course.id !== courseId);
-      localStorage.setItem("courses", JSON.stringify(updatedCourses));
-
-      if (course) {
-        logUserActivity(
-          currentUserEmail,
-          "কোর্স মুছে ফেলা",
-          "Course",
-          course.title
-        );
-      }
-
-      showNotification("কোর্স সফলভাবে মুছে ফেলা হয়েছে", "success");
-      loadCourses(); // Reload courses grid
-      loadDashboardStats(); // Update dashboard stats
+      initializeCharts(); // Update charts
     }
   };
 
@@ -1585,7 +2320,11 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.deleteAssignment = function (assignmentId) {
-    if (confirm("আপনি কি এই অ্যাসাইনমেন্টটি মুছে ফেলতে চান?")) {
+    if (
+      confirm(
+        "আপনি কি এই অ্যাসাইনমেন্টটি মুছে ফেলতে চান? এই পদক্ষেপটি অপরিবর্তনীয়।"
+      )
+    ) {
       let assignments = JSON.parse(localStorage.getItem("assignments")) || [];
       const assignment = assignments.find((a) => a.id === assignmentId); // Get assignment details for logging
       const updatedAssignments = assignments.filter(
@@ -1612,19 +2351,11 @@ document.addEventListener("DOMContentLoaded", function () {
    * Displays a temporary notification message on the screen.
    * @param {string} message - The message to display.
    * @param {"success" | "error" | "warning" | "info"} type - The type of notification, affecting its color and icon.
+   * @param {number} duration - How long the notification should be visible in milliseconds.
    */
-  function showNotification(message, type) {
+  function showNotification(message, type, duration = 3000) {
     const notification = document.createElement("div");
     notification.className = `notification ${type}`;
-
-    const colors = {
-      success: "linear-gradient(135deg, #10b981, #34d399)",
-      error: "linear-gradient(135deg, #ef4444, #f87171)",
-      warning: "linear-gradient(135deg, #f59e0b, #fbbf24)",
-      info: "linear-gradient(135deg, #06b6d4, #22d3ee)",
-    };
-
-    notification.style.background = colors[type] || colors.info;
 
     const icons = {
       success: "check-circle",
@@ -1651,7 +2382,7 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => {
         notification.remove();
       }, 300); // Allow transition to complete before removing
-    }, 3000);
+    }, duration);
   }
 
   /**
@@ -1659,7 +2390,6 @@ document.addEventListener("DOMContentLoaded", function () {
    * This is for demonstration purposes to make the panel functional out of the box.
    */
   function initializeDummyData() {
-    // FIX: Use correct localStorage key for registered users and initialize if empty
     if (
       !localStorage.getItem("registeredUsers") ||
       JSON.parse(localStorage.getItem("registeredUsers")).length === 0
@@ -1671,6 +2401,7 @@ document.addEventListener("DOMContentLoaded", function () {
           password: "111111",
           role: "admin",
           registeredAt: new Date("2023-01-01").toISOString(),
+          status: "active",
         },
         {
           name: "Teacher One",
@@ -1678,20 +2409,23 @@ document.addEventListener("DOMContentLoaded", function () {
           password: "password123",
           role: "teacher",
           registeredAt: new Date("2023-02-05").toISOString(),
+          status: "active",
         },
         {
           name: "Student A",
           email: "studentA@example.com",
           password: "password123",
-          role: "user",
+          role: "student", // Changed from 'user' to 'student'
           registeredAt: new Date("2023-03-10").toISOString(),
+          status: "active",
         },
         {
           name: "Student B",
           email: "studentB@example.com",
           password: "password123",
-          role: "user",
+          role: "student", // Changed from 'user' to 'student'
           registeredAt: new Date("2023-03-15").toISOString(),
+          status: "active",
         },
         {
           name: "Teacher Two",
@@ -1699,6 +2433,15 @@ document.addEventListener("DOMContentLoaded", function () {
           password: "password123",
           role: "teacher",
           registeredAt: new Date("2023-04-20").toISOString(),
+          status: "active",
+        },
+        {
+          name: "Inactive Student",
+          email: "inactive@example.com",
+          password: "password123",
+          role: "student",
+          registeredAt: new Date("2023-05-01").toISOString(),
+          status: "inactive",
         },
       ];
       localStorage.setItem("registeredUsers", JSON.stringify(dummyUsers));
@@ -1714,44 +2457,105 @@ document.addEventListener("DOMContentLoaded", function () {
           bio: "System administrator with 5 years of experience in educational platforms.",
         })
       );
+
+      // Initialize dashboards for dummy users
+      dummyUsers.forEach((user) => {
+        const dashboardKey = `dashboard_${user.email}`;
+        localStorage.setItem(
+          dashboardKey,
+          JSON.stringify({ courses: [], role: user.role })
+        );
+      });
     }
 
-    if (!localStorage.getItem("courses")) {
+    // Use 'allCourses' for global course storage
+    if (!localStorage.getItem("allCourses")) {
       const dummyCourses = [
         {
           id: "course_101",
-          title: "Introduction to Programming",
-          createdBy: "teacher1@example.com",
-          description:
-            "A beginner-friendly course covering the basics of Python programming.",
-          status: "active",
+          name: "Introduction to Programming",
+          section: "A",
+          subject: "Computer Science",
+          room: "Lab 101",
+          code: "PROG101",
+          teacher: "teacher1@example.com",
           students: ["studentA@example.com"],
-          assignments: ["assignment_001"],
-          createdAt: "01/04/2023",
+          created: "2023-01-04T10:00:00Z",
+          archived: false,
         },
         {
           id: "course_102",
-          title: "Advanced Mathematics",
-          createdBy: "teacher2@example.com",
-          description: "Deep dive into calculus and linear algebra.",
-          status: "active",
+          name: "Advanced Mathematics",
+          section: "B",
+          subject: "Mathematics",
+          room: "Room 203",
+          code: "MATH201",
+          teacher: "teacher2@example.com",
           students: ["studentB@example.com"],
-          assignments: [],
-          createdAt: "15/04/2023",
+          created: "2023-02-15T11:30:00Z",
+          archived: false,
         },
         {
           id: "course_103",
-          title: "Web Development Fundamentals",
-          createdBy: "teacher1@example.com",
-          description:
-            "Learn HTML, CSS, and JavaScript to build modern web applications.",
-          status: "draft",
+          name: "Web Development Fundamentals",
+          section: "C",
+          subject: "Web Development",
+          room: "Online",
+          code: "WEBDEV",
+          teacher: "teacher1@example.com",
           students: [],
-          assignments: [],
-          createdAt: "20/05/2023",
+          created: "2023-03-20T09:00:00Z",
+          archived: true, // Example archived course
+        },
+        {
+          id: "course_104",
+          name: "Data Science Basics",
+          section: "D",
+          subject: "Data Science",
+          room: "Lab 205",
+          code: "DATASCI",
+          teacher: "teacher2@example.com",
+          students: ["studentA@example.com", "studentB@example.com"],
+          created: "2023-04-01T14:00:00Z",
+          archived: false,
         },
       ];
-      localStorage.setItem("courses", JSON.stringify(dummyCourses));
+      localStorage.setItem("allCourses", JSON.stringify(dummyCourses));
+
+      // Populate dashboards for teachers and students
+      dummyCourses.forEach((course) => {
+        // Teacher's dashboard
+        const teacherDashboardKey = `dashboard_${course.teacher}`;
+        const teacherDashboard = JSON.parse(
+          localStorage.getItem(teacherDashboardKey) ||
+            '{"courses": [], "role": "teacher"}'
+        );
+        if (!teacherDashboard.courses.some((c) => c.id === course.id)) {
+          teacherDashboard.courses.push(course);
+          localStorage.setItem(
+            teacherDashboardKey,
+            JSON.stringify(teacherDashboard)
+          );
+        }
+
+        // Students' dashboards
+        if (course.students && course.students.length > 0) {
+          course.students.forEach((studentEmail) => {
+            const studentDashboardKey = `dashboard_${studentEmail}`;
+            const studentDashboard = JSON.parse(
+              localStorage.getItem(studentDashboardKey) ||
+                '{"courses": [], "role": "student"}'
+            );
+            if (!studentDashboard.courses.some((c) => c.id === course.id)) {
+              studentDashboard.courses.push(course);
+              localStorage.setItem(
+                studentDashboardKey,
+                JSON.stringify(studentDashboard)
+              );
+            }
+          });
+        }
+      });
     }
 
     if (!localStorage.getItem("assignments")) {
@@ -1848,6 +2652,15 @@ document.addEventListener("DOMContentLoaded", function () {
           recipients: "all",
           createdBy: "tanvir479@gmail.com",
           createdAt: "2023-07-20 17:00:00",
+        },
+        {
+          id: 2,
+          title: "নতুন কোর্স যোগ করা হয়েছে",
+          message:
+            "শিক্ষার্থীদের জন্য নতুন কোর্স 'ডেটা সায়েন্স বেসিকস' যোগ করা হয়েছে।",
+          recipients: "students",
+          createdBy: "tanvir479@gmail.com",
+          createdAt: "2023-07-22 10:00:00",
         },
       ];
       localStorage.setItem("announcements", JSON.stringify(dummyAnnouncements));

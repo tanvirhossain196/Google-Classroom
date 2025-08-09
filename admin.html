@@ -2,185 +2,248 @@
 <html lang="bn">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>প্রশাসনিক প্যানেল - ক্লাসরুম</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - Classroom</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts - Inter (for modern typography) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <!-- Material Icons for Course Cards -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom Admin Panel Styles -->
+    <link rel="stylesheet" href="admin.css" />
 </head>
 
 <body class="light-theme font-medium font-inter" id="mainBody">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
-                <button class="btn btn-link p-2 me-3" id="menuToggle">
+                <!-- Sidebar Toggle Button -->
+                <button class="btn btn-link p-2 me-3 text-primary d-lg-none" id="menuToggle"
+                    aria-label="Toggle Sidebar">
                     <i class="fas fa-bars fs-5"></i>
                 </button>
-                <a class="navbar-brand fw-normal text-muted" href="#">
-                    <span>ক্লাসরুম প্রশাসনিক প্যানেল</span>
+                <!-- Brand Logo/Text -->
+                <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="#">
+                    <i class="fas fa-chalkboard-teacher me-2 fs-4"></i>
+                    <span class="d-none d-sm-inline">Classroom Admin</span>
                 </a>
             </div>
             <div class="d-flex align-items-center flex-grow-1 justify-content-end">
                 <!-- Search Input -->
-                <div class="input-group me-3" style="max-width: 300px;">
-                    <input type="text" class="form-control" placeholder="অনুসন্ধান করুন..." aria-label="Search"
-                        id="navbarSearchInput">
-                    <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                <div class="input-group me-3 d-none d-md-flex" style="max-width: 350px">
+                    <input type="text" class="form-control rounded-pill ps-3" placeholder="অনুসন্ধান করুন..."
+                        aria-label="Search" id="navbarSearchInput" />
+                    <button class="btn btn-link text-muted position-absolute end-0 me-2" type="button"
+                        aria-label="Search Button">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
 
                 <!-- Theme Toggle -->
-                <button class="btn btn-link p-2 me-3" id="themeToggle">
+                <button class="btn btn-link p-2 me-3 text-muted" id="themeToggle" aria-label="Toggle Theme">
                     <i class="fas fa-moon fs-5" id="themeIcon"></i>
                 </button>
 
-                <div class="dropdown">
-                    <button class="btn btn-warning me-2" id="notificationBtn">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge bg-danger" id="notificationCount">3</span>
+                <!-- Notifications Dropdown -->
+                <div class="dropdown me-2">
+                    <button class="btn btn-light position-relative rounded-circle p-2" id="notificationBtn"
+                        type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
+                        <i class="fas fa-bell text-secondary"></i>
+                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill"
+                            id="notificationCount">3</span>
                     </button>
-                    <button class="btn btn-link p-0 me-3" type="button" data-bs-toggle="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 mt-2">
+                        <li class="dropdown-header fw-bold text-muted">Notice</li>
+                        <li>
+                            <hr class="dropdown-divider my-1" />
+                        </li>
+                        <li><a class="dropdown-item d-flex align-items-center py-2" href="#"><i
+                                    class="fas fa-file-alt me-2 text-info"></i>New Assignment Submitted</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center py-2" href="#"><i
+                                    class="fas fa-sync-alt me-2 text-warning"></i>System Update Available</a></li>
+                        <li><a class="dropdown-item d-flex align-items-center py-2" href="#"><i
+                                    class="fas fa-user-plus me-2 text-success"></i>New User Registered</a></li>
+                        <li>
+                            <hr class="dropdown-divider my-1" />
+                        </li>
+                        <li><a class="dropdown-item text-center text-primary fw-bold" href="#">View All
+                                Notifications</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- User Profile Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                        aria-label="User Profile">
                         <div class="user-avatar-header" id="headerAvatar">
                             <span id="headerUserInitial">A</span>
                         </div>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#" id="editAdminProfileBtn">
-                                <i class="fas fa-user me-2"></i>প্রোফাইল
-                            </a></li>
-                        <li><a class="dropdown-item" href="settings.html">
-                                <i class="fas fa-cog me-2"></i>সেটিংস
-                            </a></li>
-                        <li>
-                            <hr class="dropdown-divider">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 mt-2">
+                        <li class="dropdown-header text-center">
+                            <div class="user-avatar-header mx-auto mb-2"
+                                style="width: 50px; height: 50px; font-size: 20px;">
+                                <span id="dropdownUserInitial">A</span>
+                            </div>
+                            <h6 class="mb-0" id="dropdownUserName">Admin</h6>
+                            <small class="text-muted" id="dropdownUserEmail">admin@example.com</small>
                         </li>
-                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
-                                <i class="fas fa-sign-out-alt me-2"></i>লগআউট
-                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="#" id="editAdminProfileBtn">
+                                <i class="fas fa-user-circle me-2 text-primary"></i>Edit Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="settings.html">
+                                <i class="fas fa-cog me-2 text-secondary"></i>Settings
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2 text-danger fw-bold" href="#"
+                                id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h5 class="sidebar-title">প্রশাসনিক মেনু</h5>
-        </div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar shadow-lg" id="sidebar">
         <nav class="sidebar-nav">
             <a href="#overview" class="nav-item active" data-section="overview">
                 <i class="fas fa-home"></i>
-                <span class="nav-text">ওভারভিউ</span>
+                <span class="nav-text">Overview</span>
             </a>
             <a href="#users" class="nav-item" data-section="users">
                 <i class="fas fa-users"></i>
-                <span class="nav-text">ব্যবহারকারী</span>
+                <span class="nav-text">Users</span>
             </a>
             <a href="#courses" class="nav-item" data-section="courses">
                 <i class="fas fa-book"></i>
-                <span class="nav-text">কোর্স</span>
+                <span class="nav-text">Courses</span>
             </a>
             <a href="#assignments" class="nav-item" data-section="assignments">
                 <i class="fas fa-tasks"></i>
-                <span class="nav-text">অ্যাসাইনমেন্ট</span>
+                <span class="nav-text">Assignments</span>
+            </a>
+            <a href="#announcements" class="nav-item" data-section="announcements">
+                <i class="fas fa-bullhorn"></i>
+                <span class="nav-text">Announcements</span>
             </a>
             <a href="#analytics" class="nav-item" data-section="analytics">
                 <i class="fas fa-chart-line"></i>
-                <span class="nav-text">অ্যানালিটিক্স</span>
-            </a>
-            <a href="#communications" class="nav-item" data-section="communications">
-                <i class="fas fa-comments"></i>
-                <span class="nav-text">যোগাযোগ</span>
+                <span class="nav-text">Analytics</span>
             </a>
             <a href="#system" class="nav-item" data-section="system">
                 <i class="fas fa-server"></i>
-                <span class="nav-text">সিস্টেম</span>
+                <span class="nav-text">System</span>
             </a>
             <a href="#security" class="nav-item" data-section="security">
                 <i class="fas fa-shield-alt"></i>
-                <span class="nav-text">নিরাপত্তা</span>
+                <span class="nav-text">Security</span>
             </a>
         </nav>
     </div>
 
+    <!-- Main Content Area -->
     <div class="main-content" id="mainContent">
         <div class="container-fluid">
             <!-- Overview Section -->
             <div class="admin-section active" id="overview">
-                <div class="page-header">
+                <div class="page-header mb-4">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">প্রশাসনিক প্যানেল</h1>
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">Admin Panel</h1>
+                            <p class="text-muted lead">A quick overview of your classroom platform</p>
                         </div>
-                        <div class="col-auto">
-                            <div class="admin-welcome">
-                                <span class="welcome-text">স্বাগতম, <strong id="adminName">প্রশাসক</strong></span>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <div class="admin-welcome p-3 rounded-pill bg-light-primary d-inline-block">
+                                <span class="welcome-text text-primary fw-bold">Welcome, <strong
+                                        id="adminName">Admin</strong></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row g-4 mb-4">
+                <!-- Dashboard Stats Cards -->
+                <div class="row g-4 mb-5">
                     <div class="col-md-6 col-lg-3">
-                        <div class="card stats-card">
-                            <div class="card-body">
+                        <div class="card stats-card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
                                 <div class="d-flex align-items-center">
-                                    <div class="stats-icon bg-primary">
-                                        <i class="fas fa-users"></i>
+                                    <div class="stats-icon bg-primary rounded-3 p-3 me-3">
+                                        <i class="fas fa-users text-white fs-4"></i>
                                     </div>
-                                    <div class="ms-3">
-                                        <h6 class="card-subtitle mb-1">মোট ব্যবহারকারী</h6>
-                                        <h3 class="card-title mb-0" id="totalUsers">০</h3>
-                                        <small class="text-success" id="userGrowth">+০ নতুন এই মাসে</small>
+                                    <div>
+                                        <h6 class="card-subtitle text-muted mb-1">Total Users</h6>
+                                        <h3 class="card-title text-dark mb-0 fw-bold" id="totalUsers">0</h3>
+                                        <small class="text-success fw-medium" id="userGrowth"><i
+                                                class="fas fa-arrow-up me-1"></i>+0 New This Month</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-3">
-                        <div class="card stats-card">
-                            <div class="card-body">
+                        <div class="card stats-card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
                                 <div class="d-flex align-items-center">
-                                    <div class="stats-icon bg-success">
-                                        <i class="fas fa-graduation-cap"></i>
+                                    <div class="stats-icon bg-success rounded-3 p-3 me-3">
+                                        <i class="fas fa-graduation-cap text-white fs-4"></i>
                                     </div>
-                                    <div class="ms-3">
-                                        <h6 class="card-subtitle mb-1">মোট কোর্স</h6>
-                                        <h3 class="card-title mb-0" id="totalCourses">০</h3>
-                                        <small class="text-success" id="courseGrowth">+০ নতুন কোর্স</small>
+                                    <div>
+                                        <h6 class="card-subtitle text-muted mb-1">Total Courses</h6>
+                                        <h3 class="card-title text-dark mb-0 fw-bold" id="totalCourses">0</h3>
+                                        <small class="text-success fw-medium" id="courseGrowth"><i
+                                                class="fas fa-arrow-up me-1"></i>+0 New This Month</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-3">
-                        <div class="card stats-card">
-                            <div class="card-body">
+                        <div class="card stats-card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
                                 <div class="d-flex align-items-center">
-                                    <div class="stats-icon bg-warning">
-                                        <i class="fas fa-tasks"></i>
+                                    <div class="stats-icon bg-warning rounded-3 p-3 me-3">
+                                        <i class="fas fa-tasks text-white fs-4"></i>
                                     </div>
-                                    <div class="ms-3">
-                                        <h6 class="card-subtitle mb-1">সক্রিয় অ্যাসাইনমেন্ট</h6>
-                                        <h3 class="card-title mb-0" id="activeAssignments">০</h3>
-                                        <small class="text-info">চলমান</small>
+                                    <div>
+                                        <h6 class="card-subtitle text-muted mb-1">Active Assignments</h6>
+                                        <h3 class="card-title text-dark mb-0 fw-bold" id="activeAssignments">0</h3>
+                                        <small class="text-info fw-medium">Ongoing</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-3">
-                        <div class="card stats-card">
-                            <div class="card-body">
+                        <div class="card stats-card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
                                 <div class="d-flex align-items-center">
-                                    <div class="stats-icon bg-info">
-                                        <i class="fas fa-chart-bar"></i>
+                                    <div class="stats-icon bg-info rounded-3 p-3 me-3">
+                                        <i class="fas fa-heartbeat text-white fs-4"></i>
                                     </div>
-                                    <div class="ms-3">
-                                        <h6 class="card-subtitle mb-1">সিস্টেম স্বাস্থ্য</h6>
-                                        <h3 class="card-title mb-0" id="systemHealth">১০০%</h3>
-                                        <small class="text-success">চমৎকার</small>
+                                    <div>
+                                        <h6 class="card-subtitle text-muted mb-1">System Health</h6>
+                                        <h3 class="card-title text-dark mb-0 fw-bold" id="systemHealth">100%</h3>
+                                        <small class="text-success fw-medium">Excellent</small>
                                     </div>
                                 </div>
                             </div>
@@ -188,13 +251,14 @@
                     </div>
                 </div>
 
+                <!-- Recent Activity Card -->
                 <div class="row g-4">
                     <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">সাম্প্রতিক কার্যকলাপ</h5>
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">Recent Activity</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-4">
                                 <div class="activity-feed" id="activityFeed">
                                     <!-- Activity items will be populated by JavaScript -->
                                 </div>
@@ -206,65 +270,71 @@
 
             <!-- User Management Section -->
             <div class="admin-section" id="users">
-                <div class="page-header">
+                <div class="page-header mb-4">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">ব্যবহারকারী ব্যবস্থাপনা</h1>
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">User Management</h1>
+                            <p class="text-muted lead">Manage system users</p>
                         </div>
-                        <div class="col-auto">
-                            <button class="btn btn-primary" id="addUserBtn">
-                                <i class="fas fa-plus me-2"></i>নতুন ব্যবহারকারী
+                        <div
+                            class="col-md-4 text-md-end mt-3 mt-md-0 d-flex flex-column flex-md-row justify-content-md-end gap-2">
+                            <button class="btn btn-primary rounded-pill px-4 py-2 shadow-sm" id="addUserBtn">
+                                <i class="fas fa-plus me-2"></i>Add User
                             </button>
-                            <button class="btn btn-success" id="bulkUploadBtn">
-                                <i class="fas fa-upload me-2"></i>বাল্ক আপলোড
+                            <button class="btn btn-success rounded-pill px-4 py-2 shadow-sm" id="bulkUploadBtn">
+                                <i class="fas fa-upload me-2"></i>Bulk Upload
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row g-3 mb-3">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="userSearch"
-                                    placeholder="নাম বা ইমেইল খুঁজুন...">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0 rounded-start-pill"><i
+                                            class="fas fa-search text-muted"></i></span>
+                                    <input type="text" class="form-control rounded-end-pill" id="userSearch"
+                                        placeholder="নাম বা ইমেইল খুঁজুন..." />
+                                </div>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select" id="roleFilter">
-                                    <option value="">সব ভূমিকা</option>
-                                    <option value="admin">প্রশাসক</option>
-                                    <option value="teacher">শিক্ষক</option>
-                                    <option value="student">শিক্ষার্থী</option>
+                                <select class="form-select rounded-pill" id="roleFilter">
+                                    <option value="">All Roles</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="student">Student</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select" id="statusFilter">
-                                    <option value="">সব অবস্থা</option>
-                                    <option value="active">সক্রিয়</option>
-                                    <option value="inactive">নিষ্ক্রিয়</option>
+                                <select class="form-select rounded-pill" id="statusFilter">
+                                    <option value="">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <button class="btn btn-info w-100" id="exportUsersBtn">
-                                    <i class="fas fa-download me-2"></i>এক্সপোর্ট
+                                <button class="btn btn-info w-100 rounded-pill px-4 py-2 shadow-sm" id="exportUsersBtn">
+                                    <i class="fas fa-download me-2"></i>Export
                                 </button>
                             </div>
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
+                            <table class="table table-hover align-middle">
+                                <thead class="bg-light rounded-top-4">
                                     <tr>
-                                        <th>
-                                            <input type="checkbox" id="selectAllUsers">
+                                        <th class="py-3 ps-4 rounded-top-start-4">
+                                            <input type="checkbox" id="selectAllUsers" />
                                         </th>
-                                        <th>নাম</th>
-                                        <th>ইমেইল</th>
-                                        <th>ভূমিকা</th>
-                                        <th>অবস্থা</th>
-                                        <th>যোগদানের তারিখ</th>
-                                        <th>শেষ লগইন</th>
-                                        <th>কার্যক্রম</th>
+                                        <th class="py-3">Name</th>
+                                        <th class="py-3">Email</th>
+                                        <th class="py-3">Role</th>
+                                        <th class="py-3">Status</th>
+                                        <th class="py-3">Join Date</th>
+                                        <th class="py-3">Last Login</th>
+                                        <th class="py-3 pe-4 rounded-top-end-4">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="usersTableBody">
@@ -278,43 +348,48 @@
 
             <!-- Course Management Section -->
             <div class="admin-section" id="courses">
-                <div class="page-header">
+                <div class="page-header mb-4">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">কোর্স ব্যবস্থাপনা</h1>
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">Course Management</h1>
+                            <p class="text-muted lead">Manage courses available on the platform</p>
                         </div>
-                        <div class="col-auto">
-                            <button class="btn btn-primary" id="createCourseBtn">
-                                <i class="fas fa-plus me-2"></i>নতুন কোর্স
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-primary rounded-pill px-4 py-2 shadow-sm" id="createCourseBtn">
+                                <i class="fas fa-plus me-2"></i>Add Course
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row g-3 mb-3">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="courseSearch"
-                                    placeholder="কোর্সের নাম খুঁজুন...">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0 rounded-start-pill"><i
+                                            class="fas fa-search text-muted"></i></span>
+                                    <input type="text" class="form-control rounded-end-pill" id="courseSearch"
+                                        placeholder="কোর্সের নাম খুঁজুন..." />
+                                </div>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select" id="courseStatusFilter">
-                                    <option value="">সব অবস্থা</option>
-                                    <option value="active">সক্রিয়</option>
-                                    <option value="archived">আর্কাইভ</option>
-                                    <option value="draft">খসড়া</option>
+                                <select class="form-select rounded-pill" id="courseStatusFilter">
+                                    <option value="">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="archived">Archived</option>
+                                    <option value="draft">Draft</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select" id="courseTeacherFilter">
-                                    <option value="">সব শিক্ষক</option>
+                                <select class="form-select rounded-pill" id="courseTeacherFilter">
+                                    <option value="">All Teachers</option>
                                     <!-- Teacher options will be populated by JavaScript -->
                                 </select>
                             </div>
                         </div>
 
-                        <div class="courses-grid" id="coursesGrid">
+                        <div class="courses-grid-admin" id="coursesGridAdmin">
                             <!-- Course cards will be populated by JavaScript -->
                         </div>
                     </div>
@@ -323,14 +398,15 @@
 
             <!-- Assignment Management Section -->
             <div class="admin-section" id="assignments">
-                <div class="page-header">
+                <div class="page-header mb-4">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">অ্যাসাইনমেন্ট ব্যবস্থাপনা</h1>
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">Assignment Management</h1>
+                            <p class="text-muted lead">Create and manage assignments for students</p>
                         </div>
-                        <div class="col-auto">
-                            <button class="btn btn-primary" id="createAssignmentBtn">
-                                <i class="fas fa-plus me-2"></i>নতুন অ্যাসাইনমেন্ট
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-primary rounded-pill px-4 py-2 shadow-sm" id="createAssignmentBtn">
+                                <i class="fas fa-plus me-2"></i>Add Assignment
                             </button>
                         </div>
                     </div>
@@ -338,20 +414,20 @@
 
                 <div class="row g-4">
                     <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
+                                    <table class="table table-hover align-middle">
+                                        <thead class="bg-light rounded-top-4">
                                             <tr>
-                                                <th>অ্যাসাইনমেন্ট</th>
-                                                <th>কোর্স</th>
-                                                <th>শিক্ষক</th>
-                                                <th>জমা দেওয়ার তারিখ</th>
-                                                <th>জমা</th>
-                                                <th>গ্রেড</th>
-                                                <th>অবস্থা</th>
-                                                <th>কার্যক্রম</th>
+                                                <th class="py-3 ps-4 rounded-top-start-4">Assignment</th>
+                                                <th class="py-3">Course</th>
+                                                <th class="py-3">Teacher</th>
+                                                <th class="py-3">Due Date</th>
+                                                <th class="py-3">Submission</th>
+                                                <th class="py-3">Grade</th>
+                                                <th class="py-3">Status</th>
+                                                <th class="py-3 pe-4 rounded-top-end-4">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody id="assignmentsTableBody">
@@ -365,55 +441,17 @@
                 </div>
             </div>
 
-            <!-- Analytics Section -->
-            <div class="admin-section" id="analytics">
-                <div class="page-header">
+            <!-- Announcements Section -->
+            <div class="admin-section" id="announcements">
+                <div class="page-header mb-4">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">সিস্টেম অ্যানালিটিক্স</h1>
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">Announcement Management</h1>
+                            <p class="text-muted lead">Send important announcements to users</p>
                         </div>
-                        <div class="col-auto">
-                            <button class="btn btn-primary" id="generateReportBtn">
-                                <i class="fas fa-chart-line me-2"></i>রিপোর্ট তৈরি করুন
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">ব্যবহারকারী সক্রিয়তা</h5>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="userActivityChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">কোর্স পারফরম্যান্স</h5>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="coursePerformanceChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Communications Section -->
-            <div class="admin-section" id="communications">
-                <div class="page-header">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">যোগাযোগ ব্যবস্থাপনা</h1>
-                        </div>
-                        <div class="col-auto">
-                            <button class="btn btn-primary" id="sendAnnouncementBtn">
-                                <i class="fas fa-bullhorn me-2"></i>ঘোষণা পাঠান
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-primary rounded-pill px-4 py-2 shadow-sm" id="newAnnouncementBtn">
+                                <i class="fas fa-plus me-2"></i>Add Announcement
                             </button>
                         </div>
                     </div>
@@ -421,45 +459,57 @@
 
                 <div class="row g-4">
                     <div class="col-lg-8">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">সাম্প্রতিক বার্তা</h5>
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">Recent Announcements</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="messages-list" id="messagesList">
-                                    <!-- Messages will be populated by JavaScript -->
+                            <div class="card-body p-4">
+                                <div class="announcements-list" id="announcementsList">
+                                    <!-- Announcements will be populated by JavaScript -->
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">ঘোষণা পাঠান</h5>
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold" id="announcementFormTitle">Send
+                                    Announcement
+                                </h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-4">
                                 <form id="announcementForm">
+                                    <input type="hidden" id="announcementId" />
                                     <div class="mb-3">
-                                        <label class="form-label">বিষয়</label>
-                                        <input type="text" class="form-control" id="announcementTitle" required>
+                                        <label for="announcementTitle"
+                                            class="form-label text-muted fw-medium">Subject</label>
+                                        <input type="text" class="form-control rounded-pill" id="announcementTitle"
+                                            required />
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">বার্তা</label>
-                                        <!-- Placeholder for Rich Text Editor -->
-                                        <textarea class="form-control" id="announcementMessage" rows="4"
+                                    <div class="mb-3 announcement-textarea-wrapper">
+                                        <label for="announcementMessage"
+                                            class="form-label text-muted fw-medium">Message</label>
+                                        <textarea class="form-control rounded-3" id="announcementMessage" rows="2"
                                             required></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">প্রাপক</label>
-                                        <select class="form-select" id="announcementRecipients" required>
-                                            <option value="">নির্বাচন করুন</option>
-                                            <option value="all">সবাই</option>
-                                            <option value="students">শিক্ষার্থীরা</option>
-                                            <option value="teachers">শিক্ষকরা</option>
+                                        <label for="announcementRecipients"
+                                            class="form-label text-muted fw-medium">Recipients</label>
+                                        <select class="form-select rounded-pill" id="announcementRecipients" required>
+                                            <option value="">Select</option>
+                                            <option value="all">All</option>
+                                            <option value="students">Students</option>
+                                            <option value="teachers">Teachers</option>
                                         </select>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fas fa-paper-plane me-2"></i>পাঠান
+                                    <button type="submit" class="btn btn-primary w-100 rounded-pill px-4 py-2 shadow-sm"
+                                        id="saveAnnouncementBtn">
+                                        <i class="fas fa-paper-plane me-2"></i>Send
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-secondary w-100 rounded-pill px-4 py-2 mt-2 d-none"
+                                        id="cancelAnnouncementEditBtn">
+                                        Cancel
                                     </button>
                                 </form>
                             </div>
@@ -468,55 +518,122 @@
                 </div>
             </div>
 
-            <!-- System Section -->
-            <div class="admin-section" id="system">
-                <div class="page-header">
+            <!-- Analytics Section -->
+            <div class="admin-section" id="analytics">
+                <div class="page-header mb-4">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">সিস্টেম ব্যবস্থাপনা</h1>
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">System Analytics</h1>
+                            <p class="text-muted lead">Analyze platform performance and user trends
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-primary rounded-pill px-4 py-2 shadow-sm" id="generateReportBtn">
+                                <i class="fas fa-chart-bar me-2"></i>Generate Report
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="row g-4">
                     <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">সিস্টেম তথ্য</h5>
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">User Activity</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-4">
+                                <canvas id="userActivityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">Course Performance</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <canvas id="coursePerformanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">User Roles</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <canvas id="userRoleChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">Course Status</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <canvas id="courseStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Section -->
+            <div class="admin-section" id="system">
+                <div class="page-header mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">System Management</h1>
+                            <p class="text-muted lead">Monitor and manage the health and performance of the system</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">System Information</h5>
+                            </div>
+                            <div class="card-body p-4">
                                 <div class="system-info">
-                                    <div class="info-item">
-                                        <span class="info-label">সিস্টেম ভার্সন</span>
-                                        <span class="info-value">v2.5.0</span>
+                                    <div
+                                        class="info-item d-flex justify-content-between align-items-center p-3 rounded-3 mb-2">
+                                        <span class="info-label text-muted fw-medium">System Version</span>
+                                        <span class="info-value text-dark fw-bold">v2.5.0</span>
                                     </div>
-                                    <div class="info-item">
-                                        <span class="info-label">আপটাইম</span>
-                                        <span class="info-value">৯৮.৫%</span>
+                                    <div
+                                        class="info-item d-flex justify-content-between align-items-center p-3 rounded-3 mb-2">
+                                        <span class="info-label text-muted fw-medium">Uptime</span>
+                                        <span class="info-value text-dark fw-bold">98.5%</span>
                                     </div>
-                                    <div class="info-item">
-                                        <span class="info-label">ডেটাবেস সাইজ</span>
-                                        <span class="info-value">২.৪ GB</span>
+                                    <div
+                                        class="info-item d-flex justify-content-between align-items-center p-3 rounded-3">
+                                        <span class="info-label text-muted fw-medium">Database Size</span>
+                                        <span class="info-value text-dark fw-bold">2.4 GB</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">সিস্টেম কার্যক্রম</h5>
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">System Operations</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary" id="systemBackupBtn">
-                                        <i class="fas fa-download me-2"></i>ব্যাকআপ তৈরি করুন
+                            <div class="card-body p-4">
+                                <div class="d-grid gap-3">
+                                    <button class="btn btn-primary rounded-pill px-4 py-2 shadow-sm"
+                                        id="systemBackupBtn">
+                                        <i class="fas fa-download me-2"></i>Backup System
                                     </button>
-                                    <button class="btn btn-warning" id="systemMaintenanceBtn">
-                                        <i class="fas fa-tools me-2"></i>রক্ষণাবেক্ষণ মোড
+                                    <button class="btn btn-warning rounded-pill px-4 py-2 shadow-sm"
+                                        id="systemMaintenanceBtn">
+                                        <i class="fas fa-tools me-2"></i>Maintenance Mode
                                     </button>
-                                    <button class="btn btn-info" id="systemUpdateBtn">
-                                        <i class="fas fa-sync me-2"></i>আপডেট চেক করুন
+                                    <button class="btn btn-info rounded-pill px-4 py-2 shadow-sm" id="systemUpdateBtn">
+                                        <i class="fas fa-sync me-2"></i>Check for Updates
                                     </button>
                                 </div>
                             </div>
@@ -527,30 +644,31 @@
 
             <!-- Security Section -->
             <div class="admin-section" id="security">
-                <div class="page-header">
+                <div class="page-header mb-4">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="page-title">নিরাপত্তা ব্যবস্থাপনা</h1>
+                        <div class="col-md-8">
+                            <h1 class="page-title text-primary mb-2">Security Management</h1>
+                            <p class="text-muted lead">Monitor and review system security and logs</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="row g-4">
                     <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">নিরাপত্তা লগ</h5>
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="card-title text-dark mb-0 fw-bold">Security Logs</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-4">
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
+                                    <table class="table table-hover align-middle">
+                                        <thead class="bg-light rounded-top-4">
                                             <tr>
-                                                <th>সময়</th>
-                                                <th>ব্যবহারকারী</th>
-                                                <th>কার্যক্রম</th>
-                                                <th>IP ঠিকানা</th>
-                                                <th>অবস্থা</th>
+                                                <th class="py-3 ps-4 rounded-top-start-4">Time</th>
+                                                <th class="py-3">User</th>
+                                                <th class="py-3">Action</th>
+                                                <th class="py-3">IP Address</th>
+                                                <th class="py-3 pe-4 rounded-top-end-4">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody id="securityLogTableBody">
@@ -566,278 +684,346 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-light border-top shadow-sm">
+        <div class="container-fluid text-center text-muted">
+            &copy; <span id="currentYear"></span> Classroom Admin Panel. All rights reserved.
+        </div>
+    </footer>
+
     <!-- User Profile Modal (View Only) -->
-    <div class="modal fade" id="userProfileModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">ব্যবহারকারী প্রোফাইল</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold text-primary" id="userProfileModalLabel">User Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="row">
-                        <div class="col-md-6">
-                            <h6>ব্যক্তিগত তথ্য</h6>
-                            <p><strong>ইমেইল:</strong> <span id="profileUserEmail"></span></p>
-                            <p><strong>নাম:</strong> <span id="profileUserName"></span></p>
-                            <p><strong>ফোন:</strong> <span id="profileUserPhone"></span></p>
-                            <p><strong>ঠিকানা:</strong> <span id="profileUserAddress"></span></p>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-bold text-secondary mb-3">Personal Information</h6>
+                            <p class="mb-2"><strong>Email:</strong> <span id="profileUserEmail"
+                                    class="text-dark"></span></p>
+                            <p class="mb-2"><strong>Name:</strong> <span id="profileUserName" class="text-dark"></span>
+                            </p>
+                            <p class="mb-2"><strong>Phone:</strong> <span id="profileUserPhone"
+                                    class="text-dark"></span>
+                            </p>
+                            <p class="mb-2"><strong>Address:</strong> <span id="profileUserAddress"
+                                    class="text-dark"></span></p>
                         </div>
-                        <div class="col-md-6">
-                            <h6>কার্যকলাপ</h6>
-                            <p><strong>তৈরি কোর্স:</strong> <span id="userCreatedCourses"></span></p>
-                            <p><strong>যোগদান কোর্স:</strong> <span id="userEnrolledCourses"></span></p>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-bold text-secondary mb-3">Activity</h6>
+                            <p class="mb-2">
+                                <strong>Created Courses:</strong>
+                                <span id="userCreatedCourses" class="text-dark"></span>
+                            </p>
+                            <p class="mb-2">
+                                <strong>Enrolled Courses:</strong>
+                                <span id="userEnrolledCourses" class="text-dark"></span>
+                            </p>
+                            <p class="mb-2">
+                                <strong>Role:</strong>
+                                <span id="profileUserRole" class="text-dark"></span>
+                            </p>
+                            <p class="mb-2">
+                                <strong>Status:</strong>
+                                <span id="profileUserStatus" class="text-dark"></span>
+                            </p>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12">
-                            <h6>বায়ো</h6>
-                            <p id="profileUserBio"></p>
+                            <h6 class="fw-bold text-secondary mb-3">Bio</h6>
+                            <p id="profileUserBio" class="text-dark"></p>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বন্ধ করুন</button>
-                    <button type="button" class="btn btn-primary" id="editUserFromProfile">সম্পাদনা করুন</button>
+                <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" id="editUserFromProfile">
+                        Edit
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Add User Modal -->
-    <div class="modal fade" id="addUserModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">নতুন ব্যবহারকারী যোগ করুন</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold text-primary" id="addUserModalLabel">Add New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="addUserForm">
                         <div class="mb-3">
-                            <label class="form-label">নাম</label>
-                            <input type="text" class="form-control" id="newUserName" required>
+                            <label for="newUserName" class="form-label text-muted fw-medium">Name</label>
+                            <input type="text" class="form-control rounded-pill" id="newUserName" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ইমেইল</label>
-                            <input type="email" class="form-control" id="newUserEmail" required>
+                            <label for="newUserEmail" class="form-label text-muted fw-medium">Email</label>
+                            <input type="email" class="form-control rounded-pill" id="newUserEmail" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ভূমিকা</label>
-                            <select class="form-select" id="newUserRole" required>
-                                <option value="">নির্বাচন করুন</option>
-                                <option value="student">শিক্ষার্থী</option>
-                                <option value="teacher">শিক্ষক</option>
-                                <option value="admin">প্রশাসক</option>
+                            <label for="newUserRole" class="form-label text-muted fw-medium">Role</label>
+                            <select class="form-select rounded-pill" id="newUserRole" required>
+                                <option value="">Select</option>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin">Admin</option>
                             </select>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                    <button type="button" class="btn btn-primary" id="saveUserBtn">সংরক্ষণ করুন</button>
+                <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" id="saveUserBtn">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Edit User Modal -->
-    <div class="modal fade" id="editUserModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">ব্যবহারকারী সম্পাদনা করুন</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold text-primary" id="editUserModalLabel">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="editUserForm">
-                        <input type="hidden" id="editUserId">
+                        <input type="hidden" id="editUserId" />
                         <div class="mb-3">
-                            <label class="form-label">নাম</label>
-                            <input type="text" class="form-control" id="editUserName" required>
+                            <label for="editUserName" class="form-label text-muted fw-medium">Name</label>
+                            <input type="text" class="form-control rounded-pill" id="editUserName" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ইমেইল</label>
-                            <input type="email" class="form-control" id="editUserEmail" readonly>
+                            <label for="editUserEmail" class="form-label text-muted fw-medium">Email</label>
+                            <input type="email" class="form-control rounded-pill" id="editUserEmail" readonly />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ভূমিকা</label>
-                            <select class="form-select" id="editUserRole" required>
-                                <option value="student">শিক্ষার্থী</option>
-                                <option value="teacher">শিক্ষক</option>
-                                <option value="admin">প্রশাসক</option>
+                            <label for="editUserRole" class="form-label text-muted fw-medium">Role</label>
+                            <select class="form-select rounded-pill" id="editUserRole" required>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin">Admin</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">অবস্থা</label>
-                            <select class="form-select" id="editUserStatus" required>
-                                <option value="active">সক্রিয়</option>
-                                <option value="inactive">নিষ্ক্রিয়</option>
+                            <label for="editUserStatus" class="form-label text-muted fw-medium">Status</label>
+                            <select class="form-select rounded-pill" id="editUserStatus" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ফোন</label>
-                            <input type="text" class="form-control" id="editUserPhone">
+                            <label for="editUserPhone" class="form-label text-muted fw-medium">Phone</label>
+                            <input type="text" class="form-control rounded-pill" id="editUserPhone" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ঠিকানা</label>
-                            <input type="text" class="form-control" id="editUserAddress">
+                            <label for="editUserAddress" class="form-label text-muted fw-medium">Address</label>
+                            <input type="text" class="form-control rounded-pill" id="editUserAddress" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">বায়ো</label>
-                            <textarea class="form-control" id="editUserBio" rows="3"></textarea>
+                            <label for="editUserBio" class="form-label text-muted fw-medium">Bio</label>
+                            <textarea class="form-control rounded-3" id="editUserBio" rows="3"></textarea>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                    <button type="button" class="btn btn-primary" id="saveEditedUserBtn">সংরক্ষণ করুন</button>
+                <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" id="saveEditedUserBtn">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Course Modal (Create/Edit) -->
-    <div class="modal fade" id="courseModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="courseModalTitle">নতুন কোর্স তৈরি করুন</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold text-primary" id="courseModalTitle">Create Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="courseForm">
-                        <input type="hidden" id="courseId">
+                        <input type="hidden" id="courseId" />
                         <div class="mb-3">
-                            <label class="form-label">কোর্সের নাম</label>
-                            <input type="text" class="form-control" id="courseTitle" required>
+                            <label for="courseTitle" class="form-label text-muted fw-medium">Course Name *</label>
+                            <input type="text" class="form-control rounded-pill" id="courseTitle" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">শিক্ষক</label>
-                            <select class="form-select" id="courseTeacher" required>
+                            <label for="courseSection" class="form-label text-muted fw-medium">Section</label>
+                            <input type="text" class="form-control rounded-pill" id="courseSection" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseSubject" class="form-label text-muted fw-medium">Subject</label>
+                            <input type="text" class="form-control rounded-pill" id="courseSubject" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseRoom" class="form-label text-muted fw-medium">Room</label>
+                            <input type="text" class="form-control rounded-pill" id="courseRoom" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseTeacher" class="form-label text-muted fw-medium">Teacher</label>
+                            <select class="form-select rounded-pill" id="courseTeacher" required>
                                 <!-- Teachers will be populated by JS -->
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">বিবরণ</label>
-                            <textarea class="form-control" id="courseDescription" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">অবস্থা</label>
-                            <select class="form-select" id="courseStatus" required>
-                                <option value="active">সক্রিয়</option>
-                                <option value="archived">আর্কাইভ</option>
-                                <option value="draft">খসড়া</option>
+                            <label for="courseStatus" class="form-label text-muted fw-medium">Status</label>
+                            <select class="form-select rounded-pill" id="courseStatus" required>
+                                <option value="active">Active</option>
+                                <option value="archived">Archived</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">শিক্ষার্থী যোগ করুন (ইমেইল দ্বারা, কমা দ্বারা বিভক্ত)</label>
-                            <input type="text" class="form-control" id="courseStudents">
+                            <label for="courseStudents" class="form-label text-muted fw-medium">Add Students
+                                (by Email, separated by commas)</label>
+                            <input type="text" class="form-control rounded-pill" id="courseStudents" />
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                    <button type="button" class="btn btn-primary" id="saveCourseBtn">সংরক্ষণ করুন</button>
+                <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" id="saveCourseBtn">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Assignment Modal (Create/Edit) -->
-    <div class="modal fade" id="assignmentModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="assignmentModalTitle">নতুন অ্যাসাইনমেন্ট তৈরি করুন</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="assignmentModal" tabindex="-1" aria-labelledby="assignmentModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold text-primary" id="assignmentModalTitle">
+                        Create New Assignment
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="assignmentForm">
-                        <input type="hidden" id="assignmentId">
+                        <input type="hidden" id="assignmentId" />
                         <div class="mb-3">
-                            <label class="form-label">অ্যাসাইনমেন্টের নাম</label>
-                            <input type="text" class="form-control" id="assignmentTitle" required>
+                            <label for="assignmentTitle" class="form-label text-muted fw-medium">Assignment
+                                Title</label>
+                            <input type="text" class="form-control rounded-pill" id="assignmentTitle" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">কোর্স</label>
-                            <select class="form-select" id="assignmentCourse" required>
+                            <label for="assignmentCourse" class="form-label text-muted fw-medium">Course</label>
+                            <select class="form-select rounded-pill" id="assignmentCourse" required>
                                 <!-- Courses will be populated by JS -->
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">বিবরণ</label>
-                            <!-- Placeholder for Rich Text Editor -->
-                            <textarea class="form-control" id="assignmentDescription" rows="4"></textarea>
+                            <label for="assignmentDescription"
+                                class="form-label text-muted fw-medium">Description</label>
+                            <textarea class="form-control rounded-3" id="assignmentDescription" rows="4"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">জমা দেওয়ার তারিখ</label>
-                            <input type="date" class="form-control" id="assignmentDueDate" required>
+                            <label for="assignmentDueDate" class="form-label text-muted fw-medium">Due Date</label>
+                            <input type="date" class="form-control rounded-pill" id="assignmentDueDate" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">অবস্থা</label>
-                            <select class="form-select" id="assignmentStatus" required>
-                                <option value="active">সক্রিয়</option>
-                                <option value="draft">খসড়া</option>
-                                <option value="closed">বন্ধ</option>
+                            <label for="assignmentStatus" class="form-label text-muted fw-medium">Status</label>
+                            <select class="form-select rounded-pill" id="assignmentStatus" required>
+                                <option value="active">Active</option>
+                                <option value="draft">Draft</option>
+                                <option value="closed">Closed</option>
                             </select>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                    <button type="button" class="btn btn-primary" id="saveAssignmentBtn">সংরক্ষণ করুন</button>
+                <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" id="saveAssignmentBtn">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Admin Profile Edit Modal -->
-    <div class="modal fade" id="adminProfileModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">প্রোফাইল সম্পাদনা করুন</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="adminProfileModal" tabindex="-1" aria-labelledby="adminProfileModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold text-primary" id="adminProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="adminProfileForm">
                         <div class="mb-3">
-                            <label class="form-label">নাম</label>
-                            <input type="text" class="form-control" id="adminProfileName" required>
+                            <label for="adminProfileName" class="form-label text-muted fw-medium">Name</label>
+                            <input type="text" class="form-control rounded-pill" id="adminProfileName" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ইমেইল</label>
-                            <input type="email" class="form-control" id="adminProfileEmail" readonly>
+                            <label for="adminProfileEmail" class="form-label text-muted fw-medium">Email</label>
+                            <input type="email" class="form-control rounded-pill" id="adminProfileEmail" readonly />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ফোন</label>
-                            <input type="text" class="form-control" id="adminProfilePhone">
+                            <label for="adminProfilePhone" class="form-label text-muted fw-medium">Phone</label>
+                            <input type="text" class="form-control rounded-pill" id="adminProfilePhone" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ঠিকানা</label>
-                            <input type="text" class="form-control" id="adminProfileAddress">
+                            <label for="adminProfileAddress" class="form-label text-muted fw-medium">Address</label>
+                            <input type="text" class="form-control rounded-pill" id="adminProfileAddress" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">বায়ো</label>
-                            <textarea class="form-control" id="adminProfileBio" rows="3"></textarea>
+                            <label for="adminProfileBio" class="form-label text-muted fw-medium">Bio</label>
+                            <textarea class="form-control rounded-3" id="adminProfileBio" rows="3"></textarea>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                    <button type="button" class="btn btn-primary" id="saveAdminProfileBtn">সংরক্ষণ করুন</button>
+                <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" id="saveAdminProfileBtn">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <!-- Bootstrap 5 JavaScript Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js for Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Optional: Rich Text Editor Library (e.g., TinyMCE, Quill, CKEditor) -->
-    <!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
+    <!-- Custom Admin Panel JavaScript -->
     <script src="admin.js"></script>
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>
