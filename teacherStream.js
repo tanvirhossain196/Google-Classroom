@@ -1,11 +1,10 @@
-// MultipleFiles/stream.js
+// teacherStream.js
 class StreamManager {
   constructor() {
     this.attachments = [];
     this.availableCourses = []; // ব্যবহারকারীর তৈরি করা কোর্সগুলো এখানে থাকবে
     this.availableStudents = []; // সমস্ত উপলব্ধ শিক্ষার্থী এখানে থাকবে
     this.selectedCourses = [];
-    this.selectedStudents = [];
     this.assignToAll = true; // For classwork assignment
     this.isAnnouncementExpanded = false;
     this.currentEditingId = null; // Track which post is being edited
@@ -44,8 +43,8 @@ class StreamManager {
       userInitial: document.getElementById("userInitial"),
       streamPosts: document.getElementById("streamPosts"),
       noPosts: document.getElementById("noPosts"),
-      classesLink: document.getElementById("classesLink"),
-      settingsLink: document.getElementById("settingsLink"),
+      classesLink: document.getElementById("classesLink"), // Added
+      settingsLink: document.getElementById("settingsLink"), // Added
       currentCourseName: document.getElementById("currentCourseName"),
       courseHeaderSection: document.querySelector(".course-header-section"),
       courseCodeText: document.getElementById("courseCodeText"),
@@ -78,12 +77,14 @@ class StreamManager {
     // Enhanced navigation
     this.elements.classesLink.addEventListener("click", (e) => {
       e.preventDefault();
-      this.goToDashboard();
+      this.navigateWithAnimation("teacher.html"); // Updated
     });
 
-    this.elements.settingsLink.addEventListener("click", () =>
-      this.navigateWithAnimation("settings.html")
-    );
+    this.elements.settingsLink.addEventListener("click", (e) => {
+      // Updated
+      e.preventDefault(); // Prevent default link behavior
+      this.navigateWithAnimation("teacherSettings.html"); // Updated
+    });
 
     // Course code display click
     if (this.elements.courseCodeDisplay) {
@@ -178,7 +179,7 @@ class StreamManager {
 
   showErrorAndRedirect(message) {
     alert(message);
-    this.navigateWithAnimation("dashboard.html");
+    this.navigateWithAnimation("teacherStream.html");
   }
 
   setupProfessionalFeatures() {
@@ -218,7 +219,7 @@ class StreamManager {
   goToDashboard() {
     // Selected course clear করুন
     localStorage.removeItem("selectedCourse");
-    this.navigateWithAnimation("dashboard.html");
+    this.navigateWithAnimation("teacher.html"); // Updated
   }
 
   // Load upcoming assignments from classwork
@@ -274,7 +275,7 @@ class StreamManager {
 
   // Open assignment details
   openAssignment(assignmentId) {
-    // Navigate to assignment page or show modal
+    // Show notification for now
     this.showNotification("Opening assignment...", "info");
     // In a real implementation, this would navigate to the assignment details
   }
@@ -1477,16 +1478,8 @@ class StreamManager {
     // Store assignment details
     localStorage.setItem("selectedAssignment", JSON.stringify(assignment));
 
-    // Get user role from localStorage
-    const userRole = localStorage.getItem("userRole");
-
-    // Redirect based on role
-    if (userRole === "teacher") {
-      window.location.href = "instruction.html";
-    } else {
-      // Default for students or other roles
-      window.location.href = "assignment-page.html";
-    }
+    // Teachers are redirected to 'instruction.html'
+    window.location.href = "instruction.html";
   }
 
   createAttachmentElement(attachment) {
@@ -1653,7 +1646,7 @@ class StreamManager {
         ) {
           this.hideConfirmationModal();
         } else if (this.isAnnouncementExpanded && !this.currentEditingId) {
-          // Only cancel if not currently editing a post
+          // Only cancel if the editor is empty and not currently editing a post
           this.cancelAnnouncement();
         }
       }

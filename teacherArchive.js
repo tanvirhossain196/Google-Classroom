@@ -1,4 +1,4 @@
-// MultipleFiles/archive.js
+// teacherArchive.js
 document.addEventListener("DOMContentLoaded", function () {
   // Elements
   const menuIcon = document.getElementById("menuIcon");
@@ -11,12 +11,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const coursesGrid = document.getElementById("coursesGrid");
   const emptyState = document.getElementById("emptyState");
   const emptyStateText = document.getElementById("emptyStateText");
-  // const addCourseBtn = document.getElementById("addCourseBtn"); // Not on archive page
-  // const courseActionMenu = document.getElementById("courseActionMenu"); // Not on archive page
-  const dashboardTitle = document.getElementById("dashboardTitle"); // Renamed to Archived Classes
+  const dashboardTitle = document.getElementById("dashboardTitle");
 
   // Navigation links
   const navLinks = document.querySelectorAll("[data-nav-link]");
+
+  // Enrolled Classes Dropdown elements
+  const enrolledClassesDropdownToggle = document.getElementById(
+    "enrolledClassesDropdownToggle"
+  );
+  const enrolledClassesDropdown = document.getElementById(
+    "enrolledClassesDropdown"
+  );
+  // Get the dropdown arrow icon
+  const dropdownArrowIcon = enrolledClassesDropdownToggle.querySelector(
+    ".dropdown-arrow-icon"
+  );
 
   // Modals (kept for consistency, but not actively used for create/join on this page)
   const createCourseModal = document.getElementById("createCourseModal");
@@ -54,9 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listeners
   menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
-  // No addCourseBtn on archive page
-  // createCourseForm.addEventListener("submit", handleCreateCourse); // Not used
-  // joinCourseForm.addEventListener("submit", handleJoinCourse); // Not used
+  createCourseForm.addEventListener("submit", handleCreateCourse); // Not used on archive page, but kept for consistency
+  joinCourseForm.addEventListener("submit", handleJoinCourse); // Not used on archive page, but kept for consistency
   editCourseForm.addEventListener("submit", handleEditCourse);
   closeCreateModal.addEventListener("click", hideCreateModal);
   closeJoinModal.addEventListener("click", hideJoinModal);
@@ -65,12 +74,21 @@ document.addEventListener("DOMContentLoaded", function () {
   cancelJoin.addEventListener("click", hideJoinModal);
   cancelEdit.addEventListener("click", hideEditModal);
 
+  // Enrolled Classes Dropdown Toggle
+  enrolledClassesDropdownToggle.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+    enrolledClassesDropdown.classList.toggle("show");
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
+    renderEnrolledClasses(); // Re-render to ensure up-to-date list
+  });
+
   // Navigation event listeners - Complete navigation fix
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       const href = this.getAttribute("href");
       const currentPage =
-        window.location.pathname.split("/").pop() || "dashboard.html";
+        window.location.pathname.split("/").pop() || "teacher.html"; // Changed from dashboard.html
 
       // Prevent default behavior and handle navigation manually
       e.preventDefault();
@@ -79,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // If clicking on same page, do nothing
       if (
         href === currentPage ||
-        (href === "dashboard.html" && currentPage === "")
+        (href === "teacher.html" && currentPage === "")
       ) {
         return;
       }
@@ -113,7 +131,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target === editCourseModal) {
       hideEditModal();
     }
-    // No courseActionMenu on archive page
+    // Close enrolled classes dropdown if clicked outside
+    if (
+      !enrolledClassesDropdownToggle.contains(e.target) &&
+      !enrolledClassesDropdown.contains(e.target)
+    ) {
+      enrolledClassesDropdown.classList.remove("show");
+      enrolledClassesDropdownToggle
+        .querySelector(".dropdown-arrow")
+        .classList.remove("rotate");
+    }
   });
 
   // Close sidebar when clicking outside (but don't interfere with navigation)
@@ -129,6 +156,10 @@ document.addEventListener("DOMContentLoaded", function () {
       sidebar.classList.remove("open");
       mainContent.classList.remove("sidebar-open");
       localStorage.setItem("sidebarState", "closed");
+      // Ensure dropdown arrow is hidden when sidebar closes
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "none";
+      }
     }
   });
 
@@ -160,6 +191,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (intentionalNavigation === "true" && savedSidebarState === "open") {
       sidebar.classList.add("open");
       mainContent.classList.add("sidebar-open");
+      // Show dropdown arrow if sidebar is open
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "block";
+      }
       // Clear the navigation flag
       localStorage.removeItem("intentionalNavigation");
     } else {
@@ -167,10 +202,15 @@ document.addEventListener("DOMContentLoaded", function () {
       sidebar.classList.remove("open");
       mainContent.classList.remove("sidebar-open");
       localStorage.setItem("sidebarState", "closed");
+      // Hide dropdown arrow if sidebar is closed
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "none";
+      }
     }
 
     updateUIForRole(userRole);
     loadUserCourses(); // This will now load archived courses
+    renderEnrolledClasses(); // Initial render of enrolled classes
     console.log("Current user:", currentUser);
     console.log("User role:", userRole);
     debugCourses();
@@ -218,19 +258,15 @@ document.addEventListener("DOMContentLoaded", function () {
       case "teacher":
         userRoleBadge.textContent = "Teacher";
         userRoleBadge.className = "role-badge teacher";
-        // dashboardTitle.textContent = "Archived Classes (Teacher)"; // Already set in HTML
         break;
       case "student":
         userRoleBadge.textContent = "Student";
         userRoleBadge.className = "role-badge student";
-        // dashboardTitle.textContent = "Archived Classes (Student)"; // Already set in HTML
         break;
       default:
         userRoleBadge.textContent = "New User";
         userRoleBadge.className = "role-badge new";
-      // dashboardTitle.textContent = "Archived Classes"; // Already set in HTML
     }
-    // No action menu on archive page
   }
 
   function toggleSidebar() {
@@ -240,6 +276,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Save sidebar state
     const sidebarIsOpen = sidebar.classList.contains("open");
     localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
+
+    // Toggle visibility of the dropdown arrow icon
+    if (dropdownArrowIcon) {
+      dropdownArrowIcon.style.display = sidebarIsOpen ? "block" : "none";
+    }
   }
 
   function handleLogout() {
@@ -320,39 +361,8 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCourse(currentEditingCourse.id, updates);
     hideEditModal();
     loadUserCourses();
+    renderEnrolledClasses(); // Update enrolled classes dropdown
     alert("Course updated successfully!");
-  }
-
-  function generateCourseCode() {
-    // Not used on archive page
-    return "CODE123";
-  }
-
-  function addCourseToUser(course) {
-    // Not used on archive page
-  }
-
-  function addCourseToGlobalList(course) {
-    // Not used on archive page
-  }
-
-  function findCourseByCode(code) {
-    // Not used on archive page
-    return null;
-  }
-
-  function getAllCourseCodes() {
-    // Not used on archive page
-    return [];
-  }
-
-  function joinCourse(course) {
-    // Not used on archive page
-    return { success: false, message: "Not available on archive page" };
-  }
-
-  function updateTeacherDashboard(course) {
-    // Not used on archive page
   }
 
   function loadUserCourses() {
@@ -441,7 +451,7 @@ document.addEventListener("DOMContentLoaded", function () {
     headerMenu.className = "course-header-menu";
 
     if (isTeacher) {
-      // Only teachers can unarchive/delete their own courses
+      // Teacher-specific: Only teachers can unarchive/delete their own courses
       const cardMenu = document.createElement("div");
       cardMenu.className = "course-card-menu";
 
@@ -460,7 +470,10 @@ document.addEventListener("DOMContentLoaded", function () {
       // Unarchive option
       const unarchiveItem = document.createElement("div");
       unarchiveItem.className = "course-menu-item archive"; // Reusing archive class for styling
-      unarchiveItem.onclick = () => toggleArchiveCourse(course.id);
+      unarchiveItem.onclick = (e) => {
+        e.stopPropagation();
+        toggleArchiveCourse(course.id);
+      };
       const unarchiveIcon = document.createElement("span");
       unarchiveIcon.className = "material-icons";
       unarchiveIcon.textContent = "unarchive";
@@ -471,7 +484,10 @@ document.addEventListener("DOMContentLoaded", function () {
       // Delete option
       const deleteItem = document.createElement("div");
       deleteItem.className = "course-menu-item delete";
-      deleteItem.onclick = () => deleteCourse(course.id);
+      deleteItem.onclick = (e) => {
+        e.stopPropagation();
+        deleteCourse(course.id);
+      };
       const deleteIcon = document.createElement("span");
       deleteIcon.className = "material-icons";
       deleteIcon.textContent = "delete";
@@ -510,7 +526,7 @@ document.addEventListener("DOMContentLoaded", function () {
     courseInfo.className = "course-info";
 
     if (isTeacher) {
-      // For teachers: Show course code
+      // Teacher-specific: Show course code
       const courseCode = document.createElement("p");
       courseCode.className = "course-code";
       courseCode.textContent = `Code: ${course.code}`;
@@ -779,27 +795,42 @@ document.addEventListener("DOMContentLoaded", function () {
       ? "Do you want to archive this course? It will be moved to the Archive Classes page."
       : "Do you want to unarchive this course? It will be moved back to your Dashboard.";
 
-    if (!confirm(confirmMessage)) return;
+    if (!confirm(confirmMessage)) {
+      // Close the dropdown menu if the user cancels the action
+      document.querySelectorAll(".course-menu-dropdown").forEach((m) => {
+        m.classList.remove("show");
+      });
+      return;
+    }
 
     updateCourse(courseId, { archived: newArchivedStatus });
     loadUserCourses(); // Reload archive page to reflect changes
+    renderEnrolledClasses(); // Update enrolled classes dropdown
     // If unarchiving, redirect to dashboard to show it at the top
     if (!newArchivedStatus) {
       // Store the course ID to highlight it on the dashboard if needed
       localStorage.setItem("highlightCourseId", courseId);
-      window.location.href = "dashboard.html";
+      window.location.href = "teacher.html"; // Changed from dashboard.html
     }
   }
 
   function deleteCourse(courseId) {
-    if (
-      !confirm(
-        "Are you sure you want to permanently delete this course?\n\nThis action cannot be undone."
-      )
-    ) {
+    // Close any open dropdown menus first
+    document.querySelectorAll(".course-menu-dropdown").forEach((m) => {
+      m.classList.remove("show");
+    });
+
+    // Show confirmation dialog
+    const confirmation = confirm(
+      "Are you sure you want to permanently delete this course?\n\nThis action cannot be undone."
+    );
+
+    if (!confirmation) {
+      // If user clicks "Cancel", stop the deletion process
       return;
     }
 
+    // If user clicks "Yes", proceed with deletion
     // Remove from user dashboard
     const dashboard = getUserDashboard();
     dashboard.courses = dashboard.courses.filter((c) => c.id !== courseId);
@@ -829,12 +860,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     loadUserCourses();
+    renderEnrolledClasses(); // Update enrolled classes dropdown
     alert("Course successfully deleted.");
   }
 
   function openCourse(course) {
     localStorage.setItem("selectedCourse", JSON.stringify(course));
-    window.location.href = "stream.html";
+    window.location.href = "teacherStream.html"; // Changed from stream.html
+  }
+
+  // Function to render enrolled classes in the sidebar dropdown
+  function renderEnrolledClasses() {
+    const dashboard = getUserDashboard();
+    const enrolled = dashboard.courses.filter(
+      (course) => !course.archived && course.teacher === currentUser
+    ); // Only show non-archived courses created by this teacher
+
+    enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+
+    if (enrolled.length === 0) {
+      const listItem = document.createElement("li");
+      listItem.className = "dropdown-item-sidebar no-courses";
+      listItem.textContent = "No classes taught";
+      enrolledClassesDropdown.appendChild(listItem);
+    } else {
+      enrolled.forEach((course) => {
+        const listItem = document.createElement("li");
+        listItem.className = "dropdown-item-sidebar";
+        listItem.textContent = course.name;
+        listItem.dataset.courseId = course.id; // Store course ID for potential future use
+        listItem.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevent dropdown from closing immediately
+          openCourse(course); // Navigate to the course page
+        });
+        enrolledClassesDropdown.appendChild(listItem);
+      });
+    }
   }
 
   function debugCourses() {

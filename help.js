@@ -1,9 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const menuToggle = document.getElementById("menuToggle");
+  // Elements from teacher.js
+  const menuIcon = document.getElementById("menuIcon");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("mainContent");
   const logoutBtn = document.getElementById("logoutBtn");
-  const headerUserInitial = document.getElementById("headerUserInitial");
+  const userInitial = document.getElementById("userInitial");
+  const currentUserEmail = document.getElementById("currentUserEmail");
+  const userRoleBadge = document.getElementById("userRoleBadge");
+
+  // Navigation links
+  const navLinks = document.querySelectorAll("[data-nav-link]");
+
+  // Enrolled Classes Dropdown elements
+  const enrolledClassesDropdownToggle = document.getElementById(
+    "enrolledClassesDropdownToggle"
+  );
+  const enrolledClassesDropdown = document.getElementById(
+    "enrolledClassesDropdown"
+  );
+  const dropdownArrowIcon = enrolledClassesDropdownToggle.querySelector(
+    ".dropdown-arrow-icon"
+  );
+
+  // Elements from original help.js
   const helpLinks = document.querySelectorAll(".help-link");
   const helpSections = document.querySelectorAll(".help-section");
   const helpSearch = document.getElementById("helpSearch");
@@ -14,18 +33,23 @@ document.addEventListener("DOMContentLoaded", function () {
   const contactForm = document.getElementById("contactForm");
   const chatBtn = document.querySelector(".chat-btn");
 
-  const currentUserEmail = localStorage.getItem("userEmail");
+  // User data
+  const currentUser =
+    localStorage.getItem("currentUser") || localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
 
-  if (!currentUserEmail) {
+  if (!currentUser) {
     window.location.href = "index.html";
     return;
   }
 
   initializePage();
 
-  menuToggle.addEventListener("click", toggleSidebar);
+  // Event listeners from teacher.js
+  menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
+
+  // Event listeners from original help.js
   searchBtn.addEventListener("click", performSearch);
   contactForm.addEventListener("submit", handleContactSubmit);
   chatBtn.addEventListener("click", handleChatClick);
@@ -58,26 +82,221 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Enrolled Classes Dropdown Toggle
+  enrolledClassesDropdownToggle.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+    enrolledClassesDropdown.classList.toggle("show");
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
+    renderEnrolledClasses(); // Re-render to ensure up-to-date list
+  });
+
+  // Navigation event listeners - Complete navigation fix
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      const currentPage =
+        window.location.pathname.split("/").pop() || "teacher.html"; // Default for dashboard
+
+      // Prevent default behavior and handle navigation manually
+      e.preventDefault();
+      e.stopPropagation();
+
+      // If clicking on same page, do nothing
+      if (
+        href === currentPage ||
+        (href === "teacher.html" && currentPage === "")
+      ) {
+        return;
+      }
+
+      // Update active states
+      navLinks.forEach((l) => l.classList.remove("active"));
+      this.classList.add("active");
+
+      // Store navigation intent to prevent automatic redirects
+      localStorage.setItem("intentionalNavigation", "true");
+      localStorage.setItem("targetPage", href);
+
+      // Use window.location.href for proper navigation
+      setTimeout(() => {
+        window.location.href = href;
+      }, 100);
+    });
+  });
+
+  // Close dropdowns/sidebar when clicking outside
   document.addEventListener("click", function (e) {
-    if (window.innerWidth <= 768) {
-      if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-        sidebar.classList.remove("show");
+    // Close enrolled classes dropdown if clicked outside
+    if (
+      !enrolledClassesDropdownToggle.contains(e.target) &&
+      !enrolledClassesDropdown.contains(e.target)
+    ) {
+      enrolledClassesDropdown.classList.remove("show");
+      enrolledClassesDropdownToggle
+        .querySelector(".dropdown-arrow")
+        .classList.remove("rotate");
+    }
+
+    // Close sidebar when clicking outside (but don't interfere with navigation)
+    const isNavLink = e.target.closest("[data-nav-link]");
+    if (
+      !isNavLink &&
+      !sidebar.contains(e.target) &&
+      !menuIcon.contains(e.target)
+    ) {
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
+      localStorage.setItem("sidebarState", "closed");
+      // Ensure dropdown arrow is hidden when sidebar closes
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "none";
       }
     }
   });
 
-  window.addEventListener("resize", function () {
-    if (window.innerWidth > 768) {
-      sidebar.classList.remove("show");
+  // Functions from teacher.js
+  function initializeDashboardComponents() {
+    currentUserEmail.textContent = currentUser;
+    userInitial.textContent = currentUser.charAt(0).toUpperCase();
+
+    // Set role badge
+    if (userRole === "teacher") {
+      userRoleBadge.textContent = "Teacher";
+      userRoleBadge.className = "role-badge teacher";
+    } else if (userRole === "student") {
+      userRoleBadge.textContent = "Student";
+      userRoleBadge.className = "role-badge student";
+    } else {
+      userRoleBadge.textContent = "User";
+      userRoleBadge.className = "role-badge new";
     }
-  });
 
+    // Handle sidebar state on page load
+    const savedSidebarState = localStorage.getItem("sidebarState");
+    const intentionalNavigation = localStorage.getItem("intentionalNavigation");
+
+    // If coming from intentional navigation and sidebar was open, restore it
+    if (intentionalNavigation === "true" && savedSidebarState === "open") {
+      sidebar.classList.add("open");
+      mainContent.classList.add("sidebar-open");
+      // Show dropdown arrow if sidebar is open
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "block";
+      }
+      // Clear the navigation flag
+      localStorage.removeItem("intentionalNavigation");
+    } else {
+      // Default closed state (for refresh or direct access)
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
+      localStorage.setItem("sidebarState", "closed");
+      // Hide dropdown arrow if sidebar is closed
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "none";
+      }
+    }
+
+    // Set active class for current page in sidebar
+    const currentPage = window.location.pathname.split("/").pop();
+    navLinks.forEach((link) => {
+      if (link.getAttribute("href") === currentPage) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+
+    renderEnrolledClasses(); // Initial render of enrolled classes
+  }
+
+  function toggleSidebar() {
+    sidebar.classList.toggle("open");
+    mainContent.classList.toggle("sidebar-open");
+
+    // Save sidebar state
+    const sidebarIsOpen = sidebar.classList.contains("open");
+    localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
+
+    // Toggle visibility of the dropdown arrow icon
+    if (dropdownArrowIcon) {
+      dropdownArrowIcon.style.display = sidebarIsOpen ? "block" : "none";
+    }
+  }
+
+  function handleLogout() {
+    if (confirm("আপনি কি লগআউট করতে চান?")) {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userRole");
+      window.location.href = "index.html";
+    }
+  }
+
+  function getUserDashboard() {
+    const dashboardKey = `dashboard_${currentUser}`;
+    const dashboard = JSON.parse(
+      localStorage.getItem(dashboardKey) || '{"courses": [], "role": "teacher"}'
+    );
+    if (!dashboard.courses) {
+      dashboard.courses = [];
+    }
+    return dashboard;
+  }
+
+  function renderEnrolledClasses() {
+    const dashboard = getUserDashboard();
+    let enrolled = [];
+
+    if (userRole === "teacher") {
+      enrolled = dashboard.courses.filter(
+        (course) => !course.archived && course.teacher === currentUser
+      );
+    } else if (userRole === "student") {
+      enrolled = dashboard.courses.filter(
+        (course) => !course.archived && course.students.includes(currentUser)
+      );
+    }
+
+    enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+
+    if (enrolled.length === 0) {
+      const listItem = document.createElement("li");
+      listItem.className = "dropdown-item-sidebar no-courses";
+      listItem.textContent =
+        userRole === "teacher" ? "No classes taught" : "No enrolled classes";
+      enrolledClassesDropdown.appendChild(listItem);
+    } else {
+      enrolled.forEach((course) => {
+        const listItem = document.createElement("li");
+        listItem.className = "dropdown-item-sidebar";
+        listItem.textContent = course.name;
+        listItem.dataset.courseId = course.id;
+        listItem.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openCourse(course);
+        });
+        enrolledClassesDropdown.appendChild(listItem);
+      });
+    }
+  }
+
+  function openCourse(course) {
+    localStorage.setItem("selectedCourse", JSON.stringify(course));
+    if (userRole === "teacher") {
+      window.location.href = "teacherStream.html";
+    } else if (userRole === "student") {
+      window.location.href = "studentStream.html";
+    }
+  }
+
+  // Functions from original help.js
   function initializePage() {
-    const userInitial = currentUserEmail.charAt(0).toUpperCase();
-    headerUserInitial.textContent = userInitial;
+    initializeDashboardComponents(); // Initialize new navbar/sidebar components
 
-    if (currentUserEmail) {
-      document.getElementById("contactEmail").value = currentUserEmail;
+    // Original help.js initialization
+    if (currentUser) {
+      document.getElementById("contactEmail").value = currentUser;
     }
 
     document.getElementById("getting-started").classList.add("active");
@@ -85,23 +304,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".card").forEach((card) => {
       card.classList.add("fade-in");
     });
-  }
-
-  function toggleSidebar() {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.toggle("show");
-    } else {
-      sidebar.classList.toggle("collapsed");
-      mainContent.classList.toggle("collapsed");
-    }
-  }
-
-  function handleLogout() {
-    if (confirm("আপনি কি লগআউট করতে চান?")) {
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userRole");
-      window.location.href = "index.html";
-    }
   }
 
   function switchHelpSection(targetSection) {
@@ -232,8 +434,8 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     contactForm.reset();
 
-    if (currentUserEmail) {
-      document.getElementById("contactEmail").value = currentUserEmail;
+    if (currentUser) {
+      document.getElementById("contactEmail").value = currentUser;
     }
   }
 

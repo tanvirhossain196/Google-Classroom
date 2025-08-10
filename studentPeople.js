@@ -9,6 +9,36 @@ class PeopleManager {
   }
 
   init() {
+    // Simulate a student user for this version
+    localStorage.setItem("currentUser", "Student User");
+    localStorage.setItem("userRole", "student");
+    // Simulate a selected course for testing
+    if (!localStorage.getItem("selectedCourse")) {
+      const dummyCourse = {
+        id: "course123",
+        name: "Advanced Math",
+        section: "Section A",
+        teacher: "Teacher User",
+        students: ["Student One", "Student Two", "Student User"], // Include the simulated student
+        subject: "Math",
+        room: "101",
+        code: "MATH101",
+      };
+      localStorage.setItem("selectedCourse", JSON.stringify(dummyCourse));
+      // Also update the dashboard for the student
+      const studentDashboardKey = `dashboard_Student User`;
+      let studentDashboard = JSON.parse(
+        localStorage.getItem(studentDashboardKey) || '{"courses": []}'
+      );
+      if (!studentDashboard.courses.find((c) => c.id === dummyCourse.id)) {
+        studentDashboard.courses.push(dummyCourse);
+        localStorage.setItem(
+          studentDashboardKey,
+          JSON.stringify(studentDashboard)
+        );
+      }
+    }
+
     this.setupElements();
     this.setupEventListeners();
     this.loadUserData();
@@ -16,8 +46,12 @@ class PeopleManager {
     this.setupProfessionalFeatures();
     this.setupNotificationSystem();
     this.loadPeopleData();
-    this.generateClassCode();
+    // Class code generation/management is not for students, so skip it
+    // this.generateClassCode();
     this.handleResize(); // Call on init to set initial state
+
+    // Hide teacher-specific elements for students
+    this.hideTeacherSpecificElements();
   }
 
   setupElements() {
@@ -33,8 +67,8 @@ class PeopleManager {
       courseTopNav: document.getElementById("courseTopNav"), // Added for responsive adjustment
 
       // People specific elements
-      invitePeopleBtn: document.getElementById("invitePeopleBtn"),
-      inviteFirstPersonBtn: document.getElementById("inviteFirstPersonBtn"),
+      invitePeopleBtn: document.getElementById("invitePeopleBtn"), // Will be hidden
+      inviteFirstPersonBtn: document.getElementById("inviteFirstPersonBtn"), // Will be hidden
       teachersSection: document.getElementById("teachersSection"),
       studentsSection: document.getElementById("studentsSection"),
       teachersList: document.getElementById("teachersList"),
@@ -44,7 +78,7 @@ class PeopleManager {
       peopleEmpty: document.getElementById("peopleEmpty"),
       peopleContent: document.getElementById("peopleContent"),
 
-      // Modal elements
+      // Modal elements (invite modal will be hidden)
       inviteModal: document.getElementById("inviteModal"),
       closeInviteModal: document.getElementById("closeInviteModal"),
       cancelInvite: document.getElementById("cancelInvite"),
@@ -91,20 +125,11 @@ class PeopleManager {
     // Enhanced resize handling
     window.addEventListener("resize", () => this.handleResize());
 
-    // People specific event listeners
-    if (this.elements.invitePeopleBtn) {
-      this.elements.invitePeopleBtn.addEventListener("click", () =>
-        this.showInviteModal()
-      );
-    }
+    // People specific event listeners (invite buttons are hidden for students)
+    // No event listeners for invitePeopleBtn, inviteFirstPersonBtn, sendInvites, copyCodeBtn, regenerateCodeBtn
+    // as these functionalities are for teachers only.
 
-    if (this.elements.inviteFirstPersonBtn) {
-      this.elements.inviteFirstPersonBtn.addEventListener("click", () =>
-        this.showInviteModal()
-      );
-    }
-
-    // Modal event listeners
+    // Modal event listeners (invite modal will not be shown)
     if (this.elements.closeInviteModal) {
       this.elements.closeInviteModal.addEventListener("click", () =>
         this.hideInviteModal()
@@ -114,24 +139,6 @@ class PeopleManager {
     if (this.elements.cancelInvite) {
       this.elements.cancelInvite.addEventListener("click", () =>
         this.hideInviteModal()
-      );
-    }
-
-    if (this.elements.sendInvites) {
-      this.elements.sendInvites.addEventListener("click", () =>
-        this.sendInvitations()
-      );
-    }
-
-    if (this.elements.copyCodeBtn) {
-      this.elements.copyCodeBtn.addEventListener("click", () =>
-        this.copyClassCode()
-      );
-    }
-
-    if (this.elements.regenerateCodeBtn) {
-      this.elements.regenerateCodeBtn.addEventListener("click", () =>
-        this.regenerateClassCode()
       );
     }
 
@@ -194,9 +201,23 @@ class PeopleManager {
     }
   }
 
+  hideTeacherSpecificElements() {
+    // Hide invite buttons
+    if (this.elements.invitePeopleBtn) {
+      this.elements.invitePeopleBtn.style.display = "none";
+    }
+    if (this.elements.inviteFirstPersonBtn) {
+      this.elements.inviteFirstPersonBtn.style.display = "none";
+    }
+    // Hide invite modal itself
+    if (this.elements.inviteModal) {
+      this.elements.inviteModal.style.display = "none";
+    }
+  }
+
   loadUserData() {
     this.currentUser = localStorage.getItem("currentUser");
-    this.userRole = localStorage.getItem("userRole");
+    this.userRole = localStorage.getItem("userRole"); // Should be 'student' for this version
 
     if (!this.currentUser) {
       this.navigateWithAnimation("index.html");
@@ -349,7 +370,8 @@ class PeopleManager {
   }
 
   updateCourseInfo() {
-    const isTeacher = this.currentCourse.teacher === this.currentUser;
+    // In studentPeople.js, we always assume the user is a student
+    const isTeacher = false; // Always false for student version
 
     // Create additional course info section
     const courseBanner = document.getElementById("courseBanner");
@@ -370,6 +392,7 @@ class PeopleManager {
     additionalInfo.innerHTML = "";
 
     if (isTeacher) {
+      // This block should ideally not be reached in studentPeople.js
       // Teacher sees: course code, subject, room, student count
       if (this.currentCourse.code) {
         const courseCode = document.createElement("p");
@@ -602,18 +625,18 @@ class PeopleManager {
     actions.appendChild(viewBtn);
     actions.appendChild(messageBtn);
 
-    // Only show remove button for teachers and if current user is the course creator
-    if (
-      this.currentUser === this.currentCourse.teacher &&
-      name !== this.currentUser
-    ) {
-      const removeBtn = document.createElement("button");
-      removeBtn.className = "action-btn";
-      removeBtn.innerHTML =
-        '<span class="material-icons">remove_circle</span> সরান';
-      removeBtn.onclick = () => this.removePerson(name, role);
-      actions.appendChild(removeBtn);
-    }
+    // The remove button is only for teachers, so it's not added here for students.
+    // if (
+    //   this.currentUser === this.currentCourse.teacher &&
+    //   name !== this.currentUser
+    // ) {
+    //   const removeBtn = document.createElement("button");
+    //   removeBtn.className = "action-btn";
+    //   removeBtn.innerHTML =
+    //     '<span class="material-icons">remove_circle</span> সরান';
+    //   removeBtn.onclick = () => this.removePerson(name, role);
+    //   actions.appendChild(removeBtn);
+    // }
 
     personDiv.appendChild(avatar);
     personDiv.appendChild(info);
@@ -668,21 +691,14 @@ class PeopleManager {
     }
   }
 
-  // Modal methods
+  // Modal methods (invite modal is not for students)
   showInviteModal() {
-    if (this.elements.inviteModal) {
-      this.elements.inviteModal.classList.add("active");
-    }
+    // This function should not be called for students, but if it is, do nothing or show an error.
+    this.showNotification("শিক্ষকদের জন্য আমন্ত্রণ কার্যকারিতা", "info");
   }
 
   hideInviteModal() {
-    if (this.elements.inviteModal) {
-      this.elements.inviteModal.classList.remove("active");
-    }
-    // Clear form
-    if (this.elements.inviteEmails) {
-      this.elements.inviteEmails.value = "";
-    }
+    // This function should not be called for students.
   }
 
   showPersonDetails(name, role) {
@@ -748,13 +764,8 @@ class PeopleManager {
           প্রোফাইল দেখুন
         </button>
         ${
-          this.currentUser === this.currentCourse.teacher &&
-          name !== this.currentUser
-            ? `<button class="detail-action-btn danger" onclick="peopleManager.removePerson('${name}', '${role}')">
-            <span class="material-icons">remove_circle</span>
-            সরান
-          </button>`
-            : ""
+          // Remove button is not shown for students
+          ""
         }
       </div>
     `;
@@ -887,60 +898,17 @@ class PeopleManager {
     this.showNotification("সাজানো এবং ফিল্টার প্রয়োগ করা হয়েছে", "success");
   }
 
-  // Action methods
+  // Action methods (teacher-specific methods removed or made non-functional)
   sendInvitations() {
-    const emails = this.elements.inviteEmails?.value.trim();
-    const selectedRole = document.querySelector(
-      'input[name="inviteRole"]:checked'
-    )?.value;
-
-    if (!emails) {
-      this.showNotification(
-        "অনুগ্রহ করে কমপক্ষে একটি ইমেইল ঠিকানা দিন",
-        "error"
-      );
-      return;
-    }
-
-    // Simulate sending invitations
-    const emailList = emails
-      .split(",")
-      .map((email) => email.trim())
-      .filter((email) => email);
-
-    // Add to appropriate list (for demonstration)
-    emailList.forEach((email) => {
-      const name = email.split("@")[0].replace(/\./g, " ");
-      if (selectedRole === "teacher") {
-        if (!this.teachers.includes(name)) {
-          this.teachers.push(name);
-        }
-      } else {
-        if (!this.students.includes(name)) {
-          this.students.push(name);
-        }
-      }
-    });
-
-    // Update course data
-    this.updateCourseData();
-    this.renderPeopleData();
-    this.hideInviteModal();
-
-    this.showNotification(
-      `${emailList.length}টি আমন্ত্রণ সফলভাবে পাঠানো হয়েছে`,
-      "success"
-    );
+    // This method is for teachers only.
+    this.showNotification("শিক্ষার্থীদের আমন্ত্রণ পাঠানোর অনুমতি নেই", "error");
   }
 
   updateCourseData() {
-    // Update the course data in localStorage
-    this.currentCourse.students = this.students;
-    this.currentCourse.teachers = this.teachers;
-
+    // Students cannot directly update course data like adding/removing members.
+    // This method is kept minimal for student-side to avoid errors if called.
     localStorage.setItem("selectedCourse", JSON.stringify(this.currentCourse));
 
-    // Also update in user dashboard
     const userDashboard = this.getUserDashboard();
     const courseIndex = userDashboard.courses.findIndex(
       (c) => c.id === this.currentCourse.id
@@ -965,85 +933,34 @@ class PeopleManager {
   }
 
   removePerson(name, role) {
-    if (confirm(`আপনি কি নিশ্চিত যে ${name} কে এই ক্লাস থেকে সরাতে চান?`)) {
-      if (role === "teacher") {
-        this.teachers = this.teachers.filter((teacher) => teacher !== name);
-      } else {
-        this.students = this.students.filter((student) => student !== name);
-      }
-
-      this.updateCourseData();
-      this.renderPeopleData();
-      this.hidePersonDetailModal();
-      this.showNotification(`${name} কে সফলভাবে সরানো হয়েছে`, "success");
-    }
+    // This method is for teachers only.
+    this.showNotification("শিক্ষার্থীদের সদস্য সরানোর অনুমতি নেই", "error");
   }
 
-  // Class code methods
+  // Class code methods (not for students)
   generateClassCode() {
-    const existingCode = this.currentCourse.classCode;
-    if (existingCode) {
-      if (this.elements.classCode) {
-        this.elements.classCode.textContent = existingCode;
-      }
-      return;
-    }
-
-    // Generate new class code
-    const code = this.createRandomCode();
-    this.currentCourse.classCode = code;
-    this.updateCourseData();
-
-    if (this.elements.classCode) {
-      this.elements.classCode.textContent = code;
-    }
+    // Not applicable for students
   }
 
   createRandomCode() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let result = "";
-    for (let i = 0; i < 6; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
+    // Not applicable for students
+    return "";
   }
 
   copyClassCode() {
-    const code = this.elements.classCode?.textContent;
-    if (code) {
-      navigator.clipboard
-        .writeText(code)
-        .then(() => {
-          this.showNotification("ক্লাস কোড কপি করা হয়েছে", "success");
-        })
-        .catch(() => {
-          // Fallback for older browsers
-          const textArea = document.createElement("textarea");
-          textArea.value = code;
-          document.body.appendChild(textArea);
-          textArea.select();
-          document.body.removeChild(textArea);
-          this.showNotification("ক্লাস কোড কপি করা হয়েছে", "success");
-        });
-    }
+    // Not applicable for students
+    this.showNotification(
+      "শিক্ষার্থীদের ক্লাস কোড কপি করার অনুমতি নেই",
+      "error"
+    );
   }
 
   regenerateClassCode() {
-    if (
-      confirm(
-        "আপনি কি নিশ্চিত যে নতুন ক্লাস কোড তৈরি করতে চান? পুরানো কোডটি আর কাজ করবে না।"
-      )
-    ) {
-      const newCode = this.createRandomCode();
-      this.currentCourse.classCode = newCode;
-      this.updateCourseData();
-
-      if (this.elements.classCode) {
-        this.elements.classCode.textContent = newCode;
-      }
-
-      this.showNotification("নতুন ক্লাস কোড তৈরি করা হয়েছে", "success");
-    }
+    // Not applicable for students
+    this.showNotification(
+      "শিক্ষার্থীদের ক্লাস কোড পুনরুত্পাদন করার অনুমতি নেই",
+      "error"
+    );
   }
 
   // Utility methods
@@ -1055,15 +972,15 @@ class PeopleManager {
     document.addEventListener("keydown", (e) => {
       // Escape to close modals
       if (e.key === "Escape") {
-        this.hideInviteModal();
+        this.hideInviteModal(); // Will do nothing for students
         this.hidePersonDetailModal();
         this.hideSortFilterModal();
       }
 
-      // Ctrl/Cmd + I to open invite modal
+      // Ctrl/Cmd + I to open invite modal (disabled for students)
       if ((e.ctrlKey || e.metaKey) && e.key === "i") {
         e.preventDefault();
-        this.showInviteModal();
+        this.showNotification("শিক্ষার্থীদের আমন্ত্রণ কার্যকারিতা নেই", "info");
       }
     });
   }
@@ -1123,7 +1040,7 @@ class PeopleManager {
     this.loadEnrolledClasses(); // Re-render to adjust for collapsed state on resize
   }
 
-  // Advanced people management methods
+  // Advanced people management methods (teacher-specific methods removed or made non-functional)
   searchPeople(query) {
     const allPeople = [...this.teachers, ...this.students];
     return allPeople.filter((person) =>
@@ -1132,89 +1049,25 @@ class PeopleManager {
   }
 
   exportPeopleList() {
-    const peopleData = {
-      course: this.currentCourse.name,
-      teachers: this.teachers,
-      students: this.students,
-      exportDate: new Date().toLocaleDateString("bn-BD"),
-    };
-
-    const dataStr = JSON.stringify(peopleData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(dataBlob);
-    link.download = `${this.currentCourse.name}_people_list.json`;
-    link.click();
-
-    this.showNotification("সদস্য তালিকা ডাউনলোড করা হয়েছে", "success");
+    this.showNotification(
+      "শিক্ষার্থীদের সদস্য তালিকা ডাউনলোড করার অনুমতি নেই",
+      "error"
+    );
   }
 
   importPeopleList(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-
-        if (data.teachers && Array.isArray(data.teachers)) {
-          data.teachers.forEach((teacher) => {
-            if (!this.teachers.includes(teacher)) {
-              this.teachers.push(teacher);
-            }
-          });
-        }
-
-        if (data.students && Array.isArray(data.students)) {
-          data.students.forEach((student) => {
-            if (!this.students.includes(student)) {
-              this.students.push(student);
-            }
-          });
-        }
-
-        this.updateCourseData();
-        this.renderPeopleData();
-        this.showNotification(
-          "সদস্য তালিকা সফলভাবে আমদানি করা হয়েছে",
-          "success"
-        );
-      } catch (error) {
-        this.showNotification("ফাইল আমদানিতে সমস্যা হয়েছে", "error");
-      }
-    };
-    reader.readAsText(file);
+    this.showNotification(
+      "শিক্ষার্থীদের সদস্য তালিকা আমদানি করার অনুমতি নেই",
+      "error"
+    );
   }
 
   bulkInvite(emailList) {
-    // Enhanced bulk invitation functionality
-    const validEmails = emailList.filter((email) => this.validateEmail(email));
-    const invalidEmails = emailList.filter(
-      (email) => !this.validateEmail(email)
-    );
-
-    if (invalidEmails.length > 0) {
-      this.showNotification(
-        `${invalidEmails.length}টি অবৈধ ইমেইল ঠিকানা পাওয়া গেছে`,
-        "error"
-      );
-      return false;
-    }
-
-    // Process valid emails
-    validEmails.forEach((email) => {
-      const name = this.extractNameFromEmail(email);
-      if (!this.students.includes(name)) {
-        this.students.push(name);
-      }
-    });
-
-    this.updateCourseData();
-    this.renderPeopleData();
     this.showNotification(
-      `${validEmails.length}টি আমন্ত্রণ সফলভাবে পাঠানো হয়েছে`,
-      "success"
+      "শিক্ষার্থীদের বাল্ক আমন্ত্রণ পাঠানোর অনুমতি নেই",
+      "error"
     );
-    return true;
+    return false;
   }
 
   validateEmail(email) {

@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard - Classroom</title>
+    <title>Archive Classes - Classroom</title>
     <link rel="stylesheet" href="teacher.css">
+    <link rel="stylesheet" href="teacherArchive.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -35,7 +36,7 @@
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-menu">
                 <ul class="sidebar-menu">
-                    <li><a href="teacher.html" class="nav-link active" data-nav-link>
+                    <li><a href="teacher.html" class="nav-link" data-nav-link>
                             <i class="material-icons">home</i>
                             <span>Dashboard</span>
                         </a></li>
@@ -55,7 +56,7 @@
                             <!-- Course names will be dynamically inserted here -->
                         </ul>
                     </li>
-                    <li><a href="teacherArchive.html" class="nav-link" data-nav-link>
+                    <li><a href="teacherArchive.html" class="nav-link active" data-nav-link>
                             <i class="material-icons">archive</i>
                             <span>Archive classes</span>
                         </a></li>
@@ -76,34 +77,28 @@
             <div class="courses-container">
                 <!-- Header Section -->
                 <section class="courses-header">
-                    <h2 id="dashboardTitle">My Dashboard</h2>
-                    <div class="dropdown">
-                        <button class="add-course-btn" id="addCourseBtn">
-                            <span class="material-icons">add</span>
-                        </button>
-                        <div class="dropdown-menu" id="courseActionMenu">
-                            <!-- Dynamic menu items will be added here -->
-                        </div>
-                    </div>
+                    <h2 id="dashboardTitle">Archived Classes</h2>
+                    <!-- No add course button on archive page -->
                 </section>
 
                 <!-- Empty State -->
                 <div class="empty-state" id="emptyState" style="display: none;">
                     <div class="empty-icon">
-                        <span class="material-icons">school</span>
+                        <span class="material-icons">archive</span>
                     </div>
-                    <h3>No Courses Available</h3>
-                    <p id="emptyStateText">Create your first course or join an existing course</p>
+                    <h3>No Archived Courses</h3>
+                    <p id="emptyStateText">Courses you archive will appear here.</p>
                 </div>
 
                 <!-- Courses Grid -->
                 <div class="courses-grid" id="coursesGrid">
-                    <!-- Course cards will be dynamically added here -->
+                    <!-- Archived course cards will be dynamically added here -->
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Modals (kept for consistency, though not directly used on archive page) -->
     <!-- Create Course Modal -->
     <div class="modal" id="createCourseModal">
         <div class="modal-content">
@@ -139,7 +134,7 @@
         </div>
     </div>
 
-    <!-- Join Course Modal (kept for consistency, but not used in teacher.js) -->
+    <!-- Join Course Modal -->
     <div class="modal" id="joinCourseModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -200,7 +195,7 @@
     </div>
 
 
-    <script src="teacher.js"></script>
+    <script src="teacherArchive.js"></script>
 </body>
 
 </html>

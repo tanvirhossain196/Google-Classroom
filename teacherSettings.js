@@ -1,20 +1,40 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const menuToggle = document.getElementById("menuToggle");
+  // Elements from teacher.html
+  const menuIcon = document.getElementById("menuIcon");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("mainContent");
   const logoutBtn = document.getElementById("logoutBtn");
+  const userInitial = document.getElementById("userInitial");
+  const currentUserEmail = document.getElementById("currentUserEmail");
+  const userRoleBadge = document.getElementById("userRoleBadge");
+
+  // Navigation links
+  const navLinks = document.querySelectorAll("[data-nav-link]");
+
+  // Enrolled Classes Dropdown elements
+  const enrolledClassesDropdownToggle = document.getElementById(
+    "enrolledClassesDropdownToggle"
+  );
+  const enrolledClassesDropdown = document.getElementById(
+    "enrolledClassesDropdown"
+  );
+  // Get the dropdown arrow icon
+  const dropdownArrowIcon = enrolledClassesDropdownToggle.querySelector(
+    ".dropdown-arrow-icon"
+  );
+
+  // Elements specific to teacherSettings.html
   const settingsNavItems = document.querySelectorAll(".settings-nav-item");
   const settingsSections = document.querySelectorAll(".settings-section");
   const saveSettingsBtn = document.getElementById("saveSettings");
   const cancelSettingsBtn = document.getElementById("cancelSettings");
-  const headerUserInitial = document.getElementById("headerUserInitial");
-  const currentTimeElement = document.getElementById("currentTime");
   const previewTimeElement = document.getElementById("previewTime");
   const previewDateElement = document.getElementById("previewDate");
   const previewTextElement = document.getElementById("previewText");
   const mainBody = document.getElementById("mainBody");
 
-  const currentUserEmail = localStorage.getItem("userEmail");
+  const currentLoggedInUserEmail =
+    localStorage.getItem("currentUser") || localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
 
   const translations = {
@@ -49,6 +69,47 @@ document.addEventListener("DOMContentLoaded", function () {
       sample_text: "নমুনা টেক্সট",
       cancel: "বাতিল",
       save_settings: "সেটিংস সংরক্ষণ করুন",
+      new_course_notifications: "নতুন কোর্স বিজ্ঞপ্তি",
+      assignment_notifications: "অ্যাসাইনমেন্ট বিজ্ঞপ্তি",
+      system_updates: "সিস্টেম আপডেট",
+      push_notifications: "পুশ বিজ্ঞপ্তি",
+      new_messages: "নতুন বার্তা",
+      deadline_reminders: "সময়সীমা অনুস্মারক",
+      security_settings: "নিরাপত্তা সেটিংস",
+      account_security: "অ্যাকাউন্ট নিরাপত্তা",
+      two_factor_auth: "টু-ফ্যাক্টর প্রমাণীকরণ",
+      two_factor_desc: "অতিরিক্ত নিরাপত্তার জন্য SMS কোড প্রয়োজন",
+      login_notifications: "লগইন বিজ্ঞপ্তি",
+      login_desc: "নতুন ডিভাইস থেকে লগইনের জন্য বিজ্ঞপ্তি",
+      session_management: "সেশন ব্যবস্থাপনা",
+      session_timeout: "সেশন টাইমআউট (মিনিট)",
+      clear_all_sessions: "সমস্ত সেশন বাতিল করুন",
+      privacy_settings: "গোপনীয়তা সেটিংস",
+      profile_visibility: "প্রোফাইল দৃশ্যমানতা",
+      who_can_view: "কে প্রোফাইল দেখতে পারবে",
+      show_email: "ইমেল দেখান",
+      show_phone: "ফোন নম্বর দেখান",
+      data_collection: "ডেটা সংগ্রহ",
+      analytics_data: "অ্যানালিটিক্স ডেটা",
+      analytics_desc: "সিস্টেম উন্নতির জন্য বেনামী ডেটা সংগ্রহ করুন",
+      system_settings: "সিস্টেম সেটিংস",
+      system_info: "সিস্টেম তথ্য",
+      system_version: "সিস্টেম সংস্করণ",
+      last_update: "শেষ আপডেট",
+      server_status: "সার্ভার স্থিতি",
+      online: "অনলাইন",
+      maintenance: "রক্ষণাবেক্ষণ",
+      check_updates: "আপডেট চেক করুন",
+      clear_cache: "ক্যাশ পরিষ্কার করুন",
+      reset_settings: "সেটিংস রিসেট করুন",
+      backup_settings: "ব্যাকআপ সেটিংস",
+      auto_backup: "স্বয়ংক্রিয় ব্যাকআপ",
+      enable_auto_backup: "স্বয়ংক্রিয় ব্যাকআপ সক্ষম করুন",
+      backup_frequency: "ব্যাকআপ ফ্রিকোয়েন্সি",
+      create_backup: "নতুন ব্যাকআপ তৈরি করুন",
+      restore_backup: "ব্যাকআপ পুনরুদ্ধার করুন",
+      download_backup: "ব্যাকআপ ডাউনলোড করুন",
+      last_backup: "শেষ ব্যাকআপ:",
     },
     en: {
       classroom: "Classroom",
@@ -81,18 +142,135 @@ document.addEventListener("DOMContentLoaded", function () {
       sample_text: "Sample Text",
       cancel: "Cancel",
       save_settings: "Save Settings",
+      new_course_notifications: "New Course Notifications",
+      assignment_notifications: "Assignment Notifications",
+      system_updates: "System Updates",
+      push_notifications: "Push Notifications",
+      new_messages: "New Messages",
+      deadline_reminders: "Deadline Reminders",
+      security_settings: "Security Settings",
+      account_security: "Account Security",
+      two_factor_auth: "Two-Factor Authentication",
+      two_factor_desc: "Requires SMS code for additional security",
+      login_notifications: "Login Notifications",
+      login_desc: "Notifications for login from new devices",
+      session_management: "Session Management",
+      session_timeout: "Session Timeout (minutes)",
+      clear_all_sessions: "Clear All Sessions",
+      privacy_settings: "Privacy Settings",
+      profile_visibility: "Profile Visibility",
+      who_can_view: "Who can view profile",
+      show_email: "Show Email",
+      show_phone: "Show Phone Number",
+      data_collection: "Data Collection",
+      analytics_data: "Analytics Data",
+      analytics_desc: "Collect anonymous data for system improvement",
+      system_settings: "System Settings",
+      system_info: "System Information",
+      system_version: "System Version",
+      last_update: "Last Update",
+      server_status: "Server Status",
+      online: "Online",
+      maintenance: "Maintenance",
+      check_updates: "Check for Updates",
+      clear_cache: "Clear Cache",
+      reset_settings: "Reset Settings",
+      backup_settings: "Backup Settings",
+      auto_backup: "Automatic Backup",
+      enable_auto_backup: "Enable Automatic Backup",
+      backup_frequency: "Backup Frequency",
+      create_backup: "Create New Backup",
+      restore_backup: "Restore Backup",
+      download_backup: "Download Backup",
+      last_backup: "Last Backup:",
     },
   };
 
-  if (!currentUserEmail) {
+  if (!currentLoggedInUserEmail || userRole !== "teacher") {
     window.location.href = "index.html";
     return;
   }
 
-  initializePage();
+  initializeSettingsPage();
 
-  menuToggle.addEventListener("click", toggleSidebar);
+  // Event listeners for new header/sidebar
+  menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
+
+  // Enrolled Classes Dropdown Toggle
+  enrolledClassesDropdownToggle.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+    enrolledClassesDropdown.classList.toggle("show");
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
+    renderEnrolledClasses(); // Re-render to ensure up-to-date list
+  });
+
+  // Navigation event listeners - Complete navigation fix
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      const currentPage =
+        window.location.pathname.split("/").pop() || "teacher.html";
+
+      // Prevent default behavior and handle navigation manually
+      e.preventDefault();
+      e.stopPropagation();
+
+      // If clicking on same page, do nothing
+      if (
+        href === currentPage ||
+        (href === "teacher.html" && currentPage === "")
+      ) {
+        return;
+      }
+
+      // Update active states
+      navLinks.forEach((l) => l.classList.remove("active"));
+      this.classList.add("active");
+
+      // Store navigation intent to prevent automatic redirects
+      localStorage.setItem("intentionalNavigation", "true");
+      localStorage.setItem("targetPage", href);
+
+      // Use window.location.href for proper navigation
+      setTimeout(() => {
+        window.location.href = href;
+      }, 100);
+    });
+  });
+
+  // Close sidebar when clicking outside (but don't interfere with navigation)
+  document.addEventListener("click", function (e) {
+    // Check if click is on a navigation link
+    const isNavLink = e.target.closest("[data-nav-link]");
+
+    if (
+      !isNavLink &&
+      !sidebar.contains(e.target) &&
+      !menuIcon.contains(e.target)
+    ) {
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
+      localStorage.setItem("sidebarState", "closed");
+      // Ensure dropdown arrow is hidden when sidebar closes
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "none";
+      }
+    }
+    // Close enrolled classes dropdown if clicked outside
+    if (
+      !enrolledClassesDropdownToggle.contains(e.target) &&
+      !enrolledClassesDropdown.contains(e.target)
+    ) {
+      enrolledClassesDropdown.classList.remove("show");
+      enrolledClassesDropdownToggle
+        .querySelector(".dropdown-arrow")
+        .classList.remove("rotate");
+    }
+  });
+
+  // Event listeners for settings page functionality
   saveSettingsBtn.addEventListener("click", handleSaveSettings);
   cancelSettingsBtn.addEventListener("click", handleCancelSettings);
 
@@ -143,17 +321,9 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("downloadBackup")
     .addEventListener("click", handleDownloadBackup);
 
-  document.addEventListener("click", function (e) {
-    if (window.innerWidth <= 768) {
-      if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-        sidebar.classList.remove("show");
-      }
-    }
-  });
-
   window.addEventListener("resize", function () {
     if (window.innerWidth > 768) {
-      sidebar.classList.remove("show");
+      sidebar.classList.remove("show"); // Ensure sidebar is not in mobile "show" state on resize
     }
   });
 
@@ -166,18 +336,38 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function initializePage() {
-    const userInitial = currentUserEmail.charAt(0).toUpperCase();
-    headerUserInitial.textContent = userInitial;
+  function initializeSettingsPage() {
+    currentUserEmail.textContent = currentLoggedInUserEmail;
+    userInitial.textContent = currentLoggedInUserEmail.charAt(0).toUpperCase();
 
-    if (
-      !mainBody.classList.contains("light-theme") &&
-      !mainBody.classList.contains("dark-theme")
-    ) {
-      mainBody.classList.add("light-theme", "font-medium", "font-inter");
+    // Handle sidebar state on page load
+    const savedSidebarState = localStorage.getItem("sidebarState");
+    const intentionalNavigation = localStorage.getItem("intentionalNavigation");
+
+    // If coming from intentional navigation and sidebar was open, restore it
+    if (intentionalNavigation === "true" && savedSidebarState === "open") {
+      sidebar.classList.add("open");
+      mainContent.classList.add("sidebar-open");
+      // Show dropdown arrow if sidebar is open
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "block";
+      }
+      // Clear the navigation flag
+      localStorage.removeItem("intentionalNavigation");
+    } else {
+      // Default closed state (for refresh or direct access)
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
+      localStorage.setItem("sidebarState", "closed");
+      // Hide dropdown arrow if sidebar is closed
+      if (dropdownArrowIcon) {
+        dropdownArrowIcon.style.display = "none";
+      }
     }
 
-    loadSettings();
+    updateUIForRole(); // Always teacher role for this page
+    loadSettings(); // Load settings specific to this page
+    renderEnrolledClasses(); // Initial render of enrolled classes
     updateCurrentTime();
     setInterval(updateCurrentTime, 1000);
     updatePreview();
@@ -187,21 +377,41 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function getUserDashboard() {
+    const dashboardKey = `dashboard_${currentLoggedInUserEmail}`;
+    const dashboard = JSON.parse(
+      localStorage.getItem(dashboardKey) || '{"courses": [], "role": "teacher"}'
+    );
+    if (!dashboard.courses) {
+      dashboard.courses = [];
+    }
+    return dashboard;
+  }
+
+  function updateUIForRole() {
+    userRoleBadge.textContent = "Teacher";
+    userRoleBadge.className = "role-badge teacher";
+  }
+
   function toggleSidebar() {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.toggle("show");
-    } else {
-      sidebar.classList.toggle("collapsed");
-      mainContent.classList.toggle("collapsed");
+    sidebar.classList.toggle("open");
+    mainContent.classList.toggle("sidebar-open");
+
+    // Save sidebar state
+    const sidebarIsOpen = sidebar.classList.contains("open");
+    localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
+
+    // Toggle visibility of the dropdown arrow icon
+    if (dropdownArrowIcon) {
+      dropdownArrowIcon.style.display = sidebarIsOpen ? "block" : "none";
     }
   }
 
   function handleLogout() {
-    if (confirm("আপনি কি লগআউট করতে চান?")) {
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userRole");
-      window.location.href = "index.html";
-    }
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
+    window.location.href = "index.html";
   }
 
   function switchSettingsSection(targetSection) {
@@ -237,38 +447,35 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateTheme() {
-    mainBody.className = mainBody.className.replace(
-      /\b(light|dark)-theme\b/g,
-      ""
-    );
+    // Remove existing theme classes
+    mainBody.classList.remove("light-theme", "dark-theme");
+
+    // Always apply light-theme as per requirement
     mainBody.classList.add("light-theme");
 
-    const currentClasses = mainBody.className.split(" ");
-    const fontClasses = currentClasses.filter((cls) => cls.startsWith("font-"));
-    mainBody.className = `light-theme ${fontClasses.join(" ")}`;
-
+    // Set the select box value to 'light'
     document.getElementById("theme").value = "light";
+
     showNotification("থিম সবসময় হালকা থাকবে!", "success");
   }
 
   function updateFontSize() {
     const selectedSize = document.getElementById("fontSize").value;
-    mainBody.className = mainBody.className.replace(
-      /\bfont-(small|medium|large)\b/g,
-      ""
-    );
-    mainBody.classList.add(`font-${selectedSize}`);
+    mainBody.classList.remove("font-small", "font-medium", "font-large"); // Remove all font size classes
+    mainBody.classList.add(`font-${selectedSize}`); // Add the selected font size class
     updatePreview();
     showNotification("ফন্ট সাইজ পরিবর্তন করা হয়েছে!", "success");
   }
 
   function updateFontFamily() {
     const selectedFamily = document.getElementById("fontFamily").value;
-    mainBody.className = mainBody.className.replace(
-      /\bfont-(inter|poppins|roboto|system)\b/g,
-      ""
-    );
-    mainBody.classList.add(`font-${selectedFamily}`);
+    mainBody.classList.remove(
+      "font-inter",
+      "font-poppins",
+      "font-roboto",
+      "font-system"
+    ); // Remove all font family classes
+    mainBody.classList.add(`font-${selectedFamily}`); // Add the selected font family class
     updatePreview();
     showNotification("ফন্ট ফ্যামিলি পরিবর্তন করা হয়েছে!", "success");
   }
@@ -292,9 +499,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    if (currentTimeElement) {
-      currentTimeElement.textContent = timeString;
-    }
+    // There is no currentTimeElement in the new header, so this part is removed or commented out
+    // if (currentTimeElement) {
+    //   currentTimeElement.textContent = timeString;
+    // }
   }
 
   function updatePreview() {
@@ -365,7 +573,7 @@ document.addEventListener("DOMContentLoaded", function () {
         systemLanguage: document.getElementById("systemLanguage").value,
         dateFormat: document.getElementById("dateFormat").value,
         timeFormat: document.getElementById("timeFormat").value,
-        theme: document.getElementById("theme").value,
+        theme: document.getElementById("theme").value, // This will always be 'light' due to updateTheme logic
         fontSize: document.getElementById("fontSize").value,
         fontFamily: document.getElementById("fontFamily").value,
         emailCourse: document.getElementById("emailCourse").checked,
@@ -387,7 +595,7 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       localStorage.setItem(
-        `systemSettings_${currentUserEmail}`,
+        `systemSettings_${currentLoggedInUserEmail}`,
         JSON.stringify(settings)
       );
 
@@ -427,17 +635,17 @@ document.addEventListener("DOMContentLoaded", function () {
         "আপনি কি সব সেটিংস রিসেট করতে চান? এটি পূর্বাবস্থায় ফেরানো যাবে না।"
       )
     ) {
-      localStorage.removeItem(`systemSettings_${currentUserEmail}`);
+      localStorage.removeItem(`systemSettings_${currentLoggedInUserEmail}`);
 
       document.getElementById("systemLanguage").value = "bn";
       document.getElementById("dateFormat").value = "dd/mm/yyyy";
       document.getElementById("timeFormat").value = "24";
-      document.getElementById("theme").value = "light";
+      document.getElementById("theme").value = "light"; // Reset to light
       document.getElementById("fontSize").value = "medium";
       document.getElementById("fontFamily").value = "inter";
 
       updateLanguage();
-      updateTheme();
+      updateTheme(); // This will ensure light theme is applied
       updateFontSize();
       updateFontFamily();
 
@@ -470,10 +678,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function handleDownloadBackup() {
     const backupData = {
-      user: currentUserEmail,
-      settings: localStorage.getItem(`systemSettings_${currentUserEmail}`),
-      profile: localStorage.getItem(`profileData_${currentUserEmail}`),
-      courses: localStorage.getItem("courses"),
+      user: currentLoggedInUserEmail,
+      settings: localStorage.getItem(
+        `systemSettings_${currentLoggedInUserEmail}`
+      ),
+      profile: localStorage.getItem(`profileData_${currentLoggedInUserEmail}`),
+      courses: localStorage.getItem("allCourses"), // Assuming allCourses is the global course list
       timestamp: new Date().toISOString(),
     };
 
@@ -495,7 +705,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function loadSettings() {
     const savedSettings = localStorage.getItem(
-      `systemSettings_${currentUserEmail}`
+      `systemSettings_${currentLoggedInUserEmail}`
     );
 
     if (savedSettings) {
@@ -506,7 +716,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("dateFormat").value =
         settings.dateFormat || "dd/mm/yyyy";
       document.getElementById("timeFormat").value = settings.timeFormat || "24";
-      document.getElementById("theme").value = "light";
+      document.getElementById("theme").value = "light"; // Always set to light on load
       document.getElementById("fontSize").value = settings.fontSize || "medium";
       document.getElementById("fontFamily").value =
         settings.fontFamily || "inter";
@@ -544,19 +754,20 @@ document.addEventListener("DOMContentLoaded", function () {
         settings.backupFrequency || "weekly";
 
       updateLanguage();
-      updateTheme();
+      updateTheme(); // This will ensure light theme is applied
       updateFontSize();
       updateFontFamily();
     } else {
+      // Default settings if none are saved
       document.getElementById("systemLanguage").value = "bn";
       document.getElementById("dateFormat").value = "dd/mm/yyyy";
       document.getElementById("timeFormat").value = "24";
-      document.getElementById("theme").value = "light";
+      document.getElementById("theme").value = "light"; // Default to light
       document.getElementById("fontSize").value = "medium";
       document.getElementById("fontFamily").value = "inter";
 
       updateLanguage();
-      updateTheme();
+      updateTheme(); // This will ensure light theme is applied
       updateFontSize();
       updateFontFamily();
     }
@@ -592,5 +803,40 @@ document.addEventListener("DOMContentLoaded", function () {
         notification.remove();
       }, 300);
     }, 3000);
+  }
+
+  // Function to render enrolled classes in the sidebar dropdown
+  function renderEnrolledClasses() {
+    const dashboard = getUserDashboard();
+    const enrolled = dashboard.courses.filter(
+      (course) =>
+        !course.archived && course.teacher === currentLoggedInUserEmail
+    ); // Only show non-archived courses created by this teacher
+
+    enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+
+    if (enrolled.length === 0) {
+      const listItem = document.createElement("li");
+      listItem.className = "dropdown-item-sidebar no-courses";
+      listItem.textContent = "No classes taught";
+      enrolledClassesDropdown.appendChild(listItem);
+    } else {
+      enrolled.forEach((course) => {
+        const listItem = document.createElement("li");
+        listItem.className = "dropdown-item-sidebar";
+        listItem.textContent = course.name;
+        listItem.dataset.courseId = course.id; // Store course ID for potential future use
+        listItem.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevent dropdown from closing immediately
+          openCourse(course); // Navigate to the course page
+        });
+        enrolledClassesDropdown.appendChild(listItem);
+      });
+    }
+  }
+
+  function openCourse(course) {
+    localStorage.setItem("selectedCourse", JSON.stringify(course));
+    window.location.href = "teacherStream.html"; // Assuming teacherStream.html exists
   }
 });

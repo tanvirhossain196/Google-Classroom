@@ -8,490 +8,490 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="help.css">
 </head>
 
 <body class="light-theme font-medium font-inter" id="mainBody">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
-        <div class="container-fluid">
-            <div class="d-flex align-items-center">
-                <button class="btn btn-link p-2 me-3" id="menuToggle">
-                    <i class="fas fa-bars fs-5"></i>
-                </button>
-                <a class="navbar-brand fw-normal text-muted" href="#">
-                    <span>Classroom</span>
-                </a>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="material-icons menu-icon" id="menuIcon">menu</span>
+                <h1>Classroom</h1>
             </div>
-            <div class="d-flex align-items-center">
-                <div class="dropdown">
-                    <button class="btn btn-link p-0 me-3" type="button" data-bs-toggle="dropdown">
-                        <div class="user-avatar-header" id="headerAvatar">
-                            <span id="headerUserInitial">U</span>
-                        </div>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="profile.html">
-                                <i class="fas fa-user me-2"></i>Profile
-                            </a></li>
-                        <li><a class="dropdown-item" href="settings.html">
-                                <i class="fas fa-cog me-2"></i>Settings
-                            </a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a></li>
-                    </ul>
+            <div class="header-right">
+                <div class="user-info">
+                    <div id="currentUserEmail" class="user-email">user@email.com</div>
+                    <div id="userRoleBadge" class="role-badge new">New User</div>
                 </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h5 class="sidebar-title">Menu</h5>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span class="nav-text">Dashboard</span>
-            </a>
-            <a href="profile.html" class="nav-item">
-                <i class="fas fa-user"></i>
-                <span class="nav-text">Profile</span>
-            </a>
-            <a href="settings.html" class="nav-item">
-                <i class="fas fa-cog"></i>
-                <span class="nav-text">Settings</span>
-            </a>
-            <a href="reports.html" class="nav-item">
-                <i class="fas fa-chart-bar"></i>
-                <span class="nav-text">Reports</span>
-            </a>
-            <a href="help.html" class="nav-item active">
-                <i class="fas fa-question-circle"></i>
-                <span class="nav-text">Help</span>
-            </a>
-        </nav>
-    </div>
-
-    <div class="main-content" id="mainContent">
-        <div class="container-fluid">
-            <div class="page-header">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h1 class="page-title">Help Center</h1>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Help</li>
-                            </ol>
-                        </nav>
-                    </div>
-                    <div class="col-auto">
-                        <div class="search-box">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="helpSearch"
-                                    placeholder="Search for something...">
-                                <button class="btn btn-primary" id="searchBtn">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
                 </div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
             </div>
+        </header>
 
-            <div class="row g-4">
-                <div class="col-lg-3">
-                    <div class="card help-sidebar-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-list me-2"></i>Topics
-                            </h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <nav class="help-nav">
-                                <a href="#getting-started" class="help-link active" data-section="getting-started">
-                                    <i class="fas fa-rocket"></i>
-                                    <span>Getting Started</span>
-                                </a>
-                                <a href="#user-guide" class="help-link" data-section="user-guide">
-                                    <i class="fas fa-book-open"></i>
-                                    <span>User Guide</span>
-                                </a>
-                                <a href="#features" class="help-link" data-section="features">
-                                    <i class="fas fa-star"></i>
-                                    <span>Features</span>
-                                </a>
-                                <a href="#troubleshooting" class="help-link" data-section="troubleshooting">
-                                    <i class="fas fa-wrench"></i>
-                                    <span>Troubleshooting</span>
-                                </a>
-                                <a href="#faq" class="help-link" data-section="faq">
-                                    <i class="fas fa-question"></i>
-                                    <span>FAQ</span>
-                                </a>
-                                <a href="#contact" class="help-link" data-section="contact">
-                                    <i class="fas fa-phone"></i>
-                                    <span>Contact</span>
-                                </a>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-menu">
+                <ul class="sidebar-menu">
+                    <li><a href="teacher.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">home</i>
+                            <span>Dashboard</span>
+                        </a></li>
+                    <li><a href="teacherProfile.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a></li>
+                    <!-- New Enrolled Classes Dropdown -->
+                    <li class="sidebar-dropdown">
+                        <a href="#" class="nav-link" id="enrolledClassesDropdownToggle">
+                            <i class="material-icons">school</i>
+                            <span>Teaching</span>
+                            <!-- Added a new class 'dropdown-arrow-icon' for targeting -->
+                            <i class="material-icons dropdown-arrow dropdown-arrow-icon">keyboard_arrow_down</i>
+                        </a>
+                        <ul class="dropdown-menu-sidebar" id="enrolledClassesDropdown">
+                            <!-- Course names will be dynamically inserted here -->
+                        </ul>
+                    </li>
+                    <li><a href="teacherArchive.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">archive</i>
+                            <span>Archive classes</span>
+                        </a></li>
+                    <li><a href="teacherSettings.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">settings</i>
+                            <span>Settings</span>
+                        </a></li>
+                    <li><a href="help.html" class="nav-link active" data-nav-link>
+                            <i class="material-icons">help_outline</i>
+                            <span>Help</span>
+                        </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content" id="mainContent">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">Help Center</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">Help</li>
+                                </ol>
                             </nav>
                         </div>
+                        <div class="col-auto">
+                            <div class="search-box">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="helpSearch"
+                                        placeholder="Search for something...">
+                                    <button class="btn btn-primary" id="searchBtn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-lg-9">
-                    <div class="help-section active" id="getting-started">
-                        <div class="card">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <div class="card help-sidebar-card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-rocket me-2"></i>Getting Started
+                                    <i class="fas fa-list me-2"></i>Topics
                                 </h5>
                             </div>
-                            <div class="card-body">
-                                <div class="welcome-section">
-                                    <h3 class="mb-4">Welcome to Education Management System!</h3>
-                                    <p class="lead">Welcome to our platform. Here's a simple guide on how to get
-                                        started:</p>
-                                </div>
+                            <div class="card-body p-0">
+                                <nav class="help-nav">
+                                    <a href="#getting-started" class="help-link active" data-section="getting-started">
+                                        <i class="fas fa-rocket"></i>
+                                        <span>Getting Started</span>
+                                    </a>
+                                    <a href="#user-guide" class="help-link" data-section="user-guide">
+                                        <i class="fas fa-book-open"></i>
+                                        <span>User Guide</span>
+                                    </a>
+                                    <a href="#features" class="help-link" data-section="features">
+                                        <i class="fas fa-star"></i>
+                                        <span>Features</span>
+                                    </a>
+                                    <a href="#troubleshooting" class="help-link" data-section="troubleshooting">
+                                        <i class="fas fa-wrench"></i>
+                                        <span>Troubleshooting</span>
+                                    </a>
+                                    <a href="#faq" class="help-link" data-section="faq">
+                                        <i class="fas fa-question"></i>
+                                        <span>FAQ</span>
+                                    </a>
+                                    <a href="#contact" class="help-link" data-section="contact">
+                                        <i class="fas fa-phone"></i>
+                                        <span>Contact</span>
+                                    </a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
 
-                                <div class="step-guide">
-                                    <div class="step-item">
-                                        <div class="step-number">1</div>
-                                        <div class="step-content">
-                                            <h4>Login</h4>
-                                            <p>Log in with your email and password. Select your role
-                                                (teacher/student/admin).</p>
-                                        </div>
+                    <div class="col-lg-9">
+                        <div class="help-section active" id="getting-started">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-rocket me-2"></i>Getting Started
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="welcome-section">
+                                        <h3 class="mb-4">Welcome to Education Management System!</h3>
+                                        <p class="lead">Welcome to our platform. Here's a simple guide on how to get
+                                            started:</p>
                                     </div>
-                                    <div class="step-item">
-                                        <div class="step-number">2</div>
-                                        <div class="step-content">
-                                            <h4>Setup Profile</h4>
-                                            <p>Complete your profile. Set personal information, contact details, and
-                                                preferences.</p>
+
+                                    <div class="step-guide">
+                                        <div class="step-item">
+                                            <div class="step-number">1</div>
+                                            <div class="step-content">
+                                                <h4>Login</h4>
+                                                <p>Log in with your email and password. Select your role
+                                                    (teacher/student/admin).</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="step-item">
-                                        <div class="step-number">3</div>
-                                        <div class="step-content">
-                                            <h4>Start Course</h4>
-                                            <p>If you're a teacher, create new courses. If you're a student, join
-                                                courses using course codes.</p>
+                                        <div class="step-item">
+                                            <div class="step-number">2</div>
+                                            <div class="step-content">
+                                                <h4>Setup Profile</h4>
+                                                <p>Complete your profile. Set personal information, contact details, and
+                                                    preferences.</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-item">
+                                            <div class="step-number">3</div>
+                                            <div class="step-content">
+                                                <h4>Start Course</h4>
+                                                <p>If you're a teacher, create new courses. If you're a student, join
+                                                    courses using course codes.</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="help-section" id="user-guide">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-book-open me-2"></i>User Guide
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="guide-tabs">
-                                    <div class="tab-buttons">
-                                        <button class="tab-btn active" data-tab="student">Student</button>
-                                        <button class="tab-btn" data-tab="teacher">Teacher</button>
-                                        <button class="tab-btn" data-tab="admin">Admin</button>
-                                    </div>
+                        <div class="help-section" id="user-guide">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-book-open me-2"></i>User Guide
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="guide-tabs">
+                                        <div class="tab-buttons">
+                                            <button class="tab-btn active" data-tab="student">Student</button>
+                                            <button class="tab-btn" data-tab="teacher">Teacher</button>
+                                            <button class="tab-btn" data-tab="admin">Admin</button>
+                                        </div>
 
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="student-tab">
-                                            <h4>Guide for Students</h4>
-                                            <ul>
-                                                <li>Join courses using course codes</li>
-                                                <li>View and submit assignments</li>
-                                                <li>Download class notes and materials</li>
-                                                <li>Communicate with teachers and classmates</li>
-                                            </ul>
-                                        </div>
-                                        <div class="tab-pane" id="teacher-tab">
-                                            <h4>Guide for Teachers</h4>
-                                            <ul>
-                                                <li>Create new courses</li>
-                                                <li>Share course codes with students</li>
-                                                <li>Create and manage assignments</li>
-                                                <li>Provide grades and feedback</li>
-                                            </ul>
-                                        </div>
-                                        <div class="tab-pane" id="admin-tab">
-                                            <h4>Guide for Administrators</h4>
-                                            <ul>
-                                                <li>Manage user accounts</li>
-                                                <li>Configure system settings</li>
-                                                <li>View reports and analytics</li>
-                                                <li>Backup and restore data</li>
-                                            </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="student-tab">
+                                                <h4>Guide for Students</h4>
+                                                <ul>
+                                                    <li>Join courses using course codes</li>
+                                                    <li>View and submit assignments</li>
+                                                    <li>Download class notes and materials</li>
+                                                    <li>Communicate with teachers and classmates</li>
+                                                </ul>
+                                            </div>
+                                            <div class="tab-pane" id="teacher-tab">
+                                                <h4>Guide for Teachers</h4>
+                                                <ul>
+                                                    <li>Create new courses</li>
+                                                    <li>Share course codes with students</li>
+                                                    <li>Create and manage assignments</li>
+                                                    <li>Provide grades and feedback</li>
+                                                </ul>
+                                            </div>
+                                            <div class="tab-pane" id="admin-tab">
+                                                <h4>Guide for Administrators</h4>
+                                                <ul>
+                                                    <li>Manage user accounts</li>
+                                                    <li>Configure system settings</li>
+                                                    <li>View reports and analytics</li>
+                                                    <li>Backup and restore data</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="help-section" id="features">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-star me-2"></i>Features
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="feature-grid">
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-graduation-cap"></i>
+                        <div class="help-section" id="features">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-star me-2"></i>Features
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="feature-grid">
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Course Management</h4>
+                                                <ul>
+                                                    <li>Create online courses</li>
+                                                    <li>Student enrollment</li>
+                                                    <li>Upload course materials</li>
+                                                    <li>Class scheduling</li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="feature-content">
-                                            <h4>Course Management</h4>
-                                            <ul>
-                                                <li>Create online courses</li>
-                                                <li>Student enrollment</li>
-                                                <li>Upload course materials</li>
-                                                <li>Class scheduling</li>
-                                            </ul>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-tasks"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Assignments</h4>
+                                                <ul>
+                                                    <li>Create assignments</li>
+                                                    <li>Track submissions</li>
+                                                    <li>Grading system</li>
+                                                    <li>Provide feedback</li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-tasks"></i>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-comments"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Communication</h4>
+                                                <ul>
+                                                    <li>Instant messaging</li>
+                                                    <li>Forum discussions</li>
+                                                    <li>Video conferencing</li>
+                                                    <li>Email notifications</li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="feature-content">
-                                            <h4>Assignments</h4>
-                                            <ul>
-                                                <li>Create assignments</li>
-                                                <li>Track submissions</li>
-                                                <li>Grading system</li>
-                                                <li>Provide feedback</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-comments"></i>
-                                        </div>
-                                        <div class="feature-content">
-                                            <h4>Communication</h4>
-                                            <ul>
-                                                <li>Instant messaging</li>
-                                                <li>Forum discussions</li>
-                                                <li>Video conferencing</li>
-                                                <li>Email notifications</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-chart-line"></i>
-                                        </div>
-                                        <div class="feature-content">
-                                            <h4>Reports</h4>
-                                            <ul>
-                                                <li>Performance reports</li>
-                                                <li>Attendance tracking</li>
-                                                <li>Progress monitoring</li>
-                                                <li>Data export</li>
-                                            </ul>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Reports</h4>
+                                                <ul>
+                                                    <li>Performance reports</li>
+                                                    <li>Attendance tracking</li>
+                                                    <li>Progress monitoring</li>
+                                                    <li>Data export</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="help-section" id="troubleshooting">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-wrench me-2"></i>Troubleshooting
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="troubleshoot-list">
-                                    <div class="problem-item">
-                                        <div class="problem-header">
-                                            <h4>Cannot login</h4>
+                        <div class="help-section" id="troubleshooting">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-wrench me-2"></i>Troubleshooting
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="troubleshoot-list">
+                                        <div class="problem-item">
+                                            <div class="problem-header">
+                                                <h4>Cannot login</h4>
+                                            </div>
+                                            <div class="problem-solution">
+                                                <p><strong>Solution:</strong></p>
+                                                <ul>
+                                                    <li>Check your email and password</li>
+                                                    <li>Clear browser cache</li>
+                                                    <li>Try resetting your password</li>
+                                                    <li>Contact support team</li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="problem-solution">
-                                            <p><strong>Solution:</strong></p>
-                                            <ul>
-                                                <li>Check your email and password</li>
-                                                <li>Clear browser cache</li>
-                                                <li>Try resetting your password</li>
-                                                <li>Contact support team</li>
-                                            </ul>
+                                        <div class="problem-item">
+                                            <div class="problem-header">
+                                                <h4>Course code not working</h4>
+                                            </div>
+                                            <div class="problem-solution">
+                                                <p><strong>Solution:</strong></p>
+                                                <ul>
+                                                    <li>Check if course code is entered correctly</li>
+                                                    <li>Look for spaces or extra characters</li>
+                                                    <li>Make sure course code is still active</li>
+                                                    <li>Contact the teacher</li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="problem-item">
-                                        <div class="problem-header">
-                                            <h4>Course code not working</h4>
-                                        </div>
-                                        <div class="problem-solution">
-                                            <p><strong>Solution:</strong></p>
-                                            <ul>
-                                                <li>Check if course code is entered correctly</li>
-                                                <li>Look for spaces or extra characters</li>
-                                                <li>Make sure course code is still active</li>
-                                                <li>Contact the teacher</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="problem-item">
-                                        <div class="problem-header">
-                                            <h4>File not uploading</h4>
-                                        </div>
-                                        <div class="problem-solution">
-                                            <p><strong>Solution:</strong></p>
-                                            <ul>
-                                                <li>Keep file size under 10MB</li>
-                                                <li>Use supported file formats</li>
-                                                <li>Check internet connection</li>
-                                                <li>Refresh the browser</li>
-                                            </ul>
+                                        <div class="problem-item">
+                                            <div class="problem-header">
+                                                <h4>File not uploading</h4>
+                                            </div>
+                                            <div class="problem-solution">
+                                                <p><strong>Solution:</strong></p>
+                                                <ul>
+                                                    <li>Keep file size under 10MB</li>
+                                                    <li>Use supported file formats</li>
+                                                    <li>Check internet connection</li>
+                                                    <li>Refresh the browser</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="help-section" id="faq">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-question me-2"></i>FAQ
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="faq-list">
-                                    <div class="faq-item">
-                                        <div class="faq-question">
-                                            <h4>How do I create a new course?</h4>
-                                            <div class="faq-toggle">+</div>
+                        <div class="help-section" id="faq">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-question me-2"></i>FAQ
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="faq-list">
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>How do I create a new course?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>Click "Create Course" button from the dashboard. Fill in the course
+                                                    name,
+                                                    subject, and other details. Then click "Create" button.</p>
+                                            </div>
                                         </div>
-                                        <div class="faq-answer">
-                                            <p>Click "Create Course" button from the dashboard. Fill in the course name,
-                                                subject, and other details. Then click "Create" button.</p>
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>Where can I find my course code?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>After creating a course, you'll receive a unique course code. It
+                                                    will be
+                                                    displayed on your course card. Share this code with students.</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="faq-item">
-                                        <div class="faq-question">
-                                            <h4>Where can I find my course code?</h4>
-                                            <div class="faq-toggle">+</div>
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>How do I create an assignment?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>Go to the course page and click on "Assignment" section. Click "New
+                                                    Assignment" button and provide assignment details, deadline, and
+                                                    instructions.</p>
+                                            </div>
                                         </div>
-                                        <div class="faq-answer">
-                                            <p>After creating a course, you'll receive a unique course code. It will be
-                                                displayed on your course card. Share this code with students.</p>
-                                        </div>
-                                    </div>
-                                    <div class="faq-item">
-                                        <div class="faq-question">
-                                            <h4>How do I create an assignment?</h4>
-                                            <div class="faq-toggle">+</div>
-                                        </div>
-                                        <div class="faq-answer">
-                                            <p>Go to the course page and click on "Assignment" section. Click "New
-                                                Assignment" button and provide assignment details, deadline, and
-                                                instructions.</p>
-                                        </div>
-                                    </div>
-                                    <div class="faq-item">
-                                        <div class="faq-question">
-                                            <h4>How to reset password?</h4>
-                                            <div class="faq-toggle">+</div>
-                                        </div>
-                                        <div class="faq-answer">
-                                            <p>Click "Forgot Password?" link on the login page. Enter your email address
-                                                and check your email for password reset link.</p>
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>How to reset password?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>Click "Forgot Password?" link on the login page. Enter your email
+                                                    address
+                                                    and check your email for password reset link.</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="help-section" id="contact">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-phone me-2"></i>Contact
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="contact-methods">
-                                    <div class="contact-method">
-                                        <div class="contact-icon">
-                                            <i class="fas fa-envelope"></i>
-                                        </div>
-                                        <div class="contact-info">
-                                            <h4>Email</h4>
-                                            <p>support@classroom.com</p>
-                                            <p>Response within 24 hours</p>
-                                        </div>
-                                    </div>
-                                    <div class="contact-method">
-                                        <div class="contact-icon">
-                                            <i class="fas fa-phone"></i>
-                                        </div>
-                                        <div class="contact-info">
-                                            <h4>Phone</h4>
-                                            <p>+880-1712-345678</p>
-                                            <p>9 AM - 6 PM</p>
-                                        </div>
-                                    </div>
-                                    <div class="contact-method">
-                                        <div class="contact-icon">
-                                            <i class="fas fa-comments"></i>
-                                        </div>
-                                        <div class="contact-info">
-                                            <h4>Live Chat</h4>
-                                            <p>Instant help</p>
-                                            <button class="btn btn-primary chat-btn">Start Chat</button>
-                                        </div>
-                                    </div>
+                        <div class="help-section" id="contact">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-phone me-2"></i>Contact
+                                    </h5>
                                 </div>
-
-                                <div class="contact-form">
-                                    <h4>Write to Us</h4>
-                                    <form id="contactForm">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Name</label>
-                                                <input type="text" class="form-control" id="contactName" required>
+                                <div class="card-body">
+                                    <div class="contact-methods">
+                                        <div class="contact-method">
+                                            <div class="contact-icon">
+                                                <i class="fas fa-envelope"></i>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="contactEmail" required>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label">Subject</label>
-                                                <select class="form-select" id="contactSubject" required>
-                                                    <option value="">Select Subject</option>
-                                                    <option value="technical">Technical Issue</option>
-                                                    <option value="account">Account Issue</option>
-                                                    <option value="course">Course Related</option>
-                                                    <option value="other">Other</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label">Message</label>
-                                                <textarea class="form-control" id="contactMessage" rows="4"
-                                                    required></textarea>
-                                            </div>
-                                            <div class="col-12">
-                                                <button type="submit" class="btn btn-primary">
-                                                    <i class="fas fa-paper-plane me-2"></i>Send Message
-                                                </button>
+                                            <div class="contact-info">
+                                                <h4>Email</h4>
+                                                <p>support@classroom.com</p>
+                                                <p>Response within 24 hours</p>
                                             </div>
                                         </div>
-                                    </form>
+                                        <div class="contact-method">
+                                            <div class="contact-icon">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div class="contact-info">
+                                                <h4>Phone</h4>
+                                                <p>+880-1712-345678</p>
+                                                <p>9 AM - 6 PM</p>
+                                            </div>
+                                        </div>
+                                        <div class="contact-method">
+                                            <div class="contact-icon">
+                                                <i class="fas fa-comments"></i>
+                                            </div>
+                                            <div class="contact-info">
+                                                <h4>Live Chat</h4>
+                                                <p>Instant help</p>
+                                                <button class="btn btn-primary chat-btn">Start Chat</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="contact-form">
+                                        <h4>Write to Us</h4>
+                                        <form id="contactForm">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Name</label>
+                                                    <input type="text" class="form-control" id="contactName" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="contactEmail" required>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label">Subject</label>
+                                                    <select class="form-select" id="contactSubject" required>
+                                                        <option value="">Select Subject</option>
+                                                        <option value="technical">Technical Issue</option>
+                                                        <option value="account">Account Issue</option>
+                                                        <option value="course">Course Related</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label">Message</label>
+                                                    <textarea class="form-control" id="contactMessage" rows="4"
+                                                        required></textarea>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

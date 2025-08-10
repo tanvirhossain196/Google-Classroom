@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ক্লাসরুম - ব্যক্তিগত</title>
+    <link rel="stylesheet" href="studentPeople.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Enhanced Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn">
+                    <span class="material-icons">menu</span>
+                </button>
+                <h1 class="logo-text">Classroom</h1>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <span class="material-icons">notifications</span>
+                </button>
+                <button class="header-icon-btn">
+                    <span class="material-icons">apps</span>
+                </button>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Enhanced Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="current-course-section">
+                    <div class="current-course-header">
+                        <span class="material-icons">class</span>
+                        <span class="course-name-text" id="currentCourseName">Course loading...</span>
+                    </div>
+                </div>
+
+
+                <a href="studentStream.html" class="sidebar-item" id="classesLink">
+                    <span class="material-icons">home</span>
+                    <span class="sidebar-text">Classroom</span>
+                </a>
+
+                <a href="#" class="sidebar-item" id="settingsLink">
+                    <span class="material-icons">settings</span>
+                    <span class="sidebar-text">Settings</span>
+                </a>
+
+                <!-- Enrolled Classes Dropdown -->
+                <div class="sidebar-header" id="enrolledClassesHeader">
+                    <span class="material-icons">school</span>
+                    <span class="sidebar-text">Enrolled Classes</span>
+                    <span class="material-icons dropdown-icon" id="enrolledClassesDropdownIcon">chevron_right</span>
+                </div>
+
+                <div id="enrolledClasses" class="enrolled-classes-list">
+                    <!-- Enrolled classes will be populated here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Enhanced Top Navigation -->
+        <nav class="course-top-nav" id="courseTopNav">
+            <div class="top-nav-tabs">
+                <button class="top-nav-tab" data-tab="stream" onclick="window.location.href='studentStream.html'">
+                    <i class="material-icons">dynamic_feed</i>
+                    <span>Stream</span>
+                </button>
+                <button class="top-nav-tab" data-tab="classwork" onclick="window.location.href='studentClasswork.html'">
+                    <i class="material-icons">assignment</i>
+                    <span>Classwork</span>
+                </button>
+                <button class="top-nav-tab active" data-tab="people">
+                    <i class="material-icons">people</i>
+                    <span>People</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Enhanced Content Wrapper -->
+        <main class="content-wrapper" id="contentWrapper">
+            <div class="content-inner">
+                <!-- Enhanced Course Header -->
+                <section class="course-header-section" style="display: none;">
+                    <div class="course-banner" id="courseBanner">
+                        <div class="banner-content">
+                            <h1 class="course-title" id="courseTitle">Course loading...</h1>
+                            <p class="course-section" id="courseSection">Section loading...</p>
+
+                            <!-- Course additional info -->
+                            <div class="course-additional-info">
+                                <p id="courseCode">Course Code: ---</p>
+                                <p id="studentsCount">Students: ---</p>
+                                <p id="teacherName">Teacher: ---</p>
+                            </div>
+                        </div>
+                        <button class="banner-menu-btn">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Enhanced Main Content -->
+                <section class="main-content">
+                    <!-- People Tab -->
+                    <div id="people" class="tab-content active">
+                        <div class="people-container" id="peopleContent">
+                            <div class="people-header">
+                                <h2 class="people-title">
+                                    <span class="material-icons">people</span>
+                                    Class Members
+                                </h2>
+                                <!-- Invite People button is hidden for students -->
+                                <button class="invite-people-btn" id="invitePeopleBtn" style="display: none;">
+                                    <span class="material-icons">person_add</span>
+                                    Invite People
+                                </button>
+                            </div>
+
+                            <!-- Teachers Section -->
+                            <div class="people-section" id="teachersSection">
+                                <div class="section-header">
+                                    <h3 class="section-title">
+                                        <span class="material-icons">school</span>
+                                        Teachers
+                                        <span class="count-badge" id="teachersCount">0</span>
+                                    </h3>
+                                </div>
+                                <div class="people-list" id="teachersList">
+                                    <!-- Teachers will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- Students Section -->
+                            <div class="people-section" id="studentsSection">
+                                <div class="section-header">
+                                    <h3 class="section-title">
+                                        <span class="material-icons">group</span>
+                                        Students
+                                        <span class="count-badge" id="studentsCount">0</span>
+                                    </h3>
+                                    <div class="section-actions">
+                                        <button class="action-btn" id="sortStudentsBtn">
+                                            <span class="material-icons">sort</span>
+                                            Sort
+                                        </button>
+                                        <button class="action-btn" id="filterStudentsBtn">
+                                            <span class="material-icons">filter_list</span>
+                                            Filter
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="people-list" id="studentsList">
+                                    <!-- Students will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- Empty State -->
+                            <div class="people-empty" id="peopleEmpty" style="display: none;">
+                                <div class="empty-icon">
+                                    <span class="material-icons">people_outline</span>
+                                </div>
+                                <h3>No Members</h3>
+                                <p>No teachers or students have joined this class yet.</p>
+                                <!-- Invite First Person button is hidden for students -->
+                                <button class="empty-action-btn" id="inviteFirstPersonBtn" style="display: none;">
+                                    <span class="material-icons">person_add</span>
+                                    Invite First Person
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Invite People Modal (hidden for students) -->
+                        <div class="invite-modal" id="inviteModal" style="display: none;">
+                            <div class="invite-modal-content">
+                                <div class="invite-modal-header">
+                                    <h3 class="invite-modal-title">
+                                        <span class="material-icons">person_add</span>
+                                        Invite People
+                                    </h3>
+                                    <button class="modal-close-btn" id="closeInviteModal">
+                                        <span class="material-icons">close</span>
+                                    </button>
+                                </div>
+
+                                <div class="invite-modal-body">
+                                    <!-- Invite by Email -->
+                                    <div class="invite-section">
+                                        <div class="invite-section-header">
+                                            <h4>Invite by Email</h4>
+                                            <p>Separate multiple emails with commas</p>
+                                        </div>
+                                        <div class="email-input-container">
+                                            <textarea class="email-input" id="inviteEmails"
+                                                placeholder="example1@email.com, example2@email.com"
+                                                rows="3"></textarea>
+                                        </div>
+                                        <div class="role-selection">
+                                            <label class="role-label">Select Role:</label>
+                                            <div class="role-options">
+                                                <label class="role-option">
+                                                    <input type="radio" name="inviteRole" value="student" checked>
+                                                    <span class="role-icon">
+                                                        <span class="material-icons">school</span>
+                                                    </span>
+                                                    <span class="role-text">Student</span>
+                                                </label>
+                                                <label class="role-option">
+                                                    <input type="radio" name="inviteRole" value="teacher">
+                                                    <span class="role-icon">
+                                                        <span class="material-icons">person</span>
+                                                    </span>
+                                                    <span class="role-text">Teacher</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Invite by Class Code -->
+                                    <div class="invite-section">
+                                        <div class="invite-section-header">
+                                            <h4>Share Class Code</h4>
+                                            <p>Students can use this code to join the class</p>
+                                        </div>
+                                        <div class="class-code-container">
+                                            <div class="class-code-display">
+                                                <span class="class-code" id="classCode">ABC123</span>
+                                                <button class="copy-code-btn" id="copyCodeBtn">
+                                                    <span class="material-icons">content_copy</span>
+                                                    Copy
+                                                </button>
+                                            </div>
+                                            <div class="class-code-actions">
+                                                <button class="regenerate-code-btn" id="regenerateCodeBtn">
+                                                    <span class="material-icons">refresh</span>
+                                                    Regenerate Code
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="invite-modal-footer">
+                                    <button class="modal-btn-cancel" id="cancelInvite">
+                                        Cancel
+                                    </button>
+                                    <button class="modal-btn-confirm" id="sendInvites">
+                                        Send Invites
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Person Detail Modal -->
+                        <div class="person-detail-modal" id="personDetailModal" style="display: none;">
+                            <div class="person-detail-content">
+                                <div class="person-detail-header">
+                                    <button class="close-person-detail" id="closePersonDetail">
+                                        <span class="material-icons">close</span>
+                                    </button>
+                                </div>
+                                <div class="person-detail-body" id="personDetailBody">
+                                    <!-- Person detail content will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sort/Filter Modal -->
+                        <div class="sort-filter-modal" id="sortFilterModal" style="display: none;">
+                            <div class="sort-filter-content">
+                                <div class="sort-filter-header">
+                                    <h3>Sort and Filter</h3>
+                                    <button class="close-sort-filter" id="closeSortFilter">
+                                        <span class="material-icons">close</span>
+                                    </button>
+                                </div>
+                                <div class="sort-filter-body">
+                                    <!-- Sort options -->
+                                    <div class="filter-section">
+                                        <h4>Sort</h4>
+                                        <div class="sort-options">
+                                            <label class="sort-option">
+                                                <input type="radio" name="sortBy" value="name" checked>
+                                                By Name
+                                            </label>
+                                            <label class="sort-option">
+                                                <input type="radio" name="sortBy" value="recent">
+                                                By Recent Activity
+                                            </label>
+                                            <label class="sort-option">
+                                                <input type="radio" name="sortBy" value="alphabetical">
+                                                By Alphabetical Order
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Filter options -->
+                                    <div class="filter-section">
+                                        <h4>Filter</h4>
+                                        <div class="sort-options">
+                                            <label class="sort-option">
+                                                <input type="radio" name="filterBy" value="all" checked>
+                                                All Members
+                                            </label>
+                                            <label class="sort-option">
+                                                <input type="radio" name="filterBy" value="active">
+                                                Active Members
+                                            </label>
+                                            <label class="sort-option">
+                                                <input type="radio" name="filterBy" value="inactive">
+                                                Inactive Members
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Apply actions -->
+                                    <div class="sort-filter-actions">
+                                        <button class="modal-btn-cancel" onclick="peopleManager.hideSortFilterModal()">
+                                            Cancel
+                                        </button>
+                                        <button class="modal-btn-confirm" onclick="peopleManager.applySortFilter()">
+                                            Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Assignment Detail View Modal -->
+        <div class="assignment-detail-modal" id="assignmentDetailModal" style="display: none;">
+            <div class="assignment-detail-content">
+                <div class="assignment-detail-header">
+                    <button class="close-assignment-detail" id="closeAssignmentDetail">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <div class="assignment-detail-body" id="assignmentDetailBody">
+                    <!-- Assignment detail content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="studentPeople.js"></script>
+</body>
+
+</html>
