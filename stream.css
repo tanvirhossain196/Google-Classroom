@@ -27,8 +27,8 @@ body {
     sans-serif;
   background: linear-gradient(
     135deg,
-    #f5f7fa 0%,
-    #c3cfe2 100%
+    #ffffff 0%,
+    #ffffff 100%
   ); /* Subtle gradient */
   color: var(--text-primary);
   line-height: 1.6;
