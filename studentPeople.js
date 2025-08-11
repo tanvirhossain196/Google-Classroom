@@ -261,7 +261,7 @@ class PeopleManager {
   showErrorAndRedirect(message) {
     alert(message);
     // Ensure that when redirecting to student.html, the session is preserved.
-    // The student.js handles this by checking localStorage for currentUser.
+    // The student.js dashboard handles this by checking localStorage for currentUser.
     window.location.href = "student.html";
   }
 
