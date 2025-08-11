@@ -1,21 +1,35 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const menuToggle = document.getElementById("menuToggle");
+  // Elements
+  const menuIcon = document.getElementById("menuIcon");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("mainContent");
   const logoutBtn = document.getElementById("logoutBtn");
+  const userInitial = document.getElementById("userInitial");
+  const currentUserEmailElement = document.getElementById("currentUserEmail");
+  const userRoleBadge = document.getElementById("userRoleBadge");
+
+  // Navigation links
+  const navLinks = document.querySelectorAll("[data-nav-link]");
+
+  // Enrolled Classes Dropdown elements
+  const enrolledClassesDropdownToggle = document.getElementById(
+    "enrolledClassesDropdownToggle"
+  );
+  const enrolledClassesDropdown = document.getElementById(
+    "enrolledClassesDropdown"
+  );
+
   const settingsNavItems = document.querySelectorAll(".settings-nav-item");
   const settingsSections = document.querySelectorAll(".settings-section");
   const saveSettingsBtn = document.getElementById("saveSettings");
   const cancelSettingsBtn = document.getElementById("cancelSettings");
-  const headerUserInitial = document.getElementById("headerUserInitial");
-  const currentTimeElement = document.getElementById("currentTime");
   const previewTimeElement = document.getElementById("previewTime");
   const previewDateElement = document.getElementById("previewDate");
   const previewTextElement = document.getElementById("previewText");
   const mainBody = document.getElementById("mainBody");
 
   const currentUserEmail = localStorage.getItem("userEmail");
-  const userRole = localStorage.getItem("userRole"); // This variable can be used for student-specific logic if needed
+  const userRole = localStorage.getItem("userRole");
 
   const translations = {
     bn: {
@@ -84,15 +98,91 @@ document.addEventListener("DOMContentLoaded", function () {
     },
   };
 
-  if (!currentUserEmail) {
+  if (!currentUserEmail || userRole !== "student") {
     window.location.href = "index.html";
     return;
   }
 
   initializePage();
 
-  menuToggle.addEventListener("click", toggleSidebar);
+  // Event listeners for new header/sidebar
+  menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
+
+  // Enrolled Classes Dropdown Toggle
+  enrolledClassesDropdownToggle.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+    enrolledClassesDropdown.classList.toggle("show");
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
+    renderEnrolledClasses(); // Re-render to ensure up-to-date list
+  });
+
+  // Navigation event listeners - Complete navigation fix
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      const currentPage =
+        window.location.pathname.split("/").pop() || "student.html";
+
+      // Prevent default behavior and handle navigation manually
+      e.preventDefault();
+      e.stopPropagation();
+
+      // If clicking on same page, do nothing
+      if (
+        href === currentPage ||
+        (href === "student.html" && currentPage === "")
+      ) {
+        return;
+      }
+
+      // Update active states
+      navLinks.forEach((l) => l.classList.remove("active"));
+      this.classList.add("active");
+
+      // Store navigation intent to prevent automatic redirects
+      localStorage.setItem("intentionalNavigation", "true");
+      localStorage.setItem("targetPage", href);
+
+      // Use window.location.href for proper navigation
+      setTimeout(() => {
+        window.location.href = href;
+      }, 100);
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  window.addEventListener("click", function (e) {
+    // Close enrolled classes dropdown if clicked outside
+    if (
+      !enrolledClassesDropdownToggle.contains(e.target) &&
+      !enrolledClassesDropdown.contains(e.target)
+    ) {
+      enrolledClassesDropdown.classList.remove("show");
+      enrolledClassesDropdownToggle
+        .querySelector(".dropdown-arrow")
+        .classList.remove("rotate");
+    }
+  });
+
+  // Close sidebar when clicking outside (but don't interfere with navigation)
+  document.addEventListener("click", function (e) {
+    // Check if click is on a navigation link
+    const isNavLink = e.target.closest("[data-nav-link]");
+
+    if (
+      !isNavLink &&
+      !sidebar.contains(e.target) &&
+      !menuIcon.contains(e.target)
+    ) {
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
+      localStorage.setItem("sidebarState", "closed");
+    }
+  });
+
+  // Existing settings page event listeners
   saveSettingsBtn.addEventListener("click", handleSaveSettings);
   cancelSettingsBtn.addEventListener("click", handleCancelSettings);
 
@@ -143,14 +233,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("downloadBackup")
     .addEventListener("click", handleDownloadBackup);
 
-  document.addEventListener("click", function (e) {
-    if (window.innerWidth <= 768) {
-      if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-        sidebar.classList.remove("show");
-      }
-    }
-  });
-
   window.addEventListener("resize", function () {
     if (window.innerWidth > 768) {
       sidebar.classList.remove("show");
@@ -167,20 +249,33 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function initializePage() {
-    const userInitial = currentUserEmail.charAt(0).toUpperCase();
-    headerUserInitial.textContent = userInitial;
+    currentUserEmailElement.textContent = currentUserEmail;
+    userInitial.textContent = currentUserEmail.charAt(0).toUpperCase();
+    userRoleBadge.textContent = "Student";
+    userRoleBadge.className = "role-badge student";
 
-    if (
-      !mainBody.classList.contains("light-theme") &&
-      !mainBody.classList.contains("dark-theme")
-    ) {
-      mainBody.classList.add("light-theme", "font-medium", "font-inter");
+    // Handle sidebar state on page load
+    const savedSidebarState = localStorage.getItem("sidebarState");
+    const intentionalNavigation = localStorage.getItem("intentionalNavigation");
+
+    // If coming from intentional navigation and sidebar was open, restore it
+    if (intentionalNavigation === "true" && savedSidebarState === "open") {
+      sidebar.classList.add("open");
+      mainContent.classList.add("sidebar-open");
+      // Clear the navigation flag
+      localStorage.removeItem("intentionalNavigation");
+    } else {
+      // Default closed state (for refresh or direct access)
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
+      localStorage.setItem("sidebarState", "closed");
     }
 
     loadSettings();
     updateCurrentTime();
     setInterval(updateCurrentTime, 1000);
     updatePreview();
+    renderEnrolledClasses(); // Initial render of enrolled classes
 
     document.querySelectorAll(".card").forEach((card) => {
       card.classList.add("fade-in");
@@ -188,16 +283,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function toggleSidebar() {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.toggle("show");
-    } else {
-      sidebar.classList.toggle("collapsed");
-      mainContent.classList.toggle("collapsed");
-    }
+    sidebar.classList.toggle("open");
+    mainContent.classList.toggle("sidebar-open");
+
+    // Save sidebar state
+    const sidebarIsOpen = sidebar.classList.contains("open");
+    localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
   }
 
   function handleLogout() {
     if (confirm("আপনি কি লগআউট করতে চান?")) {
+      localStorage.removeItem("currentUser");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userRole");
       window.location.href = "index.html";
@@ -274,6 +370,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateCurrentTime() {
+    // This function is for the header time, which is removed.
+    // Keeping it here for consistency with original studentSettings.js, but it won't update a visible element.
     const now = new Date();
     const timeFormat = document.getElementById("timeFormat").value;
 
@@ -291,10 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
         minute: "2-digit",
       });
     }
-
-    if (currentTimeElement) {
-      currentTimeElement.textContent = timeString;
-    }
+    // No element to update for current time in the new header
   }
 
   function updatePreview() {
@@ -473,7 +568,7 @@ document.addEventListener("DOMContentLoaded", function () {
       user: currentUserEmail,
       settings: localStorage.getItem(`systemSettings_${currentUserEmail}`),
       profile: localStorage.getItem(`profileData_${currentUserEmail}`),
-      courses: localStorage.getItem("courses"),
+      courses: localStorage.getItem("allCourses"), // Changed from "courses" to "allCourses" for consistency
       timestamp: new Date().toISOString(),
     };
 
@@ -506,7 +601,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("dateFormat").value =
         settings.dateFormat || "dd/mm/yyyy";
       document.getElementById("timeFormat").value = settings.timeFormat || "24";
-      document.getElementById("theme").value = "light";
+      document.getElementById("theme").value = "light"; // Always set to light as per instruction
       document.getElementById("fontSize").value = settings.fontSize || "medium";
       document.getElementById("fontFamily").value =
         settings.fontFamily || "inter";
@@ -544,16 +639,33 @@ document.addEventListener("DOMContentLoaded", function () {
         settings.backupFrequency || "weekly";
 
       updateLanguage();
-      updateTheme();
+      updateTheme(); // Call updateTheme to ensure light theme is applied
       updateFontSize();
       updateFontFamily();
     } else {
+      // Default settings if none saved
       document.getElementById("systemLanguage").value = "bn";
       document.getElementById("dateFormat").value = "dd/mm/yyyy";
       document.getElementById("timeFormat").value = "24";
       document.getElementById("theme").value = "light";
       document.getElementById("fontSize").value = "medium";
       document.getElementById("fontFamily").value = "inter";
+
+      // Default checkboxes
+      document.getElementById("emailCourse").checked = true;
+      document.getElementById("emailAssignment").checked = false;
+      document.getElementById("emailSystem").checked = false;
+      document.getElementById("pushMessages").checked = true;
+      document.getElementById("pushDeadlines").checked = false;
+      document.getElementById("twoFactor").checked = false;
+      document.getElementById("loginNotifications").checked = true;
+      document.getElementById("sessionTimeout").value = "60";
+      document.getElementById("profileVisibility").value = "everyone";
+      document.getElementById("showEmail").checked = false;
+      document.getElementById("showPhone").checked = false;
+      document.getElementById("analytics").checked = false;
+      document.getElementById("autoBackup").checked = true;
+      document.getElementById("backupFrequency").value = "weekly";
 
       updateLanguage();
       updateTheme();
@@ -592,5 +704,52 @@ document.addEventListener("DOMContentLoaded", function () {
         notification.remove();
       }, 300);
     }, 3000);
+  }
+
+  // Helper function to get user dashboard (copied from student.js)
+  function getUserDashboard() {
+    const dashboardKey = `dashboard_${currentUserEmail}`;
+    const dashboard = JSON.parse(
+      localStorage.getItem(dashboardKey) || '{"courses": [], "role": "student"}'
+    );
+    if (!dashboard.courses) {
+      dashboard.courses = [];
+    }
+    return dashboard;
+  }
+
+  // Function to render enrolled classes in the sidebar dropdown (copied from student.js)
+  function renderEnrolledClasses() {
+    const dashboard = getUserDashboard();
+    const enrolled = dashboard.courses.filter(
+      (course) => !course.archived && course.students.includes(currentUserEmail)
+    ); // Only show non-archived courses the student is enrolled in
+
+    enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+
+    if (enrolled.length === 0) {
+      const listItem = document.createElement("li");
+      listItem.className = "dropdown-item-sidebar no-courses";
+      listItem.textContent = "No enrolled classes";
+      enrolledClassesDropdown.appendChild(listItem);
+    } else {
+      enrolled.forEach((course) => {
+        const listItem = document.createElement("li");
+        listItem.className = "dropdown-item-sidebar";
+        listItem.textContent = course.name;
+        listItem.dataset.courseId = course.id; // Store course ID for potential future use
+        listItem.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevent dropdown from closing immediately
+          openCourse(course); // Navigate to the course page
+        });
+        enrolledClassesDropdown.appendChild(listItem);
+      });
+    }
+  }
+
+  // Dummy openCourse function for navigation (copied from student.js)
+  function openCourse(course) {
+    localStorage.setItem("selectedCourse", JSON.stringify(course));
+    window.location.href = "studentStream.html"; // Assuming studentStream.html exists
   }
 });

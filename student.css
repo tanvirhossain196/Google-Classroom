@@ -1569,9 +1569,17 @@ body {
 
 .sidebar-dropdown .nav-link {
   display: flex;
+  align-items: center; /* Ensure vertical alignment */
   justify-content: space-between;
-  align-items: center;
   padding-right: 1.5rem; /* Adjust padding to make space for arrow */
+}
+
+.sidebar-dropdown .nav-link .dropdown-arrow-wrapper {
+  display: flex; /* Use flex to center the icon */
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem; /* Fixed width to prevent text shifting */
+  height: 1.25rem; /* Fixed height */
 }
 
 .sidebar-dropdown .nav-link .dropdown-arrow {
@@ -1581,6 +1589,19 @@ body {
 
 .sidebar-dropdown .nav-link .dropdown-arrow.rotate {
   transform: rotate(180deg);
+}
+
+/* Hide dropdown arrow when sidebar is closed */
+.sidebar:not(.open) .dropdown-arrow-wrapper {
+  display: none;
+}
+
+/* Adjustments for closed sidebar to maintain alignment */
+.sidebar:not(.open) .sidebar-dropdown .nav-link {
+  justify-content: center; /* Center content when closed */
+  padding: 0.875rem 0; /* Remove horizontal padding */
+  margin-right: 0;
+  border-radius: 0;
 }
 
 .dropdown-menu-sidebar {

@@ -16,6 +16,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Navigation links
   const navLinks = document.querySelectorAll("[data-nav-link]");
 
+  // Enrolled Classes Dropdown elements (newly added from student.js)
+  const enrolledClassesDropdownToggle = document.getElementById(
+    "enrolledClassesDropdownToggle"
+  );
+  const enrolledClassesDropdown = document.getElementById(
+    "enrolledClassesDropdown"
+  );
+
   // Modals (kept for consistency, but not actively used for create/join on this page)
   const createCourseModal = document.getElementById("createCourseModal");
   const joinCourseModal = document.getElementById("joinCourseModal");
@@ -62,12 +70,21 @@ document.addEventListener("DOMContentLoaded", function () {
   cancelJoin.addEventListener("click", hideJoinModal);
   cancelEdit.addEventListener("click", hideEditModal);
 
+  // Enrolled Classes Dropdown Toggle (newly added from student.js)
+  enrolledClassesDropdownToggle.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+    enrolledClassesDropdown.classList.toggle("show");
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
+    renderEnrolledClasses(); // Re-render to ensure up-to-date list
+  });
+
   // Navigation event listeners - Complete navigation fix
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       const href = this.getAttribute("href");
       const currentPage =
-        window.location.pathname.split("/").pop() || "dashboard.html";
+        window.location.pathname.split("/").pop() || "student.html"; // Changed from dashboard.html
 
       // Prevent default behavior and handle navigation manually
       e.preventDefault();
@@ -76,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // If clicking on same page, do nothing
       if (
         href === currentPage ||
-        (href === "dashboard.html" && currentPage === "")
+        (href === "student.html" && currentPage === "") // Changed from dashboard.html
       ) {
         return;
       }
@@ -109,6 +126,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     if (e.target === editCourseModal) {
       hideEditModal();
+    }
+    // Close enrolled classes dropdown if clicked outside (newly added from student.js)
+    if (
+      !enrolledClassesDropdownToggle.contains(e.target) &&
+      !enrolledClassesDropdown.contains(e.target)
+    ) {
+      enrolledClassesDropdown.classList.remove("show");
+      enrolledClassesDropdownToggle
+        .querySelector(".dropdown-arrow")
+        .classList.remove("rotate");
     }
   });
 
@@ -167,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateUIForRole(userRole);
     loadUserCourses(); // This will now load archived courses
+    renderEnrolledClasses(); // Initial render of enrolled classes (newly added from student.js)
     console.log("Current user:", currentUser);
     console.log("User role:", userRole);
     debugCourses();
@@ -281,12 +309,6 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("Join Course is not available on the Archive page for students.");
   }
 
-  // Student's cannot edit courses
-  // function handleEditCourse(e) {
-  //   e.preventDefault();
-  //   alert("Students cannot edit courses.");
-  // }
-
   function loadUserCourses() {
     const dashboard = getUserDashboard();
     // Filter to only show archived courses on the archive page
@@ -394,14 +416,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const courseInfo = document.createElement("div");
     courseInfo.className = "course-info";
-
-    // Students do not see course code on the card
-    // if (isTeacher) {
-    //   const courseCode = document.createElement("p");
-    //   courseCode.className = "course-code";
-    //   courseCode.textContent = `Code: ${course.code}`;
-    //   courseInfo.appendChild(courseCode);
-    // }
 
     bodyContent.appendChild(courseInfo);
 
@@ -582,38 +596,38 @@ document.addEventListener("DOMContentLoaded", function () {
     return Math.abs(hash);
   }
 
-  // Students do not have course menus
-  // function toggleCourseMenu(courseId) {
-  //   const menu = document.getElementById(`courseMenu_${courseId}`);
-  //   document.querySelectorAll(".course-menu-dropdown").forEach((m) => {
-  //     if (m !== menu) m.classList.remove("show");
-  //   });
-  //   menu.classList.toggle("show");
-  // }
-
-  // Students cannot edit courses
-  // function editCourse(courseId) {
-  //   alert("Students cannot edit courses.");
-  // }
-
-  // Students cannot update courses
-  // function updateCourse(courseId, updates) {
-  //   alert("Students cannot update courses.");
-  // }
-
-  // Students cannot archive/unarchive courses
-  // function toggleArchiveCourse(courseId) {
-  //   alert("Students cannot archive or unarchive courses.");
-  // }
-
-  // Students cannot delete courses
-  // function deleteCourse(courseId) {
-  //   alert("Students cannot delete courses.");
-  // }
-
   function openCourse(course) {
     localStorage.setItem("selectedCourse", JSON.stringify(course));
-    window.location.href = "stream.html";
+    window.location.href = "studentStream.html"; // Changed to studentStream.html
+  }
+
+  // Function to render enrolled classes in the sidebar dropdown (newly added from student.js)
+  function renderEnrolledClasses() {
+    const dashboard = getUserDashboard();
+    const enrolled = dashboard.courses.filter(
+      (course) => !course.archived && course.students.includes(currentUser)
+    ); // Only show non-archived courses the student is enrolled in
+
+    enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+
+    if (enrolled.length === 0) {
+      const listItem = document.createElement("li");
+      listItem.className = "dropdown-item-sidebar no-courses";
+      listItem.textContent = "No enrolled classes";
+      enrolledClassesDropdown.appendChild(listItem);
+    } else {
+      enrolled.forEach((course) => {
+        const listItem = document.createElement("li");
+        listItem.className = "dropdown-item-sidebar";
+        listItem.textContent = course.name;
+        listItem.dataset.courseId = course.id; // Store course ID for potential future use
+        listItem.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevent dropdown from closing immediately
+          openCourse(course); // Navigate to the course page
+        });
+        enrolledClassesDropdown.appendChild(listItem);
+      });
+    }
   }
 
   function debugCourses() {
@@ -673,8 +687,4 @@ document.addEventListener("DOMContentLoaded", function () {
   // Global functions for onclick events (only those applicable to students)
   window.showCreateModal = showCreateModal; // Kept for consistency, but not functional for students
   window.showJoinModal = showJoinModal; // Kept for consistency, but not functional for students
-  // window.toggleCourseMenu = toggleCourseMenu; // Not applicable for students
-  // window.editCourse = editCourse;             // Not applicable for students
-  // window.toggleArchiveCourse = toggleArchiveCourse; // Not applicable for students
-  // window.deleteCourse = deleteCourse;         // Not applicable for students
 });

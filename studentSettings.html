@@ -11,229 +11,229 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="studentSettings.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body class="light-theme font-medium font-inter" id="mainBody">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
-        <div class="container-fluid">
-            <div class="d-flex align-items-center">
-                <button class="btn btn-link p-2 me-3" id="menuToggle">
-                    <i class="fas fa-bars fs-5"></i>
-                </button>
-                <a class="navbar-brand fw-normal text-muted" href="#">
-                    <span id="navbarTitle">Classroom</span>
-                </a>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="material-icons menu-icon" id="menuIcon">menu</span>
+                <h1>Classroom</h1>
             </div>
-            <div class="d-flex align-items-center">
-                <div class="current-time me-3" id="currentTime"></div>
-                <div class="dropdown">
-                    <button class="btn btn-link p-0 me-3" type="button" data-bs-toggle="dropdown">
-                        <div class="user-avatar-header" id="headerAvatar">
-                            <span id="headerUserInitial">U</span>
-                        </div>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="studentProfile.html">
-                                <i class="fas fa-user me-2"></i><span data-translate="profile">Profile</span>
-                            </a></li>
-                        <li><a class="dropdown-item" href="studentSettings.html">
-                                <i class="fas fa-cog me-2"></i><span data-translate="settings">Settings</span>
-                            </a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
-                                <i class="fas fa-sign-out-alt me-2"></i><span data-translate="logout">Logout</span>
-                            </a></li>
-                    </ul>
+            <div class="header-right">
+                <div class="user-info">
+                    <div id="currentUserEmail" class="user-email">user@email.com</div>
+                    <div id="userRoleBadge" class="role-badge new">New User</div>
                 </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h5 class="sidebar-title" data-translate="menu">Menu</h5>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="student.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span class="nav-text" data-translate="dashboard">Dashboard</span>
-            </a>
-
-            </a>
-            <a href="studentProfile.html" class="nav-item">
-                <i class="fas fa-user"></i>
-                <span class="nav-text" data-translate="profile">Profile</span>
-            </a>
-            <a href="studentSettings.html" class="nav-item active">
-                <i class="fas fa-cog"></i>
-                <span class="nav-text" data-translate="settings">Settings</span>
-            </a>
-            <a href="studentReports.html" class="nav-item">
-                <i class="fas fa-chart-bar"></i>
-                <span class="nav-text" data-translate="reports">Reports</span>
-            </a>
-            <a href="studentHelp.html" class="nav-item">
-                <i class="fas fa-question-circle"></i>
-                <span class="nav-text" data-translate="help">Help</span>
-            </a>
-        </nav>
-    </div>
-
-    <div class="main-content" id="mainContent">
-        <div class="container-fluid">
-            <div class="page-header">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h1 class="page-title" data-translate="settings">Settings</h1>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="student.html" data-translate="dashboard">Dashboard</a>
-                                </li>
-                                <li class="breadcrumb-item active" data-translate="settings">Settings</li>
-                            </ol>
-                        </nav>
-                    </div>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
                 </div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
             </div>
+        </header>
 
-            <div class="row g-4">
-                <div class="col-lg-3">
-                    <div class="card settings-sidebar-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-cogs me-2"></i><span data-translate="settings_menu">Settings
-                                    Menu</span>
-                            </h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <nav class="settings-nav">
-                                <a href="#general" class="settings-nav-item active" data-section="general">
-                                    <i class="fas fa-sliders-h"></i>
-                                    <span data-translate="general_settings">General Settings</span>
-                                </a>
-                                <a href="#notifications" class="settings-nav-item" data-section="notifications">
-                                    <i class="fas fa-bell"></i>
-                                    <span data-translate="notifications">Notifications</span>
-                                </a>
-                                <a href="#security" class="settings-nav-item" data-section="security">
-                                    <i class="fas fa-shield-alt"></i>
-                                    <span data-translate="security">Security</span>
-                                </a>
-                                <a href="#privacy" class="settings-nav-item" data-section="privacy">
-                                    <i class="fas fa-user-secret"></i>
-                                    <span data-translate="privacy">Privacy</span>
-                                </a>
-                                <a href="#system" class="settings-nav-item" data-section="system">
-                                    <i class="fas fa-server"></i>
-                                    <span data-translate="system">System</span>
-                                </a>
-                                <a href="#backup" class="settings-nav-item" data-section="backup">
-                                    <i class="fas fa-database"></i>
-                                    <span data-translate="backup">Backup</span>
-                                </a>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-menu">
+                <ul class="sidebar-menu">
+                    <li><a href="student.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">home</i>
+                            <span>Dashboard</span>
+                        </a></li>
+                    <li><a href="studentProfile.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a></li>
+                    <!-- New Enrolled Classes Dropdown -->
+                    <li class="sidebar-dropdown">
+                        <a href="#" class="nav-link" id="enrolledClassesDropdownToggle">
+                            <i class="material-icons">school</i>
+                            <span>Enrolled</span>
+                            <span class="dropdown-arrow-wrapper">
+                                <i class="material-icons dropdown-arrow">keyboard_arrow_down</i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu-sidebar" id="enrolledClassesDropdown">
+                            <!-- Course names will be dynamically inserted here -->
+                        </ul>
+                    </li>
+                    <li><a href="studentArchive.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">archive</i>
+                            <span>Archive classes</span>
+                        </a></li>
+                    <li><a href="studentSettings.html" class="nav-link active" data-nav-link>
+                            <i class="material-icons">settings</i>
+                            <span>Settings</span>
+                        </a></li>
+                    <li><a href="studentHelp.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">help_outline</i>
+                            <span>Help</span>
+                        </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content" id="mainContent">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title" data-translate="settings">Settings</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="student.html" data-translate="dashboard">Dashboard</a>
+                                    </li>
+                                    <li class="breadcrumb-item active" data-translate="settings">Settings</li>
+                                </ol>
                             </nav>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-9">
-                    <div class="settings-section active" id="general">
-                        <div class="card">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <div class="card settings-sidebar-card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-sliders-h me-2"></i><span data-translate="general_settings">General
-                                        Settings</span>
+                                    <i class="fas fa-cogs me-2"></i><span data-translate="settings_menu">Settings
+                                        Menu</span>
                                 </h5>
                             </div>
-                            <div class="card-body">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="language_region">Language &
-                                                Region</h6>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="system_language">System
-                                                    Language</label>
-                                                <select class="form-select" id="systemLanguage">
-                                                    <option value="bn">Bengali</option>
-                                                    <option value="en">English</option>
-                                                </select>
-                                            </div>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="date_format">Date
-                                                    Format</label>
-                                                <select class="form-select" id="dateFormat">
-                                                    <option value="dd/mm/yyyy">Day/Month/Year (DD/MM/YYYY)</option>
-                                                    <option value="mm/dd/yyyy">Month/Day/Year (MM/DD/YYYY)</option>
-                                                    <option value="yyyy-mm-dd">Year-Month-Day (YYYY-MM-DD)</option>
-                                                </select>
-                                            </div>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="time_format">Time
-                                                    Format</label>
-                                                <select class="form-select" id="timeFormat">
-                                                    <option value="24">24 Hour</option>
-                                                    <option value="12">12 Hour</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="display">Display</h6>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="theme">Theme</label>
-                                                <select class="form-select" id="theme">
-                                                    <option value="light">Light</option>
-                                                    <option value="dark">Dark</option>
-                                                    <option value="auto">Auto</option>
-                                                </select>
-                                            </div>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="font_size">Font Size</label>
-                                                <select class="form-select" id="fontSize">
-                                                    <option value="small">Small</option>
-                                                    <option value="medium">Medium</option>
-                                                    <option value="large">Large</option>
-                                                </select>
-                                            </div>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="font_family">Font
-                                                    Family</label>
-                                                <select class="form-select" id="fontFamily">
-                                                    <option value="inter">Inter</option>
-                                                    <option value="poppins">Poppins</option>
-                                                    <option value="roboto">Roboto</option>
-                                                    <option value="system">System Default</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="card-body p-0">
+                                <nav class="settings-nav">
+                                    <a href="#general" class="settings-nav-item active" data-section="general">
+                                        <i class="fas fa-sliders-h"></i>
+                                        <span data-translate="general_settings">General Settings</span>
+                                    </a>
+                                    <a href="#notifications" class="settings-nav-item" data-section="notifications">
+                                        <i class="fas fa-bell"></i>
+                                        <span data-translate="notifications">Notifications</span>
+                                    </a>
+                                    <a href="#security" class="settings-nav-item" data-section="security">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span data-translate="security">Security</span>
+                                    </a>
+                                    <a href="#privacy" class="settings-nav-item" data-section="privacy">
+                                        <i class="fas fa-user-secret"></i>
+                                        <span data-translate="privacy">Privacy</span>
+                                    </a>
+                                    <a href="#system" class="settings-nav-item" data-section="system">
+                                        <i class="fas fa-server"></i>
+                                        <span data-translate="system">System</span>
+                                    </a>
+                                    <a href="#backup" class="settings-nav-item" data-section="backup">
+                                        <i class="fas fa-database"></i>
+                                        <span data-translate="backup">Backup</span>
+                                    </a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
 
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <div class="settings-preview">
-                                            <h6 class="preview-title" data-translate="preview">Preview</h6>
-                                            <div class="preview-content">
-                                                <div class="preview-item">
-                                                    <span class="preview-label" data-translate="current_time">Current
-                                                        Time:</span>
-                                                    <span class="preview-value" id="previewTime"></span>
+                    <div class="col-lg-9">
+                        <div class="settings-section active" id="general">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-sliders-h me-2"></i><span
+                                            data-translate="general_settings">General
+                                            Settings</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="language_region">
+                                                    Language &
+                                                    Region</h6>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="system_language">System
+                                                        Language</label>
+                                                    <select class="form-select" id="systemLanguage">
+                                                        <option value="bn">Bengali</option>
+                                                        <option value="en">English</option>
+                                                    </select>
                                                 </div>
-                                                <div class="preview-item">
-                                                    <span class="preview-label" data-translate="current_date">Current
-                                                        Date:</span>
-                                                    <span class="preview-value" id="previewDate"></span>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="date_format">Date
+                                                        Format</label>
+                                                    <select class="form-select" id="dateFormat">
+                                                        <option value="dd/mm/yyyy">Day/Month/Year (DD/MM/YYYY)</option>
+                                                        <option value="mm/dd/yyyy">Month/Day/Year (MM/DD/YYYY)</option>
+                                                        <option value="yyyy-mm-dd">Year-Month-Day (YYYY-MM-DD)</option>
+                                                    </select>
                                                 </div>
-                                                <div class="preview-item">
-                                                    <span class="preview-label" data-translate="sample_text">Sample
-                                                        Text:</span>
-                                                    <span class="preview-value" id="previewText">This is a sample
-                                                        text</span>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="time_format">Time
+                                                        Format</label>
+                                                    <select class="form-select" id="timeFormat">
+                                                        <option value="24">24 Hour</option>
+                                                        <option value="12">12 Hour</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="display">Display</h6>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="theme">Theme</label>
+                                                    <select class="form-select" id="theme">
+                                                        <option value="light">Light</option>
+                                                        <option value="dark">Dark</option>
+                                                        <option value="auto">Auto</option>
+                                                    </select>
+                                                </div>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="font_size">Font
+                                                        Size</label>
+                                                    <select class="form-select" id="fontSize">
+                                                        <option value="small">Small</option>
+                                                        <option value="medium">Medium</option>
+                                                        <option value="large">Large</option>
+                                                    </select>
+                                                </div>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="font_family">Font
+                                                        Family</label>
+                                                    <select class="form-select" id="fontFamily">
+                                                        <option value="inter">Inter</option>
+                                                        <option value="poppins">Poppins</option>
+                                                        <option value="roboto">Roboto</option>
+                                                        <option value="system">System Default</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <div class="settings-preview">
+                                                <h6 class="preview-title" data-translate="preview">Preview</h6>
+                                                <div class="preview-content">
+                                                    <div class="preview-item">
+                                                        <span class="preview-label"
+                                                            data-translate="current_time">Current
+                                                            Time:</span>
+                                                        <span class="preview-value" id="previewTime"></span>
+                                                    </div>
+                                                    <div class="preview-item">
+                                                        <span class="preview-label"
+                                                            data-translate="current_date">Current
+                                                            Date:</span>
+                                                        <span class="preview-value" id="previewDate"></span>
+                                                    </div>
+                                                    <div class="preview-item">
+                                                        <span class="preview-label" data-translate="sample_text">Sample
+                                                            Text:</span>
+                                                        <span class="preview-value" id="previewText">This is a sample
+                                                            text</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -241,298 +241,313 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="settings-section" id="notifications">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-bell me-2"></i><span
-                                        data-translate="notification_settings">Notification Settings</span>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="email_notifications">Email
-                                                Notifications</h6>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="emailCourse">
-                                                <label class="form-check-label" for="emailCourse"
-                                                    data-translate="new_course_notifications">
-                                                    New Course Notifications
-                                                </label>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="emailAssignment">
-                                                <label class="form-check-label" for="emailAssignment"
-                                                    data-translate="assignment_notifications">
-                                                    Assignment Notifications
-                                                </label>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="emailSystem">
-                                                <label class="form-check-label" for="emailSystem"
-                                                    data-translate="system_updates">
-                                                    System Updates
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="push_notifications">Push
-                                                Notifications</h6>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="pushMessages">
-                                                <label class="form-check-label" for="pushMessages"
-                                                    data-translate="new_messages">
-                                                    New Messages
-                                                </label>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="pushDeadlines">
-                                                <label class="form-check-label" for="pushDeadlines"
-                                                    data-translate="deadline_reminders">
-                                                    Deadline Reminders
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="settings-section" id="notifications">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-bell me-2"></i><span
+                                            data-translate="notification_settings">Notification Settings</span>
+                                    </h5>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section" id="security">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-shield-alt me-2"></i><span
-                                        data-translate="security_settings">Security Settings</span>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="account_security">Account
-                                                Security</h6>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="twoFactor">
-                                                <label class="form-check-label" for="twoFactor"
-                                                    data-translate="two_factor_auth">
-                                                    Two-Factor Authentication
-                                                </label>
-                                                <div class="form-text" data-translate="two_factor_desc">Requires SMS
-                                                    code for additional security</div>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="loginNotifications">
-                                                <label class="form-check-label" for="loginNotifications"
-                                                    data-translate="login_notifications">
-                                                    Login Notifications
-                                                </label>
-                                                <div class="form-text" data-translate="login_desc">Notifications for
-                                                    login from new devices</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="session_management">Session
-                                                Management</h6>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="session_timeout">Session
-                                                    Timeout (minutes)</label>
-                                                <input type="number" class="form-control" id="sessionTimeout" value="60"
-                                                    min="15" max="480">
-                                            </div>
-                                            <div class="mt-3">
-                                                <button class="btn btn-warning" id="clearSessions">
-                                                    <i class="fas fa-sign-out-alt me-2"></i><span
-                                                        data-translate="clear_all_sessions">Clear All Sessions</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section" id="privacy">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-user-secret me-2"></i><span
-                                        data-translate="privacy_settings">Privacy Settings</span>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="profile_visibility">Profile
-                                                Visibility</h6>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="who_can_view">Who can view
-                                                    profile</label>
-                                                <select class="form-select" id="profileVisibility">
-                                                    <option value="everyone">Everyone</option>
-                                                    <option value="contacts">Contacts only</option>
-                                                    <option value="private">Only me</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="showEmail">
-                                                <label class="form-check-label" for="showEmail"
-                                                    data-translate="show_email">
-                                                    Show Email
-                                                </label>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="showPhone">
-                                                <label class="form-check-label" for="showPhone"
-                                                    data-translate="show_phone">
-                                                    Show Phone Number
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="data_collection">Data
-                                                Collection</h6>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="analytics">
-                                                <label class="form-check-label" for="analytics"
-                                                    data-translate="analytics_data">
-                                                    Analytics Data
-                                                </label>
-                                                <div class="form-text" data-translate="analytics_desc">Collect anonymous
-                                                    data for system improvement</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section" id="system">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-server me-2"></i><span data-translate="system_settings">System
-                                        Settings</span>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="system_info">System
-                                                Information</h6>
-                                            <div class="system-info">
-                                                <div class="info-item">
-                                                    <span class="info-label" data-translate="system_version">System
-                                                        Version:</span>
-                                                    <span class="info-value">v2.1.0</span>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="email_notifications">
+                                                    Email
+                                                    Notifications</h6>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="emailCourse">
+                                                    <label class="form-check-label" for="emailCourse"
+                                                        data-translate="new_course_notifications">
+                                                        New Course Notifications
+                                                    </label>
                                                 </div>
-                                                <div class="info-item">
-                                                    <span class="info-label" data-translate="last_update">Last
-                                                        Update:</span>
-                                                    <span class="info-value">January 15, 2024</span>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="emailAssignment">
+                                                    <label class="form-check-label" for="emailAssignment"
+                                                        data-translate="assignment_notifications">
+                                                        Assignment Notifications
+                                                    </label>
                                                 </div>
-                                                <div class="info-item">
-                                                    <span class="info-label" data-translate="server_status">Server
-                                                        Status:</span>
-                                                    <span class="info-value status-online"
-                                                        data-translate="online">Online</span>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="emailSystem">
+                                                    <label class="form-check-label" for="emailSystem"
+                                                        data-translate="system_updates">
+                                                        System Updates
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="push_notifications">
+                                                    Push
+                                                    Notifications</h6>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="pushMessages">
+                                                    <label class="form-check-label" for="pushMessages"
+                                                        data-translate="new_messages">
+                                                        New Messages
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="pushDeadlines">
+                                                    <label class="form-check-label" for="pushDeadlines"
+                                                        data-translate="deadline_reminders">
+                                                        Deadline Reminders
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="maintenance">Maintenance
-                                            </h6>
-                                            <div class="d-flex flex-column gap-2">
-                                                <button class="btn btn-primary" id="checkUpdates">
-                                                    <i class="fas fa-sync me-2"></i><span
-                                                        data-translate="check_updates">Check for Updates</span>
-                                                </button>
-                                                <button class="btn btn-info" id="clearCache">
-                                                    <i class="fas fa-trash me-2"></i><span
-                                                        data-translate="clear_cache">Clear Cache</span>
-                                                </button>
-                                                <button class="btn btn-danger" id="resetSettings">
-                                                    <i class="fas fa-undo me-2"></i><span
-                                                        data-translate="reset_settings">Reset Settings</span>
-                                                </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="security">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-shield-alt me-2"></i><span
+                                            data-translate="security_settings">Security Settings</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="account_security">
+                                                    Account
+                                                    Security</h6>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="twoFactor">
+                                                    <label class="form-check-label" for="twoFactor"
+                                                        data-translate="two_factor_auth">
+                                                        Two-Factor Authentication
+                                                    </label>
+                                                    <div class="form-text" data-translate="two_factor_desc">Requires
+                                                        SMS
+                                                        code for additional security</div>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="loginNotifications">
+                                                    <label class="form-check-label" for="loginNotifications"
+                                                        data-translate="login_notifications">
+                                                        Login Notifications
+                                                    </label>
+                                                    <div class="form-text" data-translate="login_desc">Notifications
+                                                        for
+                                                        login from new devices</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="session_management">
+                                                    Session
+                                                    Management</h6>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="session_timeout">Session
+                                                        Timeout (minutes)</label>
+                                                    <input type="number" class="form-control" id="sessionTimeout"
+                                                        value="60" min="15" max="480">
+                                                </div>
+                                                <div class="mt-3">
+                                                    <button class="btn btn-warning" id="clearSessions">
+                                                        <i class="fas fa-sign-out-alt me-2"></i><span
+                                                            data-translate="clear_all_sessions">Clear All
+                                                            Sessions</span>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="settings-section" id="backup">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-database me-2"></i><span data-translate="backup_settings">Backup
-                                        Settings</span>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="auto_backup">Automatic
-                                                Backup</h6>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" id="autoBackup">
-                                                <label class="form-check-label" for="autoBackup"
-                                                    data-translate="enable_auto_backup">
-                                                    Enable Automatic Backup
-                                                </label>
+                        <div class="settings-section" id="privacy">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-user-secret me-2"></i><span
+                                            data-translate="privacy_settings">Privacy Settings</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="profile_visibility">
+                                                    Profile
+                                                    Visibility</h6>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="who_can_view">Who can
+                                                        view
+                                                        profile</label>
+                                                    <select class="form-select" id="profileVisibility">
+                                                        <option value="everyone">Everyone</option>
+                                                        <option value="contacts">Contacts only</option>
+                                                        <option value="private">Only me</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="showEmail">
+                                                    <label class="form-check-label" for="showEmail"
+                                                        data-translate="show_email">
+                                                        Show Email
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="showPhone">
+                                                    <label class="form-check-label" for="showPhone"
+                                                        data-translate="show_phone">
+                                                        Show Phone Number
+                                                    </label>
+                                                </div>
                                             </div>
-                                            <div class="setting-item">
-                                                <label class="form-label" data-translate="backup_frequency">Backup
-                                                    Frequency</label>
-                                                <select class="form-select" id="backupFrequency">
-                                                    <option value="daily">Daily</option>
-                                                    <option value="weekly">Weekly</option>
-                                                    <option value="monthly">Monthly</option>
-                                                </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="data_collection">Data
+                                                    Collection</h6>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="analytics">
+                                                    <label class="form-check-label" for="analytics"
+                                                        data-translate="analytics_data">
+                                                        Analytics Data
+                                                    </label>
+                                                    <div class="form-text" data-translate="analytics_desc">Collect
+                                                        anonymous
+                                                        data for system improvement</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="setting-group">
-                                            <h6 class="setting-group-title" data-translate="backup_management">Backup
-                                                Management</h6>
-                                            <div class="d-flex flex-column gap-2">
-                                                <button class="btn btn-success" id="createBackup">
-                                                    <i class="fas fa-plus me-2"></i><span
-                                                        data-translate="create_backup">Create New Backup</span>
-                                                </button>
-                                                <button class="btn btn-warning" id="restoreBackup">
-                                                    <i class="fas fa-upload me-2"></i><span
-                                                        data-translate="restore_backup">Restore Backup</span>
-                                                </button>
-                                                <button class="btn btn-info" id="downloadBackup">
-                                                    <i class="fas fa-download me-2"></i><span
-                                                        data-translate="download_backup">Download Backup</span>
-                                                </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="system">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-server me-2"></i><span data-translate="system_settings">System
+                                            Settings</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="system_info">System
+                                                    Information</h6>
+                                                <div class="system-info">
+                                                    <div class="info-item">
+                                                        <span class="info-label" data-translate="system_version">System
+                                                            Version:</span>
+                                                        <span class="info-value">v2.1.0</span>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <span class="info-label" data-translate="last_update">Last
+                                                            Update:</span>
+                                                        <span class="info-value">January 15, 2024</span>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <span class="info-label" data-translate="server_status">Server
+                                                            Status:</span>
+                                                        <span class="info-value status-online"
+                                                            data-translate="online">Online</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="backup-status mt-3" id="backupStatus">
-                                                <div class="text-muted" data-translate="last_backup">Last Backup: Today,
-                                                    2:30 AM</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="maintenance">Maintenance
+                                                </h6>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <button class="btn btn-primary" id="checkUpdates">
+                                                        <i class="fas fa-sync me-2"></i><span
+                                                            data-translate="check_updates">Check for Updates</span>
+                                                    </button>
+                                                    <button class="btn btn-info" id="clearCache">
+                                                        <i class="fas fa-trash me-2"></i><span
+                                                            data-translate="clear_cache">Clear Cache</span>
+                                                    </button>
+                                                    <button class="btn btn-danger" id="resetSettings">
+                                                        <i class="fas fa-undo me-2"></i><span
+                                                            data-translate="reset_settings">Reset Settings</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="backup">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-database me-2"></i><span
+                                            data-translate="backup_settings">Backup
+                                            Settings</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="auto_backup">Automatic
+                                                    Backup</h6>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="autoBackup">
+                                                    <label class="form-check-label" for="autoBackup"
+                                                        data-translate="enable_auto_backup">
+                                                        Enable Automatic Backup
+                                                    </label>
+                                                </div>
+                                                <div class="setting-item">
+                                                    <label class="form-label" data-translate="backup_frequency">Backup
+                                                        Frequency</label>
+                                                    <select class="form-select" id="backupFrequency">
+                                                        <option value="daily">Daily</option>
+                                                        <option value="weekly">Weekly</option>
+                                                        <option value="monthly">Monthly</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="setting-group">
+                                                <h6 class="setting-group-title" data-translate="backup_management">
+                                                    Backup
+                                                    Management</h6>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <button class="btn btn-success" id="createBackup">
+                                                        <i class="fas fa-plus me-2"></i><span
+                                                            data-translate="create_backup">Create New Backup</span>
+                                                    </button>
+                                                    <button class="btn btn-warning" id="restoreBackup">
+                                                        <i class="fas fa-upload me-2"></i><span
+                                                            data-translate="restore_backup">Restore Backup</span>
+                                                    </button>
+                                                    <button class="btn btn-info" id="downloadBackup">
+                                                        <i class="fas fa-download me-2"></i><span
+                                                            data-translate="download_backup">Download Backup</span>
+                                                    </button>
+                                                </div>
+                                                <div class="backup-status mt-3" id="backupStatus">
+                                                    <div class="text-muted" data-translate="last_backup">Last Backup:
+                                                        Today,
+                                                        2:30 AM</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -541,16 +556,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="settings-footer">
-                <div class="d-flex justify-content-end gap-3">
-                    <button class="btn btn-secondary" id="cancelSettings">
-                        <i class="fas fa-times me-2"></i><span data-translate="cancel">Cancel</span>
-                    </button>
-                    <button class="btn btn-primary" id="saveSettings">
-                        <i class="fas fa-save me-2"></i><span data-translate="save_settings">Save Settings</span>
-                    </button>
+                <div class="settings-footer">
+                    <div class="d-flex justify-content-end gap-3">
+                        <button class="btn btn-secondary" id="cancelSettings">
+                            <i class="fas fa-times me-2"></i><span data-translate="cancel">Cancel</span>
+                        </button>
+                        <button class="btn btn-primary" id="saveSettings">
+                            <i class="fas fa-save me-2"></i><span data-translate="save_settings">Save Settings</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

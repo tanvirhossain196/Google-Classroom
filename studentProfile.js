@@ -1,153 +1,165 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Elements
-  const menuToggle = document.getElementById("menuToggle");
+  // Elements - Updated to match student.html structure
+  const menuIcon = document.getElementById("menuIcon");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("mainContent");
   const logoutBtn = document.getElementById("logoutBtn");
+  const userInitial = document.getElementById("userInitial");
+  const currentUserEmail = document.getElementById("currentUserEmail");
+  const userRoleBadge = document.getElementById("userRoleBadge");
+
+  // Profile specific elements
   const profileForm = document.getElementById("profileForm");
   const passwordForm = document.getElementById("passwordForm");
   const savePreferences = document.getElementById("savePreferences");
   const avatarUpload = document.getElementById("avatarUpload");
   const avatarImg = document.getElementById("avatarImg");
   const avatarText = document.getElementById("avatarText");
-  const headerUserInitial = document.getElementById("headerUserInitial");
 
   // Navigation links
-  const navLinks = document.querySelectorAll(".nav-item");
+  const navLinks = document.querySelectorAll("[data-nav-link]");
+
+  // Enrolled Classes Dropdown elements - Same as student.html
+  const enrolledClassesDropdownToggle = document.getElementById(
+    "enrolledClassesDropdownToggle"
+  );
+  const enrolledClassesDropdown = document.getElementById(
+    "enrolledClassesDropdown"
+  );
 
   // User data - Get both keys for compatibility
-  const currentUserEmail =
-    localStorage.getItem("userEmail") || localStorage.getItem("currentUser");
+  const currentUser =
+    localStorage.getItem("currentUser") || localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
 
   // Check authentication
-  if (!currentUserEmail) {
+  if (!currentUser) {
     window.location.href = "index.html";
     return;
   }
 
   // Ensure both keys are set for compatibility
   if (!localStorage.getItem("userEmail")) {
-    localStorage.setItem("userEmail", currentUserEmail);
+    localStorage.setItem("userEmail", currentUser);
   }
   if (!localStorage.getItem("currentUser")) {
-    localStorage.setItem("currentUser", currentUserEmail);
+    localStorage.setItem("currentUser", currentUser);
   }
 
   // Initialize page
   initializePage();
 
-  // Event listeners
-  menuToggle.addEventListener("click", toggleSidebar);
+  // Event listeners - Updated to match student.html
+  menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
   profileForm.addEventListener("submit", handleProfileSubmit);
   passwordForm.addEventListener("submit", handlePasswordSubmit);
   savePreferences.addEventListener("click", handlePreferencesSubmit);
   avatarUpload.addEventListener("change", handleAvatarUpload);
 
-  // Navigation event listeners - Dashboard style
+  // Enrolled Classes Dropdown Toggle - Same as student.html
+  enrolledClassesDropdownToggle.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    enrolledClassesDropdown.classList.toggle("show");
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate");
+    renderEnrolledClasses();
+  });
+
+  // Navigation event listeners - Same as student.html
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       const href = this.getAttribute("href");
       const currentPage =
-        window.location.pathname.split("/").pop() || "studentProfile.html"; // Updated for studentProfile
+        window.location.pathname.split("/").pop() || "studentProfile.html";
 
-      // Only prevent navigation to the same page
+      // Prevent default behavior and handle navigation manually
+      e.preventDefault();
+      e.stopPropagation();
+
+      // If clicking on same page, do nothing
       if (
         href === currentPage ||
-        (href === "studentProfile.html" && currentPage === "") // Updated for studentProfile
+        (href === "studentProfile.html" && currentPage === "")
       ) {
-        e.preventDefault();
         return;
       }
 
-      // For different pages, allow normal navigation
-      // Remove any active class from current page
+      // Update active states
       navLinks.forEach((l) => l.classList.remove("active"));
-      // Add active class to clicked link
       this.classList.add("active");
-
-      // Store current sidebar state before navigation
-      const sidebarIsOpen = sidebar.classList.contains("show");
-      localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
 
       // Store navigation intent to prevent automatic redirects
       localStorage.setItem("intentionalNavigation", "true");
       localStorage.setItem("targetPage", href);
+
+      // Use window.location.href for proper navigation
+      setTimeout(() => {
+        window.location.href = href;
+      }, 100);
     });
   });
 
-  // Close sidebar when clicking outside (but don't interfere with navigation)
+  // Close modals and dropdowns when clicking outside - Same as student.html
+  window.addEventListener("click", function (e) {
+    // Close enrolled classes dropdown if clicked outside
+    if (
+      !enrolledClassesDropdownToggle.contains(e.target) &&
+      !enrolledClassesDropdown.contains(e.target)
+    ) {
+      enrolledClassesDropdown.classList.remove("show");
+      enrolledClassesDropdownToggle
+        .querySelector(".dropdown-arrow")
+        .classList.remove("rotate");
+    }
+  });
+
+  // Close sidebar when clicking outside - Same as student.html
   document.addEventListener("click", function (e) {
-    // Check if click is on a navigation link
-    const isNavLink = e.target.closest(".nav-item");
+    const isNavLink = e.target.closest("[data-nav-link]");
 
     if (
       !isNavLink &&
       !sidebar.contains(e.target) &&
-      !menuToggle.contains(e.target)
+      !menuIcon.contains(e.target)
     ) {
-      if (window.innerWidth <= 1024) {
-        sidebar.classList.remove("show");
-      }
-    }
-  });
-
-  // Responsive sidebar handling
-  window.addEventListener("resize", function () {
-    if (window.innerWidth > 1024) {
-      sidebar.classList.remove("show");
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
       localStorage.setItem("sidebarState", "closed");
     }
   });
 
-  // Handle page visibility change to preserve sidebar state
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "visible") {
-      // Restore sidebar state when page becomes visible again
-      const savedSidebarState = localStorage.getItem("sidebarState");
-      const intentionalNavigation = localStorage.getItem(
-        "intentionalNavigation"
-      );
-
-      if (intentionalNavigation === "true" && savedSidebarState === "open") {
-        sidebar.classList.add("show");
-        if (window.innerWidth > 1024) {
-          mainContent.classList.add("collapsed");
-        }
-        // Clear the navigation flag
-        localStorage.removeItem("intentionalNavigation");
-      }
-    }
-  });
-
   function initializePage() {
-    // Set user info
-    const userName = currentUserEmail.split("@")[0];
-    const userInitial = currentUserEmail.charAt(0).toUpperCase();
+    // Set user info - Same as student.html
+    const userName = currentUser.split("@")[0];
+    const userInitialText = currentUser.charAt(0).toUpperCase();
 
+    // Update header elements
+    currentUserEmail.textContent = currentUser;
+    userInitial.textContent = userInitialText;
+    userRoleBadge.textContent = "Student";
+    userRoleBadge.className = "role-badge student";
+
+    // Update profile elements
     document.getElementById("profileName").textContent = userName;
-    document.getElementById("profileEmail").textContent = currentUserEmail;
-    document.getElementById("email").value = currentUserEmail;
-    headerUserInitial.textContent = userInitial;
-    avatarText.textContent = userInitial;
+    document.getElementById("profileEmail").textContent = currentUser;
+    document.getElementById("email").value = currentUser;
+    avatarText.textContent = userInitialText;
 
-    // Handle sidebar state on page load
+    // Handle sidebar state on page load - Same as student.html
     const savedSidebarState = localStorage.getItem("sidebarState");
     const intentionalNavigation = localStorage.getItem("intentionalNavigation");
 
     // If coming from intentional navigation and sidebar was open, restore it
     if (intentionalNavigation === "true" && savedSidebarState === "open") {
-      sidebar.classList.add("show");
-      if (window.innerWidth > 1024) {
-        mainContent.classList.add("collapsed");
-      }
+      sidebar.classList.add("open");
+      mainContent.classList.add("sidebar-open");
       // Clear the navigation flag
       localStorage.removeItem("intentionalNavigation");
     } else {
       // Default closed state (for refresh or direct access)
-      sidebar.classList.remove("show");
-      mainContent.classList.remove("collapsed");
+      sidebar.classList.remove("open");
+      mainContent.classList.remove("sidebar-open");
       localStorage.setItem("sidebarState", "closed");
     }
 
@@ -156,6 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadPreferences();
     loadAvatar();
     updateStats();
+    renderEnrolledClasses(); // Same as student.html
 
     // Add fade-in animation
     document.querySelectorAll(".card").forEach((card) => {
@@ -164,25 +177,68 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function toggleSidebar() {
-    if (window.innerWidth <= 1024) {
-      sidebar.classList.toggle("show");
-    } else {
-      sidebar.classList.toggle("show");
-      mainContent.classList.toggle("collapsed");
-    }
+    // Same as student.html
+    sidebar.classList.toggle("open");
+    mainContent.classList.toggle("sidebar-open");
 
     // Save sidebar state
-    const sidebarIsOpen = sidebar.classList.contains("show");
+    const sidebarIsOpen = sidebar.classList.contains("open");
     localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
   }
 
   function handleLogout() {
-    if (confirm("আপনি কি লগআউট করতে চান?")) {
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("userRole");
-      window.location.href = "index.html";
+    // Same as student.html
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
+    window.location.href = "index.html";
+  }
+
+  // Function to render enrolled classes in the sidebar dropdown - Same as student.html
+  function renderEnrolledClasses() {
+    const dashboard = getUserDashboard();
+    const enrolled = dashboard.courses.filter(
+      (course) => !course.archived && course.students.includes(currentUser)
+    );
+
+    enrolledClassesDropdown.innerHTML = "";
+
+    if (enrolled.length === 0) {
+      const listItem = document.createElement("li");
+      listItem.className = "dropdown-item-sidebar no-courses";
+      listItem.textContent = "No enrolled classes";
+      enrolledClassesDropdown.appendChild(listItem);
+    } else {
+      enrolled.forEach((course) => {
+        const listItem = document.createElement("li");
+        listItem.className = "dropdown-item-sidebar";
+        listItem.textContent = course.name;
+        listItem.dataset.courseId = course.id;
+        listItem.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openCourse(course);
+        });
+        enrolledClassesDropdown.appendChild(listItem);
+      });
     }
+  }
+
+  function getUserDashboard() {
+    // Same as student.html
+    const dashboardKey = `dashboard_${currentUser}`;
+    const dashboard = JSON.parse(
+      localStorage.getItem(dashboardKey) || '{"courses": [], "role": "student"}'
+    );
+    if (!dashboard.courses) {
+      dashboard.courses = [];
+    }
+    return dashboard;
+  }
+
+  function openCourse(course) {
+    // Same as student.html
+    localStorage.setItem("selectedCourse", JSON.stringify(course));
+    window.location.href = "studentStream.html";
   }
 
   function handleProfileSubmit(e) {
@@ -198,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     localStorage.setItem(
-      `profileData_${currentUserEmail}`,
+      `profileData_${currentUser}`,
       JSON.stringify(profileData)
     );
 
@@ -234,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Save password
-    localStorage.setItem(`userPassword_${currentUserEmail}`, newPassword);
+    localStorage.setItem(`userPassword_${currentUser}`, newPassword);
     passwordForm.reset();
     showNotification("পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!", "success");
   }
@@ -249,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     localStorage.setItem(
-      `preferences_${currentUserEmail}`,
+      `preferences_${currentUser}`,
       JSON.stringify(preferences)
     );
     showNotification("প্রাথমিকতা সংরক্ষণ করা হয়েছে!", "success");
@@ -281,7 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
       avatarText.style.display = "none";
 
       // Save to localStorage
-      localStorage.setItem(`userAvatar_${currentUserEmail}`, imageData);
+      localStorage.setItem(`userAvatar_${currentUser}`, imageData);
 
       showNotification("প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!", "success");
     };
@@ -290,9 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function loadProfileData() {
-    const savedProfile = localStorage.getItem(
-      `profileData_${currentUserEmail}`
-    );
+    const savedProfile = localStorage.getItem(`profileData_${currentUser}`);
     if (savedProfile) {
       const profileData = JSON.parse(savedProfile);
 
@@ -312,9 +366,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function loadPreferences() {
-    const savedPreferences = localStorage.getItem(
-      `preferences_${currentUserEmail}`
-    );
+    const savedPreferences = localStorage.getItem(`preferences_${currentUser}`);
     if (savedPreferences) {
       const preferences = JSON.parse(savedPreferences);
 
@@ -329,7 +381,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function loadAvatar() {
-    const savedAvatar = localStorage.getItem(`userAvatar_${currentUserEmail}`);
+    const savedAvatar = localStorage.getItem(`userAvatar_${currentUser}`);
     if (savedAvatar) {
       avatarImg.src = savedAvatar;
       avatarImg.classList.remove("d-none");
@@ -338,8 +390,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateStats() {
-    // Get courses from dashboard data structure
-    const dashboardKey = `dashboard_${currentUserEmail}`;
+    // Get courses from dashboard data structure - Same as student.html
+    const dashboardKey = `dashboard_${currentUser}`;
     const dashboard = JSON.parse(
       localStorage.getItem(dashboardKey) || '{"courses": [], "role": null}'
     );
@@ -351,7 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (userRole === "teacher") {
       const userCourses = courses.filter(
-        (course) => course.teacher === currentUserEmail
+        (course) => course.teacher === currentUser
       );
       userCourseCount = userCourses.length;
       totalAssignments = userCourses.reduce(
@@ -368,7 +420,7 @@ document.addEventListener("DOMContentLoaded", function () {
         (sum, course) => sum + (course.assignments || 0),
         0
       );
-      totalStudents = courses.length; // Student count for student view
+      totalStudents = courses.length;
     }
 
     document.getElementById("totalCourses").textContent = userCourseCount;

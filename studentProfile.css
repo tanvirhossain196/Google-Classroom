@@ -30,9 +30,6 @@
   --gradient-dark: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   --border-radius: 0.75rem;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --sidebar-width: 17.5rem;
-  --sidebar-collapsed-width: 5rem;
-  --header-height: 4rem;
 }
 
 * {
@@ -51,26 +48,33 @@ body {
   overflow-x: hidden;
 }
 
-/* Enhanced Professional Header - Dashboard Style */
-.navbar {
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Enhanced Professional Header - 100% Identical to student.html */
+.header {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  height: 4rem;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
 }
 
-.navbar::before {
+.header::before {
   content: "";
   position: absolute;
   top: 0;
@@ -82,22 +86,58 @@ body {
   z-index: -1;
 }
 
-.navbar-brand {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.025em;
-  text-decoration: none;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.navbar-brand:hover {
-  text-decoration: none;
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.menu-toggle {
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 1rem;
+}
+
+.user-email {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.role-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.role-badge.teacher {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.role-badge.student {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.role-badge.new {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+.menu-icon {
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.75rem;
@@ -111,14 +151,24 @@ body {
   border: 1px solid transparent;
 }
 
-.menu-toggle:hover {
+.menu-icon:hover {
   background: var(--light-color);
   color: var(--primary-color);
   transform: scale(1.05);
   border-color: var(--border-color);
 }
 
-.user-avatar-header {
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.025em;
+}
+
+.user-avatar {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
@@ -130,69 +180,46 @@ body {
   transition: var(--transition);
   box-shadow: var(--shadow-md);
   border: 2px solid white;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+#userInitial {
   color: white;
   font-size: 1rem;
   font-weight: 700;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.user-avatar-header:hover {
-  transform: scale(1.1);
-  box-shadow: var(--shadow-lg);
-}
-
-.dropdown-menu {
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   border: none;
-  box-shadow: var(--shadow-xl);
+  color: white;
+  padding: 0.5rem 1rem;
   border-radius: var(--border-radius);
-  padding: 0.5rem 0;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  overflow: hidden;
-}
-
-.dropdown-item {
-  padding: 0.875rem 1.5rem;
-  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
   transition: var(--transition);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-weight: 500;
+  box-shadow: var(--shadow-sm);
 }
 
-.dropdown-item:last-child {
-  border-bottom: none;
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
-.dropdown-item:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(37, 99, 235, 0.1),
-    rgba(37, 99, 235, 0.05)
-  );
-  color: var(--primary-color);
-  transform: translateX(0.25rem);
-}
-
-.dropdown-item.text-danger:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(239, 68, 68, 0.1),
-    rgba(239, 68, 68, 0.05)
-  );
-  color: var(--danger-color);
-}
-
-/* Enhanced Professional Sidebar - Dashboard Style */
+/* Enhanced Professional Sidebar - Identical to student.html */
 .sidebar {
   position: fixed;
-  top: var(--header-height);
+  top: 4rem;
   left: 0;
-  width: var(--sidebar-collapsed-width);
-  height: calc(100vh - var(--header-height));
+  width: 5rem;
+  height: calc(100vh - 4rem);
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-right: 1px solid var(--border-color);
@@ -215,8 +242,8 @@ body {
   z-index: -1;
 }
 
-.sidebar.show {
-  width: var(--sidebar-width);
+.sidebar.open {
+  width: 17.5rem;
   box-shadow: var(--shadow-lg);
 }
 
@@ -228,7 +255,7 @@ body {
   transition: var(--transition);
 }
 
-.sidebar:not(.show) .sidebar-header {
+.sidebar:not(.open) .sidebar-header {
   opacity: 0;
   height: 0;
   padding: 0;
@@ -236,20 +263,24 @@ body {
   overflow: hidden;
 }
 
-.sidebar-title {
+.sidebar-header h2 {
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.025em;
-  margin: 0;
 }
 
-.sidebar-nav {
+.sidebar-menu {
+  list-style: none;
   padding: 0;
 }
 
-/* Navigation Link Styles - Dashboard Style with CORRECT ICON SIZE */
-.nav-item {
+.sidebar-menu li {
+  margin-bottom: 0.5rem;
+}
+
+/* Navigation Link Styles - Identical to student.html */
+.nav-link {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -263,10 +294,14 @@ body {
   margin-right: 1rem;
   position: relative;
   cursor: pointer;
-  margin-bottom: 0.5rem;
 }
 
-.nav-item::before {
+.nav-link[data-nav-link] {
+  pointer-events: auto;
+  user-select: none;
+}
+
+.nav-link::before {
   content: "";
   position: absolute;
   left: 0;
@@ -278,28 +313,20 @@ body {
   transition: var(--transition);
 }
 
-.sidebar:not(.show) .nav-item {
+.sidebar:not(.open) .nav-link {
   justify-content: center;
   padding: 0.875rem 0;
   margin-right: 0;
   border-radius: 0;
 }
 
-/* CORRECTED: Match dashboard.css exactly for icon size */
-.sidebar-nav .nav-item i,
-.nav-item i {
-  font-size: 1.25rem !important;
+.nav-link .material-icons {
+  font-size: 1.25rem;
   flex-shrink: 0;
   transition: var(--transition);
-  width: auto;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
 }
 
-.nav-text {
+.nav-link span {
   opacity: 1;
   transition: var(--transition);
   white-space: nowrap;
@@ -307,13 +334,13 @@ body {
   font-weight: 500;
 }
 
-.sidebar:not(.show) .nav-text {
+.sidebar:not(.open) .nav-link span {
   opacity: 0;
   width: 0;
   margin-left: -1rem;
 }
 
-.nav-item:hover {
+.nav-link:hover {
   background: linear-gradient(
     135deg,
     rgba(37, 99, 235, 0.1),
@@ -321,19 +348,18 @@ body {
   );
   color: var(--primary-color);
   transform: translateX(0.25rem);
-  text-decoration: none;
 }
 
-.nav-item:hover::before {
+.nav-link:hover::before {
   opacity: 1;
 }
 
-.nav-item:hover i {
+.nav-link:hover .material-icons {
   color: var(--primary-color);
   transform: scale(1.1);
 }
 
-.nav-item.active {
+.nav-link.active {
   background: linear-gradient(
     135deg,
     var(--primary-color),
@@ -343,27 +369,137 @@ body {
   box-shadow: var(--shadow-md);
 }
 
-.nav-item.active::before {
+.nav-link.active::before {
   opacity: 1;
   background: white;
 }
 
-.nav-item.active i {
+.nav-link.active .material-icons {
   color: white;
 }
 
-/* Main Content - Dashboard Style */
+/* Sidebar dropdown styles - Identical to student.html */
+.sidebar-dropdown {
+  position: relative;
+}
+
+.sidebar-dropdown .nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 1.5rem;
+}
+
+.sidebar-dropdown .nav-link .dropdown-arrow-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.sidebar-dropdown .nav-link .dropdown-arrow {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-dropdown .nav-link .dropdown-arrow.rotate {
+  transform: rotate(180deg);
+}
+
+.sidebar:not(.open) .dropdown-arrow-wrapper {
+  display: none;
+}
+
+.sidebar:not(.open) .sidebar-dropdown .nav-link {
+  justify-content: center;
+  padding: 0.875rem 0;
+  margin-right: 0;
+  border-radius: 0;
+}
+
+.dropdown-menu-sidebar {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0.5rem 2.5rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.dropdown-menu-sidebar.show {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.dropdown-item-sidebar {
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.dropdown-item-sidebar:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item-sidebar:hover {
+  background: var(--light-color);
+  color: var(--primary-color);
+}
+
+.dropdown-item-sidebar.no-courses {
+  font-style: italic;
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.dropdown-item-sidebar.no-courses:hover {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.sidebar.open .dropdown-menu-sidebar {
+  width: calc(100% - 3rem);
+}
+
+.sidebar:not(.open) .dropdown-item-sidebar {
+  text-align: center;
+  padding: 0.75rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.sidebar:not(.open) .dropdown-item-sidebar:hover {
+  background: var(--light-color);
+  color: var(--primary-color);
+}
+
+.sidebar:not(.open) .dropdown-item-sidebar.no-courses {
+  display: none;
+}
+
+/* Main Content - Updated to match student.html layout */
 .main-content {
-  margin-left: var(--sidebar-collapsed-width);
-  margin-top: var(--header-height);
+  margin-left: 5rem;
+  margin-top: 4rem;
   padding: 2rem;
-  min-height: calc(100vh - var(--header-height));
+  min-height: calc(100vh - 4rem);
   transition: var(--transition);
   background: transparent;
 }
 
-.main-content.collapsed {
-  margin-left: var(--sidebar-width);
+.main-content.sidebar-open {
+  margin-left: 17.5rem;
 }
 
 /* Page Header */
@@ -425,7 +561,9 @@ body {
   border-radius: var(--border-radius);
   overflow: hidden;
   transition: var(--transition);
-  background: var(--surface-color);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
 }
 
 .profile-card:hover {
@@ -747,27 +885,25 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .sidebar {
+    width: 100%;
     transform: translateX(-100%);
-    width: var(--sidebar-width);
   }
 
-  .sidebar.show {
+  .sidebar.open {
     transform: translateX(0);
   }
 
   .main-content {
     margin-left: 0;
-    width: 100%;
+    padding: 1rem;
   }
 
-  .main-content.collapsed {
+  .main-content.sidebar-open {
     margin-left: 0;
   }
-}
 
-@media (max-width: 768px) {
   .page-title {
     font-size: 1.875rem;
   }
@@ -781,21 +917,21 @@ body {
     font-size: 2.5rem;
   }
 
-  .main-content {
-    padding: 1rem;
-  }
-
   .card-header,
   .card-body {
     padding: 1rem;
   }
 
-  .navbar {
+  .header {
     padding: 0 1rem;
   }
 
   .page-header {
     padding: 1.5rem;
+  }
+
+  .user-info {
+    display: none;
   }
 }
 
@@ -817,7 +953,7 @@ body {
     padding: 0.75rem;
   }
 
-  .navbar-brand {
+  .header h1 {
     font-size: 1.25rem;
   }
 }
