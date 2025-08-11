@@ -731,7 +731,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function openCourse(course) {
     localStorage.setItem("selectedCourse", JSON.stringify(course));
-    window.location.href = "stream.html"; // Assuming stream.html exists
+    window.location.href = "studentStream.html"; // Assuming studentStream.html exists
   }
 
   // Function to render enrolled classes in the sidebar dropdown

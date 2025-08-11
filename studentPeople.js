@@ -10,23 +10,32 @@ class PeopleManager {
 
   init() {
     // Simulate a student user for this version
-    localStorage.setItem("currentUser", "Student User");
-    localStorage.setItem("userRole", "student");
-    // Simulate a selected course for testing
+    // Ensure currentUser and userRole are correctly set from localStorage
+    this.currentUser = localStorage.getItem("currentUser");
+    this.userRole = localStorage.getItem("userRole");
+
+    if (!this.currentUser || this.userRole !== "student") {
+      // Redirect to login or dashboard if session is invalid
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Simulate a selected course for testing if none exists
+    // This block is primarily for direct access to studentPeople.html for testing
     if (!localStorage.getItem("selectedCourse")) {
       const dummyCourse = {
         id: "course123",
         name: "Advanced Math",
         section: "Section A",
         teacher: "Teacher User",
-        students: ["Student One", "Student Two", "Student User"], // Include the simulated student
+        students: ["Student One", "Student Two", this.currentUser], // Include the simulated student
         subject: "Math",
         room: "101",
         code: "MATH101",
       };
       localStorage.setItem("selectedCourse", JSON.stringify(dummyCourse));
       // Also update the dashboard for the student
-      const studentDashboardKey = `dashboard_Student User`;
+      const studentDashboardKey = `dashboard_${this.currentUser}`;
       let studentDashboard = JSON.parse(
         localStorage.getItem(studentDashboardKey) || '{"courses": []}'
       );
@@ -41,7 +50,7 @@ class PeopleManager {
 
     this.setupElements();
     this.setupEventListeners();
-    this.loadUserData();
+    this.loadUserData(); // This will now use the actual currentUser
     this.loadCourseData();
     this.setupProfessionalFeatures();
     this.setupNotificationSystem();
@@ -112,15 +121,14 @@ class PeopleManager {
     // Enhanced menu functionality
     this.elements.menuBtn.addEventListener("click", () => this.toggleSidebar());
 
-    // Enhanced navigation
+    // The 'classesLink' now directly uses its href to 'student.html'
+    // and the goToDashboard function is modified to preserve selectedCourse.
+    // This ensures that clicking "Classroom" in the sidebar navigates correctly
+    // while preserving the user session.
     this.elements.classesLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.goToDashboard();
+      e.preventDefault(); // Prevent default link behavior
+      this.goToDashboard(); // Call custom navigation function
     });
-
-    this.elements.settingsLink.addEventListener("click", () =>
-      this.navigateWithAnimation("settings.html")
-    );
 
     // Enhanced resize handling
     window.addEventListener("resize", () => this.handleResize());
@@ -216,9 +224,8 @@ class PeopleManager {
   }
 
   loadUserData() {
-    this.currentUser = localStorage.getItem("currentUser");
-    this.userRole = localStorage.getItem("userRole"); // Should be 'student' for this version
-
+    // currentUser and userRole are already set in init() from localStorage
+    // No need to re-fetch here, just use the class properties
     if (!this.currentUser) {
       this.navigateWithAnimation("index.html");
       return;
@@ -253,7 +260,9 @@ class PeopleManager {
 
   showErrorAndRedirect(message) {
     alert(message);
-    this.navigateWithAnimation("dashboard.html");
+    // Ensure that when redirecting to student.html, the session is preserved.
+    // The student.js handles this by checking localStorage for currentUser.
+    window.location.href = "student.html";
   }
 
   setupProfessionalFeatures() {
@@ -307,10 +316,12 @@ class PeopleManager {
     }, 300);
   }
 
+  // MODIFIED: Ensure selectedCourse is NOT cleared when returning to dashboard
   goToDashboard() {
-    // Selected course clear করুন
-    localStorage.removeItem("selectedCourse");
-    this.navigateWithAnimation("dashboard.html");
+    // Preserve selectedCourse when navigating back to the dashboard
+    // The student.js dashboard will load courses based on currentUser,
+    // and selectedCourse is only used when navigating *into* a specific course page.
+    this.navigateWithAnimation("student.html");
   }
 
   setUserInitials() {

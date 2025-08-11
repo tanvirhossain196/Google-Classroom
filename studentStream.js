@@ -55,15 +55,17 @@ class StreamManager {
     // Enhanced menu functionality
     this.elements.menuBtn.addEventListener("click", () => this.toggleSidebar());
 
-    // Enhanced navigation
-    this.elements.classesLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.goToDashboard();
-    });
+    // No longer need to attach event listeners for classesLink and settingsLink
+    // as their href attributes are directly set in HTML.
+    // this.elements.classesLink.addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   this.goToDashboard();
+    // });
 
-    this.elements.settingsLink.addEventListener("click", () =>
-      this.navigateWithAnimation("settings.html")
-    );
+    // The settingsLink event listener is removed as the direct href handles navigation.
+    // this.elements.settingsLink.addEventListener("click", () =>
+    //   this.navigateWithAnimation("studentSettings.html")
+    // );
 
     // Course code display click
     if (this.elements.courseCodeDisplay) {
@@ -129,7 +131,7 @@ class StreamManager {
 
   showErrorAndRedirect(message) {
     alert(message);
-    this.navigateWithAnimation("dashboard.html");
+    this.navigateWithAnimation("student.html");
   }
 
   setupProfessionalFeatures() {
@@ -169,7 +171,7 @@ class StreamManager {
   goToDashboard() {
     // Selected course clear করুন
     localStorage.removeItem("selectedCourse");
-    this.navigateWithAnimation("dashboard.html");
+    this.navigateWithAnimation("student.html");
   }
 
   // Load upcoming assignments from classwork
@@ -1083,7 +1085,6 @@ StreamManager.prototype.createAttachmentElement = function (attachment) {
     padding: 12px;
     margin: 8px 0;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 8px;
     border: 1px solid var(--border-color);
     cursor: pointer;
     transition: var(--transition);

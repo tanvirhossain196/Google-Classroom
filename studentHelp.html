@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - Classroom</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="help.css">
+</head>
+
+<style>
+    /* Import Bootstrap Icons */
+    @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css");
+
+    /* Professional Variables */
+    :root {
+        --primary-color: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary-color: #64748b;
+        --accent-color: #f59e0b;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        --info-color: #06b6d4;
+        --success-color: #10b981;
+        --dark-color: #1e293b;
+        --light-color: #f8fafc;
+        --border-color: #e2e8f0;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+            0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --gradient-dark: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        --border-radius: 0.75rem;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        color: var(--text-primary);
+        line-height: 1.6;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Enhanced Professional Header */
+    .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        height: 4rem;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+    }
+
+    .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--gradient-primary);
+        opacity: 0.03;
+        z-index: -1;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-right: 1rem;
+    }
+
+    .user-email {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .role-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+    }
+
+    .role-badge.teacher {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+
+    .role-badge.student {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+    }
+
+    .role-badge.new {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+
+    .menu-icon {
+        font-size: 1.25rem;
+        cursor: pointer;
+        padding: 0.75rem;
+        border-radius: 50%;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        background: transparent;
+        border: 1px solid transparent;
+    }
+
+    .menu-icon:hover {
+        background: var(--light-color);
+        color: var(--primary-color);
+        transform: scale(1.05);
+        border-color: var(--border-color);
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.025em;
+    }
+
+    .user-avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow-md);
+        border: 2px solid white;
+    }
+
+    .user-avatar:hover {
+        transform: scale(1.1);
+        box-shadow: var(--shadow-lg);
+    }
+
+    #userInitial {
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-btn {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border: none;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    /* Enhanced Professional Sidebar */
+    .sidebar {
+        position: fixed;
+        top: 4rem;
+        left: 0;
+        width: 5rem;
+        height: calc(100vh - 4rem);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid var(--border-color);
+        padding: 1.5rem 0;
+        overflow-y: auto;
+        z-index: 999;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--gradient-primary);
+        opacity: 0.02;
+        z-index: -1;
+    }
+
+    .sidebar.open {
+        width: 17.5rem;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar-header {
+        padding: 0 1.5rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 1rem;
+        opacity: 1;
+        transition: var(--transition);
+    }
+
+    .sidebar:not(.open) .sidebar-header {
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .sidebar-header h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.025em;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar-menu li {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Navigation Link Styles - Enhanced for proper navigation */
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.875rem 1.5rem;
+        text-decoration: none;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: var(--transition);
+        border-radius: 0 2rem 2rem 0;
+        margin-right: 1rem;
+        position: relative;
+        cursor: pointer;
+    }
+
+    /* Ensure navigation links are always clickable */
+    .nav-link[data-nav-link] {
+        pointer-events: auto;
+        user-select: none;
+    }
+
+    .nav-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--primary-color);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .sidebar:not(.open) .nav-link {
+        justify-content: center;
+        padding: 0.875rem 0;
+        margin-right: 0;
+        border-radius: 0;
+    }
+
+    .nav-link .material-icons {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+        transition: var(--transition);
+    }
+
+    .nav-link span {
+        opacity: 1;
+        transition: var(--transition);
+        white-space: nowrap;
+        overflow: hidden;
+        font-weight: 500;
+    }
+
+    .sidebar:not(.open) .nav-link span {
+        opacity: 0;
+        width: 0;
+        margin-left: -1rem;
+    }
+
+    .nav-link:hover {
+        background: linear-gradient(135deg,
+                rgba(37, 99, 235, 0.1),
+                rgba(37, 99, 235, 0.05));
+        color: var(--primary-color);
+        transform: translateX(0.25rem);
+    }
+
+    .nav-link:hover::before {
+        opacity: 1;
+    }
+
+    .nav-link:hover .material-icons {
+        color: var(--primary-color);
+        transform: scale(1.1);
+    }
+
+    .nav-link.active {
+        background: linear-gradient(135deg,
+                var(--primary-color),
+                var(--primary-dark));
+        color: white;
+        box-shadow: var(--shadow-md);
+    }
+
+    .nav-link.active::before {
+        opacity: 1;
+        background: white;
+    }
+
+    .nav-link.active .material-icons {
+        color: white;
+    }
+
+    /* Enhanced Main Content */
+    .main-content {
+        margin-left: 5rem;
+        margin-top: 4rem;
+        padding: 2rem;
+        min-height: calc(100vh - 4rem);
+        transition: var(--transition);
+        background: transparent;
+    }
+
+    .main-content.sidebar-open {
+        margin-left: 17.5rem;
+    }
+
+    /* Styles for the sidebar dropdown */
+    .sidebar-dropdown {
+        position: relative;
+    }
+
+    .sidebar-dropdown .nav-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: 1.5rem;
+        /* Adjust padding to make space for arrow */
+    }
+
+    .sidebar-dropdown .nav-link .dropdown-arrow {
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-dropdown .nav-link .dropdown-arrow.rotate {
+        transform: rotate(180deg);
+    }
+
+    /* Hide the dropdown arrow icon when sidebar is not open */
+    .sidebar:not(.open) .dropdown-arrow-icon {
+        display: none;
+    }
+
+    /* Adjust spacing for the nav-link content when sidebar is open */
+    .sidebar.open .sidebar-dropdown .nav-link {
+        gap: 0.75rem;
+        /* Add a gap between icon, text, and arrow */
+        justify-content: flex-start;
+        /* Align items to the start */
+    }
+
+    .dropdown-menu-sidebar {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0 0.5rem 2.5rem;
+        /* Indent dropdown items */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        opacity: 0;
+        background: rgba(255, 255, 255, 0.5);
+        /* Slightly transparent background */
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .dropdown-menu-sidebar.show {
+        max-height: 300px;
+        /* Adjust as needed for content */
+        opacity: 1;
+    }
+
+    .dropdown-item-sidebar {
+        padding: 0.75rem 1rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+        /* Light separator */
+    }
+
+    .dropdown-item-sidebar:last-child {
+        border-bottom: none;
+    }
+
+    .dropdown-item-sidebar:hover {
+        background: var(--light-color);
+        color: var(--primary-color);
+    }
+
+    .dropdown-item-sidebar.no-courses {
+        font-style: italic;
+        color: var(--text-muted);
+        cursor: default;
+    }
+
+    .dropdown-item-sidebar.no-courses:hover {
+        background: transparent;
+        color: var(--text-muted);
+    }
+
+    /* Adjust sidebar width when dropdown is open if needed */
+    .sidebar.open .dropdown-menu-sidebar {
+        width: calc(100% - 3rem);
+        /* Adjust to fit within sidebar padding */
+    }
+
+    /* Styling for course names in collapsed sidebar */
+    .sidebar:not(.open) .dropdown-item-sidebar {
+        text-align: center;
+        padding: 0.75rem 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: block;
+        /* Ensure it takes full width for ellipsis */
+    }
+
+    .sidebar:not(.open) .dropdown-item-sidebar:hover {
+        background: var(--light-color);
+        color: var(--primary-color);
+    }
+
+    .sidebar:not(.open) .dropdown-item-sidebar.no-courses {
+        display: none;
+        /* Hide "No enrolled classes" when sidebar is collapsed */
+    }
+
+    /* Existing help.css styles below */
+
+    .help-sidebar-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .help-sidebar-card .card-header {
+        background: rgba(37, 99, 235, 0.05);
+        border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+        padding: 1.5rem;
+    }
+
+    .help-nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .help-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        color: var(--secondary-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+    }
+
+    .help-link:hover {
+        background-color: #f1f5f9;
+        color: var(--primary-color);
+        transform: translateX(2px);
+    }
+
+    .help-link.active {
+        background-color: rgba(37, 99, 235, 0.1);
+        color: var(--primary-color);
+        border-left-color: var(--primary-color);
+    }
+
+    .help-link i {
+        width: 20px;
+        font-size: 1.1rem;
+        margin-right: 0.75rem;
+        text-align: center;
+    }
+
+    .help-section {
+        display: none;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .help-section.active {
+        display: block;
+    }
+
+    .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background: rgba(37, 99, 235, 0.05);
+        border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+        border-radius: 16px 16px 0 0 !important;
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin: 0;
+    }
+
+    .welcome-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .welcome-section h3 {
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+    }
+
+    .welcome-section .lead {
+        color: var(--secondary-color);
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    .step-guide {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .step-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: rgba(248, 250, 252, 0.8);
+        border-radius: 12px;
+        border-left: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .step-item:hover {
+        background: rgba(37, 99, 235, 0.05);
+        transform: translateX(4px);
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .step-content h4 {
+        color: var(--dark-color);
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .step-content p {
+        color: var(--secondary-color);
+        line-height: 1.6;
+    }
+
+    .tab-buttons {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .tab-btn {
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--secondary-color);
+        transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .tab-btn:hover {
+        color: var(--primary-color);
+    }
+
+    .tab-pane {
+        display: none;
+        padding: 1.5rem;
+        background: rgba(248, 250, 252, 0.8);
+        border-radius: 12px;
+    }
+
+    .tab-pane.active {
+        display: block;
+    }
+
+    .tab-pane h4 {
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+    }
+
+    .tab-pane ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .tab-pane li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: var(--secondary-color);
+    }
+
+    .tab-pane li:before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .feature-item {
+        background: rgba(248, 250, 252, 0.8);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-top: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+        background: rgba(37, 99, 235, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-content h4 {
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+    }
+
+    .feature-content ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .feature-content li {
+        padding: 0.25rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: var(--secondary-color);
+    }
+
+    .feature-content li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--success-color);
+        font-weight: 600;
+    }
+
+    .troubleshoot-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .problem-item {
+        background: rgba(248, 250, 252, 0.8);
+        border-radius: 12px;
+        overflow: hidden;
+        border-left: 4px solid var(--danger-color);
+        transition: all 0.3s ease;
+    }
+
+    .problem-item:hover {
+        background: rgba(239, 68, 68, 0.05);
+        transform: translateX(4px);
+    }
+
+    .problem-header {
+        padding: 1.5rem;
+        background: white;
+    }
+
+    .problem-header h4 {
+        color: var(--dark-color);
+        margin: 0;
+    }
+
+    .problem-solution {
+        padding: 1.5rem;
+    }
+
+    .problem-solution p {
+        color: var(--dark-color);
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .problem-solution ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .problem-solution li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: var(--secondary-color);
+    }
+
+    .problem-solution li:before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--danger-color);
+        font-weight: 600;
+    }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .faq-item {
+        background: rgba(248, 250, 252, 0.8);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+        background: rgba(37, 99, 235, 0.05);
+    }
+
+    .faq-question {
+        padding: 1.5rem;
+        background: white;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+        background: rgba(248, 250, 252, 0.8);
+    }
+
+    .faq-question h4 {
+        color: var(--dark-color);
+        margin: 0;
+    }
+
+    .faq-toggle {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        font-weight: 600;
+        transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-toggle {
+        transform: rotate(45deg);
+    }
+
+    .faq-answer {
+        padding: 0 1.5rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+        padding: 1.5rem;
+        max-height: 200px;
+    }
+
+    .faq-answer p {
+        color: var(--secondary-color);
+        line-height: 1.6;
+    }
+
+    .contact-methods {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .contact-method {
+        background: rgba(248, 250, 252, 0.8);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        border-top: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .contact-method:hover {
+        background: rgba(37, 99, 235, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .contact-icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .contact-info h4 {
+        color: var(--dark-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-info p {
+        color: var(--secondary-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .contact-form {
+        background: rgba(248, 250, 252, 0.8);
+        padding: 2rem;
+        border-radius: 12px;
+        border-top: 4px solid var(--primary-color);
+    }
+
+    .contact-form h4 {
+        color: var(--dark-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.1);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+    }
+
+    .chat-btn {
+        background: linear-gradient(135deg, var(--success-color), #34d399);
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .chat-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+            width: 100%;
+            /* Adjusted for mobile */
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 1rem;
+        }
+
+        .main-content.sidebar-open {
+            margin-left: 0;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .page-header .row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .help-sidebar-card {
+            position: relative;
+            order: 2;
+        }
+
+        .col-lg-9 {
+            order: 1;
+        }
+
+        .step-item {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-methods {
+            grid-template-columns: 1fr;
+        }
+
+        .tab-buttons {
+            flex-wrap: wrap;
+        }
+
+        .user-info {
+            display: none;
+        }
+
+        .header {
+            padding: 0 1rem;
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<body class="light-theme font-medium font-inter" id="mainBody">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="material-icons menu-icon" id="menuIcon">menu</span>
+                <h1>Classroom</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div id="currentUserEmail" class="user-email">user@email.com</div>
+                    <div id="userRoleBadge" class="role-badge new">New User</div>
+                </div>
+                <div class="user-avatar">
+                    <span id="userInitial">U</span>
+                </div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-menu">
+                <ul class="sidebar-menu">
+                    <li><a href="teacher.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">home</i>
+                            <span>Dashboard</span>
+                        </a></li>
+                    <li><a href="teacherProfile.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a></li>
+                    <!-- New Enrolled Classes Dropdown -->
+                    <li class="sidebar-dropdown">
+                        <a href="#" class="nav-link" id="enrolledClassesDropdownToggle">
+                            <i class="material-icons">school</i>
+                            <span>Teaching</span>
+                            <!-- Added a new class 'dropdown-arrow-icon' for targeting -->
+                            <i class="material-icons dropdown-arrow dropdown-arrow-icon">keyboard_arrow_down</i>
+                        </a>
+                        <ul class="dropdown-menu-sidebar" id="enrolledClassesDropdown">
+                            <!-- Course names will be dynamically inserted here -->
+                        </ul>
+                    </li>
+                    <li><a href="teacherArchive.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">archive</i>
+                            <span>Archive classes</span>
+                        </a></li>
+                    <li><a href="teacherSettings.html" class="nav-link" data-nav-link>
+                            <i class="material-icons">settings</i>
+                            <span>Settings</span>
+                        </a></li>
+                    <li><a href="help.html" class="nav-link active" data-nav-link>
+                            <i class="material-icons">help_outline</i>
+                            <span>Help</span>
+                        </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content" id="mainContent">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="page-title">Help Center</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">Help</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <div class="col-auto">
+                            <div class="search-box">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="helpSearch"
+                                        placeholder="Search for something...">
+                                    <button class="btn btn-primary" id="searchBtn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <div class="card help-sidebar-card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-list me-2"></i>Topics
+                                </h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <nav class="help-nav">
+                                    <a href="#getting-started" class="help-link active" data-section="getting-started">
+                                        <i class="fas fa-rocket"></i>
+                                        <span>Getting Started</span>
+                                    </a>
+                                    <a href="#user-guide" class="help-link" data-section="user-guide">
+                                        <i class="fas fa-book-open"></i>
+                                        <span>User Guide</span>
+                                    </a>
+                                    <a href="#features" class="help-link" data-section="features">
+                                        <i class="fas fa-star"></i>
+                                        <span>Features</span>
+                                    </a>
+                                    <a href="#troubleshooting" class="help-link" data-section="troubleshooting">
+                                        <i class="fas fa-wrench"></i>
+                                        <span>Troubleshooting</span>
+                                    </a>
+                                    <a href="#faq" class="help-link" data-section="faq">
+                                        <i class="fas fa-question"></i>
+                                        <span>FAQ</span>
+                                    </a>
+                                    <a href="#contact" class="help-link" data-section="contact">
+                                        <i class="fas fa-phone"></i>
+                                        <span>Contact</span>
+                                    </a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-9">
+                        <div class="help-section active" id="getting-started">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-rocket me-2"></i>Getting Started
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="welcome-section">
+                                        <h3 class="mb-4">Welcome to Education Management System!</h3>
+                                        <p class="lead">Welcome to our platform. Here's a simple guide on how to get
+                                            started:</p>
+                                    </div>
+
+                                    <div class="step-guide">
+                                        <div class="step-item">
+                                            <div class="step-number">1</div>
+                                            <div class="step-content">
+                                                <h4>Login</h4>
+                                                <p>Log in with your email and password. Select your role
+                                                    (teacher/student/admin).</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-item">
+                                            <div class="step-number">2</div>
+                                            <div class="step-content">
+                                                <h4>Setup Profile</h4>
+                                                <p>Complete your profile. Set personal information, contact details, and
+                                                    preferences.</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-item">
+                                            <div class="step-number">3</div>
+                                            <div class="step-content">
+                                                <h4>Start Course</h4>
+                                                <p>If you're a teacher, create new courses. If you're a student, join
+                                                    courses using course codes.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="help-section" id="user-guide">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-book-open me-2"></i>User Guide
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="guide-tabs">
+                                        <div class="tab-buttons">
+                                            <button class="tab-btn active" data-tab="student">Student</button>
+                                            <button class="tab-btn" data-tab="teacher">Teacher</button>
+                                            <button class="tab-btn" data-tab="admin">Admin</button>
+                                        </div>
+
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="student-tab">
+                                                <h4>Guide for Students</h4>
+                                                <ul>
+                                                    <li>Join courses using course codes</li>
+                                                    <li>View and submit assignments</li>
+                                                    <li>Download class notes and materials</li>
+                                                    <li>Communicate with teachers and classmates</li>
+                                                </ul>
+                                            </div>
+                                            <div class="tab-pane" id="teacher-tab">
+                                                <h4>Guide for Teachers</h4>
+                                                <ul>
+                                                    <li>Create new courses</li>
+                                                    <li>Share course codes with students</li>
+                                                    <li>Create and manage assignments</li>
+                                                    <li>Provide grades and feedback</li>
+                                                </ul>
+                                            </div>
+                                            <div class="tab-pane" id="admin-tab">
+                                                <h4>Guide for Administrators</h4>
+                                                <ul>
+                                                    <li>Manage user accounts</li>
+                                                    <li>Configure system settings</li>
+                                                    <li>View reports and analytics</li>
+                                                    <li>Backup and restore data</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="help-section" id="features">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-star me-2"></i>Features
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="feature-grid">
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Course Management</h4>
+                                                <ul>
+                                                    <li>Create online courses</li>
+                                                    <li>Student enrollment</li>
+                                                    <li>Upload course materials</li>
+                                                    <li>Class scheduling</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-tasks"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Assignments</h4>
+                                                <ul>
+                                                    <li>Create assignments</li>
+                                                    <li>Track submissions</li>
+                                                    <li>Grading system</li>
+                                                    <li>Provide feedback</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-comments"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Communication</h4>
+                                                <ul>
+                                                    <li>Instant messaging</li>
+                                                    <li>Forum discussions</li>
+                                                    <li>Video conferencing</li>
+                                                    <li>Email notifications</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div class="feature-content">
+                                                <h4>Reports</h4>
+                                                <ul>
+                                                    <li>Performance reports</li>
+                                                    <li>Attendance tracking</li>
+                                                    <li>Progress monitoring</li>
+                                                    <li>Data export</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="help-section" id="troubleshooting">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-wrench me-2"></i>Troubleshooting
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="troubleshoot-list">
+                                        <div class="problem-item">
+                                            <div class="problem-header">
+                                                <h4>Cannot login</h4>
+                                            </div>
+                                            <div class="problem-solution">
+                                                <p><strong>Solution:</strong></p>
+                                                <ul>
+                                                    <li>Check your email and password</li>
+                                                    <li>Clear browser cache</li>
+                                                    <li>Try resetting your password</li>
+                                                    <li>Contact support team</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="problem-item">
+                                            <div class="problem-header">
+                                                <h4>Course code not working</h4>
+                                            </div>
+                                            <div class="problem-solution">
+                                                <p><strong>Solution:</strong></p>
+                                                <ul>
+                                                    <li>Check if course code is entered correctly</li>
+                                                    <li>Look for spaces or extra characters</li>
+                                                    <li>Make sure course code is still active</li>
+                                                    <li>Contact the teacher</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="problem-item">
+                                            <div class="problem-header">
+                                                <h4>File not uploading</h4>
+                                            </div>
+                                            <div class="problem-solution">
+                                                <p><strong>Solution:</strong></p>
+                                                <ul>
+                                                    <li>Keep file size under 10MB</li>
+                                                    <li>Use supported file formats</li>
+                                                    <li>Check internet connection</li>
+                                                    <li>Refresh the browser</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="help-section" id="faq">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-question me-2"></i>FAQ
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="faq-list">
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>How do I create a new course?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>Click "Create Course" button from the dashboard. Fill in the course
+                                                    name,
+                                                    subject, and other details. Then click "Create" button.</p>
+                                            </div>
+                                        </div>
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>Where can I find my course code?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>After creating a course, you'll receive a unique course code. It
+                                                    will be
+                                                    displayed on your course card. Share this code with students.</p>
+                                            </div>
+                                        </div>
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>How do I create an assignment?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>Go to the course page and click on "Assignment" section. Click "New
+                                                    Assignment" button and provide assignment details, deadline, and
+                                                    instructions.</p>
+                                            </div>
+                                        </div>
+                                        <div class="faq-item">
+                                            <div class="faq-question">
+                                                <h4>How to reset password?</h4>
+                                                <div class="faq-toggle">+</div>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <p>Click "Forgot Password?" link on the login page. Enter your email
+                                                    address
+                                                    and check your email for password reset link.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="help-section" id="contact">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-phone me-2"></i>Contact
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="contact-methods">
+                                        <div class="contact-method">
+                                            <div class="contact-icon">
+                                                <i class="fas fa-envelope"></i>
+                                            </div>
+                                            <div class="contact-info">
+                                                <h4>Email</h4>
+                                                <p>support@classroom.com</p>
+                                                <p>Response within 24 hours</p>
+                                            </div>
+                                        </div>
+                                        <div class="contact-method">
+                                            <div class="contact-icon">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div class="contact-info">
+                                                <h4>Phone</h4>
+                                                <p>+880-1712-345678</p>
+                                                <p>9 AM - 6 PM</p>
+                                            </div>
+                                        </div>
+                                        <div class="contact-method">
+                                            <div class="contact-icon">
+                                                <i class="fas fa-comments"></i>
+                                            </div>
+                                            <div class="contact-info">
+                                                <h4>Live Chat</h4>
+                                                <p>Instant help</p>
+                                                <button class="btn btn-primary chat-btn">Start Chat</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="contact-form">
+                                        <h4>Write to Us</h4>
+                                        <form id="contactForm">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Name</label>
+                                                    <input type="text" class="form-control" id="contactName" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="contactEmail" required>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label">Subject</label>
+                                                    <select class="form-select" id="contactSubject" required>
+                                                        <option value="">Select Subject</option>
+                                                        <option value="technical">Technical Issue</option>
+                                                        <option value="account">Account Issue</option>
+                                                        <option value="course">Course Related</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label">Message</label>
+                                                    <textarea class="form-control" id="contactMessage" rows="4"
+                                                        required></textarea>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Elements from teacher.js
+            const menuIcon = document.getElementById("menuIcon");
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.getElementById("mainContent");
+            const logoutBtn = document.getElementById("logoutBtn");
+            const userInitial = document.getElementById("userInitial");
+            const currentUserEmail = document.getElementById("currentUserEmail");
+            const userRoleBadge = document.getElementById("userRoleBadge");
+
+            // Navigation links
+            const navLinks = document.querySelectorAll("[data-nav-link]");
+
+            // Enrolled Classes Dropdown elements
+            const enrolledClassesDropdownToggle = document.getElementById(
+                "enrolledClassesDropdownToggle"
+            );
+            const enrolledClassesDropdown = document.getElementById(
+                "enrolledClassesDropdown"
+            );
+            const dropdownArrowIcon = enrolledClassesDropdownToggle.querySelector(
+                ".dropdown-arrow-icon"
+            );
+
+            // Elements from original help.js
+            const helpLinks = document.querySelectorAll(".help-link");
+            const helpSections = document.querySelectorAll(".help-section");
+            const helpSearch = document.getElementById("helpSearch");
+            const searchBtn = document.getElementById("searchBtn");
+            const tabButtons = document.querySelectorAll(".tab-btn");
+            const tabPanes = document.querySelectorAll(".tab-pane");
+            const faqItems = document.querySelectorAll(".faq-item");
+            const contactForm = document.getElementById("contactForm");
+            const chatBtn = document.querySelector(".chat-btn");
+
+            // User data
+            const currentUser =
+                localStorage.getItem("currentUser") || localStorage.getItem("userEmail");
+            const userRole = localStorage.getItem("userRole");
+
+            if (!currentUser) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            initializePage();
+
+            // Event listeners from teacher.js
+            menuIcon.addEventListener("click", toggleSidebar);
+            logoutBtn.addEventListener("click", handleLogout);
+
+            // Event listeners from original help.js
+            searchBtn.addEventListener("click", performSearch);
+            contactForm.addEventListener("submit", handleContactSubmit);
+            chatBtn.addEventListener("click", handleChatClick);
+
+            helpSearch.addEventListener("keypress", function (e) {
+                if (e.key === "Enter") {
+                    performSearch();
+                }
+            });
+
+            helpLinks.forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const targetSection = this.dataset.section;
+                    switchHelpSection(targetSection);
+                });
+            });
+
+            tabButtons.forEach((button) => {
+                button.addEventListener("click", function () {
+                    const targetTab = this.dataset.tab;
+                    switchTab(targetTab);
+                });
+            });
+
+            faqItems.forEach((item) => {
+                const question = item.querySelector(".faq-question");
+                question.addEventListener("click", function () {
+                    toggleFAQ(item);
+                });
+            });
+
+            // Enrolled Classes Dropdown Toggle
+            enrolledClassesDropdownToggle.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+                enrolledClassesDropdown.classList.toggle("show");
+                this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
+                renderEnrolledClasses(); // Re-render to ensure up-to-date list
+            });
+
+            // Navigation event listeners - Complete navigation fix
+            navLinks.forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    const href = this.getAttribute("href");
+                    const currentPage =
+                        window.location.pathname.split("/").pop() || "teacher.html"; // Default for dashboard
+
+                    // Prevent default behavior and handle navigation manually
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // If clicking on same page, do nothing
+                    if (
+                        href === currentPage ||
+                        (href === "teacher.html" && currentPage === "")
+                    ) {
+                        return;
+                    }
+
+                    // Update active states
+                    navLinks.forEach((l) => l.classList.remove("active"));
+                    this.classList.add("active");
+
+                    // Store navigation intent to prevent automatic redirects
+                    localStorage.setItem("intentionalNavigation", "true");
+                    localStorage.setItem("targetPage", href);
+
+                    // Use window.location.href for proper navigation
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 100);
+                });
+            });
+
+            // Close dropdowns/sidebar when clicking outside
+            document.addEventListener("click", function (e) {
+                // Close enrolled classes dropdown if clicked outside
+                if (
+                    !enrolledClassesDropdownToggle.contains(e.target) &&
+                    !enrolledClassesDropdown.contains(e.target)
+                ) {
+                    enrolledClassesDropdown.classList.remove("show");
+                    enrolledClassesDropdownToggle
+                        .querySelector(".dropdown-arrow")
+                        .classList.remove("rotate");
+                }
+
+                // Close sidebar when clicking outside (but don't interfere with navigation)
+                const isNavLink = e.target.closest("[data-nav-link]");
+                if (
+                    !isNavLink &&
+                    !sidebar.contains(e.target) &&
+                    !menuIcon.contains(e.target)
+                ) {
+                    sidebar.classList.remove("open");
+                    mainContent.classList.remove("sidebar-open");
+                    localStorage.setItem("sidebarState", "closed");
+                    // Ensure dropdown arrow is hidden when sidebar closes
+                    if (dropdownArrowIcon) {
+                        dropdownArrowIcon.style.display = "none";
+                    }
+                }
+            });
+
+            // Functions from teacher.js
+            function initializeDashboardComponents() {
+                currentUserEmail.textContent = currentUser;
+                userInitial.textContent = currentUser.charAt(0).toUpperCase();
+
+                // Set role badge
+                if (userRole === "teacher") {
+                    userRoleBadge.textContent = "Teacher";
+                    userRoleBadge.className = "role-badge teacher";
+                } else if (userRole === "student") {
+                    userRoleBadge.textContent = "Student";
+                    userRoleBadge.className = "role-badge student";
+                } else {
+                    userRoleBadge.textContent = "User";
+                    userRoleBadge.className = "role-badge new";
+                }
+
+                // Handle sidebar state on page load
+                const savedSidebarState = localStorage.getItem("sidebarState");
+                const intentionalNavigation = localStorage.getItem("intentionalNavigation");
+
+                // If coming from intentional navigation and sidebar was open, restore it
+                if (intentionalNavigation === "true" && savedSidebarState === "open") {
+                    sidebar.classList.add("open");
+                    mainContent.classList.add("sidebar-open");
+                    // Show dropdown arrow if sidebar is open
+                    if (dropdownArrowIcon) {
+                        dropdownArrowIcon.style.display = "block";
+                    }
+                    // Clear the navigation flag
+                    localStorage.removeItem("intentionalNavigation");
+                } else {
+                    // Default closed state (for refresh or direct access)
+                    sidebar.classList.remove("open");
+                    mainContent.classList.remove("sidebar-open");
+                    localStorage.setItem("sidebarState", "closed");
+                    // Hide dropdown arrow if sidebar is closed
+                    if (dropdownArrowIcon) {
+                        dropdownArrowIcon.style.display = "none";
+                    }
+                }
+
+                // Set active class for current page in sidebar
+                const currentPage = window.location.pathname.split("/").pop();
+                navLinks.forEach((link) => {
+                    if (link.getAttribute("href") === currentPage) {
+                        link.classList.add("active");
+                    } else {
+                        link.classList.remove("active");
+                    }
+                });
+
+                renderEnrolledClasses(); // Initial render of enrolled classes
+            }
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("open");
+                mainContent.classList.toggle("sidebar-open");
+
+                // Save sidebar state
+                const sidebarIsOpen = sidebar.classList.contains("open");
+                localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
+
+                // Toggle visibility of the dropdown arrow icon
+                if (dropdownArrowIcon) {
+                    dropdownArrowIcon.style.display = sidebarIsOpen ? "block" : "none";
+                }
+            }
+
+            function handleLogout() {
+                if (confirm("আপনি কি লগআউট করতে চান?")) {
+                    localStorage.removeItem("currentUser");
+                    localStorage.removeItem("userEmail");
+                    localStorage.removeItem("userRole");
+                    window.location.href = "index.html";
+                }
+            }
+
+            function getUserDashboard() {
+                const dashboardKey = `dashboard_${currentUser}`;
+                const dashboard = JSON.parse(
+                    localStorage.getItem(dashboardKey) || '{"courses": [], "role": "teacher"}'
+                );
+                if (!dashboard.courses) {
+                    dashboard.courses = [];
+                }
+                return dashboard;
+            }
+
+            function renderEnrolledClasses() {
+                const dashboard = getUserDashboard();
+                let enrolled = [];
+
+                if (userRole === "teacher") {
+                    enrolled = dashboard.courses.filter(
+                        (course) => !course.archived && course.teacher === currentUser
+                    );
+                } else if (userRole === "student") {
+                    enrolled = dashboard.courses.filter(
+                        (course) => !course.archived && course.students.includes(currentUser)
+                    );
+                }
+
+                enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+
+                if (enrolled.length === 0) {
+                    const listItem = document.createElement("li");
+                    listItem.className = "dropdown-item-sidebar no-courses";
+                    listItem.textContent =
+                        userRole === "teacher" ? "No classes taught" : "No enrolled classes";
+                    enrolledClassesDropdown.appendChild(listItem);
+                } else {
+                    enrolled.forEach((course) => {
+                        const listItem = document.createElement("li");
+                        listItem.className = "dropdown-item-sidebar";
+                        listItem.textContent = course.name;
+                        listItem.dataset.courseId = course.id;
+                        listItem.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            openCourse(course);
+                        });
+                        enrolledClassesDropdown.appendChild(listItem);
+                    });
+                }
+            }
+
+            function openCourse(course) {
+                localStorage.setItem("selectedCourse", JSON.stringify(course));
+                if (userRole === "teacher") {
+                    window.location.href = "teacherStream.html";
+                } else if (userRole === "student") {
+                    window.location.href = "studentStream.html";
+                }
+            }
+
+            // Functions from original help.js
+            function initializePage() {
+                initializeDashboardComponents(); // Initialize new navbar/sidebar components
+
+                // Original help.js initialization
+                if (currentUser) {
+                    document.getElementById("contactEmail").value = currentUser;
+                }
+
+                document.getElementById("getting-started").classList.add("active");
+
+                document.querySelectorAll(".card").forEach((card) => {
+                    card.classList.add("fade-in");
+                });
+            }
+
+            function switchHelpSection(targetSection) {
+                helpLinks.forEach((link) => {
+                    link.classList.remove("active");
+                });
+                document
+                    .querySelector(`[data-section="${targetSection}"]`)
+                    .classList.add("active");
+
+                helpSections.forEach((section) => {
+                    section.classList.remove("active");
+                });
+                document.getElementById(targetSection).classList.add("active");
+            }
+
+            function switchTab(targetTab) {
+                tabButtons.forEach((btn) => btn.classList.remove("active"));
+                document.querySelector(`[data-tab="${targetTab}"]`).classList.add("active");
+
+                tabPanes.forEach((pane) => {
+                    pane.classList.remove("active");
+                });
+                document.getElementById(targetTab + "-tab").classList.add("active");
+            }
+
+            function toggleFAQ(item) {
+                const isActive = item.classList.contains("active");
+
+                faqItems.forEach((faq) => faq.classList.remove("active"));
+
+                if (!isActive) {
+                    item.classList.add("active");
+                }
+            }
+
+            function performSearch() {
+                const searchTerm = helpSearch.value.toLowerCase().trim();
+
+                if (!searchTerm) {
+                    showNotification("অনুসন্ধানের জন্য কিছু লিখুন", "error");
+                    return;
+                }
+
+                const allContent = document
+                    .querySelector(".main-content")
+                    .textContent.toLowerCase();
+
+                if (allContent.includes(searchTerm)) {
+                    showNotification(`"${searchTerm}" খুঁজে পাওয়া গেছে`, "success");
+                    highlightSearchTerm(searchTerm);
+                } else {
+                    showNotification(`"${searchTerm}" খুঁজে পাওয়া যায়নি`, "error");
+                }
+            }
+
+            function highlightSearchTerm(term) {
+                const helpContent = document.querySelector(".main-content");
+                const walker = document.createTreeWalker(
+                    helpContent,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                );
+
+                const textNodes = [];
+                let node;
+
+                while ((node = walker.nextNode())) {
+                    if (node.textContent.toLowerCase().includes(term)) {
+                        textNodes.push(node);
+                    }
+                }
+
+                textNodes.forEach((textNode) => {
+                    const parent = textNode.parentNode;
+                    const text = textNode.textContent;
+                    const regex = new RegExp(`(${term})`, "gi");
+                    const highlightedText = text.replace(regex, "<mark>$1</mark>");
+
+                    if (highlightedText !== text) {
+                        const span = document.createElement("span");
+                        span.innerHTML = highlightedText;
+                        parent.replaceChild(span, textNode);
+                    }
+                });
+
+                setTimeout(() => {
+                    document.querySelectorAll("mark").forEach((mark) => {
+                        mark.outerHTML = mark.innerHTML;
+                    });
+                }, 3000);
+            }
+
+            function handleContactSubmit(e) {
+                e.preventDefault();
+
+                const name = document.getElementById("contactName").value;
+                const email = document.getElementById("contactEmail").value;
+                const subject = document.getElementById("contactSubject").value;
+                const message = document.getElementById("contactMessage").value;
+
+                if (!name || !email || !subject || !message) {
+                    showNotification("সব ফিল্ড পূরণ করুন", "error");
+                    return;
+                }
+
+                const contactData = {
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    message: message,
+                    timestamp: new Date().toISOString(),
+                };
+
+                const existingContacts = JSON.parse(
+                    localStorage.getItem("contactSubmissions") || "[]"
+                );
+                existingContacts.push(contactData);
+                localStorage.setItem(
+                    "contactSubmissions",
+                    JSON.stringify(existingContacts)
+                );
+
+                showNotification(
+                    "আপনার বার্তা পাঠানো হয়েছে। আমরা শীঘ্রই যোগাযোগ করব।",
+                    "success"
+                );
+                contactForm.reset();
+
+                if (currentUser) {
+                    document.getElementById("contactEmail").value = currentUser;
+                }
+            }
+
+            function handleChatClick() {
+                showNotification("লাইভ চ্যাট শীঘ্রই চালু করা হবে", "success");
+            }
+
+            function showNotification(message, type) {
+                const notification = document.createElement("div");
+                notification.className = `notification ${type}`;
+                notification.style.cssText = `
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            background: ${type === "success"
+                        ? "linear-gradient(135deg, #10b981, #34d399)"
+                        : "linear-gradient(135deg, #ef4444, #f87171)"
+                    };
+        `;
+
+                notification.innerHTML = `
+            <i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"
+                    } me-2"></i>
+            ${message}
+        `;
+
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.transform = "translateX(0)";
+                }, 100);
+
+                setTimeout(() => {
+                    notification.style.transform = "translateX(100%)";
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 3000);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
