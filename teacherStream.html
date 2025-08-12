@@ -243,24 +243,10 @@
                                                 onclick="streamManager.cancelAnnouncement()">
                                                 Cancel
                                             </button>
-                                            <div class="post-dropdown">
-                                                <button type="button" class="btn btn-primary post-btn"
-                                                    onclick="streamManager.postAnnouncement()">
-                                                    Post
-                                                </button>
-                                                <button type="button"
-                                                    class="btn btn-primary dropdown-toggle dropdown-toggle-split post-dropdown-btn"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <span class="visually-hidden">Toggle Dropdown</span>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#"
-                                                            onclick="streamManager.postAnnouncement()">Post</a></li>
-                                                    <li><a class="dropdown-item" href="#"
-                                                            onclick="streamManager.schedulePost()">Schedule for
-                                                            later</a></li>
-                                                </ul>
-                                            </div>
+                                            <button type="button" class="btn btn-primary post-btn"
+                                                onclick="streamManager.postAnnouncement()">
+                                                Post
+                                            </button>
                                         </div>
                                     </div>
 
@@ -287,16 +273,16 @@
                                             <div class="notification-menu-container">
                                                 <button class="notification-menu-dots"
                                                     onclick="streamManager.toggleNotificationMenu('assignment_1')">
-                                                    ⋮
+                                                    <span class="material-icons">more_vert</span>
                                                 </button>
                                                 <div class="notification-dropdown-menu" id="dropdown-assignment_1">
                                                     <button class="notification-dropdown-item"
                                                         onclick="streamManager.editNotification('assignment_1', 'Assignment-2')">
-                                                        <span>✏️</span> Edit
+                                                        <span class="material-icons">edit</span> Edit
                                                     </button>
                                                     <button class="notification-dropdown-item delete"
                                                         onclick="streamManager.deleteNotification('assignment_1')">
-                                                        <span>🗑️</span> Delete
+                                                        <span class="material-icons">delete</span> Delete
                                                     </button>
                                                 </div>
                                             </div>
@@ -317,16 +303,16 @@
                                             <div class="notification-menu-container">
                                                 <button class="notification-menu-dots"
                                                     onclick="streamManager.toggleNotificationMenu('assignment_2')">
-                                                    ⋮
+                                                    <span class="material-icons">more_vert</span>
                                                 </button>
                                                 <div class="notification-dropdown-menu" id="dropdown-assignment_2">
                                                     <button class="notification-dropdown-item"
                                                         onclick="streamManager.editNotification('assignment_2', 'Assignment-1')">
-                                                        <span>✏️</span> Edit
+                                                        <span class="material-icons">edit</span> Edit
                                                     </button>
                                                     <button class="notification-dropdown-item delete"
                                                         onclick="streamManager.deleteNotification('assignment_2')">
-                                                        <span>🗑️</span> Delete
+                                                        <span class="material-icons">delete</span> Delete
                                                     </button>
                                                 </div>
                                             </div>

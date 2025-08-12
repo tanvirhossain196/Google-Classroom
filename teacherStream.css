@@ -820,31 +820,50 @@ body {
   transform: translateX(2px); /* Reduced translateX */
 }
 
-/* New Announcement Input Card */
+/* New Announcement Input Card - Google Classroom Style */
 .announcement-input-card {
   background: var(--surface-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-medium);
-  padding: 24px;
-  margin-bottom: 32px;
+  border-radius: 8px; /* Less rounded */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* Subtle shadow */
+  padding: 0; /* Remove padding, let children handle it */
+  margin-bottom: 24px; /* Less margin */
   transition: var(--transition);
-  border: 1px solid var(--border-color);
-  position: relative; /* Added for dropdown positioning */
+  border: 1px solid #dadce0; /* Light border */
+  position: relative;
+  cursor: pointer;
+  overflow: hidden; /* Hide overflow for clean appearance */
 }
 
 .announcement-input-card:hover {
-  transform: translateY(-1px); /* Reduced translateY */
-  box-shadow: var(--shadow-heavy);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
 }
 
-/* COLLAPSED STATE - Hide header and actions by default */
+/* When expanded, remove cursor pointer and adjust styling */
+.announcement-input-card.expanded {
+  cursor: default;
+  border-color: #1976d2; /* Blue border when expanded */
+}
+
+.announcement-input-card.expanded:hover {
+  border-color: #1976d2; /* Keep blue border when expanded */
+}
+
+/* Input area styling */
+.announcement-input-area {
+  margin-bottom: 0; /* Remove margin */
+  padding: 16px 20px; /* Add padding here instead */
+}
+
+/* COLLAPSED STATE - Hide header by default (Image 1 shows only placeholder) */
 .announcement-header {
-  display: flex; /* Changed to flex to allow transition */
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 16px;
+  padding: 12px 16px; /* Better padding */
+  background: #f8f9fa; /* Light background */
+  border-bottom: 1px solid #dadce0;
+  border-radius: 12px 12px 0 0; /* Rounded top corners only */
   opacity: 0;
   max-height: 0;
   overflow: hidden;
@@ -853,7 +872,7 @@ body {
 
 .announcement-header.expanded {
   opacity: 1;
-  max-height: 100px; /* Adjust based on content height when expanded */
+  max-height: 70px; /* Reduced height */
 }
 
 .announcement-for-section {
@@ -863,19 +882,19 @@ body {
 }
 
 .announcement-label {
-  font-size: 14px;
+  font-size: 13px; /* Smaller font */
   font-weight: 500;
-  color: var(--text-secondary);
+  color: #5f6368; /* Google gray */
 }
 
 .announcement-dropdown {
   background: var(--surface-color) !important;
-  border: 1px solid var(--border-color) !important;
-  color: var(--text-primary) !important;
-  font-size: 14px !important;
+  border: 1px solid #dadce0 !important; /* Light border */
+  color: #202124 !important; /* Darker text */
+  font-size: 13px !important; /* Smaller font */
   font-weight: 500 !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
+  padding: 6px 12px !important; /* Smaller padding */
+  border-radius: 6px !important; /* Smaller radius */
   transition: var(--transition) !important;
   display: flex !important;
   align-items: center !important;
@@ -884,13 +903,13 @@ body {
 
 .announcement-dropdown:hover,
 .announcement-dropdown:focus {
-  border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1) !important;
+  border-color: #1976d2 !important; /* Blue border */
+  box-shadow: none !important; /* Remove shadow */
 }
 
 .dropdown-arrow {
-  font-size: 20px !important;
-  color: var(--text-secondary) !important;
+  font-size: 16px !important; /* Smaller arrow */
+  color: #5f6368 !important; /* Gray arrow */
 }
 
 .announcement-students-section {
@@ -900,94 +919,99 @@ body {
 
 .students-btn {
   background: var(--surface-color) !important;
-  border: 1px solid var(--border-color) !important;
-  color: var(--text-primary) !important;
-  font-size: 14px !important;
+  border: 1px solid #dadce0 !important; /* Light border */
+  color: #202124 !important; /* Darker text */
+  font-size: 13px !important; /* Smaller font */
   font-weight: 500 !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
+  padding: 6px 12px !important; /* Smaller padding */
+  border-radius: 20px !important; /* More rounded */
   transition: var(--transition) !important;
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 6px !important; /* Smaller gap */
 }
 
 .students-btn:hover,
 .students-btn:focus {
-  border-color: var(--primary-color) !important;
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%) !important;
-  color: var(--primary-color) !important;
+  border-color: #1976d2 !important; /* Blue border */
+  background: #e3f2fd !important; /* Light blue background */
+  color: #1976d2 !important; /* Blue text */
+}
+
+.students-btn .material-icons {
+  font-size: 16px !important; /* Smaller icon */
 }
 
 .announcement-input-area {
   margin-bottom: 20px;
 }
 
-/* COLLAPSED PLACEHOLDER (VISIBLE BY DEFAULT) */
+/* COLLAPSED PLACEHOLDER (VISIBLE BY DEFAULT) - Exact Image 1 Style */
 .announcement-placeholder {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px 20px;
-  color: var(--text-secondary);
+  background: #f1f3f4; /* Light gray like Google Classroom */
+  border: 1px solid #dadce0; /* Light border */
+  border-radius: 24px; /* More rounded like in image */
+  padding: 16px 24px; /* Better padding */
+  color: #5f6368; /* Google gray text */
   cursor: pointer;
   transition: var(--transition);
-  font-size: 16px;
-  display: block; /* Ensure it's block by default */
+  font-size: 14px; /* Smaller font */
+  display: block;
+  font-weight: 400; /* Normal weight */
 }
 
 .announcement-placeholder:hover {
-  border-color: var(--primary-color);
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-  transform: translateY(-1px);
+  background: #e8eaed; /* Slightly darker on hover */
+  border-color: #1976d2; /* Blue border on hover */
 }
 
 .announcement-placeholder.hidden {
-  display: none; /* Hide when expanded */
+  display: none;
 }
 
-/* EXPANDED EDITOR (HIDDEN BY DEFAULT) */
+/* EXPANDED EDITOR (HIDDEN BY DEFAULT) - Exact Image 2 Style */
 .announcement-editor-expanded {
-  display: block; /* Changed to block to allow transition */
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
+  display: block;
+  border: 2px solid #1976d2; /* Blue border like in image */
+  border-radius: 12px; /* Rounded corners */
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
-  max-height: 0; /* Hidden by default */
+  max-height: 0;
+  background: var(--surface-color);
 }
 
 .announcement-editor-expanded.expanded {
   opacity: 1;
-  max-height: 300px; /* Adjust based on content */
+  max-height: 400px; /* Increased height */
 }
 
 .announcement-editor-expanded:focus-within {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  border-color: #1976d2;
+  box-shadow: none; /* Remove focus shadow */
 }
 
 .editor-toolbar {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-bottom: 1px solid var(--border-color);
-  gap: 8px;
+  padding: 8px 12px; /* Reduced padding */
+  background: #f8f9fa; /* Light background */
+  border-bottom: 1px solid #dadce0;
+  gap: 4px; /* Smaller gap */
 }
 
 .toolbar-btn {
   background: none;
-  border: 1px solid var(--border-color);
-  padding: 8px 12px;
-  border-radius: 6px;
+  border: none;
+  padding: 6px 8px; /* Smaller padding */
+  border-radius: 4px; /* Smaller radius */
   cursor: pointer;
-  color: var(--text-secondary);
+  color: #5f6368; /* Google gray */
   transition: var(--transition);
-  font-size: 14px;
-  font-weight: 600;
-  min-width: 36px;
-  height: 36px;
+  font-size: 12px; /* Smaller font */
+  font-weight: 500;
+  min-width: 28px; /* Smaller buttons */
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -995,34 +1019,34 @@ body {
 
 .toolbar-btn:hover,
 .toolbar-btn.active {
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+  background: #e8eaed; /* Light gray hover */
+  color: #202124; /* Darker text */
 }
 
 .editor-content {
-  min-height: 120px;
-  padding: 20px;
-  font-size: 16px;
-  line-height: 1.6;
+  min-height: 100px; /* Reduced height */
+  padding: 16px 20px; /* Better padding */
+  font-size: 14px; /* Smaller font */
+  line-height: 1.5;
   outline: none;
   color: var(--text-primary);
   background: var(--surface-color);
 }
 
 .editor-content:empty::before {
-  content: attr(placeholder);
-  color: var(--text-secondary);
+  content: "Share something with your class...";
+  color: #9aa0a6; /* Lighter placeholder text */
   pointer-events: none;
 }
 
-/* COLLAPSED ACTIONS (HIDDEN BY DEFAULT) */
+/* COLLAPSED ACTIONS (HIDDEN BY DEFAULT) - Image 2 Style */
 .announcement-actions {
-  display: flex; /* Changed to flex to allow transition */
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
+  padding: 12px 16px; /* Reduced padding */
+  background: #f8f9fa; /* Light background like toolbar */
+  border-top: 1px solid #dadce0;
   opacity: 0;
   max-height: 0;
   overflow: hidden;
@@ -1031,65 +1055,81 @@ body {
 
 .announcement-actions.expanded {
   opacity: 1;
-  max-height: 100px; /* Adjust based on content height */
+  max-height: 80px; /* Reduced height */
 }
 
 .attachment-buttons {
   display: flex;
-  gap: 8px;
+  gap: 4px; /* Smaller gap */
 }
 
 .attachment-btn {
   background: none;
-  border: 1px solid var(--border-color);
-  padding: 10px;
-  border-radius: 8px;
+  border: none;
+  padding: 8px; /* Smaller padding */
+  border-radius: 20px; /* More rounded */
   cursor: pointer;
-  color: var(--text-secondary);
+  color: #5f6368; /* Google gray */
   transition: var(--transition);
-  width: 40px;
-  height: 40px;
+  width: 32px; /* Smaller size */
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .attachment-btn:hover {
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+  background: #e8eaed; /* Light gray hover */
+  color: #202124;
 }
 
 .attachment-btn .material-icons {
-  font-size: 20px;
+  font-size: 18px; /* Smaller icons */
 }
 
 .action-buttons {
   display: flex;
-  gap: 12px;
+  gap: 8px; /* Smaller gap */
   align-items: center;
 }
 
 .cancel-btn {
-  padding: 8px 20px !important;
-  font-size: 14px !important;
+  padding: 8px 16px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
-  border-radius: 6px !important;
+  border-radius: 20px !important;
   transition: var(--transition) !important;
+  color: #5f6368 !important;
+  background: transparent !important;
+  border: 1px solid #dadce0 !important;
+  cursor: pointer !important; /* Ensure cursor is pointer */
+}
+
+.cancel-btn:hover {
+  background: #f8f9fa !important;
+  color: #202124 !important;
 }
 
 .post-btn {
   padding: 8px 20px !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
-  border-radius: 6px !important;
+  border-radius: 20px !important;
   transition: var(--transition) !important;
+  background: #1976d2 !important;
+  border: none !important;
+  color: white !important;
+  cursor: pointer !important; /* Ensure cursor is pointer */
 }
 
-.post-dropdown-btn {
-  border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
+.post-btn:hover {
+  background: #1565c0 !important;
+}
+
+.post-btn:disabled {
+  background: #dadce0 !important;
+  color: #9aa0a6 !important;
+  cursor: not-allowed !important;
 }
 
 .attached-files-display {
@@ -1111,19 +1151,26 @@ body {
   gap: 32px;
 }
 
+/* Updated .stream-post styling to support absolute positioning */
 .stream-post {
-  background: var(--surface-color);
+  background: transparent;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-medium);
-  overflow: hidden;
+  box-shadow: none;
+  overflow: visible; /* Changed from hidden to visible */
   transition: var(--transition);
   border: 1px solid var(--border-color);
-  position: relative; /* Added for dropdown positioning */
+  position: relative; /* Added relative positioning */
+  background-image: linear-gradient(
+    135deg,
+    rgba(25, 118, 210, 0.02) 0%,
+    rgba(76, 175, 80, 0.02) 100%
+  );
 }
 
 .stream-post:hover {
-  transform: translateY(-2px); /* Reduced translateY */
-  box-shadow: var(--shadow-heavy);
+  transform: translateY(-2px);
+  box-shadow: none; /* Ensure no shadow on hover */
+  /* border-color: var(--primary-color);  */
 }
 
 .post-header {
@@ -1225,15 +1272,18 @@ body {
 }
 
 /* Assignment Post Styling */
+/* Updated .notification-header styling */
 .notification-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-  border-bottom: 1px solid var(--border-color);
+  background: transparent; /* Transparent background */
+  border-bottom: 1px solid var(--border-color); /* Clean, minimal border */
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   position: relative;
+  /* Subtle color accent */
+  /* Removed border-left: 4px solid var(--primary-color); */
 }
 
 .notification-content {
@@ -1285,46 +1335,52 @@ body {
 }
 
 .notification-menu-dots {
-  background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
-  border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
-  padding: 8px 12px;
+  background: none;
+  border: none;
+  padding: 8px;
   border-radius: 50%;
   cursor: pointer;
   color: var(--text-secondary);
   transition: var(--transition);
-  font-size: 18px;
-  font-weight: bold;
-  width: 36px; /* Fixed width for circular button */
-  height: 36px; /* Fixed height for circular button */
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px); /* Frosted glass effect */
+  width: 36px;
+  height: 36px;
 }
 
 .notification-menu-dots:hover {
-  background: rgba(255, 255, 255, 0.95); /* Less transparent on hover */
+  background: rgba(0, 0, 0, 0.05);
   color: var(--primary-color);
   transform: scale(1.05);
-  box-shadow: var(--shadow-light);
 }
 
-/* FIXED DROPDOWN MENU - APPEARS ABOVE POST */
+.notification-menu-dots .material-icons {
+  font-size: 18px;
+}
+
+/* DROPDOWN MENU - EXACT GOOGLE CLASSROOM POSITIONING */
 .notification-dropdown-menu {
-  position: absolute;
-  top: -10px; /* Position above the button */
-  right: 0;
+  position: absolute; /* Use absolute positioning relative to post */
+  top: 0; /* Align with top of post */
+  right: 0; /* Align with right edge of post */
   background: var(--surface-color);
-  border: 1px solid var(--border-color);
-  border-radius: 12px; /* More rounded corners */
-  box-shadow: var(--shadow-heavy); /* Stronger shadow */
-  z-index: 10000; /* Ensure it's above other content */
-  min-width: 180px; /* Wider dropdown */
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 99999;
+  min-width: 140px;
   display: none;
   overflow: hidden;
   transform-origin: top right;
-  animation: dropdownSlideIn 0.2s ease-out;
-  backdrop-filter: blur(10px); /* Frosted glass effect */
+  margin-top: 8px; /* Small gap from top */
+  margin-right: 8px; /* Small gap from right edge */
+}
+
+.notification-dropdown-menu.show {
+  display: block !important;
+  opacity: 1;
+  animation: dropdownSlideIn 0.15s ease-out;
 }
 
 .notification-dropdown-menu.show {
@@ -1334,7 +1390,7 @@ body {
 @keyframes dropdownSlideIn {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.95);
+    transform: translateY(-10px) scale(0.95);
   }
   to {
     opacity: 1;
@@ -1343,7 +1399,7 @@ body {
 }
 
 .notification-dropdown-item {
-  padding: 14px 18px; /* More padding */
+  padding: 12px 16px; /* Google Classroom style padding */
   cursor: pointer;
   font-size: 14px;
   border: none;
@@ -1352,38 +1408,37 @@ body {
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 12px; /* More space between icon and text */
-  color: var(--text-primary);
-  transition: var(--transition);
-  font-weight: 500; /* Slightly bolder text */
+  gap: 16px; /* Increased gap for better spacing */
+  color: #3c4043; /* Google gray */
+  transition: background-color 0.1s ease;
+  font-weight: 400; /* Normal font weight */
+  border-bottom: none;
 }
 
 .notification-dropdown-item:hover {
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-  color: var(--primary-color);
+  background-color: #f8f9fa; /* Light gray hover */
+  color: #3c4043;
 }
 
 .notification-dropdown-item.delete:hover {
-  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-  color: #d32f2f;
+  background-color: #f8f9fa;
+  color: #3c4043; /* Keep same color, no red highlighting */
 }
 
-.notification-dropdown-item span {
-  font-size: 16px; /* Larger icons */
-  width: 20px; /* Fixed width for icon container */
-  height: 20px; /* Fixed height for icon container */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.notification-dropdown-item .material-icons {
+  font-size: 18px; /* Slightly larger icons */
+  width: 18px;
+  height: 18px;
+  color: #5f6368; /* Google icon gray */
 }
 
 /* INLINE EDIT MODE */
 .notification-edit-mode {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* More space between elements */
+  gap: 12px;
   width: 100%;
-  animation: fadeInScale 0.3s ease; /* Smooth fade-in and scale */
+  animation: fadeInScale 0.3s ease;
 }
 
 @keyframes fadeInScale {
@@ -1399,19 +1454,19 @@ body {
 
 .notification-edit-input {
   width: 100%;
-  padding: 12px 16px; /* More padding */
-  border: 2px solid var(--border-color); /* Thicker border */
-  border-radius: 8px; /* More rounded corners */
+  padding: 12px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
   font-size: 15px;
   color: var(--text-primary);
   transition: var(--transition);
-  font-family: inherit; /* Inherit font from body */
+  font-family: inherit;
   background: var(--surface-color);
 }
 
 .notification-edit-input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1); /* Subtle focus ring */
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
   outline: none;
 }
 
@@ -1428,7 +1483,7 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
-  border: 2px solid transparent; /* Consistent border style */
+  border: 2px solid transparent;
 }
 
 .notification-cancel-btn {
@@ -1465,15 +1520,15 @@ body {
   from {
     opacity: 1;
     transform: translateY(0);
-    max-height: 200px; /* Approximate height of a post */
+    max-height: 200px;
   }
   to {
     opacity: 0;
     transform: translateY(-30px);
-    max-height: 0; /* Collapse height */
-    margin-bottom: 0; /* Remove margin */
-    padding-top: 0; /* Remove padding */
-    padding-bottom: 0; /* Remove padding */
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 
@@ -1539,7 +1594,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(25, 118, 210, 0.05) 0%,
-    /* Reduced opacity for subtle hover */ rgba(76, 175, 80, 0.05) 100%
+    rgba(76, 175, 80, 0.05) 100%
   );
 }
 
@@ -1596,7 +1651,7 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Slightly lighter overlay */
+  background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(5px);
 }
 
@@ -1650,7 +1705,7 @@ body {
 
 .modal-close:hover {
   background: #f1f3f4;
-  transform: scale(1.05); /* Slightly reduced scale */
+  transform: scale(1.05);
 }
 
 .modal-body {
@@ -1667,42 +1722,33 @@ body {
 
 /* CONFIRMATION MODAL STYLES */
 .confirmation-modal {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
-  z-index: 10001; /* Higher than other modals */
+  z-index: 10001;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Darker overlay */
+  background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
   animation: modalFadeIn 0.3s ease;
 }
 
 .confirmation-modal.show {
-  display: flex; /* Show as flex to center content */
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .confirmation-modal-content {
   background-color: var(--surface-color);
-  padding: 32px; /* More padding */
+  padding: 32px;
   border-radius: var(--border-radius);
   width: 90%;
-  max-width: 450px; /* Slightly smaller max-width */
+  max-width: 450px;
   box-shadow: var(--shadow-heavy);
-  animation: modalSlideIn 0.3s ease; /* Slide in animation */
-  text-align: center; /* Center text */
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  animation: modalSlideIn 0.3s ease;
+  text-align: center;
 }
 
 @keyframes modalSlideIn {
@@ -1717,7 +1763,7 @@ body {
 }
 
 .confirmation-modal-title {
-  font-size: 20px; /* Larger title */
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 16px;
@@ -1726,25 +1772,25 @@ body {
 .confirmation-modal-message {
   font-size: 16px;
   color: var(--text-secondary);
-  margin-bottom: 24px; /* More space below message */
+  margin-bottom: 24px;
   line-height: 1.5;
 }
 
 .confirmation-modal-actions {
   display: flex;
   gap: 12px;
-  justify-content: center; /* Center buttons */
+  justify-content: center;
 }
 
 .confirmation-btn {
-  padding: 12px 24px; /* More padding */
+  padding: 12px 24px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
-  border: 2px solid transparent; /* Consistent border style */
-  min-width: 100px; /* Minimum width for buttons */
+  border: 2px solid transparent;
+  min-width: 100px;
 }
 
 .confirmation-btn-cancel {
@@ -1760,13 +1806,13 @@ body {
 }
 
 .confirmation-btn-delete {
-  background: #d32f2f; /* Red for delete */
+  background: #d32f2f;
   border-color: #d32f2f;
   color: white;
 }
 
 .confirmation-btn-delete:hover {
-  background: #b71c1c; /* Darker red on hover */
+  background: #b71c1c;
   border-color: #b71c1c;
   transform: translateY(-1px);
   box-shadow: var(--shadow-medium);
@@ -1931,7 +1977,7 @@ body {
 
   /* Mobile dropdown positioning */
   .notification-dropdown-menu {
-    right: -10px; /* Adjust for smaller screens */
+    right: -10px;
     left: auto;
     min-width: 160px;
   }
@@ -2071,7 +2117,7 @@ body {
 }
 
 .file-item:hover {
-  transform: translateY(-1px); /* Reduced translateY */
+  transform: translateY(-1px);
   box-shadow: var(--shadow-medium);
   border-color: var(--primary-color);
 }
@@ -2168,7 +2214,7 @@ body {
 
 .btn-close:hover {
   opacity: 1 !important;
-  transform: scale(1.05) !important; /* Slightly reduced scale */
+  transform: scale(1.05) !important;
 }
 
 /* Bootstrap Dropdown Overrides */
@@ -2204,7 +2250,7 @@ body {
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px) !important; /* Reduced translateY */
+  transform: translateY(-1px) !important;
   box-shadow: var(--shadow-medium) !important;
 }
 
@@ -2218,8 +2264,8 @@ body {
 
 .btn-outline-primary:hover {
   background: var(--primary-color) !important;
-  color: white !important; /* Added color change on hover */
-  transform: translateY(-1px) !important; /* Reduced translateY */
+  color: white !important;
+  transform: translateY(-1px) !important;
   box-shadow: var(--shadow-medium) !important;
 }
 
@@ -2234,7 +2280,7 @@ body {
 .btn-outline-secondary:hover {
   background: var(--border-color) !important;
   color: var(--text-primary) !important;
-  transform: translateY(-1px) !important; /* Reduced translateY */
+  transform: translateY(-1px) !important;
 }
 
 /* Utility Classes */
@@ -2316,4 +2362,209 @@ body {
   .stream-layout {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* New styles for comment input */
+.comment-input-container {
+  padding: 0 24px 20px;
+  margin-left: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.comment-input {
+  flex-grow: 1;
+  width: 80%;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: var(--background-color);
+  transition: all 0.3s ease;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  background-color: var(--surface-color);
+}
+
+.comment-submit-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-submit-btn:hover {
+  background: rgba(25, 118, 210, 0.1);
+}
+
+.comment-submit-btn .material-icons {
+  font-size: 20px;
+}
+
+/* Styles for comments section */
+.comments-section {
+  margin-left: 64px;
+  padding: 0 24px 20px;
+  border-top: 1px solid var(--border-color);
+  margin-top: 16px;
+}
+
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.comment-content-wrapper {
+  flex-grow: 1;
+  background: var(--background-color);
+  border-radius: 16px;
+  padding: 10px 16px;
+}
+
+.comment-author-time {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.comment-text {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.comment-actions {
+  display: none;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.comment-item:hover .comment-actions {
+  display: flex;
+}
+
+.comment-action-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.comment-action-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--primary-color);
+}
+
+.comment-action-btn.delete:hover {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.comment-action-btn .material-icons {
+  font-size: 18px;
+}
+
+/* Comment edit mode */
+.comment-edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: var(--surface-color);
+  transition: all 0.3s ease;
+}
+
+.comment-edit-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+.comment-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.comment-edit-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+}
+
+.comment-edit-btn.cancel {
+  background: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.comment-edit-btn.cancel:hover {
+  background: #f1f3f4;
+  color: var(--text-primary);
+}
+
+.comment-edit-btn.save {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.comment-edit-btn.save:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
 }

@@ -2,13 +2,14 @@
 class StreamManager {
   constructor() {
     this.attachments = [];
-    this.availableCourses = []; // ব্যবহারকারীর তৈরি করা কোর্সগুলো এখানে থাকবে
-    this.availableStudents = []; // সমস্ত উপলব্ধ শিক্ষার্থী এখানে থাকবে
+    this.availableCourses = [];
+    this.availableStudents = [];
     this.selectedCourses = [];
-    this.assignToAll = true; // For classwork assignment
+    this.assignToAll = true;
     this.isAnnouncementExpanded = false;
-    this.currentEditingId = null; // Track which post is being edited
-    this.pendingDeleteId = null; // Track which post is pending deletion
+    this.currentEditingId = null;
+    this.pendingDeleteId = null;
+    this.isCourseCodeExpanded = false;
     this.init();
   }
 
@@ -20,9 +21,9 @@ class StreamManager {
     this.setupProfessionalFeatures();
     this.loadPosts();
     this.setupNotificationSystem();
-    this.loadAvailableCoursesAndStudents(); // এই ফাংশনটি ব্যবহারকারীর কোর্স এবং শিক্ষার্থীদের লোড করবে
-    this.loadUpcomingAssignments(); // Load upcoming assignments
-    this.initializeAnnouncementEditorState(); // New: Initialize editor state
+    this.loadAvailableCoursesAndStudents();
+    this.loadUpcomingAssignments();
+    this.initializeAnnouncementEditorState();
   }
 
   setupElements() {
@@ -38,78 +39,86 @@ class StreamManager {
         "announcementEditorExpanded"
       ),
       announcementActions: document.getElementById("announcementActions"),
-      announcementHeader: document.getElementById("announcementHeader"), // Added
+      announcementHeader: document.getElementById("announcementHeader"),
       editorContent: document.getElementById("editorContent"),
       userInitial: document.getElementById("userInitial"),
       streamPosts: document.getElementById("streamPosts"),
       noPosts: document.getElementById("noPosts"),
-      classesLink: document.getElementById("classesLink"), // Added
-      settingsLink: document.getElementById("settingsLink"), // Added
+      classesLink: document.getElementById("classesLink"),
+      settingsLink: document.getElementById("settingsLink"),
       currentCourseName: document.getElementById("currentCourseName"),
       courseHeaderSection: document.querySelector(".course-header-section"),
       courseCodeText: document.getElementById("courseCodeText"),
       courseCodeDisplay: document.getElementById("courseCodeDisplay"),
+      courseCodeExpandBtn: document.getElementById("courseCodeExpandBtn"),
+      courseCodeExpandedContent: document.getElementById(
+        "courseCodeExpandedContent"
+      ),
+      courseCodeLarge: document.getElementById("courseCodeLarge"),
       selectedCourse: document.getElementById("selectedCourse"),
       attachedFilesDisplay: document.getElementById("attachedFilesDisplay"),
       attachedFilesList: document.getElementById("attachedFilesList"),
       upcomingContent: document.getElementById("upcomingContent"),
-      // Add elements for student selector modal
       studentSelectorModal: document.getElementById("studentSelectorModal"),
       allStudentsRadio: document.getElementById("allStudents"),
       specificStudentsRadio: document.getElementById("specificStudents"),
       specificStudentsList: document.getElementById("specificStudentsList"),
-      // Enrolled Classes Dropdown elements
       enrolledClassesDropdownToggle: document.getElementById(
         "enrolledClassesDropdownToggle"
       ),
       enrolledClasses: document.getElementById("enrolledClasses"),
-      // Delete Confirmation Modal
-      confirmationModal: document.getElementById("confirmationModal"), // Changed ID
-      confirmationMessage: document.getElementById("confirmationMessage"), // New
+      confirmationModal: document.getElementById("confirmationModal"),
+      confirmationMessage: document.getElementById("confirmationMessage"),
       confirmDeleteBtn: document.getElementById("confirmDeleteBtn"),
     };
   }
 
   setupEventListeners() {
-    // Enhanced menu functionality
     this.elements.menuBtn.addEventListener("click", () => this.toggleSidebar());
 
-    // Enhanced navigation
     this.elements.classesLink.addEventListener("click", (e) => {
       e.preventDefault();
-      this.navigateWithAnimation("teacher.html"); // Updated
+      this.navigateWithAnimation("teacher.html");
     });
 
     this.elements.settingsLink.addEventListener("click", (e) => {
-      // Updated
-      e.preventDefault(); // Prevent default link behavior
-      this.navigateWithAnimation("teacherSettings.html"); // Updated
+      e.preventDefault();
+      this.navigateWithAnimation("teacherSettings.html");
     });
 
-    // Course code display click
-    if (this.elements.courseCodeDisplay) {
-      this.elements.courseCodeDisplay.addEventListener("click", () => {
-        this.showCourseCodeModal();
+    if (this.elements.courseCodeExpandBtn) {
+      this.elements.courseCodeExpandBtn.addEventListener("click", () => {
+        this.toggleCourseCodeExpansion();
       });
     }
 
-    // Enhanced announcement functionality
+    // Enhanced announcement card click handling
     if (this.elements.announcementPlaceholder) {
-      this.elements.announcementPlaceholder.addEventListener("click", () =>
-        this.expandAnnouncement()
-      );
+      this.elements.announcementPlaceholder.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.expandAnnouncement();
+      });
+    }
+
+    // Make entire announcement card clickable when collapsed
+    const announcementCard = document.querySelector(".announcement-input-card");
+    if (announcementCard) {
+      announcementCard.addEventListener("click", (e) => {
+        // Only expand if clicked when collapsed and not clicking on buttons
+        if (!this.isAnnouncementExpanded && !e.target.closest("button")) {
+          e.stopPropagation();
+          this.expandAnnouncement();
+        }
+      });
     }
 
     // Enhanced click outside detection
     document.addEventListener("click", (e) => this.handleClickOutside(e));
-
-    // Enhanced resize handling
     window.addEventListener("resize", () => this.handleResize());
 
-    // Setup rich text editor
     this.setupRichTextEditor();
+    this.setupAnnouncementButtons(); // New method for button setup
 
-    // Student selector radio button change listener
     if (this.elements.allStudentsRadio) {
       this.elements.allStudentsRadio.addEventListener("change", () =>
         this.toggleSpecificStudentsList()
@@ -121,7 +130,6 @@ class StreamManager {
       );
     }
 
-    // Enrolled Classes Dropdown Toggle
     if (this.elements.enrolledClassesDropdownToggle) {
       this.elements.enrolledClassesDropdownToggle.addEventListener(
         "click",
@@ -129,11 +137,53 @@ class StreamManager {
       );
     }
 
-    // Confirmation modal buttons
     if (this.elements.confirmDeleteBtn) {
       this.elements.confirmDeleteBtn.addEventListener("click", () =>
         this.confirmDelete()
       );
+    }
+  }
+
+  setupAnnouncementButtons() {
+    // Setup cancel button
+    const cancelBtn = document.querySelector(".cancel-btn");
+    if (cancelBtn) {
+      // Remove any existing listeners
+      cancelBtn.removeEventListener("click", this.handleCancelClick);
+
+      // Add new listener
+      this.handleCancelClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Cancel button clicked");
+        this.cancelAnnouncement();
+      };
+
+      cancelBtn.addEventListener("click", this.handleCancelClick);
+    }
+
+    // Setup post button
+    const postBtn = document.querySelector(".post-btn");
+    if (postBtn) {
+      // Remove any existing listeners
+      postBtn.removeEventListener("click", this.handlePostClick);
+
+      // Add new listener
+      this.handlePostClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Post button clicked");
+
+        // Prevent multiple clicks
+        if (postBtn.disabled) {
+          console.log("Post button is disabled, ignoring click");
+          return;
+        }
+
+        this.postAnnouncement();
+      };
+
+      postBtn.addEventListener("click", this.handlePostClick);
     }
   }
 
@@ -166,13 +216,13 @@ class StreamManager {
       }
 
       this.courseId = this.currentCourse.id;
-      console.log("Course loaded with ID:", this.courseId); // Debug log
-      console.log("Current course:", this.currentCourse); // Debug log
+      console.log("Course loaded with ID:", this.courseId);
+      console.log("Current course:", this.currentCourse);
 
       this.updateCourseDisplay();
-      this.loadEnrolledClasses(); // Ensure enrolled classes are loaded after current course
+      this.loadEnrolledClasses();
     } catch (error) {
-      console.error("Error loading course data:", error); // Debug log
+      console.error("Error loading course data:", error);
       this.showErrorAndRedirect("কোর্স লোড করতে সমস্যা হয়েছে");
     }
   }
@@ -188,8 +238,8 @@ class StreamManager {
     this.setupAutoSave();
     this.setupThemeDetection();
     this.setupProgressIndicators();
-    this.setupAccessibility(); // Added accessibility setup
-    this.setupPerformanceOptimizations(); // Added performance optimizations
+    this.setupAccessibility();
+    this.setupPerformanceOptimizations();
   }
 
   toggleSidebar() {
@@ -197,7 +247,6 @@ class StreamManager {
     this.elements.contentWrapper.classList.toggle("sidebar-open");
     this.elements.courseTopNav.classList.toggle("sidebar-open");
 
-    // Add smooth animation effect
     this.elements.sidebar.style.transition =
       "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
     this.elements.contentWrapper.style.transition =
@@ -207,7 +256,6 @@ class StreamManager {
   }
 
   navigateWithAnimation(url) {
-    // Add fade out animation before navigation
     document.body.style.opacity = "0";
     document.body.style.transition = "opacity 0.3s ease";
 
@@ -217,19 +265,16 @@ class StreamManager {
   }
 
   goToDashboard() {
-    // Selected course clear করুন
     localStorage.removeItem("selectedCourse");
-    this.navigateWithAnimation("teacher.html"); // Updated
+    this.navigateWithAnimation("teacher.html");
   }
 
-  // Load upcoming assignments from classwork
   loadUpcomingAssignments() {
     const assignmentsKey = `assignments_${this.courseId}`;
     const assignments = JSON.parse(
       localStorage.getItem(assignmentsKey) || "[]"
     );
 
-    // Filter assignments that are due soon (within next 7 days)
     const now = new Date();
     const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
@@ -239,7 +284,6 @@ class StreamManager {
       return dueDate >= now && dueDate <= sevenDaysFromNow;
     });
 
-    // Update upcoming section
     if (this.elements.upcomingContent) {
       if (upcomingAssignments.length === 0) {
         this.elements.upcomingContent.innerHTML = "<p>No work due soon</p>";
@@ -273,51 +317,47 @@ class StreamManager {
     }
   }
 
-  // Open assignment details
   openAssignment(assignmentId) {
-    // Show notification for now
     this.showNotification("Opening assignment...", "info");
-    // In a real implementation, this would navigate to the assignment details
   }
 
-  // New: Initialize editor state to collapsed
   initializeAnnouncementEditorState() {
     this.isAnnouncementExpanded = false;
     this.elements.announcementPlaceholder.classList.remove("hidden");
     this.elements.announcementHeader.classList.remove("expanded");
     this.elements.announcementEditorExpanded.classList.remove("expanded");
-    this.elements.announcementEditorExpanded.style.display = "none"; // Ensure it's hidden
+    this.elements.announcementEditorExpanded.style.display = "none";
     this.elements.announcementActions.classList.remove("expanded");
   }
 
-  // New announcement expansion method
   expandAnnouncement() {
-    if (this.isAnnouncementExpanded) return; // Prevent re-expansion if already expanded
+    if (this.isAnnouncementExpanded) return;
 
     this.isAnnouncementExpanded = true;
     this.elements.announcementPlaceholder.classList.add("hidden");
 
-    // Expand header
     this.elements.announcementHeader.classList.add("expanded");
 
-    // Expand editor
-    this.elements.announcementEditorExpanded.style.display = "block"; // Make it block for transition
+    this.elements.announcementEditorExpanded.style.display = "block";
     this.elements.announcementEditorExpanded.classList.add("expanded");
 
-    // Expand actions
     this.elements.announcementActions.classList.add("expanded");
 
-    // Focus on editor content after a slight delay to allow transition
     setTimeout(() => {
       if (this.elements.editorContent) {
         this.elements.editorContent.focus();
       }
-    }, 400); // Match transition duration
+    }, 400);
   }
 
-  // Cancel announcement method
   cancelAnnouncement() {
     this.isAnnouncementExpanded = false;
+
+    // Remove expanded class from card
+    const announcementCard = document.querySelector(".announcement-input-card");
+    if (announcementCard) {
+      announcementCard.classList.remove("expanded");
+    }
 
     // Collapse header
     this.elements.announcementHeader.classList.remove("expanded");
@@ -344,10 +384,13 @@ class StreamManager {
     this.attachments = [];
     this.updateAttachedFilesDisplay();
 
-    this.showNotification("Announcement cancelled", "info");
+    // Only show notification if manually cancelled (not by outside click)
+    if (!this.isCancelledByOutsideClick) {
+      this.showNotification("Announcement cancelled", "info");
+    }
+    this.isCancelledByOutsideClick = false; // Reset flag
   }
 
-  // Post announcement method
   postAnnouncement() {
     const content = this.elements.editorContent.innerHTML.trim();
 
@@ -356,14 +399,12 @@ class StreamManager {
       return;
     }
 
-    // Show loading state
     const postBtn = document.querySelector(".post-btn");
     if (postBtn) {
       postBtn.textContent = "Posting...";
       postBtn.disabled = true;
     }
 
-    // Determine target students
     let targetStudents = [];
     if (
       this.elements.allStudentsRadio &&
@@ -393,49 +434,55 @@ class StreamManager {
         return;
       }
     } else {
-      targetStudents = ["all"]; // Default to all if no selection is made
+      targetStudents = ["all"];
     }
 
-    // Simulate API call delay
+    // Simulate posting with shorter delay for better UX
     setTimeout(() => {
       const announcement = {
         id: Date.now(),
         author: this.currentUser,
         content: content,
         attachments: [...this.attachments],
-        timestamp: new Date().toISOString(), // Use ISO string for consistent date parsing
+        timestamp: new Date().toISOString(),
         targetCourses: [this.courseId],
-        targetStudents: targetStudents, // Use selected students
+        targetStudents: targetStudents,
         comments: [],
         likes: 0,
-        type: "announcement", // Added type for general posts
+        type: "announcement",
       };
 
-      // Save announcement
       this.saveAnnouncementToCourse(announcement, this.courseId);
       this.loadPosts();
       this.cancelAnnouncement(); // This will also clear the draft
 
-      // Reset button
       if (postBtn) {
         postBtn.textContent = "Post";
         postBtn.disabled = false;
       }
 
       this.showNotification("Announcement posted successfully!", "success");
-    }, 1000);
+    }, 500); // Reduced delay for better responsiveness
   }
 
-  // Course code related methods
-  showCourseCodeModal() {
-    const modal = new bootstrap.Modal(
-      document.getElementById("courseCodeModal")
-    );
-    modal.show();
+  toggleCourseCodeExpansion() {
+    this.isCourseCodeExpanded = !this.isCourseCodeExpanded;
+    const expandBtnIcon =
+      this.elements.courseCodeExpandBtn.querySelector(".material-icons");
+
+    if (this.isCourseCodeExpanded) {
+      this.elements.courseCodeDisplay.style.display = "none";
+      this.elements.courseCodeExpandedContent.classList.add("expanded");
+      if (expandBtnIcon) expandBtnIcon.textContent = "collapse_content";
+    } else {
+      this.elements.courseCodeDisplay.style.display = "flex";
+      this.elements.courseCodeExpandedContent.classList.remove("expanded");
+      if (expandBtnIcon) expandBtnIcon.textContent = "expand_content";
+    }
   }
 
   copyCourseCode() {
-    const courseCode = this.elements.courseCodeText.textContent;
+    const courseCode = this.elements.courseCodeLarge.textContent;
     navigator.clipboard
       .writeText(courseCode)
       .then(() => {
@@ -446,14 +493,12 @@ class StreamManager {
       });
   }
 
-  // Course selection methods
   selectCourse(courseName) {
     if (this.elements.selectedCourse) {
       this.elements.selectedCourse.textContent = courseName;
     }
   }
 
-  // Student selector methods
   openStudentSelector() {
     this.populateStudentList();
     const modal = new bootstrap.Modal(
@@ -465,9 +510,8 @@ class StreamManager {
   populateStudentList() {
     if (!this.elements.specificStudentsList) return;
 
-    this.elements.specificStudentsList.innerHTML = ""; // Clear previous list
+    this.elements.specificStudentsList.innerHTML = "";
 
-    // Get students for the current course
     const currentCourseStudents = this.currentCourse.students || [];
 
     if (currentCourseStudents.length === 0) {
@@ -537,7 +581,6 @@ class StreamManager {
     modal.hide();
   }
 
-  // Attachment methods
   attachFromDrive() {
     this.showNotification("Google Drive integration coming soon!", "info");
   }
@@ -583,17 +626,14 @@ class StreamManager {
     }
   }
 
-  // Schedule post method
   schedulePost() {
     this.showNotification("Schedule feature coming soon!", "info");
   }
 
   loadAvailableCoursesAndStudents() {
-    // ব্যবহারকারীর ড্যাশবোর্ড থেকে সমস্ত কোর্স লোড করুন
     const userDashboard = this.getUserDashboard();
     this.availableCourses = userDashboard.courses || [];
 
-    // সমস্ত কোর্স থেকে সমস্ত শিক্ষার্থী সংগ্রহ করুন
     this.availableStudents = [];
     this.availableCourses.forEach((course) => {
       if (course.students && Array.isArray(course.students)) {
@@ -729,7 +769,6 @@ class StreamManager {
           document.execCommand(command, false, null);
         }
 
-        // Toggle active class for visual feedback
         button.classList.toggle("active");
         if (this.elements.editorContent) {
           this.elements.editorContent.focus();
@@ -737,7 +776,6 @@ class StreamManager {
       });
     });
 
-    // Ensure active state is maintained when content is selected/deselected
     if (this.elements.editorContent) {
       this.elements.editorContent.addEventListener("mouseup", () =>
         this.updateToolbarButtons()
@@ -768,41 +806,34 @@ class StreamManager {
   }
 
   updateCourseDisplay() {
-    // Course title এবং section update করুন
     const courseTitle = document.getElementById("courseTitle");
     const courseSection = document.getElementById("courseSection");
 
     if (courseTitle) courseTitle.textContent = this.currentCourse.name;
     if (courseSection) courseSection.textContent = this.currentCourse.section;
 
-    // Page title update করুন
     document.title = `${this.currentCourse.name} - ক্লাসরুম`;
 
-    // Sidebar এ current course name update করুন
     if (this.elements.currentCourseName) {
       this.elements.currentCourseName.textContent = this.currentCourse.name;
     }
 
-    // Course banner theme set করুন
     const courseBanner = document.getElementById("courseBanner");
     if (courseBanner) {
       const courseType = this.getCourseType(this.currentCourse.subject);
       courseBanner.className = `course-banner ${courseType}`;
     }
 
-    // Course code display করুন (only in the dedicated section, not in banner)
     if (this.elements.courseCodeText && this.currentCourse.code) {
       this.elements.courseCodeText.textContent = this.currentCourse.code;
-      document.getElementById("courseCodeLarge").textContent =
-        this.currentCourse.code;
+      this.elements.courseCodeLarge.textContent = this.currentCourse.code;
     }
 
-    // Course info update করুন
     this.updateCourseInfo();
   }
 
   getCourseType(subject) {
-    if (!subject) return "science"; // default
+    if (!subject) return "science";
 
     const subjectLower = subject.toLowerCase();
 
@@ -820,13 +851,12 @@ class StreamManager {
     )
       return "programming";
 
-    return "science"; // default
+    return "science";
   }
 
   updateCourseInfo() {
     const isTeacher = this.currentCourse.teacher === this.currentUser;
 
-    // Create additional course info section
     const courseBanner = document.getElementById("courseBanner");
     if (!courseBanner) return;
 
@@ -841,10 +871,8 @@ class StreamManager {
       }
     }
 
-    // Clear previous content
     additionalInfo.innerHTML = "";
 
-    // Always display subject and room if available
     if (this.currentCourse.subject) {
       const subject = document.createElement("p");
       subject.innerHTML = `Subject: ${this.currentCourse.subject}`;
@@ -858,14 +886,12 @@ class StreamManager {
     }
 
     if (isTeacher) {
-      // Teacher sees: student count
       const studentCount = document.createElement("p");
       studentCount.innerHTML = `Students: ${
         this.currentCourse.students ? this.currentCourse.students.length : 0
       }`;
       additionalInfo.appendChild(studentCount);
     } else {
-      // Student sees: teacher name
       const teacher = document.createElement("p");
       teacher.innerHTML = `Teacher: ${this.currentCourse.teacher}`;
       additionalInfo.appendChild(teacher);
@@ -926,38 +952,34 @@ class StreamManager {
   }
 
   loadPosts() {
-    console.log("Loading posts for course ID:", this.courseId); // Debug log
+    console.log("Loading posts for course ID:", this.courseId);
 
     const posts = this.getCourseAnnouncements();
     const assignments = this.getCourseAssignments();
 
-    console.log("Found announcements:", posts.length); // Debug log
-    console.log("Found assignments:", assignments.length); // Debug log
-    console.log("Assignments data:", assignments); // Debug log
+    console.log("Found announcements:", posts.length);
+    console.log("Announcements data:", posts); // Debug log
+    console.log("Found assignments:", assignments.length);
 
-    // Combine announcements and assignments
     const allPosts = [...posts];
 
-    // Add assignment notifications
     assignments.forEach((assignment) => {
-      console.log("Processing assignment:", assignment); // Debug log
-
       const assignmentPost = {
         id: `assignment_${assignment.id}`,
         type: "assignment",
-        author: assignment.author || this.currentUser || "SurePay",
+        author: assignment.author || this.currentUser || "Teacher",
         content: `posted a new assignment: <strong>${assignment.title}</strong>`,
-        timestamp: assignment.createdAt, // Use ISO string directly
+        timestamp: assignment.createdAt,
         assignment: assignment,
         comments: [],
         likes: 0,
         isEditable: true,
-        originalText: assignment.title, // Store original title for editing
+        originalText: assignment.title,
       };
       allPosts.push(assignmentPost);
     });
 
-    console.log("Total posts after combining:", allPosts.length); // Debug log
+    console.log("Total posts after combining:", allPosts.length);
 
     // Sort by timestamp (newest first)
     allPosts.sort((a, b) => {
@@ -983,17 +1005,17 @@ class StreamManager {
 
   getCourseAssignments() {
     if (!this.courseId) {
-      console.log("No course ID found"); // Debug log
+      console.log("No course ID found");
       return [];
     }
 
     const assignmentsKey = `assignments_${this.courseId}`;
-    console.log("Looking for assignments with key:", assignmentsKey); // Debug log
+    console.log("Looking for assignments with key:", assignmentsKey);
 
     const assignments = JSON.parse(
       localStorage.getItem(assignmentsKey) || "[]"
     );
-    console.log("Retrieved assignments:", assignments); // Debug log
+    console.log("Retrieved assignments:", assignments);
 
     return assignments;
   }
@@ -1040,7 +1062,6 @@ class StreamManager {
     postDiv.className = "stream-post";
 
     if (post.type === "assignment") {
-      // Create notification-style header for assignments
       const notificationHeader = document.createElement("div");
       notificationHeader.className = "notification-header";
       notificationHeader.id = `notification-${post.id}`;
@@ -1072,17 +1093,16 @@ class StreamManager {
       notificationContent.appendChild(avatar);
       notificationContent.appendChild(notificationText);
 
-      // Menu container
+      // Enhanced menu container with proper z-index
       const menuContainer = document.createElement("div");
       menuContainer.className = "notification-menu-container";
 
       const menuButton = document.createElement("button");
       menuButton.className = "notification-menu-dots";
-      menuButton.textContent = "⋮";
+      menuButton.innerHTML = '<span class="material-icons">more_vert</span>';
       menuButton.onclick = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        console.log("Menu button clicked for post:", post.id); // Debug log
         this.toggleNotificationMenu(post.id);
       };
 
@@ -1092,11 +1112,10 @@ class StreamManager {
 
       const editButton = document.createElement("button");
       editButton.className = "notification-dropdown-item";
-      editButton.innerHTML = "<span>✏️</span> Edit";
+      editButton.innerHTML = '<span class="material-icons">edit</span> Edit';
       editButton.onclick = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        console.log("Edit button clicked"); // Debug log
         this.editNotification(
           post.id,
           post.originalText || post.assignment.title
@@ -1105,12 +1124,12 @@ class StreamManager {
 
       const deleteButton = document.createElement("button");
       deleteButton.className = "notification-dropdown-item delete";
-      deleteButton.innerHTML = "<span>🗑️</span> Delete";
+      deleteButton.innerHTML =
+        '<span class="material-icons">delete</span> Delete';
       deleteButton.onclick = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        console.log("Delete button clicked"); // Debug log
-        this.deleteNotification(post.id); // Call deleteNotification directly
+        this.deleteNotification(post.id);
       };
 
       dropdownMenu.appendChild(editButton);
@@ -1124,51 +1143,130 @@ class StreamManager {
 
       postDiv.appendChild(notificationHeader);
 
-      // Store original text for editing
       postDiv.setAttribute(
         "data-original-text",
         post.originalText || post.assignment.title
       );
       postDiv.setAttribute("data-assignment-id", post.assignment.id);
     } else {
-      // Regular announcement post
+      // Regular announcement post - Google Classroom style
+      postDiv.id = `post-${post.id}`;
+
       const postHeader = document.createElement("div");
       postHeader.className = "post-header";
+      postHeader.style.cssText = `
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        border-bottom: 1px solid #dadce0;
+      `;
 
+      // User avatar
       const avatar = document.createElement("div");
-      avatar.className = "post-avatar";
-      avatar.textContent = post.author.charAt(0).toUpperCase();
+      avatar.style.cssText = `
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #1976d2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+      `;
+      avatar.textContent = (post.author || "T").charAt(0).toUpperCase();
 
+      // Post info
       const postInfo = document.createElement("div");
-      postInfo.className = "post-info";
+      postInfo.style.cssText = "flex: 1;";
 
       const author = document.createElement("div");
-      author.className = "post-author";
-      author.textContent = post.author;
+      author.style.cssText =
+        "font-weight: 500; color: #202124; font-size: 14px;";
+      author.textContent = post.author || "Teacher";
 
-      const date = document.createElement("div");
-      date.className = "post-date";
-      date.textContent = this.formatTimestamp(post.timestamp);
+      const timestamp = document.createElement("div");
+      timestamp.style.cssText =
+        "font-size: 12px; color: #5f6368; margin-top: 2px;";
+      timestamp.textContent = this.formatTimestamp(post.timestamp);
+      // Add edited indicator if post was edited
+      if (post.editedAt) {
+        timestamp.textContent += " (edited)";
+      }
 
       postInfo.appendChild(author);
-      postInfo.appendChild(date);
+      postInfo.appendChild(timestamp);
 
-      const postMenu = document.createElement("div");
-      postMenu.className = "post-menu";
-      postMenu.innerHTML = '<span class="material-icons">more_vert</span>';
+      // Menu container for announcements
+      const menuContainer = document.createElement("div");
+      menuContainer.className = "notification-menu-container";
+
+      const menuButton = document.createElement("button");
+      menuButton.className = "notification-menu-dots";
+      menuButton.innerHTML = '<span class="material-icons">more_vert</span>';
+      menuButton.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        this.toggleNotificationMenu(`announcement_${post.id}`);
+      };
+
+      const dropdownMenu = document.createElement("div");
+      dropdownMenu.className = "notification-dropdown-menu";
+      dropdownMenu.id = `dropdown-announcement_${post.id}`;
+
+      const editButton = document.createElement("button");
+      editButton.className = "notification-dropdown-item";
+      editButton.innerHTML = '<span class="material-icons">edit</span> Edit';
+      editButton.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        // Extract text content without HTML tags for editing
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = post.content;
+        const textContent = tempDiv.textContent || tempDiv.innerText || "";
+        this.editAnnouncement(post.id, textContent);
+      };
+
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "notification-dropdown-item delete";
+      deleteButton.innerHTML =
+        '<span class="material-icons">delete</span> Delete';
+      deleteButton.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        this.deleteAnnouncement(post.id);
+      };
+
+      dropdownMenu.appendChild(editButton);
+      dropdownMenu.appendChild(deleteButton);
+
+      menuContainer.appendChild(menuButton);
+      menuContainer.appendChild(dropdownMenu);
 
       postHeader.appendChild(avatar);
       postHeader.appendChild(postInfo);
-      postHeader.appendChild(postMenu);
+      postHeader.appendChild(menuContainer);
 
+      // Post content
       const postContent = document.createElement("div");
       postContent.className = "post-content";
+      postContent.id = `post-content-${post.id}`;
+      postContent.style.cssText = `
+        padding: 16px 20px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #202124;
+        border-bottom: 1px solid #dadce0;
+      `;
       postContent.innerHTML = post.content;
 
       // Add attachments if any
       if (post.attachments && post.attachments.length > 0) {
         const attachmentsDiv = document.createElement("div");
         attachmentsDiv.className = "post-attachments";
+        attachmentsDiv.style.cssText = "padding: 0 20px 16px;";
 
         post.attachments.forEach((attachment) => {
           const attachmentElement = this.createAttachmentElement(attachment);
@@ -1178,219 +1276,561 @@ class StreamManager {
         postDiv.appendChild(attachmentsDiv);
       }
 
-      const postActions = document.createElement("div");
-      postActions.className = "post-actions";
+      // Comment input field
+      const commentInputContainer = document.createElement("div");
+      commentInputContainer.style.cssText = `
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8f9fa;
+      `;
 
-      const likeCount = document.createElement("span");
-      likeCount.className = "like-count";
-      likeCount.innerHTML =
-        '<span class="material-icons">thumb_up</span> ' + post.likes;
+      const commentInput = document.createElement("input");
+      commentInput.type = "text";
+      commentInput.placeholder = "Add a class comment...";
+      commentInput.id = `comment-input-${post.id}`;
+      commentInput.style.cssText = `
+        flex: 1;
+        padding: 8px 16px;
+        border: 1px solid #dadce0;
+        border-radius: 20px;
+        font-size: 13px;
+        outline: none;
+      `;
+      commentInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          this.addComment(post.id, commentInput.value);
+          commentInput.value = "";
+        }
+      });
 
-      const commentCount = document.createElement("span");
-      commentCount.className = "comment-count";
-      commentCount.innerHTML =
-        '<span class="material-icons">comment</span> ' + post.comments.length;
+      const commentSubmitBtn = document.createElement("button");
+      commentSubmitBtn.innerHTML = '<span class="material-icons">send</span>';
+      commentSubmitBtn.style.cssText = `
+        background: none;
+        border: none;
+        color: #1976d2;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `;
+      commentSubmitBtn.onclick = () => {
+        this.addComment(post.id, commentInput.value);
+        commentInput.value = "";
+      };
 
-      postActions.appendChild(likeCount);
-      postActions.appendChild(commentCount);
+      commentInputContainer.appendChild(commentInput);
+      commentInputContainer.appendChild(commentSubmitBtn);
+
+      // Comments section
+      const commentsSection = document.createElement("div");
+      commentsSection.className = "comments-section";
+      commentsSection.id = `comments-section-${post.id}`;
+      this.renderComments(post.id, post.comments, commentsSection);
 
       postDiv.appendChild(postHeader);
       postDiv.appendChild(postContent);
-      postDiv.appendChild(postActions);
+      postDiv.appendChild(commentInputContainer);
+      postDiv.appendChild(commentsSection);
     }
 
     return postDiv;
   }
 
-  // Notification menu methods
+  addComment(postId, commentText) {
+    if (!commentText.trim()) {
+      this.showNotification("Comment cannot be empty", "error");
+      return;
+    }
+
+    const announcements = this.getCourseAnnouncements();
+    const postIndex = announcements.findIndex((p) => p.id === postId);
+
+    if (postIndex !== -1) {
+      const newComment = {
+        author: this.currentUser,
+        text: commentText.trim(),
+        timestamp: new Date().toISOString(),
+        id: Date.now(),
+      };
+      announcements[postIndex].comments.push(newComment);
+      localStorage.setItem(
+        `announcements_${this.courseId}`,
+        JSON.stringify(announcements)
+      );
+
+      const commentsSection = document.getElementById(
+        `comments-section-${postId}`
+      );
+      if (commentsSection) {
+        this.renderComments(
+          postId,
+          announcements[postIndex].comments,
+          commentsSection
+        );
+      }
+      this.showNotification("Comment added!", "success");
+    }
+  }
+
+  renderComments(postId, comments, commentsSectionElement) {
+    commentsSectionElement.innerHTML = "";
+
+    comments.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    comments.forEach((comment) => {
+      const commentItem = document.createElement("div");
+      commentItem.className = "comment-item";
+      commentItem.id = `comment-${comment.id}`;
+
+      const avatar = document.createElement("div");
+      avatar.className = "comment-avatar";
+      avatar.textContent = comment.author.charAt(0).toUpperCase();
+
+      const commentContentWrapper = document.createElement("div");
+      commentContentWrapper.className = "comment-content-wrapper";
+
+      const authorTime = document.createElement("div");
+      authorTime.className = "comment-author-time";
+      authorTime.innerHTML = `
+        <span class="comment-author">${comment.author}</span>
+        <span class="comment-time">${this.formatTimestamp(
+          comment.timestamp
+        )}</span>
+      `;
+
+      const commentText = document.createElement("div");
+      commentText.className = "comment-text";
+      commentText.textContent = comment.text;
+
+      commentContentWrapper.appendChild(authorTime);
+      commentContentWrapper.appendChild(commentText);
+
+      const commentActions = document.createElement("div");
+      commentActions.className = "comment-actions";
+
+      const editBtn = document.createElement("button");
+      editBtn.className = "comment-action-btn edit";
+      editBtn.innerHTML = '<span class="material-icons">edit</span>';
+      editBtn.title = "Edit comment";
+      editBtn.onclick = () =>
+        this.editComment(postId, comment.id, comment.text);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "comment-action-btn delete";
+      deleteBtn.innerHTML = '<span class="material-icons">delete</span>';
+      deleteBtn.title = "Delete comment";
+      deleteBtn.onclick = () => this.deleteComment(postId, comment.id);
+
+      commentActions.appendChild(editBtn);
+      commentActions.appendChild(deleteBtn);
+
+      commentItem.appendChild(avatar);
+      commentItem.appendChild(commentContentWrapper);
+      commentItem.appendChild(commentActions);
+
+      commentsSectionElement.appendChild(commentItem);
+    });
+  }
+
+  editComment(postId, commentId, currentText) {
+    const commentItem = document.getElementById(`comment-${commentId}`);
+    if (!commentItem) return;
+
+    const commentContentWrapper = commentItem.querySelector(
+      ".comment-content-wrapper"
+    );
+    const originalContent = commentContentWrapper.innerHTML;
+    commentContentWrapper.setAttribute(
+      "data-original-content",
+      originalContent
+    );
+
+    commentContentWrapper.innerHTML = `
+      <input type="text" class="comment-edit-input" id="comment-edit-input-${commentId}" value="${currentText}">
+      <div class="comment-edit-actions">
+        <button class="comment-edit-btn cancel" onclick="streamManager.cancelCommentEdit('${postId}', '${commentId}')">Cancel</button>
+        <button class="comment-edit-btn save" onclick="streamManager.saveCommentEdit('${postId}', '${commentId}')">Save</button>
+      </div>
+    `;
+
+    const editInput = document.getElementById(
+      `comment-edit-input-${commentId}`
+    );
+    if (editInput) {
+      editInput.focus();
+      editInput.select();
+      editInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          this.saveCommentEdit(postId, commentId);
+        }
+      });
+    }
+  }
+
+  cancelCommentEdit(postId, commentId) {
+    const commentItem = document.getElementById(`comment-${commentId}`);
+    if (!commentItem) return;
+
+    const commentContentWrapper = commentItem.querySelector(
+      ".comment-content-wrapper"
+    );
+    const originalContent = commentContentWrapper.getAttribute(
+      "data-original-content"
+    );
+    commentContentWrapper.innerHTML = originalContent;
+    commentContentWrapper.removeAttribute("data-original-content");
+  }
+
+  saveCommentEdit(postId, commentId) {
+    const editInput = document.getElementById(
+      `comment-edit-input-${commentId}`
+    );
+    if (!editInput) return;
+
+    const newText = editInput.value.trim();
+    if (!newText) {
+      this.showNotification("Comment cannot be empty", "error");
+      return;
+    }
+
+    const announcements = this.getCourseAnnouncements();
+    const postIndex = announcements.findIndex((p) => p.id === postId);
+
+    if (postIndex !== -1) {
+      const commentIndex = announcements[postIndex].comments.findIndex(
+        (c) => c.id === commentId
+      );
+      if (commentIndex !== -1) {
+        announcements[postIndex].comments[commentIndex].text = newText;
+        localStorage.setItem(
+          `announcements_${this.courseId}`,
+          JSON.stringify(announcements)
+        );
+
+        const commentsSection = document.getElementById(
+          `comments-section-${postId}`
+        );
+        if (commentsSection) {
+          this.renderComments(
+            postId,
+            announcements[postIndex].comments,
+            commentsSection
+          );
+        }
+        this.showNotification("Comment updated!", "success");
+      }
+    }
+  }
+
+  deleteComment(postId, commentId) {
+    this.pendingDeleteId = { type: "comment", postId, commentId };
+    this.showConfirmationModal(
+      "Are you sure you want to delete this comment? This action cannot be undone."
+    );
+  }
+
+  // Enhanced dropdown menu methods with proper z-index handling
   toggleNotificationMenu(postId) {
-    console.log("Toggling menu for post:", postId); // Debug log
+    console.log("Toggling menu for post:", postId);
 
     const dropdown = document.getElementById(`dropdown-${postId}`);
     const allDropdowns = document.querySelectorAll(
       ".notification-dropdown-menu"
     );
 
-    console.log("Found dropdown:", dropdown); // Debug log
+    console.log("Found dropdown:", dropdown);
 
-    // Close all other dropdowns
+    // Close all other dropdowns first
     allDropdowns.forEach((menu) => {
       if (menu.id !== `dropdown-${postId}`) {
         menu.classList.remove("show");
+        menu.style.display = "none";
       }
     });
 
     // Toggle current dropdown
     if (dropdown) {
       const isCurrentlyShowing = dropdown.classList.contains("show");
-      console.log("Currently showing:", isCurrentlyShowing); // Debug log
+      console.log("Currently showing:", isCurrentlyShowing);
 
       if (isCurrentlyShowing) {
         dropdown.classList.remove("show");
+        dropdown.style.display = "none";
       } else {
+        // Show the dropdown
+        dropdown.style.display = "block";
         dropdown.classList.add("show");
 
-        // Ensure dropdown appears above everything
-        this.positionDropdown(dropdown);
-        console.log("Dropdown should now be visible"); // Debug log
+        // Position it properly after making it visible
+        setTimeout(() => {
+          this.positionDropdown(dropdown);
+        }, 10); // Small delay to ensure element is rendered
+
+        console.log("Dropdown should now be visible");
       }
     } else {
       console.error("Dropdown not found for ID:", `dropdown-${postId}`);
     }
   }
 
-  // New: Position dropdown correctly
+  // Simple positioning exactly like Google Classroom image
   positionDropdown(dropdown) {
-    const rect = dropdown.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
+    // Reset positioning - let CSS handle the positioning
+    dropdown.style.position = "";
+    dropdown.style.top = "";
+    dropdown.style.left = "";
+    dropdown.style.right = "";
+    dropdown.style.bottom = "";
+    dropdown.style.zIndex = "";
 
-    // If dropdown would go below viewport, position it above
-    if (rect.bottom > viewportHeight) {
-      dropdown.style.top = "auto";
-      dropdown.style.bottom = "45px"; // Adjust as needed to clear the button
-    } else {
-      dropdown.style.top = "-10px"; // Default position above
-      dropdown.style.bottom = "auto";
-    }
+    // Just ensure it's visible
+    dropdown.style.display = "block";
+
+    console.log("Dropdown positioned using CSS defaults");
   }
 
+  // UPDATED: Edit notification now redirects to classwork.html
   editNotification(postId, originalText) {
-    // Close dropdown first
     const dropdown = document.getElementById(`dropdown-${postId}`);
     if (dropdown) {
       dropdown.classList.remove("show");
     }
 
-    const notificationText = document.getElementById(
-      `notification-text-${postId}`
+    // Get the assignment data
+    const notificationHeader = document.getElementById(
+      `notification-${postId}`
     );
-    if (!notificationText) return;
+    const streamPost = notificationHeader?.closest(".stream-post");
+    const assignmentId = streamPost?.getAttribute("data-assignment-id");
 
-    this.currentEditingId = postId; // Set the currently editing post ID
+    if (assignmentId) {
+      // Store assignment ID for editing
+      localStorage.setItem("editingAssignmentId", assignmentId);
 
-    // Get current text without HTML tags for editing
-    const currentText = originalText || notificationText.textContent;
+      // Navigate to classwork.html for editing
+      window.location.href = "classwork.html";
+    } else {
+      this.showNotification("Assignment not found for editing", "error");
+    }
+  }
 
-    // Create edit interface
-    const editHtml = `
-      <div class="notification-edit-mode">
-        <input type="text" class="notification-edit-input" id="editInput-${postId}" value="${currentText}">
-        <div class="notification-edit-actions">
-          <button class="notification-edit-btn notification-cancel-btn" onclick="streamManager.cancelEdit('${postId}')">Cancel</button>
-          <button class="notification-edit-btn notification-save-btn" onclick="streamManager.saveEdit('${postId}')">Save</button>
+  editAnnouncement(postId, currentContent) {
+    const dropdown = document.getElementById(`dropdown-announcement_${postId}`);
+    if (dropdown) {
+      dropdown.classList.remove("show");
+      dropdown.style.display = "none";
+    }
+
+    const postContentElement = document.getElementById(
+      `post-content-${postId}`
+    );
+    if (!postContentElement) return;
+
+    this.currentEditingId = postId;
+
+    // Store original content
+    const originalHTML = postContentElement.innerHTML;
+    postContentElement.setAttribute("data-original-html", originalHTML);
+
+    // Create Google Classroom style edit interface
+    postContentElement.innerHTML = `
+      <div style="border: 2px solid #1976d2; border-radius: 8px; background: white; overflow: hidden;">
+        <div contenteditable="true" 
+             id="editContent-${postId}" 
+             style="padding: 16px 20px; min-height: 80px; font-size: 14px; line-height: 1.5; outline: none; background: white;"
+             placeholder="Edit your announcement...">${currentContent}</div>
+        <div style="background: #f8f9fa; padding: 12px 16px; border-top: 1px solid #dadce0; display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" 
+                  id="cancelEdit-${postId}"
+                  style="background: transparent; border: 1px solid #dadce0; color: #5f6368; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer;">
+            Cancel
+          </button>
+          <button type="button" 
+                  id="saveEdit-${postId}"
+                  style="background: #1976d2; border: none; color: white; padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer;">
+            Save
+          </button>
         </div>
       </div>
     `;
 
-    const originalHTML = notificationText.innerHTML;
-    notificationText.setAttribute("data-original-html", originalHTML);
-    notificationText.innerHTML = editHtml;
+    // Focus on the editable content
+    const editContent = document.getElementById(`editContent-${postId}`);
+    if (editContent) {
+      editContent.focus();
 
-    // Focus on input and select text
-    const editInput = document.getElementById(`editInput-${postId}`);
-    if (editInput) {
-      editInput.focus();
-      editInput.select();
+      // Place cursor at the end
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(editContent);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
 
-      // Save on Enter key
-      editInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
+      // Handle Enter key to save
+      editContent.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
           e.preventDefault();
-          streamManager.saveEdit(postId);
+          streamManager.saveAnnouncementEdit(postId);
         }
-      });
-
-      // Cancel on Escape key
-      editInput.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
           e.preventDefault();
-          streamManager.cancelEdit(postId);
+          streamManager.cancelEditAnnouncement(postId);
         }
+      });
+    }
+
+    // Add event listeners to buttons
+    const cancelBtn = document.getElementById(`cancelEdit-${postId}`);
+    const saveBtn = document.getElementById(`saveEdit-${postId}`);
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Cancel edit clicked for postId:", postId);
+        this.cancelEditAnnouncement(postId);
+      });
+    }
+
+    if (saveBtn) {
+      saveBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Save edit clicked for postId:", postId);
+        this.saveAnnouncementEdit(postId);
       });
     }
   }
 
-  cancelEdit(postId) {
-    const notificationText = document.getElementById(
-      `notification-text-${postId}`
+  cancelEditAnnouncement(postId) {
+    const postContentElement = document.getElementById(
+      `post-content-${postId}`
     );
-    if (!notificationText) return;
+    if (!postContentElement) return;
 
-    const originalHTML = notificationText.getAttribute("data-original-html");
-    notificationText.innerHTML = originalHTML;
-    notificationText.removeAttribute("data-original-html");
-    this.currentEditingId = null; // Clear the currently editing post ID
+    const originalHTML = postContentElement.getAttribute("data-original-html");
+    if (originalHTML) {
+      postContentElement.innerHTML = originalHTML;
+      postContentElement.removeAttribute("data-original-html");
+    }
+
+    this.currentEditingId = null;
     this.showNotification("Edit cancelled", "info");
   }
 
-  saveEdit(postId) {
-    const editInput = document.getElementById(`editInput-${postId}`);
-    const notificationText = document.getElementById(
-      `notification-text-${postId}`
+  saveAnnouncementEdit(postId) {
+    console.log("Saving announcement edit for postId:", postId); // Debug log
+
+    const editContent = document.getElementById(`editContent-${postId}`);
+    if (!editContent) {
+      console.error("Edit content element not found");
+      return;
+    }
+
+    let newContent = editContent.innerHTML.trim();
+    console.log("New content:", newContent); // Debug log
+
+    // Clean up content - remove empty tags and normalize
+    if (
+      newContent === "<br>" ||
+      newContent === "<div><br></div>" ||
+      newContent === ""
+    ) {
+      this.showNotification("Announcement content cannot be empty", "error");
+      return;
+    }
+
+    // Show saving state
+    const saveBtn = document.querySelector(
+      `button[onclick="streamManager.saveAnnouncementEdit('${postId}')"]`
     );
+    if (saveBtn) {
+      saveBtn.textContent = "Saving...";
+      saveBtn.disabled = true;
+    }
 
-    if (!editInput || !notificationText) return;
+    try {
+      // Get announcements from localStorage
+      const courseKey = `announcements_${this.courseId}`;
+      let announcements = JSON.parse(localStorage.getItem(courseKey) || "[]");
+      console.log("Current announcements:", announcements); // Debug log
 
-    const newText = editInput.value.trim();
-    const notificationHeader = document.getElementById(
-      `notification-${postId}`
-    );
-    const streamPostElement = notificationHeader?.closest(".stream-post");
-    const assignmentId = streamPostElement?.getAttribute("data-assignment-id");
+      // Find the specific announcement
+      const postIndex = announcements.findIndex((p) => p.id == postId); // Use == for type coercion
+      console.log("Found post index:", postIndex); // Debug log
 
-    if (newText) {
-      // Update the notification text
-      const timeElement = notificationText.querySelector(".time");
-      const timeHTML = timeElement ? timeElement.outerHTML : "";
-      notificationText.innerHTML = `<strong>SurePay</strong> posted a new assignment: <strong>${newText}</strong>${timeHTML}`;
+      if (postIndex !== -1) {
+        // Update the content
+        announcements[postIndex].content = newContent;
+        announcements[postIndex].editedAt = new Date().toISOString();
 
-      // Update the assignment title in localStorage
-      if (assignmentId) {
-        this.updateAssignmentTitle(assignmentId, newText);
+        // Save back to localStorage
+        localStorage.setItem(courseKey, JSON.stringify(announcements));
+        console.log("Updated announcement:", announcements[postIndex]); // Debug log
+
+        // Update the UI immediately - find the post content element
+        const postContentElement = document.getElementById(
+          `post-content-${postId}`
+        );
+        if (postContentElement) {
+          postContentElement.innerHTML = newContent;
+          postContentElement.removeAttribute("data-original-html");
+        }
+
+        this.currentEditingId = null;
+        this.showNotification("Announcement updated successfully!", "success");
+
+        // Reload posts to ensure everything is synced
+        setTimeout(() => {
+          this.loadPosts();
+        }, 500);
+      } else {
+        console.error("Post not found in announcements array");
+        this.showNotification(
+          "Failed to find announcement to update.",
+          "error"
+        );
+        this.cancelEditAnnouncement(postId);
       }
-      this.showNotification("Assignment updated successfully!", "success");
-    } else {
-      // If empty, revert to original
-      const originalHTML = notificationText.getAttribute("data-original-html");
-      notificationText.innerHTML = originalHTML;
-      this.showNotification("Cannot save empty assignment title", "error");
-    }
-
-    notificationText.removeAttribute("data-original-html");
-    this.currentEditingId = null; // Clear the currently editing post ID
-  }
-
-  updateAssignmentTitle(assignmentId, newTitle) {
-    const assignmentsKey = `assignments_${this.courseId}`;
-    const assignments = JSON.parse(
-      localStorage.getItem(assignmentsKey) || "[]"
-    );
-
-    const assignmentIndex = assignments.findIndex((a) => a.id == assignmentId);
-    if (assignmentIndex !== -1) {
-      assignments[assignmentIndex].title = newTitle;
-      localStorage.setItem(assignmentsKey, JSON.stringify(assignments));
-
-      // Reload upcoming assignments
-      this.loadUpcomingAssignments();
+    } catch (error) {
+      console.error("Error saving announcement:", error);
+      this.showNotification("Error saving announcement", "error");
+      this.cancelEditAnnouncement(postId);
     }
   }
 
-  // New: Show confirmation modal for deletion
+  // UPDATED: Enhanced delete with smooth animation
   deleteNotification(postId) {
-    // Close dropdown first
     const dropdown = document.getElementById(`dropdown-${postId}`);
     if (dropdown) {
       dropdown.classList.remove("show");
     }
 
-    this.pendingDeleteId = postId; // Store the ID of the post to be deleted
+    this.pendingDeleteId = { type: "assignment", id: postId };
     this.showConfirmationModal(
-      "Are you sure you want to delete this item? This action cannot be undone."
+      "Are you sure you want to delete this assignment? This action cannot be undone."
     );
   }
 
-  // New: Show confirmation modal
+  deleteAnnouncement(postId) {
+    const dropdown = document.getElementById(`dropdown-announcement_${postId}`);
+    if (dropdown) {
+      dropdown.classList.remove("show");
+    }
+
+    this.pendingDeleteId = { type: "announcement", id: postId };
+    this.showConfirmationModal(
+      "Are you sure you want to delete this announcement? This action cannot be undone."
+    );
+  }
+
   showConfirmationModal(message) {
     if (this.elements.confirmationMessage) {
       this.elements.confirmationMessage.textContent = message;
@@ -1398,51 +1838,82 @@ class StreamManager {
     if (this.elements.confirmationModal) {
       this.elements.confirmationModal.classList.add("show");
     }
-    document.body.style.overflow = "hidden"; // Prevent scrolling
+    document.body.style.overflow = "hidden";
   }
 
-  // New: Hide confirmation modal
   hideConfirmationModal() {
     if (this.elements.confirmationModal) {
       this.elements.confirmationModal.classList.remove("show");
     }
-    this.pendingDeleteId = null; // Clear pending delete ID
-    document.body.style.overflow = "auto"; // Restore scrolling
+    this.pendingDeleteId = null;
+    document.body.style.overflow = "auto";
   }
 
-  // New: Confirm deletion
+  // UPDATED: Enhanced deletion with permanent removal and smooth animation
   confirmDelete() {
     if (!this.pendingDeleteId) return;
 
-    const postIdToDelete = this.pendingDeleteId;
-    const notificationHeader = document.getElementById(
-      `notification-${postIdToDelete}`
-    );
-    const streamPost = notificationHeader?.closest(".stream-post");
-    const assignmentId = streamPost?.getAttribute("data-assignment-id");
+    const { type, id, postId, commentId } = this.pendingDeleteId;
 
-    // Add fade out animation
-    if (streamPost) {
-      streamPost.classList.add("notification-fade-out");
+    if (type === "comment") {
+      const announcements = this.getCourseAnnouncements();
+      const postIndex = announcements.findIndex((p) => p.id === postId);
 
-      // Remove the notification after animation
-      setTimeout(() => {
-        streamPost.remove();
+      if (postIndex !== -1) {
+        announcements[postIndex].comments = announcements[
+          postIndex
+        ].comments.filter((c) => c.id !== commentId);
+        localStorage.setItem(
+          `announcements_${this.courseId}`,
+          JSON.stringify(announcements)
+        );
 
-        // Delete the assignment from localStorage
-        if (assignmentId) {
-          this.deleteAssignment(assignmentId);
+        const commentsSection = document.getElementById(
+          `comments-section-${postId}`
+        );
+        if (commentsSection) {
+          this.renderComments(
+            postId,
+            announcements[postIndex].comments,
+            commentsSection
+          );
         }
+        this.showNotification("Comment deleted!", "success");
+      }
+    } else if (type === "assignment") {
+      const notificationHeader = document.getElementById(`notification-${id}`);
+      const streamPost = notificationHeader?.closest(".stream-post");
+      const assignmentId = streamPost?.getAttribute("data-assignment-id");
 
-        // Show success message
-        this.showNotification("Notification deleted successfully", "success");
+      if (streamPost) {
+        // Apply smooth fade-out animation
+        streamPost.classList.add("notification-fade-out");
 
-        // Check if no posts remain
-        this.checkForNoPosts();
-      }, 400); // Match animation duration
+        setTimeout(() => {
+          streamPost.remove();
+          if (assignmentId) {
+            this.deleteAssignment(assignmentId);
+          }
+          this.showNotification("Assignment deleted successfully", "success");
+          this.checkForNoPosts();
+        }, 400); // Match animation duration
+      }
+    } else if (type === "announcement") {
+      const postElement = document.getElementById(`post-${id}`);
+      if (postElement) {
+        // Apply smooth fade-out animation
+        postElement.classList.add("notification-fade-out");
+
+        setTimeout(() => {
+          postElement.remove();
+          this.deleteAnnouncementFromStorage(id);
+          this.showNotification("Announcement deleted successfully", "success");
+          this.checkForNoPosts();
+        }, 400); // Match animation duration
+      }
     }
 
-    this.hideConfirmationModal(); // Hide the modal after action
+    this.hideConfirmationModal();
   }
 
   deleteAssignment(assignmentId) {
@@ -1454,8 +1925,16 @@ class StreamManager {
     const filteredAssignments = assignments.filter((a) => a.id != assignmentId);
     localStorage.setItem(assignmentsKey, JSON.stringify(filteredAssignments));
 
-    // Reload upcoming assignments
     this.loadUpcomingAssignments();
+  }
+
+  deleteAnnouncementFromStorage(announcementId) {
+    const announcementsKey = `announcements_${this.courseId}`;
+    let announcements = JSON.parse(
+      localStorage.getItem(announcementsKey) || "[]"
+    );
+    announcements = announcements.filter((ann) => ann.id !== announcementId);
+    localStorage.setItem(announcementsKey, JSON.stringify(announcements));
   }
 
   checkForNoPosts() {
@@ -1469,16 +1948,8 @@ class StreamManager {
     }
   }
 
-  /**
-   * Navigates to the assignment details page based on user role.
-   * Teachers are redirected to 'instruction.html', students to 'assignment-page.html'.
-   * @param {object} assignment - The assignment object.
-   */
   navigateToAssignment(assignment) {
-    // Store assignment details
     localStorage.setItem("selectedAssignment", JSON.stringify(assignment));
-
-    // Teachers are redirected to 'instruction.html'
     window.location.href = "instruction.html";
   }
 
@@ -1516,14 +1987,13 @@ class StreamManager {
     attachmentDiv.appendChild(icon);
     attachmentDiv.appendChild(info);
 
-    // Add click handler for links
     if (attachment.url) {
       attachmentDiv.addEventListener("click", () => {
         window.open(attachment.url, "_blank");
       });
 
       attachmentDiv.addEventListener("mouseenter", () => {
-        attachmentDiv.style.transform = "translateY(-1px)"; // Reduced translateY
+        attachmentDiv.style.transform = "translateY(-1px)";
         attachmentDiv.style.boxShadow = "var(--shadow-medium)";
       });
 
@@ -1547,7 +2017,6 @@ class StreamManager {
   }
 
   showNotification(message, type) {
-    // Remove existing notifications to prevent stacking
     const existingNotifications = document.querySelectorAll(".notification");
     existingNotifications.forEach((notification) => notification.remove());
 
@@ -1557,27 +2026,24 @@ class StreamManager {
     document.body.appendChild(notification);
 
     setTimeout(() => {
-      // Add fade out animation before removal
       notification.style.opacity = "0";
       notification.style.transform = "translateX(100%)";
-      setTimeout(() => notification.remove(), 300); // Remove after animation
+      setTimeout(() => notification.remove(), 300);
     }, 3000);
   }
 
   setupTooltips() {
-    // Tooltip functionality for enhanced UX
-    const tooltipElements = document.querySelectorAll("[title]"); // Use title attribute for simplicity
+    const tooltipElements = document.querySelectorAll("[title]");
     tooltipElements.forEach((element) => {
       element.addEventListener("mouseenter", (e) => {
         const tooltipText = e.target.getAttribute("title");
-        if (!tooltipText) return; // Skip if no title
+        if (!tooltipText) return;
 
-        // Store original title and remove it to prevent default browser tooltip
         e.target._originalTitle = tooltipText;
         e.target.removeAttribute("title");
 
         const tooltip = document.createElement("div");
-        tooltip.className = "custom-tooltip"; // Use a custom class
+        tooltip.className = "custom-tooltip";
         tooltip.textContent = tooltipText;
         document.body.appendChild(tooltip);
 
@@ -1594,7 +2060,6 @@ class StreamManager {
           e.target._tooltip.remove();
           delete e.target._tooltip;
         }
-        // Restore original title
         if (e.target._originalTitle) {
           e.target.setAttribute("title", e.target._originalTitle);
           delete e.target._originalTitle;
@@ -1602,7 +2067,6 @@ class StreamManager {
       });
     });
 
-    // Add CSS for custom-tooltip
     const style = document.createElement("style");
     style.innerHTML = `
       .custom-tooltip {
@@ -1614,7 +2078,7 @@ class StreamManager {
         font-size: 12px;
         z-index: 10002;
         white-space: nowrap;
-        pointer-events: none; /* Allow clicks through tooltip */
+        pointer-events: none;
         opacity: 0;
         transition: opacity 0.2s ease-in-out;
       }
@@ -1626,9 +2090,7 @@ class StreamManager {
   }
 
   setupKeyboardShortcuts() {
-    // Enhanced keyboard shortcuts
     document.addEventListener("keydown", (e) => {
-      // Ctrl/Cmd + Enter to post announcement
       if (
         (e.ctrlKey || e.metaKey) &&
         e.key === "Enter" &&
@@ -1638,7 +2100,6 @@ class StreamManager {
         this.postAnnouncement();
       }
 
-      // Escape to cancel announcement or close modal
       if (e.key === "Escape") {
         if (
           this.elements.confirmationModal &&
@@ -1646,7 +2107,6 @@ class StreamManager {
         ) {
           this.hideConfirmationModal();
         } else if (this.isAnnouncementExpanded && !this.currentEditingId) {
-          // Only cancel if the editor is empty and not currently editing a post
           this.cancelAnnouncement();
         }
       }
@@ -1654,7 +2114,6 @@ class StreamManager {
   }
 
   setupAutoSave() {
-    // Auto-save announcement draft functionality
     let autoSaveTimer;
 
     if (this.elements.editorContent) {
@@ -1668,11 +2127,9 @@ class StreamManager {
         }, 1000);
       });
 
-      // Load draft on page load
       const draft = localStorage.getItem("announcement_draft");
       if (draft && this.elements.editorContent) {
         this.elements.editorContent.innerHTML = draft;
-        // If there's a draft, expand the announcement input area
         if (draft.trim() !== "") {
           this.expandAnnouncement();
         }
@@ -1681,16 +2138,13 @@ class StreamManager {
   }
 
   setupThemeDetection() {
-    // Dark/Light theme detection and application
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
-
     prefersDarkScheme.addEventListener("change", (e) => {
       // Theme handling if needed in future
     });
   }
 
   setupProgressIndicators() {
-    // Loading progress indicators for better UX
     const showLoading = (element) => {
       element.classList.add("loading");
       const spinner = document.createElement("div");
@@ -1709,7 +2163,6 @@ class StreamManager {
     this.showLoading = showLoading;
     this.hideLoading = hideLoading;
 
-    // Add CSS for loading spinner
     const style = document.createElement("style");
     style.innerHTML = `
       .loading {
@@ -1738,11 +2191,9 @@ class StreamManager {
   }
 
   setupNotificationSystem() {
-    // Real-time notification system
     this.notificationQueue = [];
     this.isShowingNotification = false;
 
-    // Function to show notifications from queue
     const processQueue = () => {
       if (this.notificationQueue.length > 0 && !this.isShowingNotification) {
         this.isShowingNotification = true;
@@ -1755,16 +2206,14 @@ class StreamManager {
       }
     };
 
-    // Override showNotification to use queue
     const originalShowNotification = this.showNotification.bind(this);
     this.showNotification = (message, type) => {
       this.notificationQueue.push({ message, type });
       processQueue();
     };
 
-    // Close dropdown menus when clicking outside or scrolling
+    // Enhanced click outside handling for dropdowns
     document.addEventListener("click", (e) => {
-      // Close assignment post dropdown menus
       if (
         !e.target.closest(".notification-menu-container") &&
         !e.target.closest(".notification-dropdown-menu")
@@ -1777,7 +2226,6 @@ class StreamManager {
         });
       }
 
-      // Close sidebar enrolled classes dropdown if open and clicked outside
       const enrolledClassesDropdown = this.elements.enrolledClasses;
       const enrolledClassesToggle = this.elements.enrolledClassesDropdownToggle;
 
@@ -1795,7 +2243,6 @@ class StreamManager {
       }
     });
 
-    // Close dropdowns on scroll
     document.addEventListener("scroll", () => {
       const allDropdowns = document.querySelectorAll(
         ".notification-dropdown-menu"
@@ -1804,7 +2251,6 @@ class StreamManager {
         menu.classList.remove("show");
       });
 
-      // Close sidebar enrolled classes dropdown on scroll
       const enrolledClassesDropdown = this.elements.enrolledClasses;
       if (
         enrolledClassesDropdown &&
@@ -1814,7 +2260,6 @@ class StreamManager {
       }
     });
 
-    // Close dropdowns on window resize
     window.addEventListener("resize", () => {
       const allDropdowns = document.querySelectorAll(
         ".notification-dropdown-menu"
@@ -1823,7 +2268,6 @@ class StreamManager {
         menu.classList.remove("show");
       });
 
-      // Close sidebar enrolled classes dropdown on resize
       const enrolledClassesDropdown = this.elements.enrolledClasses;
       if (
         enrolledClassesDropdown &&
@@ -1835,19 +2279,18 @@ class StreamManager {
   }
 
   handleClickOutside(e) {
-    // Enhanced click outside handling for announcement section
+    // Handle announcement card collapse on outside click
     if (this.isAnnouncementExpanded) {
       const announcementCard = e.target.closest(".announcement-input-card");
-      const modal = e.target.closest(".modal"); // Check if click is inside a Bootstrap modal
-      const confirmationModal = e.target.closest(".confirmation-modal"); // Check if click is inside custom confirmation modal
+      const modal = e.target.closest(".modal");
+      const confirmationModal = e.target.closest(".confirmation-modal");
+      const dropdown = e.target.closest(".notification-dropdown-menu");
 
-      // If click is outside the announcement card AND not inside any modal
-      if (!announcementCard && !modal && !confirmationModal) {
-        const content = this.elements.editorContent?.innerHTML?.trim();
-        if (!content && !this.currentEditingId) {
-          // Only cancel if the editor is empty and not currently editing a post
-          this.cancelAnnouncement();
-        }
+      // If click is outside the announcement card AND not inside any modal or dropdown
+      if (!announcementCard && !modal && !confirmationModal && !dropdown) {
+        // Set flag to indicate this is an outside click cancellation
+        this.isCancelledByOutsideClick = true;
+        this.cancelAnnouncement();
       }
     }
 
@@ -1859,10 +2302,23 @@ class StreamManager {
     ) {
       this.hideConfirmationModal();
     }
+
+    // Close dropdown menus when clicking outside
+    if (
+      !e.target.closest(".notification-menu-container") &&
+      !e.target.closest(".notification-dropdown-menu")
+    ) {
+      const allDropdowns = document.querySelectorAll(
+        ".notification-dropdown-menu"
+      );
+      allDropdowns.forEach((menu) => {
+        menu.classList.remove("show");
+        menu.style.display = "none";
+      });
+    }
   }
 
   handleResize() {
-    // Enhanced responsive behavior
     const sidebar = this.elements.sidebar;
     const contentWrapper = this.elements.contentWrapper;
     const courseTopNav = this.elements.courseTopNav;
@@ -1875,7 +2331,6 @@ class StreamManager {
   }
 
   setupAccessibility() {
-    // Add ARIA labels and roles
     const interactiveElements = document.querySelectorAll(
       'button, [role="button"], input, textarea, a'
     );
@@ -1892,7 +2347,6 @@ class StreamManager {
       }
     });
 
-    // Improve focus management
     document.body.addEventListener("keydown", (e) => {
       if (e.key === "Tab") {
         document.body.classList.add("keyboard-navigation");
@@ -1903,7 +2357,6 @@ class StreamManager {
       document.body.classList.remove("keyboard-navigation");
     });
 
-    // Add CSS for keyboard-navigation focus outline
     const style = document.createElement("style");
     style.innerHTML = `
       .keyboard-navigation *:focus-visible {
@@ -1915,7 +2368,6 @@ class StreamManager {
   }
 
   setupPerformanceOptimizations() {
-    // Lazy load images
     const images = document.querySelectorAll("img[data-src]");
     const imageObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
@@ -1930,7 +2382,6 @@ class StreamManager {
 
     images.forEach((img) => imageObserver.observe(img));
 
-    // Debounce resize handler
     const debouncedResize = this.debounce(() => {
       this.handleResize();
     }, 250);
@@ -1938,7 +2389,6 @@ class StreamManager {
     window.addEventListener("resize", debouncedResize);
   }
 
-  // Utility methods
   debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -1975,7 +2425,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Additional utility functions
 window.addEventListener("beforeunload", (e) => {
-  // Save any unsaved changes
   if (streamManager && streamManager.elements.editorContent) {
     const content = streamManager.elements.editorContent.innerHTML;
     if (content.trim()) {
@@ -2010,9 +2459,8 @@ window.addEventListener("load", () => {
       );
     }
   }
-  // Ensure initial state of announcement editor is collapsed
   if (streamManager && !localStorage.getItem("announcement_draft")) {
-    streamManager.cancelAnnouncement(); // This will collapse it
+    streamManager.cancelAnnouncement();
   }
 });
 
@@ -2047,9 +2495,9 @@ document.addEventListener("visibilitychange", () => {
   } else {
     // Page is visible - resume operations
     if (streamManager) {
-      console.log("Page became visible, refreshing posts..."); // Debug log
-      streamManager.loadPosts(); // Refresh posts when user returns
-      streamManager.loadUpcomingAssignments(); // Refresh upcoming assignments
+      console.log("Page became visible, refreshing posts...");
+      streamManager.loadPosts();
+      streamManager.loadUpcomingAssignments();
     }
   }
 });

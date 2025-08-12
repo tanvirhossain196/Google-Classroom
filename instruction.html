@@ -1355,7 +1355,7 @@
                         <span class="course-name-text" id="currentCourseName">CSE479</span>
                     </div>
                 </div>
-                <a href="#" class="sidebar-item" id="classesLink">
+                <a href="teacher.html" class="sidebar-item" id="classesLink">
                     <span class="material-icons">home</span>
                     <span class="sidebar-text">Classes</span>
                 </a>
@@ -1370,11 +1370,11 @@
                         <!-- Courses will be dynamically inserted here -->
                     </ul>
                 </div>
-                <a href="#" class="sidebar-item" id="archiveLink">
+                <a href="teacherArchive.html" class="sidebar-item" id="archiveLink">
                     <span class="material-icons">archive</span>
                     <span class="sidebar-text">Archive</span>
                 </a>
-                <a href="#" class="sidebar-item" id="settingsLink">
+                <a href="teacherSettings.html" class="sidebar-item" id="settingsLink">
                     <span class="material-icons">settings</span>
                     <span class="sidebar-text">Settings</span>
                 </a>
@@ -1824,11 +1824,11 @@
 
             openCourse(course) {
                 localStorage.setItem("selectedCourse", JSON.stringify(course));
-                this.navigateWithAnimation("stream.html"); // Assuming stream.html is the course page
+                this.navigateWithAnimation("teacherStream.html"); // Assuming teacherStream.html is the course page
             }
 
             navigateWithAnimation(url) {
-                // Navigate with animation - Same as stream.html
+                // Navigate with animation - Same as teacherStream.html
                 document.body.style.opacity = "0";
                 document.body.style.transition = "opacity 0.3s ease";
 
