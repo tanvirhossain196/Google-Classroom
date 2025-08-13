@@ -11,9 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const coursesGrid = document.getElementById("coursesGrid");
   const emptyState = document.getElementById("emptyState");
   const emptyStateText = document.getElementById("emptyStateText");
-  const addCourseBtn = document.getElementById("addCourseBtn");
-  const courseActionMenu = document.getElementById("courseActionMenu");
-  const dashboardTitle = document.getElementById("dashboardTitle");
+  // const addCourseBtn = document.getElementById("addCourseBtn"); // Removed
+  // const courseActionMenu = document.getElementById("courseActionMenu"); // Removed
+  // const dashboardTitle = document.getElementById("dashboardTitle"); // Removed
+
+  // New: Join Course Button in Navbar
+  const joinCourseNavBtn = document.getElementById("joinCourseNavBtn");
 
   // Navigation links
   const navLinks = document.querySelectorAll("[data-nav-link]");
@@ -56,7 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listeners
   menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
-  addCourseBtn.addEventListener("click", toggleActionMenu);
+  // addCourseBtn.addEventListener("click", toggleActionMenu); // Removed
+  joinCourseNavBtn.addEventListener("click", showJoinModal); // New: Event listener for the new button
   joinCourseForm.addEventListener("submit", handleJoinCourse);
   closeJoinModal.addEventListener("click", hideJoinModal);
   cancelJoin.addEventListener("click", hideJoinModal);
@@ -109,12 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target === joinCourseModal) {
       hideJoinModal();
     }
-    if (
-      !addCourseBtn.contains(e.target) &&
-      !courseActionMenu.contains(e.target)
-    ) {
-      courseActionMenu.classList.remove("show");
-    }
+    // Removed logic for courseActionMenu as it's removed
+    // if (
+    //   !addCourseBtn.contains(e.target) &&
+    //   !courseActionMenu.contains(e.target)
+    // ) {
+    //   courseActionMenu.classList.remove("show");
+    // }
     // Close enrolled classes dropdown if clicked outside
     if (
       !enrolledClassesDropdownToggle.contains(e.target) &&
@@ -191,24 +196,12 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateUIForRole() {
     userRoleBadge.textContent = "Student";
     userRoleBadge.className = "role-badge student";
-    dashboardTitle.textContent = "Student Dashboard";
+    // dashboardTitle.textContent = "Student Dashboard"; // Removed
     emptyStateText.textContent = "Join a course with the course code";
-    updateActionMenu();
+    // updateActionMenu(); // Removed as action menu is removed
   }
 
-  function updateActionMenu() {
-    courseActionMenu.innerHTML = "";
-    const joinItem = document.createElement("div");
-    joinItem.className = "dropdown-item";
-    joinItem.onclick = showJoinModal;
-    const joinIcon = document.createElement("span");
-    joinIcon.className = "material-icons";
-    joinIcon.textContent = "group_add";
-    const joinText = document.createTextNode("Join a course");
-    joinItem.appendChild(joinIcon);
-    joinItem.appendChild(joinText);
-    courseActionMenu.appendChild(joinItem);
-  }
+  // Removed updateActionMenu function
 
   function toggleSidebar() {
     sidebar.classList.toggle("open");
@@ -226,13 +219,11 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "index.html";
   }
 
-  function toggleActionMenu() {
-    courseActionMenu.classList.toggle("show");
-  }
+  // Removed toggleActionMenu function
 
   function showJoinModal() {
     joinCourseModal.style.display = "block";
-    courseActionMenu.classList.remove("show");
+    // courseActionMenu.classList.remove("show"); // Removed
   }
 
   function hideJoinModal() {

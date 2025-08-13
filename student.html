@@ -20,6 +20,10 @@
                 <h1>Classroom</h1>
             </div>
             <div class="header-right">
+                <!-- Moved Join Course Button -->
+                <button class="join-course-nav-btn" id="joinCourseNavBtn" title="Join a course">
+                    <span class="material-icons">add</span>
+                </button>
                 <div class="user-info">
                     <div id="currentUserEmail" class="user-email">user@email.com</div>
                     <div id="userRoleBadge" class="role-badge new">New User</div>
@@ -75,19 +79,6 @@
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
             <div class="courses-container">
-                <!-- Header Section -->
-                <section class="courses-header">
-                    <h2 id="dashboardTitle">My Dashboard</h2>
-                    <div class="dropdown">
-                        <button class="add-course-btn" id="addCourseBtn">
-                            <span class="material-icons">add</span>
-                        </button>
-                        <div class="dropdown-menu" id="courseActionMenu">
-                            <!-- Dynamic menu items will be added here -->
-                        </div>
-                    </div>
-                </section>
-
                 <!-- Empty State -->
                 <div class="empty-state" id="emptyState" style="display: none;">
                     <div class="empty-icon">

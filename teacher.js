@@ -11,9 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const coursesGrid = document.getElementById("coursesGrid");
   const emptyState = document.getElementById("emptyState");
   const emptyStateText = document.getElementById("emptyStateText");
-  const addCourseBtn = document.getElementById("addCourseBtn");
-  const courseActionMenu = document.getElementById("courseActionMenu");
-  const dashboardTitle = document.getElementById("dashboardTitle");
+  // const addCourseBtn = document.getElementById("addCourseBtn"); // Removed
+  const addCourseBtnHeader = document.getElementById("addCourseBtnHeader"); // New header button
+  const courseActionMenu = document.getElementById("courseActionMenu"); // This dropdown is now unused but kept for consistency if needed
+  const dashboardTitle = document.getElementById("dashboardTitle"); // This is now unused but kept for consistency if needed
 
   // Navigation links
   const navLinks = document.querySelectorAll("[data-nav-link]");
@@ -60,7 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listeners
   menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
-  addCourseBtn.addEventListener("click", toggleActionMenu);
+  // addCourseBtn.addEventListener("click", toggleActionMenu); // Removed
+  addCourseBtnHeader.addEventListener("click", showCreateModal); // New button directly opens modal
   createCourseForm.addEventListener("submit", handleCreateCourse);
   editCourseForm.addEventListener("submit", handleEditCourse);
   closeCreateModal.addEventListener("click", hideCreateModal);
@@ -122,12 +124,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target === editCourseModal) {
       hideEditModal();
     }
-    if (
-      !addCourseBtn.contains(e.target) &&
-      !courseActionMenu.contains(e.target)
-    ) {
-      courseActionMenu.classList.remove("show");
-    }
+    // The courseActionMenu is no longer used for the add button, but if it's used elsewhere, keep this.
+    // if (
+    //   !addCourseBtn.contains(e.target) &&
+    //   !courseActionMenu.contains(e.target)
+    // ) {
+    //   courseActionMenu.classList.remove("show");
+    // }
     // Close enrolled classes dropdown if clicked outside
     if (
       !enrolledClassesDropdownToggle.contains(e.target) &&
@@ -225,24 +228,24 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateUIForRole() {
     userRoleBadge.textContent = "Teacher";
     userRoleBadge.className = "role-badge teacher";
-    dashboardTitle.textContent = "Teacher Dashboard";
+    // dashboardTitle.textContent = "Teacher Dashboard"; // Removed
     emptyStateText.textContent = "Create your first course";
-    updateActionMenu();
+    // updateActionMenu(); // Removed as action menu is no longer used for add button
   }
 
-  function updateActionMenu() {
-    courseActionMenu.innerHTML = "";
-    const createItem = document.createElement("div");
-    createItem.className = "dropdown-item";
-    createItem.onclick = showCreateModal;
-    const createIcon = document.createElement("span");
-    createIcon.className = "material-icons";
-    createIcon.textContent = "add";
-    const createText = document.createTextNode("Create a new course");
-    createItem.appendChild(createIcon);
-    createItem.appendChild(createText);
-    courseActionMenu.appendChild(createItem);
-  }
+  // function updateActionMenu() { // Removed as action menu is no longer used for add button
+  //   courseActionMenu.innerHTML = "";
+  //   const createItem = document.createElement("div");
+  //   createItem.className = "dropdown-item";
+  //   createItem.onclick = showCreateModal;
+  //   const createIcon = document.createElement("span");
+  //   createIcon.className = "material-icons";
+  //   createIcon.textContent = "add";
+  //   const createText = document.createTextNode("Create a new course");
+  //   createItem.appendChild(createIcon);
+  //   createItem.appendChild(createText);
+  //   courseActionMenu.appendChild(createItem);
+  // }
 
   function toggleSidebar() {
     sidebar.classList.toggle("open");
@@ -265,13 +268,13 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "index.html";
   }
 
-  function toggleActionMenu() {
-    courseActionMenu.classList.toggle("show");
-  }
+  // function toggleActionMenu() { // Removed as action menu is no longer used for add button
+  //   courseActionMenu.classList.toggle("show");
+  // }
 
   function showCreateModal() {
     createCourseModal.style.display = "block";
-    courseActionMenu.classList.remove("show");
+    // courseActionMenu.classList.remove("show"); // Removed
   }
 
   function hideCreateModal() {

@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="chatbot.css">
 </head>
 
 <body>
@@ -20,6 +21,10 @@
                 <h1>Classroom</h1>
             </div>
             <div class="header-right">
+                <!-- Relocated Add Course Button -->
+                <button class="add-course-btn-header" id="addCourseBtnHeader">
+                    <span class="material-icons">add</span>
+                </button>
                 <div class="user-info">
                     <div id="currentUserEmail" class="user-email">user@email.com</div>
                     <div id="userRoleBadge" class="role-badge new">New User</div>
@@ -74,26 +79,13 @@
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
             <div class="courses-container">
-                <!-- Header Section -->
-                <section class="courses-header">
-                    <h2 id="dashboardTitle">My Dashboard</h2>
-                    <div class="dropdown">
-                        <button class="add-course-btn" id="addCourseBtn">
-                            <span class="material-icons">add</span>
-                        </button>
-                        <div class="dropdown-menu" id="courseActionMenu">
-                            <!-- Dynamic menu items will be added here -->
-                        </div>
-                    </div>
-                </section>
-
                 <!-- Empty State -->
                 <div class="empty-state" id="emptyState" style="display: none;">
                     <div class="empty-icon">
                         <span class="material-icons">school</span>
                     </div>
                     <h3>No Courses Available</h3>
-                    <p id="emptyStateText">Create your first course or join an existing course</p>
+                    <p id="emptyStateText">Create your first course</p>
                 </div>
 
                 <!-- Courses Grid -->
@@ -199,8 +191,34 @@
         </div>
     </div>
 
+    <!-- Chatbot Section Start -->
+    <div class="chatbot-container">
+        <button id="chatbot-toggle-btn" class="chatbot-toggle-btn">
+            <span class="material-icons">chat</span> Live Chat
+        </button>
+
+        <div id="chatbot-modal" class="chatbot-modal">
+            <div class="chatbot-header">
+                <h3>Live Chat</h3>
+                <button id="chatbot-close-btn" class="chatbot-close-btn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <!-- Chat messages will be appended here -->
+            </div>
+            <div class="chatbot-input-area">
+                <input type="text" id="chatbot-input" placeholder="Type your message...">
+                <button id="chatbot-send-btn" class="chatbot-send-btn">
+                    <span class="material-icons">send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Chatbot Section End -->
 
     <script src="teacher.js"></script>
+    <script src="chatbot.js"></script>
 </body>
 
 </html>
