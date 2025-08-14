@@ -1,6 +1,4 @@
-// student.js
 document.addEventListener("DOMContentLoaded", function () {
-  // Elements
   const menuIcon = document.getElementById("menuIcon");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("mainContent");
@@ -12,13 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const emptyState = document.getElementById("emptyState");
   const emptyStateText = document.getElementById("emptyStateText");
 
-  // New: Join Course Button in Navbar
   const joinCourseNavBtn = document.getElementById("joinCourseNavBtn");
 
-  // Navigation links
   const navLinks = document.querySelectorAll("[data-nav-link]");
 
-  // Enrolled Classes Dropdown elements
   const enrolledClassesDropdownToggle = document.getElementById(
     "enrolledClassesDropdownToggle"
   );
@@ -26,62 +21,54 @@ document.addEventListener("DOMContentLoaded", function () {
     "enrolledClassesDropdown"
   );
 
-  // Modals
-  const createCourseModal = document.getElementById("createCourseModal"); // Kept for consistency, not used
+  const createCourseModal = document.getElementById("createCourseModal");
   const joinCourseModal = document.getElementById("joinCourseModal");
-  const editCourseModal = document.getElementById("editCourseModal"); // Kept for consistency, not used
-  const closeCreateModal = document.getElementById("closeCreateModal"); // Kept for consistency, not used
+  const editCourseModal = document.getElementById("editCourseModal");
+  const closeCreateModal = document.getElementById("closeCreateModal");
   const closeJoinModal = document.getElementById("closeJoinModal");
-  const closeEditModal = document.getElementById("closeEditModal"); // Kept for consistency, not used
-  const createCourseForm = document.getElementById("createCourseForm"); // Kept for consistency, not used
+  const closeEditModal = document.getElementById("closeEditModal");
+  const createCourseForm = document.getElementById("createCourseForm");
   const joinCourseForm = document.getElementById("joinCourseForm");
-  const editCourseForm = document.getElementById("editCourseForm"); // Kept for consistency, not used
-  const cancelCreate = document.getElementById("cancelCreate"); // Kept for consistency, not used
+  const editCourseForm = document.getElementById("editCourseForm");
+  const cancelCreate = document.getElementById("cancelCreate");
   const cancelJoin = document.getElementById("cancelJoin");
-  const cancelEdit = document.getElementById("cancelEdit"); // Kept for consistency, not used
+  const cancelEdit = document.getElementById("cancelEdit");
 
-  // Get current user
   const currentUser =
     localStorage.getItem("currentUser") || localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
 
   if (!currentUser || userRole !== "student") {
-    window.location.href = "index.html"; // Redirect if not logged in as student
+    window.location.href = "index.html";
     return;
   }
 
-  // Initialize dashboard
   initializeDashboard();
 
-  // Event listeners
   menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
-  joinCourseNavBtn.addEventListener("click", showJoinModal); // New: Event listener for the new button
+  joinCourseNavBtn.addEventListener("click", showJoinModal);
   joinCourseForm.addEventListener("submit", handleJoinCourse);
   closeJoinModal.addEventListener("click", hideJoinModal);
   cancelJoin.addEventListener("click", hideJoinModal);
 
-  // Enrolled Classes Dropdown Toggle
   enrolledClassesDropdownToggle.addEventListener("click", function (e) {
     e.preventDefault();
-    e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+    e.stopPropagation();
     enrolledClassesDropdown.classList.toggle("show");
-    this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
-    renderEnrolledClasses(); // Re-render to ensure up-to-date list
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate");
+    renderEnrolledClasses();
   });
 
-  // Navigation event listeners - Complete navigation fix
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       const href = this.getAttribute("href");
       const currentPage =
         window.location.pathname.split("/").pop() || "student.html";
 
-      // Prevent default behavior and handle navigation manually
       e.preventDefault();
       e.stopPropagation();
 
-      // If clicking on same page, do nothing
       if (
         href === currentPage ||
         (href === "student.html" && currentPage === "")
@@ -89,27 +76,22 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Update active states
       navLinks.forEach((l) => l.classList.remove("active"));
       this.classList.add("active");
 
-      // Store navigation intent to prevent automatic redirects
       localStorage.setItem("intentionalNavigation", "true");
       localStorage.setItem("targetPage", href);
 
-      // Use window.location.href for proper navigation
       setTimeout(() => {
         window.location.href = href;
       }, 100);
     });
   });
 
-  // Close modals when clicking outside
   window.addEventListener("click", function (e) {
     if (e.target === joinCourseModal) {
       hideJoinModal();
     }
-    // Close enrolled classes dropdown if clicked outside
     if (
       !enrolledClassesDropdownToggle.contains(e.target) &&
       !enrolledClassesDropdown.contains(e.target)
@@ -121,9 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Close sidebar when clicking outside (but don't interfere with navigation)
   document.addEventListener("click", function (e) {
-    // Check if click is on a navigation link
     const isNavLink = e.target.closest("[data-nav-link]");
 
     if (
@@ -137,35 +117,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  /**
+   * Initializes the student dashboard by setting user information,
+   * restoring sidebar state, updating UI for the student role,
+   * loading user's enrolled courses, and rendering the enrolled classes dropdown.
+   */
   function initializeDashboard() {
     currentUserEmail.textContent = currentUser;
     userInitial.textContent = currentUser.charAt(0).toUpperCase();
 
-    // Handle sidebar state on page load
     const savedSidebarState = localStorage.getItem("sidebarState");
     const intentionalNavigation = localStorage.getItem("intentionalNavigation");
 
-    // If coming from intentional navigation and sidebar was open, restore it
     if (intentionalNavigation === "true" && savedSidebarState === "open") {
       sidebar.classList.add("open");
       mainContent.classList.add("sidebar-open");
-      // Clear the navigation flag
       localStorage.removeItem("intentionalNavigation");
     } else {
-      // Default closed state (for refresh or direct access)
       sidebar.classList.remove("open");
       mainContent.classList.remove("sidebar-open");
       localStorage.setItem("sidebarState", "closed");
     }
 
-    updateUIForRole(); // Always student role for this page
+    updateUIForRole();
     loadUserCourses();
-    renderEnrolledClasses(); // Initial render of enrolled classes
+    renderEnrolledClasses();
     console.log("Current user:", currentUser);
     console.log("User role:", userRole);
     debugCourses();
   }
 
+  /**
+   * Retrieves the dashboard data for the current user from local storage.
+   * If no dashboard exists, it initializes a new one with an empty courses array and student role.
+   * @returns {object} The user's dashboard object.
+   */
   function getUserDashboard() {
     const dashboardKey = `dashboard_${currentUser}`;
     const dashboard = JSON.parse(
@@ -177,26 +163,41 @@ document.addEventListener("DOMContentLoaded", function () {
     return dashboard;
   }
 
+  /**
+   * Saves the provided dashboard object to local storage for the current user.
+   * @param {object} dashboard - The dashboard object to save.
+   */
   function saveUserDashboard(dashboard) {
     const dashboardKey = `dashboard_${currentUser}`;
     localStorage.setItem(dashboardKey, JSON.stringify(dashboard));
   }
 
+  /**
+   * Updates the user interface elements specific to the student role,
+   * such as the role badge text and styling, and the empty state message.
+   */
   function updateUIForRole() {
     userRoleBadge.textContent = "Student";
     userRoleBadge.className = "role-badge student";
     emptyStateText.textContent = "Join a course with the course code";
   }
 
+  /**
+   * Toggles the visibility and state of the sidebar and main content area.
+   * Also saves the current sidebar state to local storage.
+   */
   function toggleSidebar() {
     sidebar.classList.toggle("open");
     mainContent.classList.toggle("sidebar-open");
 
-    // Save sidebar state
     const sidebarIsOpen = sidebar.classList.contains("open");
     localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
   }
 
+  /**
+   * Handles the user logout process by clearing user-related data from local storage
+   * and redirecting to the index page.
+   */
   function handleLogout() {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("userEmail");
@@ -204,15 +205,27 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "index.html";
   }
 
+  /**
+   * Displays the "Join Course" modal.
+   */
   function showJoinModal() {
     joinCourseModal.style.display = "block";
   }
 
+  /**
+   * Hides the "Join Course" modal and resets the join course form.
+   */
   function hideJoinModal() {
     joinCourseModal.style.display = "none";
     joinCourseForm.reset();
   }
 
+  /**
+   * Handles the submission of the join course form.
+   * It validates the course code, checks for existing enrollment,
+   * and attempts to join the course, updating the UI accordingly.
+   * @param {Event} e - The form submission event.
+   */
   function handleJoinCourse(e) {
     e.preventDefault();
     const formData = new FormData(joinCourseForm);
@@ -224,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Clean and format course code
     courseCode = courseCode.trim().toUpperCase().replace(/\s+/g, "");
 
     if (courseCode.length < 3 || courseCode.length > 10) {
@@ -234,7 +246,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("Attempting to join course with code:", courseCode);
 
-    // Show loading state
     const joinButton = document.querySelector(
       '#joinCourseForm button[type="submit"]'
     );
@@ -242,7 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
     joinButton.textContent = "Joining...";
     joinButton.disabled = true;
 
-    // Find course with better error handling
     const course = findCourseByCode(courseCode);
 
     if (!course) {
@@ -255,7 +265,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Check if user is the teacher (should not happen on student page, but good check)
     if (course.teacher === currentUser) {
       joinButton.textContent = originalText;
       joinButton.disabled = false;
@@ -265,7 +274,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Check if already enrolled
     if (course.students && course.students.includes(currentUser)) {
       joinButton.textContent = originalText;
       joinButton.disabled = false;
@@ -275,19 +283,16 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Join the course
     const joinResult = joinCourse(course);
 
-    // Reset button
     joinButton.textContent = originalText;
     joinButton.disabled = false;
 
     if (joinResult.success) {
       hideJoinModal();
       loadUserCourses();
-      renderEnrolledClasses(); // Update enrolled classes dropdown
+      renderEnrolledClasses();
 
-      // Success message with course details
       alert(
         `✅ Successfully joined the course!\n\n📚 Course: ${
           course.name
@@ -304,6 +309,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Finds a course by its unique course code from the global list of all courses.
+   * @param {string} code - The course code to search for.
+   * @returns {object|undefined} The course object if found, otherwise undefined.
+   */
   function findCourseByCode(code) {
     const allCourses = JSON.parse(localStorage.getItem("allCourses") || "[]");
     console.log("Searching for course code:", code);
@@ -327,11 +337,22 @@ document.addEventListener("DOMContentLoaded", function () {
     return foundCourse;
   }
 
+  /**
+   * Retrieves a list of all course codes currently stored in local storage.
+   * @returns {string[]} An array of course codes.
+   */
   function getAllCourseCodes() {
     const allCourses = JSON.parse(localStorage.getItem("allCourses") || "[]");
     return allCourses.map((course) => course.code).filter((code) => code);
   }
 
+  /**
+   * Enrolls the current user into a specified course.
+   * It updates the course's student list, the global course list,
+   * and the current user's dashboard. It also updates the teacher's dashboard.
+   * @param {object} course - The course object to join.
+   * @returns {object} An object indicating success or failure with a message.
+   */
   function joinCourse(course) {
     try {
       console.log("Joining course:", course.name);
@@ -348,7 +369,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       }
 
-      // Update course in global courses list
       const allCourses = JSON.parse(localStorage.getItem("allCourses") || "[]");
       const courseIndex = allCourses.findIndex((c) => c.id === course.id);
 
@@ -364,7 +384,6 @@ document.addEventListener("DOMContentLoaded", function () {
         };
       }
 
-      // Add course to current user's dashboard
       const dashboard = getUserDashboard();
       const existingCourseIndex = dashboard.courses.findIndex(
         (c) => c.id === course.id
@@ -388,6 +407,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Updates the teacher's dashboard with the latest information for a specific course.
+   * This ensures that the teacher's view of their courses reflects changes like student enrollment.
+   * @param {object} course - The course object to update in the teacher's dashboard.
+   */
   function updateTeacherDashboard(course) {
     try {
       const teacherDashboardKey = `dashboard_${course.teacher}`;
@@ -413,14 +437,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Loads the courses for the current user from their dashboard.
+   * It filters for non-archived courses that the student is enrolled in,
+   * removes any duplicates, and then renders them on the dashboard.
+   */
   function loadUserCourses() {
     const dashboard = getUserDashboard();
-    // Filter to only show non-archived courses on the dashboard that the student is enrolled in
     let courses = (dashboard.courses || []).filter(
       (course) => !course.archived && course.students.includes(currentUser)
     );
 
-    // Remove duplicates based on course ID
     const uniqueCourses = [];
     const seenIds = new Set();
 
@@ -431,7 +458,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    // Update dashboard if we found duplicates
     if (uniqueCourses.length !== courses.length) {
       dashboard.courses = uniqueCourses;
       saveUserDashboard(dashboard);
@@ -449,6 +475,10 @@ document.addEventListener("DOMContentLoaded", function () {
     renderCourses(courses);
   }
 
+  /**
+   * Renders a list of course cards in the courses grid.
+   * @param {object[]} courses - An array of course objects to render.
+   */
   function renderCourses(courses) {
     coursesGrid.innerHTML = "";
     courses.forEach((course) => {
@@ -457,20 +487,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  /**
+   * Creates a single course card element for display on the dashboard.
+   * It includes course details, teacher information, and action icons.
+   * @param {object} course - The course object to create a card for.
+   * @returns {HTMLElement} The created course card DOM element.
+   */
   function createCourseCard(course) {
     const card = document.createElement("div");
     card.className = `course-card ${course.archived ? "archived" : ""}`;
-    // Only open course details if not an action button click
     card.onclick = (e) => {
-      // Check if the click target is one of the action buttons or their children
       if (!e.target.closest(".course-action-icon")) {
         openCourse(course);
       }
     };
 
-    const headerClass = getHeaderClass(course.subject, course.id); // Pass course.id for more unique hashing
+    const headerClass = getHeaderClass(course.subject, course.id);
 
-    // Archived badge
     if (course.archived) {
       const archivedBadge = document.createElement("div");
       archivedBadge.className = "archived-badge";
@@ -478,7 +511,6 @@ document.addEventListener("DOMContentLoaded", function () {
       card.appendChild(archivedBadge);
     }
 
-    // Course Header (Top 1/3rd with gradient background)
     const courseHeader = document.createElement("div");
     courseHeader.className = `course-header ${headerClass}`;
 
@@ -493,7 +525,6 @@ document.addEventListener("DOMContentLoaded", function () {
     courseSection.className = "course-section";
     courseSection.textContent = course.section;
 
-    // Add subtitle for instructor name
     const courseSubtitle = document.createElement("p");
     courseSubtitle.className = "course-subtitle";
     courseSubtitle.textContent = course.teacher;
@@ -504,16 +535,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     courseHeader.appendChild(headerContent);
 
-    // Profile Initial Circle (overlapping the header)
     const profileInitial = document.createElement("div");
     profileInitial.className = "course-profile-initial";
     profileInitial.textContent = course.teacher.charAt(0).toUpperCase();
     profileInitial.style.background = `hsl(${
       hashString(course.teacher) % 360
-    }, 70%, 40%)`; // Dynamic color for initial
+    }, 70%, 40%)`;
     courseHeader.appendChild(profileInitial);
 
-    // Course Body (Remaining 2/3rd white area)
     const courseBody = document.createElement("div");
     courseBody.className = "course-body";
 
@@ -525,38 +554,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     bodyContent.appendChild(courseInfo);
 
-    // Bottom Actions (Google Classroom style icons)
     const bottomActions = document.createElement("div");
     bottomActions.className = "course-bottom-actions";
 
-    // Stream icon
     const streamIcon = document.createElement("button");
     streamIcon.className = "course-action-icon";
     streamIcon.innerHTML = '<span class="material-icons">dynamic_feed</span>';
     streamIcon.title = "Stream";
     streamIcon.onclick = (e) => {
-      e.stopPropagation(); // Prevent card click from firing
+      e.stopPropagation();
       openCourse(course);
     };
 
-    // Classwork icon
     const classworkIcon = document.createElement("button");
     classworkIcon.className = "course-action-icon";
     classworkIcon.innerHTML = '<span class="material-icons">assignment</span>';
     classworkIcon.title = "Classwork";
     classworkIcon.onclick = (e) => {
       e.stopPropagation();
-      // Add classwork functionality here
     };
 
-    // People icon
     const peopleIcon = document.createElement("button");
     peopleIcon.className = "course-action-icon";
     peopleIcon.innerHTML = '<span class="material-icons">people</span>';
     peopleIcon.title = "People";
     peopleIcon.onclick = (e) => {
       e.stopPropagation();
-      // Add people management functionality here
     };
 
     bottomActions.appendChild(streamIcon);
@@ -572,149 +595,92 @@ document.addEventListener("DOMContentLoaded", function () {
     return card;
   }
 
+  /**
+   * Determines the CSS class for a course card header based on the course subject.
+   * It provides specific classes for common subjects and a hash-based default for others.
+   * @param {string} subject - The subject of the course.
+   * @param {string} courseId - The unique ID of the course for consistent hashing.
+   * @returns {string} The CSS class name for the course header.
+   */
   function getHeaderClass(subject, courseId) {
     const subjectLower = subject.toLowerCase();
 
-    // Specific subject mappings
-    if (
-      subjectLower.includes("math") ||
-      subjectLower.includes("Mathmatics") ||
-      subjectLower.includes("mathematics")
-    )
+    if (subjectLower.includes("math") || subjectLower.includes("mathematics"))
       return "math";
     if (subjectLower.includes("science") || subjectLower.includes("scientific"))
       return "science";
-    if (
-      subjectLower.includes("bangla") ||
-      subjectLower.includes("bangla") ||
-      subjectLower.includes("bengali")
-    )
+    if (subjectLower.includes("bangla") || subjectLower.includes("bengali"))
       return "bangla";
-    if (subjectLower.includes("english") || subjectLower.includes("ইংরেজি"))
-      return "english";
-    if (
-      subjectLower.includes("programming") ||
-      subjectLower.includes("programming") ||
-      subjectLower.includes("coding")
-    )
+    if (subjectLower.includes("english")) return "english";
+    if (subjectLower.includes("programming") || subjectLower.includes("coding"))
       return "programming";
-    if (subjectLower.includes("history") || subjectLower.includes("History"))
-      return "history";
-    if (subjectLower.includes("physics") || subjectLower.includes("Physics"))
-      return "physics";
-    if (
-      subjectLower.includes("chemistry") ||
-      subjectLower.includes("Chemistry")
-    )
-      return "chemistry";
-    if (subjectLower.includes("biology") || subjectLower.includes("Biology"))
-      return "biology";
-    if (
-      subjectLower.includes("economics") ||
-      subjectLower.includes("Economics")
-    )
-      return "economics";
-    if (
-      subjectLower.includes("geography") ||
-      subjectLower.includes("Geography")
-    )
-      return "geography";
-    if (subjectLower.includes("art") || subjectLower.includes("Art"))
-      return "art";
-    if (subjectLower.includes("music") || subjectLower.includes("Music"))
-      return "music";
-    if (
-      subjectLower.includes("literature") ||
-      subjectLower.includes("Literature")
-    )
-      return "literature";
-    if (
-      subjectLower.includes("philosophy") ||
-      subjectLower.includes("Philosophy")
-    )
-      return "philosophy";
-    if (
-      subjectLower.includes("sociology") ||
-      subjectLower.includes("Sociology")
-    )
-      return "sociology";
-    if (
-      subjectLower.includes("psychology") ||
-      subjectLower.includes("Psychology")
-    )
-      return "psychology";
-    if (subjectLower.includes("computer") || subjectLower.includes("Computer"))
-      return "computer";
-    if (
-      subjectLower.includes("technology") ||
-      subjectLower.includes("Technology")
-    )
-      return "technology";
-    if (subjectLower.includes("business") || subjectLower.includes("Business"))
-      return "business";
-    if (
-      subjectLower.includes("accounting") ||
-      subjectLower.includes("Accounting")
-    )
-      return "accounting";
-    if (subjectLower.includes("finance") || subjectLower.includes("Finance"))
-      return "finance";
-    if (
-      subjectLower.includes("marketing") ||
-      subjectLower.includes("Marketing")
-    )
-      return "marketing";
-    if (
-      subjectLower.includes("management") ||
-      subjectLower.includes("Management")
-    )
-      return "management";
-    if (
-      subjectLower.includes("statistics") ||
-      subjectLower.includes("Statistics")
-    )
-      return "statistics";
-    if (subjectLower.includes("religion") || subjectLower.includes("Religion"))
-      return "religion";
-    if (subjectLower.includes("physical") || subjectLower.includes("Physical"))
-      return "physical";
-    if (subjectLower.includes("health") || subjectLower.includes("Health"))
-      return "health";
-    if (subjectLower.includes("general") || subjectLower.includes("General"))
-      return "general";
+    if (subjectLower.includes("history")) return "history";
+    if (subjectLower.includes("physics")) return "physics";
+    if (subjectLower.includes("chemistry")) return "chemistry";
+    if (subjectLower.includes("biology")) return "biology";
+    if (subjectLower.includes("economics")) return "economics";
+    if (subjectLower.includes("geography")) return "geography";
+    if (subjectLower.includes("art")) return "art";
+    if (subjectLower.includes("music")) return "music";
+    if (subjectLower.includes("literature")) return "literature";
+    if (subjectLower.includes("philosophy")) return "philosophy";
+    if (subjectLower.includes("sociology")) return "sociology";
+    if (subjectLower.includes("psychology")) return "psychology";
+    if (subjectLower.includes("computer")) return "computer";
+    if (subjectLower.includes("technology")) return "technology";
+    if (subjectLower.includes("business")) return "business";
+    if (subjectLower.includes("accounting")) return "accounting";
+    if (subjectLower.includes("finance")) return "finance";
+    if (subjectLower.includes("marketing")) return "marketing";
+    if (subjectLower.includes("management")) return "management";
+    if (subjectLower.includes("statistics")) return "statistics";
+    if (subjectLower.includes("religion")) return "religion";
+    if (subjectLower.includes("physical")) return "physical";
+    if (subjectLower.includes("health")) return "health";
+    if (subjectLower.includes("general")) return "general";
 
-    // For courses without specific subject match, use hash-based color assignment
-    // This ensures same course name always gets same color but different courses get different colors
-    // Use a combination of subject and courseId for more unique distribution
     const combinedHash = hashString(subject + courseId);
-    const colorIndex = (combinedHash % 10) + 1; // Use 10 different default classes
+    const colorIndex = (combinedHash % 10) + 1;
     return `default-${colorIndex}`;
   }
 
-  // Simple hash function to generate consistent colors for course names
+  /**
+   * Simple hash function to generate a numeric hash from a string.
+   * Used for consistent color assignment to course cards.
+   * @param {string} str - The input string to hash.
+   * @returns {number} The absolute hash value.
+   */
   function hashString(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
+      hash = hash & hash;
     }
     return Math.abs(hash);
   }
 
+  /**
+   * Opens the stream page for a selected course.
+   * Stores the course details in local storage and redirects the user.
+   * @param {object} course - The course object to open.
+   */
   function openCourse(course) {
     localStorage.setItem("selectedCourse", JSON.stringify(course));
-    window.location.href = "studentStream.html"; // Assuming studentStream.html exists
+    window.location.href = "studentStream.html";
   }
 
-  // Function to render enrolled classes in the sidebar dropdown
+  /**
+   * Renders the list of enrolled classes in the sidebar dropdown menu.
+   * It displays non-archived courses that the current student is enrolled in.
+   */
   function renderEnrolledClasses() {
     const dashboard = getUserDashboard();
     const enrolled = dashboard.courses.filter(
       (course) => !course.archived && course.students.includes(currentUser)
-    ); // Only show non-archived courses the student is enrolled in
+    );
 
-    enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+    enrolledClassesDropdown.innerHTML = "";
 
     if (enrolled.length === 0) {
       const listItem = document.createElement("li");
@@ -726,16 +692,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const listItem = document.createElement("li");
         listItem.className = "dropdown-item-sidebar";
         listItem.textContent = course.name;
-        listItem.dataset.courseId = course.id; // Store course ID for potential future use
+        listItem.dataset.courseId = course.id;
         listItem.addEventListener("click", (e) => {
-          e.stopPropagation(); // Prevent dropdown from closing immediately
-          openCourse(course); // Navigate to the course page
+          e.stopPropagation();
+          openCourse(course);
         });
         enrolledClassesDropdown.appendChild(listItem);
       });
     }
   }
 
+  /**
+   * Logs detailed information about all courses (global) and the current user's dashboard
+   * to the console for debugging purposes.
+   */
   function debugCourses() {
     const allCourses = JSON.parse(localStorage.getItem("allCourses") || "[]");
     console.log("=== Debug: Available Courses (Global) ===");
@@ -749,7 +719,7 @@ document.addEventListener("DOMContentLoaded", function () {
         `   Students: ${course.students ? course.students.length : 0}`
       );
       console.log(`   Created: ${course.created}`);
-      console.log(`   Archived: ${course.archived}`); // Debug archived status
+      console.log(`   Archived: ${course.archived}`);
       console.log(`   ---`);
     });
     console.log("=== End Debug (Global) ===");
@@ -761,12 +731,11 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(`Courses: ${dashboard.courses.length}`);
     dashboard.courses.forEach((course, index) => {
       console.log(`${index + 1}. ${course.name} (${course.code})`);
-      console.log(`   Archived: ${course.archived}`); // Debug archived status
+      console.log(`   Archived: ${course.archived}`);
     });
     console.log("=== End Dashboard ===");
   }
 
-  // Global functions for debugging
   window.debugCourses = debugCourses;
   window.clearAllCourses = function () {
     if (
@@ -790,6 +759,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  // Global functions for onclick events
   window.showJoinModal = showJoinModal;
 });

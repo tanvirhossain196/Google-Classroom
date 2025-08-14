@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Elements
   const menuIcon = document.getElementById("menuIcon");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("mainContent");
@@ -8,10 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentUserEmailElement = document.getElementById("currentUserEmail");
   const userRoleBadge = document.getElementById("userRoleBadge");
 
-  // Navigation links
   const navLinks = document.querySelectorAll("[data-nav-link]");
 
-  // Enrolled Classes Dropdown elements
   const enrolledClassesDropdownToggle = document.getElementById(
     "enrolledClassesDropdownToggle"
   );
@@ -33,36 +30,79 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const translations = {
     bn: {
-      classroom: "ক্লাসরুম",
-      profile: "প্রোফাইল",
-      settings: "সেটিংস",
-      logout: "লগআউট",
-      menu: "মেনু",
-      dashboard: "ড্যাশবোর্ড",
-      courses: "কোর্স",
-      reports: "রিপোর্ট",
-      help: "সাহায্য",
-      settings_menu: "সেটিংস মেনু",
-      general_settings: "সাধারণ সেটিংস",
-      notifications: "বিজ্ঞপ্তি",
-      security: "নিরাপত্তা",
-      privacy: "গোপনীয়তা",
-      system: "সিস্টেম",
-      backup: "ব্যাকআপ",
-      language_region: "ভাষা এবং অঞ্চল",
-      system_language: "সিস্টেম ভাষা",
-      date_format: "তারিখ ফরম্যাট",
-      time_format: "সময় ফরম্যাট",
-      display: "প্রদর্শন",
-      theme: "থিম",
-      font_size: "ফন্ট সাইজ",
-      font_family: "ফন্ট ফ্যামিলি",
-      preview: "প্রিভিউ",
-      current_time: "বর্তমান সময়",
-      current_date: "বর্তমান তারিখ",
-      sample_text: "নমুনা টেক্সট",
-      cancel: "বাতিল",
-      save_settings: "সেটিংস সংরক্ষণ করুন",
+      classroom: "Classroom",
+      profile: "Profile",
+      settings: "Settings",
+      logout: "Logout",
+      menu: "Menu",
+      dashboard: "Dashboard",
+      courses: "Courses",
+      reports: "Reports",
+      help: "Help",
+      settings_menu: "Settings Menu",
+      general_settings: "General Settings",
+      notifications: "Notifications",
+      security: "Security",
+      privacy: "Privacy",
+      system: "System",
+      backup: "Backup",
+      language_region: "Language & Region",
+      system_language: "System Language",
+      date_format: "Date Format",
+      time_format: "Time Format",
+      display: "Display",
+      theme: "Theme",
+      font_size: "Font Size",
+      font_family: "Font Family",
+      preview: "Preview",
+      current_time: "Current Time",
+      current_date: "Current Date",
+      sample_text: "Sample Text",
+      cancel: "Cancel",
+      save_settings: "Save Settings",
+      email_notifications: "Email Notifications",
+      new_course_notifications: "New Course Notifications",
+      assignment_notifications: "Assignment Notifications",
+      system_updates: "System Updates",
+      push_notifications: "Push Notifications",
+      new_messages: "New Messages",
+      deadline_reminders: "Deadline Reminders",
+      security_settings: "Security Settings",
+      account_security: "Account Security",
+      two_factor_auth: "Two-Factor Authentication",
+      two_factor_desc: "Requires SMS code for additional security",
+      login_notifications: "Login Notifications",
+      login_desc: "Notifications for login from new devices",
+      session_management: "Session Management",
+      session_timeout: "Session Timeout (minutes)",
+      clear_all_sessions: "Clear All Sessions",
+      privacy_settings: "Privacy Settings",
+      profile_visibility: "Profile Visibility",
+      who_can_view: "Who can view profile",
+      show_email: "Show Email",
+      show_phone: "Show Phone Number",
+      data_collection: "Data Collection",
+      analytics_data: "Analytics Data",
+      analytics_desc: "Collect anonymous data for system improvement",
+      system_settings: "System Settings",
+      system_info: "System Information",
+      system_version: "System Version",
+      last_update: "Last Update",
+      server_status: "Server Status",
+      online: "Online",
+      maintenance: "Maintenance",
+      check_updates: "Check for Updates",
+      clear_cache: "Clear Cache",
+      reset_settings: "Reset Settings",
+      backup_settings: "Backup Settings",
+      auto_backup: "Automatic Backup",
+      enable_auto_backup: "Enable Automatic Backup",
+      backup_frequency: "Backup Frequency",
+      backup_management: "Backup Management",
+      create_backup: "Create New Backup",
+      restore_backup: "Restore Backup",
+      download_backup: "Download Backup",
+      last_backup: "Last Backup:",
     },
     en: {
       classroom: "Classroom",
@@ -95,6 +135,49 @@ document.addEventListener("DOMContentLoaded", function () {
       sample_text: "Sample Text",
       cancel: "Cancel",
       save_settings: "Save Settings",
+      email_notifications: "Email Notifications",
+      new_course_notifications: "New Course Notifications",
+      assignment_notifications: "Assignment Notifications",
+      system_updates: "System Updates",
+      push_notifications: "Push Notifications",
+      new_messages: "New Messages",
+      deadline_reminders: "Deadline Reminders",
+      security_settings: "Security Settings",
+      account_security: "Account Security",
+      two_factor_auth: "Two-Factor Authentication",
+      two_factor_desc: "Requires SMS code for additional security",
+      login_notifications: "Login Notifications",
+      login_desc: "Notifications for login from new devices",
+      session_management: "Session Management",
+      session_timeout: "Session Timeout (minutes)",
+      clear_all_sessions: "Clear All Sessions",
+      privacy_settings: "Privacy Settings",
+      profile_visibility: "Profile Visibility",
+      who_can_view: "Who can view profile",
+      show_email: "Show Email",
+      show_phone: "Show Phone Number",
+      data_collection: "Data Collection",
+      analytics_data: "Analytics Data",
+      analytics_desc: "Collect anonymous data for system improvement",
+      system_settings: "System Settings",
+      system_info: "System Information",
+      system_version: "System Version",
+      last_update: "Last Update",
+      server_status: "Server Status",
+      online: "Online",
+      maintenance: "Maintenance",
+      check_updates: "Check for Updates",
+      clear_cache: "Clear Cache",
+      reset_settings: "Reset Settings",
+      backup_settings: "Backup Settings",
+      auto_backup: "Automatic Backup",
+      enable_auto_backup: "Enable Automatic Backup",
+      backup_frequency: "Backup Frequency",
+      backup_management: "Backup Management",
+      create_backup: "Create New Backup",
+      restore_backup: "Restore Backup",
+      download_backup: "Download Backup",
+      last_backup: "Last Backup:",
     },
   };
 
@@ -112,10 +195,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Enrolled Classes Dropdown Toggle
   enrolledClassesDropdownToggle.addEventListener("click", function (e) {
     e.preventDefault();
-    e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+    e.stopPropagation();
     enrolledClassesDropdown.classList.toggle("show");
-    this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
-    renderEnrolledClasses(); // Re-render to ensure up-to-date list
+    this.querySelector(".dropdown-arrow").classList.toggle("rotate");
+    renderEnrolledClasses();
   });
 
   // Navigation event listeners - Complete navigation fix
@@ -248,6 +331,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  /**
+   * Initializes the page by setting user info, loading settings, and updating UI elements.
+   */
   function initializePage() {
     currentUserEmailElement.textContent = currentUserEmail;
     userInitial.textContent = currentUserEmail.charAt(0).toUpperCase();
@@ -275,13 +361,16 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCurrentTime();
     setInterval(updateCurrentTime, 1000);
     updatePreview();
-    renderEnrolledClasses(); // Initial render of enrolled classes
+    renderEnrolledClasses();
 
     document.querySelectorAll(".card").forEach((card) => {
       card.classList.add("fade-in");
     });
   }
 
+  /**
+   * Toggles the sidebar open/closed state and updates main content margin.
+   */
   function toggleSidebar() {
     sidebar.classList.toggle("open");
     mainContent.classList.toggle("sidebar-open");
@@ -291,8 +380,11 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
   }
 
+  /**
+   * Handles user logout, clearing session data and redirecting to the login page.
+   */
   function handleLogout() {
-    if (confirm("আপনি কি লগআউট করতে চান?")) {
+    if (confirm("Do you want to log out?")) {
       localStorage.removeItem("currentUser");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userRole");
@@ -300,6 +392,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Switches the active settings section based on the target section ID.
+   * @param {string} targetSection - The ID of the settings section to display.
+   */
   function switchSettingsSection(targetSection) {
     settingsNavItems.forEach((item) => {
       item.classList.remove("active");
@@ -314,6 +410,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById(targetSection).classList.add("active");
   }
 
+  /**
+   * Updates the UI language based on the selected language.
+   */
   function updateLanguage() {
     const selectedLanguage = document.getElementById("systemLanguage").value;
 
@@ -329,9 +428,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.documentElement.lang = selectedLanguage;
     updatePreview();
-    showNotification("ভাষা পরিবর্তন করা হয়েছে!", "success");
+    showNotification("Language changed!", "success");
   }
 
+  /**
+   * Updates the theme to always be light and shows a notification.
+   */
   function updateTheme() {
     mainBody.className = mainBody.className.replace(
       /\b(light|dark)-theme\b/g,
@@ -344,9 +446,12 @@ document.addEventListener("DOMContentLoaded", function () {
     mainBody.className = `light-theme ${fontClasses.join(" ")}`;
 
     document.getElementById("theme").value = "light";
-    showNotification("থিম সবসময় হালকা থাকবে!", "success");
+    showNotification("Theme will always be light!", "success");
   }
 
+  /**
+   * Updates the font size of the body and refreshes the preview.
+   */
   function updateFontSize() {
     const selectedSize = document.getElementById("fontSize").value;
     mainBody.className = mainBody.className.replace(
@@ -355,9 +460,12 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     mainBody.classList.add(`font-${selectedSize}`);
     updatePreview();
-    showNotification("ফন্ট সাইজ পরিবর্তন করা হয়েছে!", "success");
+    showNotification("Font size changed!", "success");
   }
 
+  /**
+   * Updates the font family of the body and refreshes the preview.
+   */
   function updateFontFamily() {
     const selectedFamily = document.getElementById("fontFamily").value;
     mainBody.className = mainBody.className.replace(
@@ -366,12 +474,13 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     mainBody.classList.add(`font-${selectedFamily}`);
     updatePreview();
-    showNotification("ফন্ট ফ্যামিলি পরিবর্তন করা হয়েছে!", "success");
+    showNotification("Font family changed!", "success");
   }
 
+  /**
+   * Updates the current time displayed in the header (if applicable).
+   */
   function updateCurrentTime() {
-    // This function is for the header time, which is removed.
-    // Keeping it here for consistency with original studentSettings.js, but it won't update a visible element.
     const now = new Date();
     const timeFormat = document.getElementById("timeFormat").value;
 
@@ -389,9 +498,11 @@ document.addEventListener("DOMContentLoaded", function () {
         minute: "2-digit",
       });
     }
-    // No element to update for current time in the new header
   }
 
+  /**
+   * Updates the preview section with current time, date, and sample text based on selected settings.
+   */
   function updatePreview() {
     const now = new Date();
     const timeFormat = document.getElementById("timeFormat").value;
@@ -442,17 +553,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (previewTextElement) {
       const sampleText =
-        language === "en" ? "This is a sample text" : "এটি একটি নমুনা টেক্সট";
+        language === "en" ? "This is a sample text" : "This is a sample text";
       previewTextElement.textContent = sampleText;
     }
   }
 
+  /**
+   * Handles saving the current settings to local storage.
+   */
   function handleSaveSettings() {
     const saveButton = saveSettingsBtn;
     const originalText = saveButton.innerHTML;
 
-    saveButton.innerHTML =
-      '<span class="loading me-2"></span>সংরক্ষণ করা হচ্ছে...';
+    saveButton.innerHTML = '<span class="loading me-2"></span>Saving...';
     saveButton.disabled = true;
 
     setTimeout(() => {
@@ -489,42 +602,54 @@ document.addEventListener("DOMContentLoaded", function () {
       saveButton.innerHTML = originalText;
       saveButton.disabled = false;
 
-      showNotification("সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে!", "success");
+      showNotification("Settings saved successfully!", "success");
     }, 1500);
   }
 
+  /**
+   * Handles canceling changes to settings and reloads the previously saved settings.
+   */
   function handleCancelSettings() {
-    if (confirm("আপনি কি পরিবর্তনগুলি বাতিল করতে চান?")) {
+    if (confirm("Do you want to cancel changes?")) {
       loadSettings();
-      showNotification("পরিবর্তনসমূহ বাতিল করা হয়েছে।", "error");
+      showNotification("Changes canceled.", "error");
     }
   }
 
+  /**
+   * Simulates checking for system updates and shows a notification.
+   */
   function handleCheckUpdates() {
-    showNotification("আপডেট চেক করা হচ্ছে...", "success");
+    showNotification("Checking for updates...", "success");
     setTimeout(() => {
-      showNotification("আপনার সিস্টেম সর্বশেষ ভার্সনে আপডেট!", "success");
+      showNotification("Your system is up to date!", "success");
     }, 2000);
   }
 
+  /**
+   * Handles clearing the application cache and shows a notification.
+   */
   function handleClearCache() {
-    if (confirm("আপনি কি ক্যাশ পরিষ্কার করতে চান?")) {
-      showNotification("ক্যাশ পরিষ্কার করা হচ্ছে...", "success");
+    if (confirm("Do you want to clear the cache?")) {
+      showNotification("Clearing cache...", "success");
       setTimeout(() => {
-        showNotification("ক্যাশ সফলভাবে পরিষ্কার করা হয়েছে!", "success");
+        showNotification("Cache cleared successfully!", "success");
       }, 1500);
     }
   }
 
+  /**
+   * Handles resetting all settings to their default values.
+   */
   function handleResetSettings() {
     if (
       confirm(
-        "আপনি কি সব সেটিংস রিসেট করতে চান? এটি পূর্বাবস্থায় ফেরানো যাবে না।"
+        "Do you want to reset all settings? This action cannot be undone."
       )
     ) {
       localStorage.removeItem(`systemSettings_${currentUserEmail}`);
 
-      document.getElementById("systemLanguage").value = "bn";
+      document.getElementById("systemLanguage").value = "en";
       document.getElementById("dateFormat").value = "dd/mm/yyyy";
       document.getElementById("timeFormat").value = "24";
       document.getElementById("theme").value = "light";
@@ -536,39 +661,51 @@ document.addEventListener("DOMContentLoaded", function () {
       updateFontSize();
       updateFontFamily();
 
-      showNotification("সেটিংস রিসেট করা হয়েছে!", "success");
+      showNotification("Settings reset!", "success");
     }
   }
 
+  /**
+   * Handles clearing all active user sessions.
+   */
   function handleClearSessions() {
-    if (confirm("আপনি কি সব সেশন বাতিল করতে চান?")) {
-      showNotification("সব সেশন বাতিল করা হয়েছে!", "success");
+    if (confirm("Do you want to clear all sessions?")) {
+      showNotification("All sessions cleared!", "success");
     }
   }
 
+  /**
+   * Simulates creating a new backup and updates the backup status.
+   */
   function handleCreateBackup() {
-    showNotification("ব্যাকআপ তৈরি করা হচ্ছে...", "success");
+    showNotification("Creating backup...", "success");
     setTimeout(() => {
-      showNotification("ব্যাকআপ সফলভাবে তৈরি হয়েছে!", "success");
+      showNotification("Backup created successfully!", "success");
       updateBackupStatus();
     }, 3000);
   }
 
+  /**
+   * Simulates restoring a backup.
+   */
   function handleRestoreBackup() {
-    if (confirm("আপনি কি ব্যাকআপ পুনরুদ্ধার করতে চান?")) {
-      showNotification("ব্যাকআপ পুনরুদ্ধার করা হচ্ছে...", "success");
+    if (confirm("Do you want to restore backup?")) {
+      showNotification("Restoring backup...", "success");
       setTimeout(() => {
-        showNotification("ব্যাকআপ সফলভাবে পুনরুদ্ধার করা হয়েছে!", "success");
+        showNotification("Backup restored successfully!", "success");
       }, 3000);
     }
   }
 
+  /**
+   * Handles downloading the current system settings and user data as a JSON backup file.
+   */
   function handleDownloadBackup() {
     const backupData = {
       user: currentUserEmail,
       settings: localStorage.getItem(`systemSettings_${currentUserEmail}`),
       profile: localStorage.getItem(`profileData_${currentUserEmail}`),
-      courses: localStorage.getItem("allCourses"), // Changed from "courses" to "allCourses" for consistency
+      courses: localStorage.getItem("allCourses"),
       timestamp: new Date().toISOString(),
     };
 
@@ -585,9 +722,12 @@ document.addEventListener("DOMContentLoaded", function () {
     linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
 
-    showNotification("ব্যাকআপ ডাউনলোড সম্পন্ন হয়েছে!", "success");
+    showNotification("Backup download complete!", "success");
   }
 
+  /**
+   * Loads saved settings from local storage and applies them to the UI.
+   */
   function loadSettings() {
     const savedSettings = localStorage.getItem(
       `systemSettings_${currentUserEmail}`
@@ -597,11 +737,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const settings = JSON.parse(savedSettings);
 
       document.getElementById("systemLanguage").value =
-        settings.systemLanguage || "bn";
+        settings.systemLanguage || "en";
       document.getElementById("dateFormat").value =
         settings.dateFormat || "dd/mm/yyyy";
       document.getElementById("timeFormat").value = settings.timeFormat || "24";
-      document.getElementById("theme").value = "light"; // Always set to light as per instruction
+      document.getElementById("theme").value = "light";
       document.getElementById("fontSize").value = settings.fontSize || "medium";
       document.getElementById("fontFamily").value =
         settings.fontFamily || "inter";
@@ -639,12 +779,12 @@ document.addEventListener("DOMContentLoaded", function () {
         settings.backupFrequency || "weekly";
 
       updateLanguage();
-      updateTheme(); // Call updateTheme to ensure light theme is applied
+      updateTheme();
       updateFontSize();
       updateFontFamily();
     } else {
       // Default settings if none saved
-      document.getElementById("systemLanguage").value = "bn";
+      document.getElementById("systemLanguage").value = "en";
       document.getElementById("dateFormat").value = "dd/mm/yyyy";
       document.getElementById("timeFormat").value = "24";
       document.getElementById("theme").value = "light";
@@ -674,14 +814,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Updates the displayed last backup status with the current time.
+   */
   function updateBackupStatus() {
     const now = new Date();
-    const timeString = now.toLocaleString("bn-BD");
+    const timeString = now.toLocaleString("en-US");
     document.getElementById("backupStatus").innerHTML = `
-            <div class="text-muted">সর্বশেষ ব্যাকআপ: ${timeString}</div>
+            <div class="text-muted">Last Backup: ${timeString}</div>
         `;
   }
 
+  /**
+   * Displays a temporary notification message on the screen.
+   * @param {string} message - The message to display.
+   * @param {string} type - The type of notification (e.g., "success", "error").
+   */
   function showNotification(message, type) {
     const notification = document.createElement("div");
     notification.className = `notification ${type}`;
@@ -706,7 +854,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 3000);
   }
 
-  // Helper function to get user dashboard (copied from student.js)
+  /**
+   * Retrieves the user's dashboard data from local storage.
+   */
   function getUserDashboard() {
     const dashboardKey = `dashboard_${currentUserEmail}`;
     const dashboard = JSON.parse(
@@ -718,14 +868,16 @@ document.addEventListener("DOMContentLoaded", function () {
     return dashboard;
   }
 
-  // Function to render enrolled classes in the sidebar dropdown (copied from student.js)
+  /**
+   * Renders the list of enrolled classes in the sidebar dropdown.
+   */
   function renderEnrolledClasses() {
     const dashboard = getUserDashboard();
     const enrolled = dashboard.courses.filter(
       (course) => !course.archived && course.students.includes(currentUserEmail)
-    ); // Only show non-archived courses the student is enrolled in
+    );
 
-    enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+    enrolledClassesDropdown.innerHTML = "";
 
     if (enrolled.length === 0) {
       const listItem = document.createElement("li");
@@ -737,19 +889,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const listItem = document.createElement("li");
         listItem.className = "dropdown-item-sidebar";
         listItem.textContent = course.name;
-        listItem.dataset.courseId = course.id; // Store course ID for potential future use
+        listItem.dataset.courseId = course.id;
         listItem.addEventListener("click", (e) => {
-          e.stopPropagation(); // Prevent dropdown from closing immediately
-          openCourse(course); // Navigate to the course page
+          e.stopPropagation();
+          openCourse(course);
         });
         enrolledClassesDropdown.appendChild(listItem);
       });
     }
   }
 
-  // Dummy openCourse function for navigation (copied from student.js)
+  /**
+   * Navigates to the student stream page for a selected course.
+   * @param {object} course - The course object to open.
+   */
   function openCourse(course) {
     localStorage.setItem("selectedCourse", JSON.stringify(course));
-    window.location.href = "studentStream.html"; // Assuming studentStream.html exists
+    window.location.href = "studentStream.html";
   }
 });

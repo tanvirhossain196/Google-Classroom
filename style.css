@@ -16,11 +16,11 @@ body {
 
 /* START: Green color variable for consistency */
 :root {
-  --logo-green: #4AA81E; /* A clean, professional green from the logo */
-  --light-green-hover: #4AA81E; /* Slightly lighter for hover/selection */
+  --logo-green: #27ae60; /* Updated to a different professional green (Medium Sea Green) */
+  --light-green-hover: #2ecc71; /* Updated to a lighter different green for hover/selection (Emerald) */
 }
-/* END: Green color variable for consistency */
 
+/* END: Green color variable for consistency */
 .login-container {
   background: #ffffff;
   border-radius: 20px;
@@ -72,13 +72,12 @@ body {
 }
 
 .project-name .green-text {
-  color: #4AA81E;
+  color: var(--logo-green); /* Updated to new green */
 }
 
 /* Updated: Green color for "Room" */
 
 /* END: Logo and Project Name Update Styling */
-
 .logo i {
   font-size: 2.5rem;
   color: white;
@@ -145,7 +144,7 @@ body {
 .form-control:not(:placeholder-shown) + .form-label,
 .form-control:valid + .form-label {
   transform: translateY(-1.75rem) scale(0.8);
-  /* Updated: Focus color to light green */
+  /* Updated: Focus color to new light green */
   color: var(--light-green-hover);
   font-weight: 500;
   background: linear-gradient(to right, #ffffff 0%, #ffffff 100%);
@@ -154,19 +153,20 @@ body {
 
 .form-control:focus {
   background: linear-gradient(145deg, #ffffff, #fafbff);
-  /* Updated: Focus border color to light green */
+  /* Updated: Focus border color to new light green */
   border-color: var(--light-green-hover);
   border-top-color: var(--logo-green);
   border-bottom-color: var(--light-green-hover);
-  box-shadow: inset 0 2px 4px rgba(79, 70, 229, 0.05),
-    /* Adjusted shadow to match green theme */ 0 0 0 3px rgba(52, 211, 153, 0.1),
-    0 4px 12px rgba(52, 211, 153, 0.15);
+  box-shadow: inset 0 2px 4px rgba(39, 174, 96, 0.05),
+    /* Adjusted shadow to match new green theme */ 0 0 0 3px
+      rgba(39, 174, 96, 0.1),
+    0 4px 12px rgba(39, 174, 96, 0.15);
   outline: none;
   transform: translateY(-1px);
 }
 
 .form-control:focus + .form-label {
-  /* Updated: Focus label color to light green */
+  /* Updated: Focus label color to new light green */
   color: var(--light-green-hover);
 }
 
@@ -181,20 +181,24 @@ body {
 }
 
 .form-control:valid:not(:placeholder-shown) {
-  border-color: #4AA81E;
-  border-top-color: #4AA81E;
-  border-bottom-color: #4AA81E;
+  border-color: var(--logo-green); /* Updated to new green */
+  border-top-color: var(--logo-green);
+  border-bottom-color: var(--logo-green);
 }
 
 .form-control:valid:not(:placeholder-shown) + .form-label {
-  color: #4AA81E;
+  color: var(--logo-green); /* Updated to new green */
 }
 
 .login-btn {
   width: 100%;
-  padding: 1.3rem;
-  /* Updated: Button background to green gradient */
-  background: #4AA81E;
+  padding: 1rem; /* Updated: Reduced padding to make height smaller for a more compact, professional look */
+  /* Updated: Button background to new green gradient for standard professional look */
+  background: linear-gradient(
+    145deg,
+    var(--logo-green),
+    #219150
+  ); /* Adjusted gradient for more professional depth with new greens */
   border: 2px solid var(--logo-green);
   border-top-color: var(--light-green-hover);
   border-bottom-color: var(--logo-green);
@@ -205,8 +209,8 @@ body {
   margin-bottom: 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  /* Updated: Button shadow to green */
-  box-shadow: 0 6px 12px rgba(52, 211, 153, 0.25),
+  /* Updated: Button shadow to new green */
+  box-shadow: 0 6px 12px rgba(39, 174, 96, 0.25),
     inset 0 2px 4px rgba(255, 255, 255, 0.25),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15),
     inset 0 1px 2px rgba(255, 255, 255, 0.3);
@@ -228,20 +232,24 @@ body {
 
 .login-btn:hover {
   transform: translateY(-3px);
-  /* Updated: Button hover background to a slightly different green gradient */
-  background: #4AA81E;
-  /* Updated: Button hover shadow to green */
-  box-shadow: 0 10px 20px rgba(52, 211, 153, 0.35),
+  /* Updated: Button hover background to a slightly lighter new green gradient for professional hover effect */
+  background: linear-gradient(
+    145deg,
+    var(--light-green-hover),
+    var(--logo-green)
+  );
+  /* Updated: Button hover shadow to new green */
+  box-shadow: 0 10px 20px rgba(39, 174, 96, 0.35),
     inset 0 2px 4px rgba(255, 255, 255, 0.3),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .login-btn:active {
   transform: translateY(1px);
-  /* Updated: Button active background to a darker green gradient */
-  background: linear-gradient(145deg, #047857, #065f46);
-  /* Updated: Button active shadow to green */
-  box-shadow: 0 2px 6px rgba(52, 211, 153, 0.3),
+  /* Updated: Button active background to a darker new green gradient for post-click feedback, keeping professional */
+  background: linear-gradient(145deg, #219150, #1b7a43);
+  /* Updated: Button active shadow to new green */
+  box-shadow: 0 2px 6px rgba(39, 174, 96, 0.3),
     inset 0 3px 8px rgba(0, 0, 0, 0.25),
     inset 0 -1px 2px rgba(255, 255, 255, 0.1);
   border-top-color: var(--logo-green);
@@ -260,7 +268,7 @@ body {
 }
 
 .forgot-link a {
-  /* Updated: Link color to light green */
+  /* Updated: Link color to new light green */
   color: var(--light-green-hover);
   text-decoration: none;
   font-weight: 500;
@@ -268,7 +276,7 @@ body {
 }
 
 .forgot-link a:hover {
-  /* Updated: Link hover color to logo green */
+  /* Updated: Link hover color to new logo green */
   color: var(--logo-green);
 }
 
@@ -286,11 +294,8 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* Updated: Removed flex-direction and gap from .role-cards to use Bootstrap grid */
+/* Updated: Role cards using Bootstrap grid for responsiveness */
 .role-cards {
-  /* display: flex; */
-  /* gap: 1rem; */
-  /* justify-content: center; */
   margin-left: -0.5rem; /* Adjust for Bootstrap's default row negative margin */
   margin-right: -0.5rem; /* Adjust for Bootstrap's default row negative margin */
 }
@@ -305,9 +310,6 @@ body {
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  /* Removed flex and max-width to let Bootstrap columns control size */
-  /* flex: 1; */
-  /* max-width: 140px; */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06),
     inset 0 2px 4px rgba(255, 255, 255, 0.9),
     inset 0 -2px 4px rgba(0, 0, 0, 0.04);
@@ -332,28 +334,28 @@ body {
 }
 
 .role-card:hover {
-  /* Updated: Hover border color to light green */
+  /* Updated: Hover border color to new light green */
   border-color: var(--light-green-hover);
   border-top-color: var(--light-green-hover);
   border-bottom-color: var(--logo-green);
   transform: translateY(-4px);
   background: linear-gradient(145deg, #fefeff, #f0f4ff);
-  /* Updated: Hover shadow to light green */
-  box-shadow: 0 12px 24px rgba(52, 211, 153, 0.15),
+  /* Updated: Hover shadow to new light green */
+  box-shadow: 0 12px 24px rgba(39, 174, 96, 0.15),
     inset 0 2px 4px rgba(255, 255, 255, 0.9),
     inset 0 -2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .role-card.selected {
-  /* Updated: Selected background to green gradient */
-  background: #4AA81E;
-  border-color: #4AA81E;
-  border-top-color: #4AA81E;
-  border-bottom-color: #4AA81E;
+  /* Updated: Selected background to new green gradient */
+  background: var(--logo-green);
+  border-color: var(--logo-green);
+  border-top-color: var(--logo-green);
+  border-bottom-color: var(--logo-green);
   color: white;
   transform: translateY(-4px);
-  /* Updated: Selected shadow to green */
-  box-shadow: 0 12px 24px rgba(52, 211, 153, 0.3),
+  /* Updated: Selected shadow to new green */
+  box-shadow: 0 12px 24px rgba(39, 174, 96, 0.3),
     inset 0 2px 4px rgba(255, 255, 255, 0.25),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -364,8 +366,8 @@ body {
 
 .role-icon {
   font-size: 2.5rem;
-  /* Updated: Icon color to light green */
-  color:#4AA81E;
+  /* Updated: Icon color to new light green */
+  color: var(--light-green-hover);
   margin-bottom: 0.8rem;
   display: block;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -436,7 +438,11 @@ body {
 }
 
 .alert-success {
-  background: linear-gradient(145deg, #10b981, #059669);
+  background: linear-gradient(
+    145deg,
+    var(--light-green-hover),
+    var(--logo-green)
+  ); /* Updated to new green gradient */
 }
 
 .alert-error {
@@ -481,8 +487,41 @@ body {
   }
 }
 
-/* Responsive Design */
+/* Enhanced Responsive Design for all devices */
+@media (max-width: 992px) {
+  body {
+    padding: 1.5rem;
+  }
+
+  .login-container {
+    max-width: 100%;
+    padding: 2.5rem;
+    border-radius: 18px;
+  }
+
+  .learnroom-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .project-name {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .role-title {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
   .login-container {
     padding: 2rem 1.5rem;
     margin: 1rem;
@@ -495,50 +534,66 @@ body {
   }
 
   .title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
-  /* START: Responsive Logo and Project Name Update */
+  /* Responsive Logo and Project Name */
   .learnroom-logo {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
   }
 
   .project-name {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
-  /* END: Responsive Logo and Project Name Update */
 
-  /* Role cards are now handled by Bootstrap grid, ensuring they stay in one row */
+  .form-control {
+    padding: 1.3rem 1rem 0.6rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .form-label {
+    font-size: 0.95rem;
+  }
+
+  .login-btn {
+    padding: 0.9rem;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+
   .role-cards {
-    /* flex-direction: row; */ /* Ensure they stay in a row */
-    /* align-items: stretch; */ /* Align items to stretch to fill height */
+    /* Allow Bootstrap columns to adjust, potentially stacking if needed */
   }
 
   .role-card {
-    /* max-width: none; */ /* Remove max-width to allow Bootstrap col to control */
     width: 100%;
     border-radius: 14px;
-    padding: 1rem 0.5rem; /* Adjusted padding for smaller cards */
+    padding: 1rem 0.5rem;
   }
 
   .role-icon {
-    font-size: 2rem; /* Slightly smaller icons for smaller cards */
+    font-size: 2rem;
     margin-bottom: 0.5rem;
   }
 
   .role-name {
-    font-size: 0.8rem; /* Smaller font for role names */
+    font-size: 0.8rem;
   }
 
   .alert {
     right: 1rem;
     left: 1rem;
     min-width: auto;
+    max-width: 90%;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
+  body {
+    padding: 0.5rem;
+  }
+
   .login-container {
     padding: 1.5rem 1rem;
     border-radius: 12px;
@@ -550,41 +605,125 @@ body {
   }
 
   .title {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
   }
 
   .form-control {
-    padding: 1.1rem 1.2rem;
-    border-radius: 12px;
+    padding: 1.1rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
   }
 
   .login-btn {
-    border-radius: 12px;
-    padding: 1.1rem;
+    padding: 0.8rem;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+
+  .role-section {
+    padding-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .role-title {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
   }
 
   .role-card {
     border-radius: 12px;
-    padding: 0.8rem 0.3rem; /* Even smaller padding for very small screens */
+    padding: 0.8rem 0.3rem;
+    margin-bottom: 1rem; /* Add spacing if stacked */
   }
 
   .role-icon {
-    font-size: 1.8rem; /* Further reduced icon size */
+    font-size: 1.8rem;
     margin-bottom: 0.4rem;
   }
 
   .role-name {
-    font-size: 0.75rem; /* Further reduced font size */
+    font-size: 0.75rem;
   }
 
-  /* START: Smaller Mobile Logo and Project Name Update */
+  /* Smaller Mobile Logo and Project Name */
   .learnroom-logo {
-    width: 45px;
-    height: 45px;
+    width: 60px;
+    height: 60px;
   }
 
   .project-name {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
-  /* END: Smaller Mobile Logo and Project Name Update */
+
+  .forgot-link {
+    margin-bottom: 1.5rem;
+  }
+
+  .forgot-link a {
+    font-size: 0.9rem;
+  }
+
+  .demo-title {
+    font-size: 0.9rem;
+  }
+
+  .demo-info {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .login-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .learnroom-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .project-name {
+    font-size: 1.2rem;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .role-card {
+    padding: 0.6rem 0.2rem;
+  }
+
+  .role-icon {
+    font-size: 1.5rem;
+  }
+
+  .role-name {
+    font-size: 0.7rem;
+  }
+}
+
+/* For larger screens, ensure centering and no overflow */
+@media (min-width: 1200px) {
+  .login-container {
+    max-width: 500px;
+    padding: 3.5rem;
+  }
+
+  .learnroom-logo {
+    width: 140px;
+    height: 140px;
+  }
+
+  .project-name {
+    font-size: 2.2rem;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
 }

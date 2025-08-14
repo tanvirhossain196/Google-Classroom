@@ -1,21 +1,16 @@
-/* MultipleFiles/studentArchive.css */
-/* Import student.css to inherit all base styles, including header and sidebar */
 @import url("student.css");
 
-/* Specific styles for the archive page, overriding or adding to student.css */
-
-/* Main Content Area adjustments for the new sidebar */
 .main-content {
-    margin-left: 5rem; /* Default margin for closed sidebar from student.css */
-    margin-top: 4rem; /* Default margin for fixed header from student.css */
-    padding: 2rem; /* Default padding from student.css */
-    min-height: calc(100vh - 4rem);
-    transition: var(--transition);
-    background: transparent;
+  margin-left: 5rem;
+  margin-top: 4rem;
+  padding: 2rem;
+  min-height: calc(100vh - 4rem);
+  transition: var(--transition);
+  background: transparent;
 }
 
 .main-content.sidebar-open {
-    margin-left: 17.5rem; /* Margin for open sidebar from student.css */
+  margin-left: 17.5rem;
 }
 
 .project-name {
@@ -27,76 +22,75 @@
 }
 
 .project-name .green-text {
-  color: #4AA81E;
+  color: #4aa81e;
 }
-
 
 /* Courses Container */
 .courses-container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .courses-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding: 0.7rem;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0.7rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 .courses-header h2 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.05em;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.05em;
 }
 
 /* Empty State */
 .empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    max-width: 32rem;
-    margin: 2rem auto;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border-color);
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 32rem;
+  margin: 2rem auto;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 .empty-icon {
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-    opacity: 0.6;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .empty-state h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-    letter-spacing: -0.025em;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
 }
 
 .empty-state p {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
-    line-height: 1.6;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
 /* Courses Grid with Google Classroom Style */
@@ -191,51 +185,43 @@
 
 /* New default gradients for visual diversity */
 .course-header.default-1 {
-  background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%); /* Purple */
+  background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
 }
 
 .course-header.default-2 {
-  background: linear-gradient(135deg, #00838f 0%, #00acc1 100%); /* Cyan */
+  background: linear-gradient(135deg, #00838f 0%, #00acc1 100%);
 }
 
 .course-header.default-3 {
-  background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%); /* Pink */
+  background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%);
 }
 
 .course-header.default-4 {
-  background: linear-gradient(135deg, #5d4037 0%, #795548 100%); /* Brown */
+  background: linear-gradient(135deg, #5d4037 0%, #795548 100%);
 }
 
 .course-header.default-5 {
-  background: linear-gradient(
-    135deg,
-    #4527a0 0%,
-    #5e35b1 100%
-  ); /* Deep Purple */
+  background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
 }
 
 .course-header.default-6 {
-  background: linear-gradient(135deg, #fbc02d 0%, #fdd835 100%); /* Yellow */
+  background: linear-gradient(135deg, #fbc02d 0%, #fdd835 100%);
 }
 
 .course-header.default-7 {
-  background: linear-gradient(135deg, #ad1457 0%, #d81b60 100%); /* Dark Pink */
+  background: linear-gradient(135deg, #ad1457 0%, #d81b60 100%);
 }
 
 .course-header.default-8 {
-  background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%); /* Green */
+  background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
 }
 
 .course-header.default-9 {
-  background: linear-gradient(
-    135deg,
-    #e64a19 0%,
-    #f4511e 100%
-  ); /* Deep Orange */
+  background: linear-gradient(135deg, #e64a19 0%, #f4511e 100%);
 }
 
 .course-header.default-10 {
-  background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%); /* Indigo */
+  background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%);
 }
 
 .course-header-content {

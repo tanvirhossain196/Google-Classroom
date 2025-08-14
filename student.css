@@ -49,7 +49,6 @@ body {
 }
 
 .container-fluid {
-  /* Changed from .container to .container-fluid for full width responsiveness */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -159,16 +158,6 @@ body {
   border-color: var(--border-color);
 }
 
-/* .header h1 {
-  font-size: 1.5rem;
-  font-weight: 500;
-  background: #424141;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.025em;
-} */
-
 .project-name {
   font-size: 1.5rem;
   font-weight: 400;
@@ -178,9 +167,8 @@ body {
 }
 
 .project-name .green-text {
-  color: #4AA81E;
+  color: #4aa81e;
 }
-
 
 .user-avatar {
   width: 2.5rem;
@@ -229,21 +217,21 @@ body {
 
 /* New Join Course Button in Navbar */
 .join-course-nav-btn {
-  width: 2.5rem; /* Same size as user avatar */
-  height: 2.5rem; /* Same size as user avatar */
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
-  background: rgba(226, 232, 240, 0.5); /* Light gray transparent */
+  background: rgba(226, 232, 240, 0.5);
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem; /* Plus icon size */
+  font-size: 1.5rem;
   cursor: pointer;
   border: 2px solid #a8a8a8;
   transition: var(--transition);
   box-shadow: var(--shadow-sm);
-  margin-right: 0.75rem; /* Space between join button and user info */
-  position: relative; /* For tooltip positioning */
+  margin-right: 0.75rem;
+  position: relative;
 }
 
 .join-course-nav-btn:hover {
@@ -257,7 +245,7 @@ body {
 .join-course-nav-btn::before {
   content: attr(data-tooltip);
   position: absolute;
-  top: 100%; /* Position below the button */
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--dark-color);
@@ -269,8 +257,8 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 1001; /* Above other elements */
-  margin-top: 0.5rem; /* Space between button and tooltip */
+  z-index: 1001;
+  margin-top: 0.5rem;
 }
 
 .join-course-nav-btn:hover::before {
@@ -465,13 +453,9 @@ body {
   padding: 0 1rem;
 }
 
-/* Removed .courses-header */
-
 .dropdown {
   position: relative;
 }
-
-/* Removed .add-course-btn */
 
 .dropdown-menu {
   position: absolute;
@@ -558,13 +542,11 @@ body {
   overflow: hidden;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-  /* height: 300px; Removed fixed height */
   display: flex;
   flex-direction: column;
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  /* Make cards square */
-  aspect-ratio: 1 / 1; /* This makes the card a perfect square */
+  aspect-ratio: 1 / 1;
 }
 
 .course-card:hover {
@@ -575,8 +557,7 @@ body {
 
 /* Course Header - Top 1/3rd with background */
 .course-header {
-  /* height: 100px; Removed fixed height */
-  flex-basis: 33.33%; /* Occupy roughly 1/3rd of the card height */
+  flex-basis: 33.33%;
   background: var(--gradient-primary);
   position: relative;
   padding: 16px 24px;
@@ -635,51 +616,43 @@ body {
 
 /* New default gradients for visual diversity */
 .course-header.default-1 {
-  background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%); /* Purple */
+  background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
 }
 
 .course-header.default-2 {
-  background: linear-gradient(135deg, #00838f 0%, #00acc1 100%); /* Cyan */
+  background: linear-gradient(135deg, #00838f 0%, #00acc1 100%);
 }
 
 .course-header.default-3 {
-  background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%); /* Pink */
+  background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%);
 }
 
 .course-header.default-4 {
-  background: linear-gradient(135deg, #5d4037 0%, #795548 100%); /* Brown */
+  background: linear-gradient(135deg, #5d4037 0%, #795548 100%);
 }
 
 .course-header.default-5 {
-  background: linear-gradient(
-    135deg,
-    #4527a0 0%,
-    #5e35b1 100%
-  ); /* Deep Purple */
+  background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
 }
 
 .course-header.default-6 {
-  background: linear-gradient(135deg, #fbc02d 0%, #fdd835 100%); /* Yellow */
+  background: linear-gradient(135deg, #fbc02d 0%, #fdd835 100%);
 }
 
 .course-header.default-7 {
-  background: linear-gradient(135deg, #ad1457 0%, #d81b60 100%); /* Dark Pink */
+  background: linear-gradient(135deg, #ad1457 0%, #d81b60 100%);
 }
 
 .course-header.default-8 {
-  background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%); /* Green */
+  background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
 }
 
 .course-header.default-9 {
-  background: linear-gradient(
-    135deg,
-    #e64a19 0%,
-    #f4511e 100%
-  ); /* Deep Orange */
+  background: linear-gradient(135deg, #e64a19 0%, #f4511e 100%);
 }
 
 .course-header.default-10 {
-  background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%); /* Indigo */
+  background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%);
 }
 
 .course-header-content {
@@ -771,7 +744,7 @@ body {
 
 /* Course Body - Remaining 2/3rd white area */
 .course-body {
-  flex: 1; /* Allow it to take remaining space */
+  flex: 1;
   padding: 24px;
   background: white;
   display: flex;
@@ -1189,8 +1162,6 @@ body {
     gap: 1.5rem;
   }
 
-  /* Removed .courses-header responsive styles */
-
   .user-info {
     display: none;
   }
@@ -1216,13 +1187,11 @@ body {
   }
 
   .course-card {
-    /* height: 280px; Removed fixed height */
-    aspect-ratio: 1 / 1; /* Maintain square shape */
+    aspect-ratio: 1 / 1;
   }
 
   .course-header {
-    /* height: 90px; Removed fixed height */
-    flex-basis: 33.33%; /* Maintain 1/3rd height */
+    flex-basis: 33.33%;
     padding: 12px 20px;
   }
 
@@ -1230,20 +1199,19 @@ body {
     padding: 20px;
   }
 
-  /* Adjust header-right for mobile to ensure elements fit */
   .header-right {
-    gap: 0.5rem; /* Reduce gap */
+    gap: 0.5rem;
   }
 
   .join-course-nav-btn {
-    width: 2rem; /* Slightly smaller on mobile */
+    width: 2rem;
     height: 2rem;
     font-size: 1.2rem;
-    margin-right: 0.5rem; /* Adjust margin for smaller screens */
+    margin-right: 0.5rem;
   }
 
   .user-avatar {
-    width: 2rem; /* Slightly smaller on mobile */
+    width: 2rem;
     height: 2rem;
   }
 
@@ -1252,8 +1220,8 @@ body {
   }
 
   .logout-btn {
-    padding: 0.4rem 0.8rem; /* Smaller padding */
-    font-size: 0.75rem; /* Smaller font size */
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -1343,6 +1311,8 @@ body {
   justify-content: space-between;
   position: relative;
   margin-bottom: 16px;
+  z-index: 2;
+  overflow: visible;
 }
 
 .notification-content {
@@ -1457,23 +1427,6 @@ body {
   background-color: #ffebee;
 }
 
-.notification-header {
-  background: white;
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  margin-bottom: 16px;
-  z-index: 2;
-  /* Increased z-index */
-  overflow: visible;
-  /* Ensure dropdown is visible outside */
-}
-
-/* Ensure dropdown is above everything */
 .notification-dropdown-menu {
   pointer-events: auto;
 }
@@ -1597,8 +1550,6 @@ body {
   }
 }
 
-/* Add to dashboard.css */
-
 /* Styles for the sidebar dropdown */
 .sidebar-dropdown {
   position: relative;
@@ -1606,17 +1557,17 @@ body {
 
 .sidebar-dropdown .nav-link {
   display: flex;
-  align-items: center; /* Ensure vertical alignment */
+  align-items: center;
   justify-content: space-between;
-  padding-right: 1.5rem; /* Adjust padding to make space for arrow */
+  padding-right: 1.5rem;
 }
 
 .sidebar-dropdown .nav-link .dropdown-arrow-wrapper {
-  display: flex; /* Use flex to center the icon */
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem; /* Fixed width to prevent text shifting */
-  height: 1.25rem; /* Fixed height */
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .sidebar-dropdown .nav-link .dropdown-arrow {
@@ -1635,8 +1586,8 @@ body {
 
 /* Adjustments for closed sidebar to maintain alignment */
 .sidebar:not(.open) .sidebar-dropdown .nav-link {
-  justify-content: center; /* Center content when closed */
-  padding: 0.875rem 0; /* Remove horizontal padding */
+  justify-content: center;
+  padding: 0.875rem 0;
   margin-right: 0;
   border-radius: 0;
 }
@@ -1644,18 +1595,18 @@ body {
 .dropdown-menu-sidebar {
   list-style: none;
   padding: 0;
-  margin: 0.5rem 0 0.5rem 2.5rem; /* Indent dropdown items */
+  margin: 0.5rem 0 0.5rem 2.5rem;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
   opacity: 0;
-  background: rgba(255, 255, 255, 0.5); /* Slightly transparent background */
+  background: rgba(255, 255, 255, 0.5);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-sm);
 }
 
 .dropdown-menu-sidebar.show {
-  max-height: 300px; /* Adjust as needed for content */
+  max-height: 300px;
   opacity: 1;
 }
 
@@ -1666,7 +1617,7 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.3); /* Light separator */
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
 }
 
 .dropdown-item-sidebar:last-child {
@@ -1691,7 +1642,7 @@ body {
 
 /* Adjust sidebar width when dropdown is open if needed */
 .sidebar.open .dropdown-menu-sidebar {
-  width: calc(100% - 3rem); /* Adjust to fit within sidebar padding */
+  width: calc(100% - 3rem);
 }
 
 /* Styling for course names in collapsed sidebar */
@@ -1701,7 +1652,7 @@ body {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  display: block; /* Ensure it takes full width for ellipsis */
+  display: block;
 }
 
 .sidebar:not(.open) .dropdown-item-sidebar:hover {
@@ -1710,5 +1661,5 @@ body {
 }
 
 .sidebar:not(.open) .dropdown-item-sidebar.no-courses {
-  display: none; /* Hide "No enrolled classes" when sidebar is collapsed */
+  display: none;
 }

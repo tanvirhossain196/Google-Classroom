@@ -14,10 +14,8 @@
 </head>
 
 <style>
-    /* Import Bootstrap Icons */
     @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css");
 
-    /* Professional Variables */
     :root {
         --primary-color: #2563eb;
         --primary-dark: #1d4ed8;
@@ -71,7 +69,6 @@
         position: relative;
     }
 
-    /* Enhanced Professional Header */
     .header {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
@@ -232,7 +229,6 @@
         background: linear-gradient(135deg, #dc2626, #b91c1c);
     }
 
-    /* Enhanced Professional Sidebar */
     .sidebar {
         position: fixed;
         top: 4rem;
@@ -298,7 +294,6 @@
         margin-bottom: 0.5rem;
     }
 
-    /* Navigation Link Styles - Enhanced for proper navigation */
     .nav-link {
         display: flex;
         align-items: center;
@@ -315,7 +310,6 @@
         cursor: pointer;
     }
 
-    /* Ensure navigation links are always clickable */
     .nav-link[data-nav-link] {
         pointer-events: auto;
         user-select: none;
@@ -394,7 +388,6 @@
         color: white;
     }
 
-    /* Enhanced Main Content */
     .main-content {
         margin-left: 5rem;
         margin-top: 4rem;
@@ -408,7 +401,6 @@
         margin-left: 17.5rem;
     }
 
-    /* Styles for the sidebar dropdown */
     .sidebar-dropdown {
         position: relative;
     }
@@ -418,7 +410,6 @@
         justify-content: space-between;
         align-items: center;
         padding-right: 1.5rem;
-        /* Adjust padding to make space for arrow */
     }
 
     .sidebar-dropdown .nav-link .dropdown-arrow {
@@ -430,37 +421,30 @@
         transform: rotate(180deg);
     }
 
-    /* Hide the dropdown arrow icon when sidebar is not open */
     .sidebar:not(.open) .dropdown-arrow-icon {
         display: none;
     }
 
-    /* Adjust spacing for the nav-link content when sidebar is open */
     .sidebar.open .sidebar-dropdown .nav-link {
         gap: 0.75rem;
-        /* Add a gap between icon, text, and arrow */
         justify-content: flex-start;
-        /* Align items to the start */
     }
 
     .dropdown-menu-sidebar {
         list-style: none;
         padding: 0;
         margin: 0.5rem 0 0.5rem 2.5rem;
-        /* Indent dropdown items */
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
         opacity: 0;
         background: rgba(255, 255, 255, 0.5);
-        /* Slightly transparent background */
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-sm);
     }
 
     .dropdown-menu-sidebar.show {
         max-height: 300px;
-        /* Adjust as needed for content */
         opacity: 1;
     }
 
@@ -472,7 +456,6 @@
         cursor: pointer;
         transition: background 0.2s ease, color 0.2s ease;
         border-bottom: 1px solid rgba(226, 232, 240, 0.3);
-        /* Light separator */
     }
 
     .dropdown-item-sidebar:last-child {
@@ -495,13 +478,10 @@
         color: var(--text-muted);
     }
 
-    /* Adjust sidebar width when dropdown is open if needed */
     .sidebar.open .dropdown-menu-sidebar {
         width: calc(100% - 3rem);
-        /* Adjust to fit within sidebar padding */
     }
 
-    /* Styling for course names in collapsed sidebar */
     .sidebar:not(.open) .dropdown-item-sidebar {
         text-align: center;
         padding: 0.75rem 0;
@@ -509,7 +489,6 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         display: block;
-        /* Ensure it takes full width for ellipsis */
     }
 
     .sidebar:not(.open) .dropdown-item-sidebar:hover {
@@ -519,10 +498,7 @@
 
     .sidebar:not(.open) .dropdown-item-sidebar.no-courses {
         display: none;
-        /* Hide "No enrolled classes" when sidebar is collapsed */
     }
-
-    /* Existing help.css styles below */
 
     .help-sidebar-card {
         border: none;
@@ -1018,7 +994,6 @@
         .sidebar {
             transform: translateX(-100%);
             width: 100%;
-            /* Adjusted for mobile */
         }
 
         .sidebar.open {
@@ -1140,7 +1115,6 @@
                         <a href="#" class="nav-link" id="enrolledClassesDropdownToggle">
                             <i class="material-icons">school</i>
                             <span>Teaching</span>
-                            <!-- Added a new class 'dropdown-arrow-icon' for targeting -->
                             <i class="material-icons dropdown-arrow dropdown-arrow-icon">keyboard_arrow_down</i>
                         </a>
                         <ul class="dropdown-menu-sidebar" id="enrolledClassesDropdown">
@@ -1595,7 +1569,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Elements from teacher.js
             const menuIcon = document.getElementById("menuIcon");
             const sidebar = document.getElementById("sidebar");
             const mainContent = document.getElementById("mainContent");
@@ -1604,10 +1577,8 @@
             const currentUserEmail = document.getElementById("currentUserEmail");
             const userRoleBadge = document.getElementById("userRoleBadge");
 
-            // Navigation links
             const navLinks = document.querySelectorAll("[data-nav-link]");
 
-            // Enrolled Classes Dropdown elements
             const enrolledClassesDropdownToggle = document.getElementById(
                 "enrolledClassesDropdownToggle"
             );
@@ -1618,7 +1589,6 @@
                 ".dropdown-arrow-icon"
             );
 
-            // Elements from original help.js
             const helpLinks = document.querySelectorAll(".help-link");
             const helpSections = document.querySelectorAll(".help-section");
             const helpSearch = document.getElementById("helpSearch");
@@ -1629,7 +1599,6 @@
             const contactForm = document.getElementById("contactForm");
             const chatBtn = document.querySelector(".chat-btn");
 
-            // User data
             const currentUser =
                 localStorage.getItem("currentUser") || localStorage.getItem("userEmail");
             const userRole = localStorage.getItem("userRole");
@@ -1641,11 +1610,9 @@
 
             initializePage();
 
-            // Event listeners from teacher.js
             menuIcon.addEventListener("click", toggleSidebar);
             logoutBtn.addEventListener("click", handleLogout);
 
-            // Event listeners from original help.js
             searchBtn.addEventListener("click", performSearch);
             contactForm.addEventListener("submit", handleContactSubmit);
             chatBtn.addEventListener("click", handleChatClick);
@@ -1678,27 +1645,23 @@
                 });
             });
 
-            // Enrolled Classes Dropdown Toggle
             enrolledClassesDropdownToggle.addEventListener("click", function (e) {
                 e.preventDefault();
-                e.stopPropagation(); // Prevent sidebar from closing if clicked inside
+                e.stopPropagation();
                 enrolledClassesDropdown.classList.toggle("show");
-                this.querySelector(".dropdown-arrow").classList.toggle("rotate"); // Rotate arrow
-                renderEnrolledClasses(); // Re-render to ensure up-to-date list
+                this.querySelector(".dropdown-arrow").classList.toggle("rotate");
+                renderEnrolledClasses();
             });
 
-            // Navigation event listeners - Complete navigation fix
             navLinks.forEach((link) => {
                 link.addEventListener("click", function (e) {
                     const href = this.getAttribute("href");
                     const currentPage =
-                        window.location.pathname.split("/").pop() || "teacher.html"; // Default for dashboard
+                        window.location.pathname.split("/").pop() || "teacher.html";
 
-                    // Prevent default behavior and handle navigation manually
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // If clicking on same page, do nothing
                     if (
                         href === currentPage ||
                         (href === "teacher.html" && currentPage === "")
@@ -1706,24 +1669,19 @@
                         return;
                     }
 
-                    // Update active states
                     navLinks.forEach((l) => l.classList.remove("active"));
                     this.classList.add("active");
 
-                    // Store navigation intent to prevent automatic redirects
                     localStorage.setItem("intentionalNavigation", "true");
                     localStorage.setItem("targetPage", href);
 
-                    // Use window.location.href for proper navigation
                     setTimeout(() => {
                         window.location.href = href;
                     }, 100);
                 });
             });
 
-            // Close dropdowns/sidebar when clicking outside
             document.addEventListener("click", function (e) {
-                // Close enrolled classes dropdown if clicked outside
                 if (
                     !enrolledClassesDropdownToggle.contains(e.target) &&
                     !enrolledClassesDropdown.contains(e.target)
@@ -1734,7 +1692,6 @@
                         .classList.remove("rotate");
                 }
 
-                // Close sidebar when clicking outside (but don't interfere with navigation)
                 const isNavLink = e.target.closest("[data-nav-link]");
                 if (
                     !isNavLink &&
@@ -1744,19 +1701,19 @@
                     sidebar.classList.remove("open");
                     mainContent.classList.remove("sidebar-open");
                     localStorage.setItem("sidebarState", "closed");
-                    // Ensure dropdown arrow is hidden when sidebar closes
                     if (dropdownArrowIcon) {
                         dropdownArrowIcon.style.display = "none";
                     }
                 }
             });
 
-            // Functions from teacher.js
+            /**
+             * Initializes dashboard components including user info and sidebar state.
+             */
             function initializeDashboardComponents() {
                 currentUserEmail.textContent = currentUser;
                 userInitial.textContent = currentUser.charAt(0).toUpperCase();
 
-                // Set role badge
                 if (userRole === "teacher") {
                     userRoleBadge.textContent = "Teacher";
                     userRoleBadge.className = "role-badge teacher";
@@ -1768,32 +1725,25 @@
                     userRoleBadge.className = "role-badge new";
                 }
 
-                // Handle sidebar state on page load
                 const savedSidebarState = localStorage.getItem("sidebarState");
                 const intentionalNavigation = localStorage.getItem("intentionalNavigation");
 
-                // If coming from intentional navigation and sidebar was open, restore it
                 if (intentionalNavigation === "true" && savedSidebarState === "open") {
                     sidebar.classList.add("open");
                     mainContent.classList.add("sidebar-open");
-                    // Show dropdown arrow if sidebar is open
                     if (dropdownArrowIcon) {
                         dropdownArrowIcon.style.display = "block";
                     }
-                    // Clear the navigation flag
                     localStorage.removeItem("intentionalNavigation");
                 } else {
-                    // Default closed state (for refresh or direct access)
                     sidebar.classList.remove("open");
                     mainContent.classList.remove("sidebar-open");
                     localStorage.setItem("sidebarState", "closed");
-                    // Hide dropdown arrow if sidebar is closed
                     if (dropdownArrowIcon) {
                         dropdownArrowIcon.style.display = "none";
                     }
                 }
 
-                // Set active class for current page in sidebar
                 const currentPage = window.location.pathname.split("/").pop();
                 navLinks.forEach((link) => {
                     if (link.getAttribute("href") === currentPage) {
@@ -1803,25 +1753,29 @@
                     }
                 });
 
-                renderEnrolledClasses(); // Initial render of enrolled classes
+                renderEnrolledClasses();
             }
 
+            /**
+             * Toggles the sidebar open and closed.
+             */
             function toggleSidebar() {
                 sidebar.classList.toggle("open");
                 mainContent.classList.toggle("sidebar-open");
 
-                // Save sidebar state
                 const sidebarIsOpen = sidebar.classList.contains("open");
                 localStorage.setItem("sidebarState", sidebarIsOpen ? "open" : "closed");
 
-                // Toggle visibility of the dropdown arrow icon
                 if (dropdownArrowIcon) {
                     dropdownArrowIcon.style.display = sidebarIsOpen ? "block" : "none";
                 }
             }
 
+            /**
+             * Handles the logout process.
+             */
             function handleLogout() {
-                if (confirm("আপনি কি লগআউট করতে চান?")) {
+                if (confirm("Do you want to log out?")) {
                     localStorage.removeItem("currentUser");
                     localStorage.removeItem("userEmail");
                     localStorage.removeItem("userRole");
@@ -1829,6 +1783,10 @@
                 }
             }
 
+            /**
+             * Retrieves the user's dashboard data from local storage.
+             * @returns {object} The user's dashboard object.
+             */
             function getUserDashboard() {
                 const dashboardKey = `dashboard_${currentUser}`;
                 const dashboard = JSON.parse(
@@ -1840,6 +1798,9 @@
                 return dashboard;
             }
 
+            /**
+             * Renders the list of enrolled classes in the sidebar dropdown.
+             */
             function renderEnrolledClasses() {
                 const dashboard = getUserDashboard();
                 let enrolled = [];
@@ -1854,7 +1815,7 @@
                     );
                 }
 
-                enrolledClassesDropdown.innerHTML = ""; // Clear existing list
+                enrolledClassesDropdown.innerHTML = "";
 
                 if (enrolled.length === 0) {
                     const listItem = document.createElement("li");
@@ -1877,6 +1838,10 @@
                 }
             }
 
+            /**
+             * Opens a specific course page based on the user's role.
+             * @param {object} course - The course object to open.
+             */
             function openCourse(course) {
                 localStorage.setItem("selectedCourse", JSON.stringify(course));
                 if (userRole === "teacher") {
@@ -1886,11 +1851,12 @@
                 }
             }
 
-            // Functions from original help.js
+            /**
+             * Initializes the help page components.
+             */
             function initializePage() {
-                initializeDashboardComponents(); // Initialize new navbar/sidebar components
+                initializeDashboardComponents();
 
-                // Original help.js initialization
                 if (currentUser) {
                     document.getElementById("contactEmail").value = currentUser;
                 }
@@ -1902,6 +1868,10 @@
                 });
             }
 
+            /**
+             * Switches the active help section.
+             * @param {string} targetSection - The ID of the section to activate.
+             */
             function switchHelpSection(targetSection) {
                 helpLinks.forEach((link) => {
                     link.classList.remove("active");
@@ -1916,6 +1886,10 @@
                 document.getElementById(targetSection).classList.add("active");
             }
 
+            /**
+             * Switches the active tab within the user guide section.
+             * @param {string} targetTab - The ID of the tab to activate.
+             */
             function switchTab(targetTab) {
                 tabButtons.forEach((btn) => btn.classList.remove("active"));
                 document.querySelector(`[data-tab="${targetTab}"]`).classList.add("active");
@@ -1926,6 +1900,10 @@
                 document.getElementById(targetTab + "-tab").classList.add("active");
             }
 
+            /**
+             * Toggles the active state of an FAQ item.
+             * @param {HTMLElement} item - The FAQ item element.
+             */
             function toggleFAQ(item) {
                 const isActive = item.classList.contains("active");
 
@@ -1936,11 +1914,14 @@
                 }
             }
 
+            /**
+             * Performs a search within the help content and highlights results.
+             */
             function performSearch() {
                 const searchTerm = helpSearch.value.toLowerCase().trim();
 
                 if (!searchTerm) {
-                    showNotification("অনুসন্ধানের জন্য কিছু লিখুন", "error");
+                    showNotification("Please enter something to search for", "error");
                     return;
                 }
 
@@ -1949,13 +1930,17 @@
                     .textContent.toLowerCase();
 
                 if (allContent.includes(searchTerm)) {
-                    showNotification(`"${searchTerm}" খুঁজে পাওয়া গেছে`, "success");
+                    showNotification(`"${searchTerm}" found`, "success");
                     highlightSearchTerm(searchTerm);
                 } else {
-                    showNotification(`"${searchTerm}" খুঁজে পাওয়া যায়নি`, "error");
+                    showNotification(`"${searchTerm}" not found`, "error");
                 }
             }
 
+            /**
+             * Highlights the given search term within the main content.
+             * @param {string} term - The search term to highlight.
+             */
             function highlightSearchTerm(term) {
                 const helpContent = document.querySelector(".main-content");
                 const walker = document.createTreeWalker(
@@ -1994,6 +1979,10 @@
                 }, 3000);
             }
 
+            /**
+             * Handles the submission of the contact form.
+             * @param {Event} e - The form submission event.
+             */
             function handleContactSubmit(e) {
                 e.preventDefault();
 
@@ -2003,7 +1992,7 @@
                 const message = document.getElementById("contactMessage").value;
 
                 if (!name || !email || !subject || !message) {
-                    showNotification("সব ফিল্ড পূরণ করুন", "error");
+                    showNotification("Please fill in all fields", "error");
                     return;
                 }
 
@@ -2025,7 +2014,7 @@
                 );
 
                 showNotification(
-                    "আপনার বার্তা পাঠানো হয়েছে। আমরা শীঘ্রই যোগাযোগ করব।",
+                    "Your message has been sent. We will contact you shortly.",
                     "success"
                 );
                 contactForm.reset();
@@ -2035,10 +2024,18 @@
                 }
             }
 
+            /**
+             * Handles the click event for the chat button.
+             */
             function handleChatClick() {
-                showNotification("লাইভ চ্যাট শীঘ্রই চালু করা হবে", "success");
+                showNotification("Live chat will be available soon", "success");
             }
 
+            /**
+             * Displays a notification message.
+             * @param {string} message - The message to display.
+             * @param {string} type - The type of notification ('success' or 'error').
+             */
             function showNotification(message, type) {
                 const notification = document.createElement("div");
                 notification.className = `notification ${type}`;

@@ -79,7 +79,8 @@ class PeopleManager {
       teachersList: document.getElementById("teachersList"),
       studentsList: document.getElementById("studentsList"),
       teachersCount: document.getElementById("teachersCount"),
-      studentsCount: document.getElementById("studentsCount"),
+      studentsCount: document.getElementById("studentsCount"), // This is the old one, keeping for now
+      liveStudentsCount: document.getElementById("liveStudentsCount"), // New element for live count
       peopleEmpty: document.getElementById("peopleEmpty"),
       peopleContent: document.getElementById("peopleContent"),
 
@@ -696,8 +697,8 @@ class PeopleManager {
     if (this.elements.teachersCount) {
       this.elements.teachersCount.textContent = this.teachers.length;
     }
-    if (this.elements.studentsCount) {
-      this.elements.studentsCount.textContent = this.students.length;
+    if (this.elements.liveStudentsCount) {
+      this.elements.liveStudentsCount.textContent = this.students.length;
     }
   }
 

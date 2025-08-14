@@ -14,7 +14,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        /* Original styles from studentProject.html, adjusted for new layout */
         body {
             background: white;
             border-radius: 8px;
@@ -291,7 +290,6 @@
             margin: 15px 0;
         }
 
-        /* Animation for smooth transitions */
         @keyframes slideDown {
             from {
                 max-height: 0;
@@ -320,20 +318,17 @@
 
 <body>
     <div class="app-container">
-        <!-- Enhanced Header (from studentStream.html) -->
         <header class="app-header">
             <div class="header-left">
                 <button class="menu-btn" id="menuBtn">
                     <span class="material-icons">menu</span>
                 </button>
-                <!-- Logo Section Start -->
                 <div class="logo-container">
                     <a href="student.html" class="navbar-logo-link">
                         <img src="logo/logo.jpg" alt="Classroom Logo" class="navbar-logo">
                         <h1 class="project-name">Learn<span class="green-text">Room</span></h1>
                     </a>
                 </div>
-                <!-- Logo Section End -->
             </div>
             <div class="header-right">
                 <button class="header-icon-btn">
@@ -348,13 +343,12 @@
             </div>
         </header>
 
-        <!-- Enhanced Sidebar (from studentStream.html) -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-content">
                 <div class="current-course-section">
                     <div class="current-course-header">
                         <span class="material-icons">class</span>
-                        <span class="course-name-text" id="currentCourseName">কোর্স লোড হচ্ছে...</span>
+                        <span class="course-name-text" id="currentCourseName">Loading Course...</span>
                     </div>
                 </div>
                 <a href="student.html" class="sidebar-item" id="classesLink">
@@ -367,7 +361,6 @@
                     <span class="sidebar-text">Settings</span>
                 </a>
 
-                <!-- Enrolled Classes Dropdown -->
                 <div class="sidebar-dropdown">
                     <div class="sidebar-header sidebar-dropdown-toggle" id="enrolledClassesDropdownToggle">
                         <span class="material-icons">school</span>
@@ -375,13 +368,11 @@
                         <span class="material-icons dropdown-arrow-icon">keyboard_arrow_down</span>
                     </div>
                     <div id="enrolledClasses" class="sidebar-dropdown-content">
-                        <!-- Enrolled classes will be populated here -->
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Enhanced Top Navigation (from studentStream.html) -->
         <nav class="course-top-nav" id="courseTopNav">
             <div class="top-nav-tabs">
                 <button class="top-nav-tab" data-tab="stream" onclick="window.location.href='studentStream.html'">
@@ -399,10 +390,8 @@
             </div>
         </nav>
 
-        <!-- Enhanced Content Wrapper -->
         <main class="content-wrapper" id="contentWrapper">
             <div class="content-inner">
-                <!-- Original content of studentProject.html starts here -->
                 <div class="container" style="padding-top: 32px;">
                     <div class="project-card">
                         <div class="project-header" onclick="toggleProject(event, 'projectContent', 'projectHeader')"
@@ -456,7 +445,6 @@
                         </div>
                     </div>
 
-                    <!-- Additional project cards can be added here -->
                     <div class="project-card">
                         <div class="project-header" onclick="toggleProject(event, 'projectContent2', 'projectHeader2')"
                             id="projectHeader2">
@@ -510,7 +498,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Original content of studentProject.html ends here -->
             </div>
         </main>
     </div>
@@ -518,9 +505,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="studentStream.js"></script>
     <script>
-        // **Enhanced Toggle Function with Multiple Project Support**
+        // Enhanced Toggle Function with Multiple Project Support
         function toggleProject(event, contentId = 'projectContent', headerId = 'projectHeader') {
-            // Don't toggle if clicking on menu dots or dropdown
             if (event.target.closest('.menu-container')) {
                 return;
             }
@@ -529,49 +515,41 @@
             const header = document.getElementById(headerId);
             const toggleIndicator = header.querySelector('.toggle-indicator');
 
-            // Toggle the expanded class
             const isExpanded = content.classList.contains('expanded');
 
             if (isExpanded) {
-                // Close the project
                 content.classList.remove('expanded');
                 header.classList.remove('expanded');
                 toggleIndicator.style.transform = 'rotate(0deg)';
 
-                // Add closing animation
                 setTimeout(() => {
                     if (!content.classList.contains('expanded')) {
                         content.style.maxHeight = '0';
                     }
                 }, 10);
             } else {
-                // Open the project
                 content.classList.add('expanded');
                 header.classList.add('expanded');
                 toggleIndicator.style.transform = 'rotate(180deg)';
 
-                // Calculate and set max height for smooth animation
                 const scrollHeight = content.scrollHeight;
                 content.style.maxHeight = scrollHeight + 'px';
             }
 
-            // Close any open dropdowns
             closeAllDropdowns();
         }
 
-        // **Enhanced Dropdown Toggle Function**
+        // Enhanced Dropdown Toggle Function
         function toggleDropdown(event, dropdownId = 'dropdownMenu') {
             event.stopPropagation();
 
-            // Close all other dropdowns first
             closeAllDropdowns();
 
-            // Toggle the clicked dropdown
             const dropdown = document.getElementById(dropdownId);
             dropdown.classList.toggle('active');
         }
 
-        // **Close All Dropdowns Function**
+        // Close All Dropdowns Function
         function closeAllDropdowns() {
             const dropdowns = document.querySelectorAll('.dropdown-menu');
             dropdowns.forEach(dropdown => {
@@ -589,105 +567,86 @@
             event.stopPropagation();
             if (confirm('Are you sure you want to delete this project?')) {
                 alert('Project deleted');
-                // Here you can add actual delete functionality
-                // For example: event.target.closest('.project-card').remove();
             }
             closeAllDropdowns();
         }
 
-        // **Updated viewInstructions function to redirect to assignment-page.html**
+        // Updated viewInstructions function to redirect to assignment-page.html
         function viewInstructions() {
-            // Redirect to assignment-page.html
             window.location.href = 'assignment-page.html';
         }
 
-        // **Enhanced Click Outside Handler**
+        // Enhanced Click Outside Handler
         document.addEventListener('click', function (event) {
-            // Close dropdowns when clicking outside
             if (!event.target.closest('.menu-container')) {
                 closeAllDropdowns();
             }
         });
 
-        // **Keyboard Support for Accessibility**
+        // Keyboard Support for Accessibility
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 closeAllDropdowns();
             }
         });
 
-        // **Initialize Page**
+        // Initialize Page
         document.addEventListener('DOMContentLoaded', function () {
-            // Add smooth scrolling behavior
             document.documentElement.style.scrollBehavior = 'smooth';
 
-            // Initialize any additional functionality here
             console.log('Student Classwork page loaded successfully');
 
-            // Sidebar toggle functionality
             const menuBtn = document.getElementById('menuBtn');
             const sidebar = document.getElementById('sidebar');
             const contentWrapper = document.getElementById('contentWrapper');
-            const courseTopNav = document.getElementById('courseTopNav'); // Get the courseTopNav
+            const courseTopNav = document.getElementById('courseTopNav');
 
             menuBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('open');
-                contentWrapper.classList.toggle('sidebar-open'); // Use sidebar-open class
-                courseTopNav.classList.toggle('sidebar-open'); // Toggle for courseTopNav
+                contentWrapper.classList.toggle('sidebar-open');
+                courseTopNav.classList.toggle('sidebar-open');
             });
 
-            // Sidebar dropdown toggle functionality
             const enrolledClassesDropdownToggle = document.getElementById('enrolledClassesDropdownToggle');
             const enrolledClassesDropdownContent = document.getElementById('enrolledClasses');
 
             if (enrolledClassesDropdownToggle && enrolledClassesDropdownContent) {
                 enrolledClassesDropdownToggle.addEventListener('click', () => {
-                    enrolledClassesDropdownContent.classList.toggle('open'); // Use 'open' class
+                    enrolledClassesDropdownContent.classList.toggle('open');
                     enrolledClassesDropdownToggle.querySelector('.dropdown-arrow-icon').classList.toggle('rotate');
                 });
             }
 
-            // Populate enrolled classes (example, replace with actual data fetching)
-            // This part should ideally be handled by studentStream.js
-            // For now, we'll keep a placeholder or ensure studentStream.js handles it.
             const enrolledClassesContainer = document.getElementById('enrolledClasses');
             if (enrolledClassesContainer) {
-                // This will be populated by studentStream.js's loadEnrolledClasses method
-                // if the studentStream.js script is properly initialized and running.
-                // For a standalone HTML, you might need to fetch this data here.
             }
 
-            // Set user initial
             const userInitialSpan = document.getElementById('userInitial');
             if (userInitialSpan) {
-                const userName = "User"; // Replace with actual user name
+                const userName = "User";
                 userInitialSpan.textContent = userName.charAt(0).toUpperCase();
             }
 
-            // Set current course name (example, replace with actual data)
             const currentCourseNameSpan = document.getElementById('currentCourseName');
             if (currentCourseNameSpan) {
-                currentCourseNameSpan.textContent = "Web Development Basics"; // Replace with actual course name
+                currentCourseNameSpan.textContent = "Web Development Basics";
             }
 
-            // Initialize StreamManager to handle sidebar/navbar functionality
-            // This assumes studentStream.js defines a StreamManager class and initializes it.
-            // If not, you might need to manually call relevant functions from studentStream.js here.
             if (typeof StreamManager !== 'undefined') {
                 window.streamManager = new StreamManager();
             }
         });
 
-        // **Auto-close dropdowns after a delay (optional)**
+        // Auto-close dropdowns after a delay (optional)
         let dropdownTimeout;
         function autoCloseDropdowns() {
             clearTimeout(dropdownTimeout);
             dropdownTimeout = setTimeout(() => {
                 closeAllDropdowns();
-            }, 5000); // Close after 5 seconds of inactivity
+            }, 5000);
         }
 
-        // **Enhanced Menu Dots Hover Effect**
+        // Enhanced Menu Dots Hover Effect
         document.querySelectorAll('.menu-dots').forEach(menuDot => {
             menuDot.addEventListener('mouseenter', function () {
                 this.style.transform = 'scale(1.1)';
@@ -698,7 +657,7 @@
             });
         });
 
-        // **Project Card Hover Effects**
+        // Project Card Hover Effects
         document.querySelectorAll('.project-card').forEach(card => {
             card.addEventListener('mouseenter', function () {
                 this.style.transform = 'translateY(-2px)';
@@ -711,7 +670,7 @@
             });
         });
 
-        // **Responsive Behavior**
+        // Responsive Behavior
         function handleResize() {
             const isMobile = window.innerWidth <= 768;
             const projectCards = document.querySelectorAll('.project-card');
@@ -726,9 +685,9 @@
         }
 
         window.addEventListener('resize', handleResize);
-        handleResize(); // Call on initial load
+        handleResize();
 
-        // **Loading Animation (optional)**
+        // Loading Animation (optional)
         function showLoadingState() {
             const projectCards = document.querySelectorAll('.project-card');
             projectCards.forEach(card => {
@@ -745,7 +704,7 @@
             });
         }
 
-        // **Performance Optimization**
+        // Performance Optimization
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -758,7 +717,7 @@
             };
         }
 
-        // **Smooth Animation Helper**
+        // Smooth Animation Helper
         function animateElement(element, property, from, to, duration = 300) {
             const start = performance.now();
 

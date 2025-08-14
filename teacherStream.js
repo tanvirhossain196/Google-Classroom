@@ -24,6 +24,7 @@ class StreamManager {
     this.loadAvailableCoursesAndStudents();
     this.loadUpcomingAssignments();
     this.initializeAnnouncementEditorState();
+    this.populateAnnouncementCourseDropdown(); // New: Populate announcement dropdown
   }
 
   setupElements() {
@@ -50,12 +51,13 @@ class StreamManager {
       courseHeaderSection: document.querySelector(".course-header-section"),
       courseCodeText: document.getElementById("courseCodeText"),
       courseCodeDisplay: document.getElementById("courseCodeDisplay"),
-      courseCodeExpandBtn: document.getElementById("courseCodeExpandBtn"),
-      courseCodeExpandedContent: document.getElementById(
-        "courseCodeExpandedContent"
-      ),
+      // Removed courseCodeMenuBtn as per requirement 1
+      // Removed courseCodeDropdown as per requirement 1
       courseCodeLarge: document.getElementById("courseCodeLarge"),
       selectedCourse: document.getElementById("selectedCourse"),
+      announcementCourseDropdown: document.getElementById(
+        "announcementCourseDropdown"
+      ), // New: Announcement course dropdown
       attachedFilesDisplay: document.getElementById("attachedFilesDisplay"),
       attachedFilesList: document.getElementById("attachedFilesList"),
       upcomingContent: document.getElementById("upcomingContent"),
@@ -86,9 +88,13 @@ class StreamManager {
       this.navigateWithAnimation("teacherSettings.html");
     });
 
-    if (this.elements.courseCodeExpandBtn) {
-      this.elements.courseCodeExpandBtn.addEventListener("click", () => {
-        this.toggleCourseCodeExpansion();
+    // Requirement 1: Add copy icon functionality directly to courseCodeDisplay
+    if (this.elements.courseCodeDisplay) {
+      this.elements.courseCodeDisplay.addEventListener("click", (e) => {
+        // Ensure click is not on the copy button itself, as it has its own handler
+        if (!e.target.closest(".course-code-copy-btn")) {
+          this.copyCourseCode();
+        }
       });
     }
 
@@ -465,37 +471,51 @@ class StreamManager {
     }, 500); // Reduced delay for better responsiveness
   }
 
-  toggleCourseCodeExpansion() {
-    this.isCourseCodeExpanded = !this.isCourseCodeExpanded;
-    const expandBtnIcon =
-      this.elements.courseCodeExpandBtn.querySelector(".material-icons");
-
-    if (this.isCourseCodeExpanded) {
-      this.elements.courseCodeDisplay.style.display = "none";
-      this.elements.courseCodeExpandedContent.classList.add("expanded");
-      if (expandBtnIcon) expandBtnIcon.textContent = "collapse_content";
-    } else {
-      this.elements.courseCodeDisplay.style.display = "flex";
-      this.elements.courseCodeExpandedContent.classList.remove("expanded");
-      if (expandBtnIcon) expandBtnIcon.textContent = "expand_content";
-    }
-  }
-
+  // Requirement 1: Copy Course Code
   copyCourseCode() {
-    const courseCode = this.elements.courseCodeLarge.textContent;
+    const courseCode = this.elements.courseCodeText.textContent; // Get text from the display span
     navigator.clipboard
       .writeText(courseCode)
       .then(() => {
-        this.showNotification("Course code copied to clipboard!", "success");
+        this.showNotification("Copied", "success");
       })
       .catch(() => {
         this.showNotification("Failed to copy course code", "error");
       });
   }
 
-  selectCourse(courseName) {
+  populateAnnouncementCourseDropdown() {
+    const dropdownMenu = this.elements.announcementCourseDropdown;
+    if (!dropdownMenu) return;
+
+    dropdownMenu.innerHTML = ""; // Clear existing items
+
+    const userDashboard = this.getUserDashboard();
+    const userCourses = userDashboard.courses || [];
+
+    // Add "All courses" option
+    const allCoursesItem = document.createElement("li");
+    allCoursesItem.innerHTML = `<a class="dropdown-item" href="#" onclick="streamManager.selectAnnouncementCourse('All courses', 'all')">All courses</a>`;
+    dropdownMenu.appendChild(allCoursesItem);
+
+    // Add individual courses
+    userCourses.forEach((course) => {
+      const courseItem = document.createElement("li");
+      courseItem.innerHTML = `<a class="dropdown-item" href="#" onclick="streamManager.selectAnnouncementCourse('${course.name}', '${course.id}')">${course.name}</a>`;
+      dropdownMenu.appendChild(courseItem);
+    });
+
+    // Set initial selected course
+    if (this.elements.selectedCourse) {
+      this.elements.selectedCourse.textContent = this.currentCourse.name;
+      this.selectedAnnouncementCourseId = this.currentCourse.id;
+    }
+  }
+
+  selectAnnouncementCourse(courseName, courseId) {
     if (this.elements.selectedCourse) {
       this.elements.selectedCourse.textContent = courseName;
+      this.selectedAnnouncementCourseId = courseId; // Store the selected course ID
     }
   }
 
@@ -971,7 +991,7 @@ class StreamManager {
         content: `posted a new assignment: <strong>${assignment.title}</strong>`,
         timestamp: assignment.createdAt,
         assignment: assignment,
-        comments: [],
+        comments: [], // Assignments don't have comments in this context
         likes: 0,
         isEditable: true,
         originalText: assignment.title,
@@ -1382,10 +1402,20 @@ class StreamManager {
 
     comments.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-    comments.forEach((comment) => {
+    const commentsListContainer = document.createElement("div");
+    commentsListContainer.className = "comments-list-container";
+    commentsListContainer.id = `comments-list-container-${postId}`;
+    commentsSectionElement.appendChild(commentsListContainer);
+
+    const initialCommentsToShow = 1; // Only first comment visible initially
+
+    comments.forEach((comment, index) => {
       const commentItem = document.createElement("div");
       commentItem.className = "comment-item";
       commentItem.id = `comment-${comment.id}`;
+      if (index >= initialCommentsToShow) {
+        commentItem.style.display = "none"; // Hide comments beyond the first
+      }
 
       const avatar = document.createElement("div");
       avatar.className = "comment-avatar";
@@ -1433,10 +1463,53 @@ class StreamManager {
       commentItem.appendChild(commentContentWrapper);
       commentItem.appendChild(commentActions);
 
-      commentsSectionElement.appendChild(commentItem);
+      commentsListContainer.appendChild(commentItem);
     });
+
+    // Add "View Comments" button if there are more than initialCommentsToShow
+    if (comments.length > initialCommentsToShow) {
+      const viewCommentsBtn = document.createElement("button");
+      viewCommentsBtn.className = "view-comments-btn";
+      viewCommentsBtn.textContent = `View ${
+        comments.length - initialCommentsToShow
+      } more comments`;
+      viewCommentsBtn.onclick = () => this.toggleCommentsVisibility(postId);
+      commentsSectionElement.appendChild(viewCommentsBtn);
+    }
   }
 
+  toggleCommentsVisibility(postId) {
+    const commentsListContainer = document.getElementById(
+      `comments-list-container-${postId}`
+    );
+    const viewCommentsBtn = commentsListContainer.nextElementSibling; // The button is the next sibling
+
+    if (commentsListContainer.classList.contains("expanded")) {
+      commentsListContainer.classList.remove("expanded");
+      const hiddenComments = commentsListContainer.querySelectorAll(
+        ".comment-item:nth-child(n+2)"
+      );
+      hiddenComments.forEach((comment) => (comment.style.display = "none"));
+      if (viewCommentsBtn) {
+        const comments =
+          this.getCourseAnnouncements().find((p) => p.id === postId)
+            ?.comments || [];
+        viewCommentsBtn.textContent = `View ${
+          comments.length - 1
+        } more comments`;
+      }
+    } else {
+      commentsListContainer.classList.add("expanded");
+      const hiddenComments =
+        commentsListContainer.querySelectorAll(".comment-item");
+      hiddenComments.forEach((comment) => (comment.style.display = "flex")); // Show all comments
+      if (viewCommentsBtn) {
+        viewCommentsBtn.textContent = "Hide comments";
+      }
+    }
+  }
+
+  // Requirement 2: Edit comment
   editComment(postId, commentId, currentText) {
     const commentItem = document.getElementById(`comment-${commentId}`);
     if (!commentItem) return;
@@ -1473,6 +1546,7 @@ class StreamManager {
     }
   }
 
+  // Requirement 2: Cancel comment edit
   cancelCommentEdit(postId, commentId) {
     const commentItem = document.getElementById(`comment-${commentId}`);
     if (!commentItem) return;
@@ -1485,8 +1559,10 @@ class StreamManager {
     );
     commentContentWrapper.innerHTML = originalContent;
     commentContentWrapper.removeAttribute("data-original-content");
+    this.showNotification("Comment edit cancelled", "info");
   }
 
+  // Requirement 2: Save comment edit
   saveCommentEdit(postId, commentId) {
     const editInput = document.getElementById(
       `comment-edit-input-${commentId}`
@@ -1528,6 +1604,7 @@ class StreamManager {
     }
   }
 
+  // Requirement 2: Delete comment
   deleteComment(postId, commentId) {
     this.pendingDeleteId = { type: "comment", postId, commentId };
     this.showConfirmationModal(
@@ -1536,10 +1613,11 @@ class StreamManager {
   }
 
   // Enhanced dropdown menu methods with proper z-index handling
-  toggleNotificationMenu(postId) {
-    console.log("Toggling menu for post:", postId);
+  toggleNotificationMenu(id) {
+    // Changed postId to id to handle courseCode dropdown
+    console.log("Toggling menu for ID:", id);
 
-    const dropdown = document.getElementById(`dropdown-${postId}`);
+    const dropdown = document.getElementById(`dropdown-${id}`);
     const allDropdowns = document.querySelectorAll(
       ".notification-dropdown-menu"
     );
@@ -1548,7 +1626,7 @@ class StreamManager {
 
     // Close all other dropdowns first
     allDropdowns.forEach((menu) => {
-      if (menu.id !== `dropdown-${postId}`) {
+      if (menu.id !== `dropdown-${id}`) {
         menu.classList.remove("show");
         menu.style.display = "none";
       }
@@ -1575,7 +1653,7 @@ class StreamManager {
         console.log("Dropdown should now be visible");
       }
     } else {
-      console.error("Dropdown not found for ID:", `dropdown-${postId}`);
+      console.error("Dropdown not found for ID:", `dropdown-${id}`);
     }
   }
 
@@ -2107,6 +2185,7 @@ class StreamManager {
         ) {
           this.hideConfirmationModal();
         } else if (this.isAnnouncementExpanded && !this.currentEditingId) {
+          this.isCancelledByOutsideClick = true; // Set flag for outside click
           this.cancelAnnouncement();
         }
       }
@@ -2214,18 +2293,26 @@ class StreamManager {
 
     // Enhanced click outside handling for dropdowns
     document.addEventListener("click", (e) => {
-      if (
-        !e.target.closest(".notification-menu-container") &&
-        !e.target.closest(".notification-dropdown-menu")
-      ) {
-        const allDropdowns = document.querySelectorAll(
-          ".notification-dropdown-menu"
-        );
-        allDropdowns.forEach((menu) => {
+      // Close all notification dropdowns
+      const allNotificationDropdowns = document.querySelectorAll(
+        ".notification-dropdown-menu"
+      );
+      allNotificationDropdowns.forEach((menu) => {
+        if (
+          !e.target.closest(`#${menu.id}`) &&
+          !e.target.closest(
+            `[onclick*="toggleNotificationMenu('${menu.id.replace(
+              "dropdown-",
+              ""
+            )}')"]`
+          )
+        ) {
           menu.classList.remove("show");
-        });
-      }
+          menu.style.display = "none";
+        }
+      });
 
+      // Close enrolled classes dropdown
       const enrolledClassesDropdown = this.elements.enrolledClasses;
       const enrolledClassesToggle = this.elements.enrolledClassesDropdownToggle;
 
