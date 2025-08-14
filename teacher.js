@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // const addCourseBtn = document.getElementById("addCourseBtn"); // Removed
   const addCourseBtnHeader = document.getElementById("addCourseBtnHeader"); // New header button
   const courseActionMenu = document.getElementById("courseActionMenu"); // This dropdown is now unused but kept for consistency if needed
-  const dashboardTitle = document.getElementById("dashboardTitle"); // This is now unused but kept for consistency if needed
+  // const dashboardTitle = document.getElementById("dashboardTitle"); // This is now unused but kept for consistency if needed
 
   // Navigation links
   const navLinks = document.querySelectorAll("[data-nav-link]");

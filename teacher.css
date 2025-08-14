@@ -48,7 +48,8 @@ body {
   overflow-x: hidden;
 }
 
-.container {
+.container-fluid {
+  /* Changed from .container to .container-fluid for full width responsiveness */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -158,10 +159,11 @@ body {
   border-color: var(--border-color);
 }
 
+/* Removed .header h1 as it's now part of logo-container */
 .header h1 {
   font-size: 1.5rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
+  font-weight: 500;
+  background: #424141;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -225,16 +227,42 @@ body {
   justify-content: center;
   font-size: 1.5rem;
   cursor: pointer;
-  border: none;
+  border: 2px solid #a8a8a8;
   transition: var(--transition);
+  position: relative; /* For tooltip positioning */
 }
 
 .add-course-btn-header:hover {
-  background: var(--light-color); /* Light background on hover */
-  color: var(--primary-color); /* Primary color on hover */
-  transform: scale(1.1);
+  background: var(--light-color);
+  transform: scale(1.05);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
 }
 
+/* Tooltip for Add Course Button */
+.add-course-btn-header::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%; /* Position below the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--dark-color);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1001; /* Above other elements */
+  margin-top: 0.5rem; /* Space between button and tooltip */
+}
+
+.add-course-btn-header:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
 
 /* Enhanced Professional Sidebar */
 .sidebar {
@@ -550,11 +578,13 @@ body {
   overflow: hidden;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-  height: 300px;
+  /* height: 300px; Removed fixed height */
   display: flex;
   flex-direction: column;
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  /* Make cards square */
+  aspect-ratio: 1 / 1; /* This makes the card a perfect square */
 }
 
 .course-card:hover {
@@ -565,7 +595,8 @@ body {
 
 /* Course Header - Top 1/3rd with background */
 .course-header {
-  height: 100px;
+  /* height: 100px; Removed fixed height */
+  flex-basis: 33.33%; /* Occupy roughly 1/3rd of the card height */
   background: var(--gradient-primary);
   position: relative;
   padding: 16px 24px;
@@ -760,7 +791,7 @@ body {
 
 /* Course Body - Remaining 2/3rd white area */
 .course-body {
-  flex: 1;
+  flex: 1; /* Allow it to take remaining space */
   padding: 24px;
   background: white;
   display: flex;
@@ -1178,14 +1209,16 @@ body {
     gap: 1.5rem;
   }
 
-  .courses-header { /* This rule is now effectively unused due to HTML removal */
+  .courses-header {
+    /* This rule is now effectively unused due to HTML removal */
     flex-direction: column;
     gap: 1rem;
     text-align: center;
     padding: 1.5rem;
   }
 
-  .courses-header h2 { /* This rule is now effectively unused due to HTML removal */
+  .courses-header h2 {
+    /* This rule is now effectively unused due to HTML removal */
     font-size: 1.875rem;
   }
 
@@ -1214,11 +1247,13 @@ body {
   }
 
   .course-card {
-    height: 280px;
+    /* height: 280px; Removed fixed height */
+    aspect-ratio: 1 / 1; /* Maintain square shape */
   }
 
   .course-header {
-    height: 90px;
+    /* height: 90px; Removed fixed height */
+    flex-basis: 33.33%; /* Maintain 1/3rd height */
     padding: 12px 20px;
   }
 

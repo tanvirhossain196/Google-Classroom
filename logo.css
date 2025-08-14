@@ -1,0 +1,110 @@
+/* logo.css */
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem; /* Slight spacing from "Classroom" text */
+}
+
+/* New: Clickable logo link wrapper - Added for navigation functionality */
+.navbar-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Remove default link underline */
+  color: inherit; /* Inherit text color from parent */
+  gap: 0.25rem; /* Consistent spacing between logo and text */
+  cursor: pointer; /* Ensure cursor shows as pointer */
+  outline: none; /* Remove default focus outline */
+  border: none; /* Remove any borders */
+}
+
+.navbar-logo-link:hover {
+  text-decoration: none; /* Ensure no underline appears on hover */
+  color: inherit; /* Maintain original color on hover */
+}
+
+.navbar-logo-link:focus {
+  outline: none; /* Remove focus outline completely */
+  text-decoration: none; /* No underline on focus */
+}
+
+.navbar-logo-link:active {
+  outline: none; /* Remove active state outline */
+  text-decoration: none; /* No underline on active */
+}
+
+.navbar-logo-link:visited {
+  color: inherit; /* Maintain original color for visited links */
+  text-decoration: none; /* No underline for visited links */
+}
+
+.navbar-logo {
+  height: 4.2rem; /* Adjust size as needed */
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  padding: 0.2rem; /* Slight padding for smooth edges */
+}
+
+/* Removed individual hover effect from logo image since it's now handled by the link wrapper */
+/* .navbar-logo:hover styles are now managed by .navbar-logo-link:hover */
+
+.navbar-brand-text {
+  font-size: 1.5rem; /* Match header h1 size */
+  font-weight: 500;
+  background: #424141; /* Original color from teacher.css h1 */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.025em;
+  margin-left: 0.25rem; /* Keep text closer to logo */
+  margin-bottom: 0; /* Remove default paragraph margin */
+}
+
+/* Ensure text color inheritance in link context */
+.navbar-logo-link .navbar-brand-text {
+  color: inherit;
+}
+
+/* New: Styles for the chatbot header logo */
+.chatbot-header-logo {
+  height: 35px; /* Adjust height to fit within the circle */
+  width: 35px; /* Maintain aspect ratio */
+  object-fit: contain; /* Ensure the entire image is visible */
+  border-radius: 50%; /* Make it circular if the image is square */
+  /* Optional: Add a subtle shadow or border if needed for better integration */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments for logo */
+@media (max-width: 768px) {
+  .navbar-logo {
+    height: 1.8rem; /* Smaller on mobile */
+    margin-right: 0.25rem;
+  }
+  .navbar-brand-text {
+    font-size: 1.2rem; /* Smaller text on mobile */
+  }
+  .header-left {
+    gap: 0.5rem; /* Reduce gap in header-left on mobile */
+  }
+  /* New: Responsive adjustments for chatbot header logo */
+  .chatbot-header-logo {
+    height: 30px; /* Slightly smaller on tablets */
+    width: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo {
+    height: 1.5rem; /* Even smaller on very small screens */
+  }
+  .navbar-brand-text {
+    font-size: 1rem; /* Even smaller text on very small screens */
+  }
+  /* New: Responsive adjustments for chatbot header logo */
+  .chatbot-header-logo {
+    height: 25px; /* Even smaller on mobile */
+    width: 25px;
+  }
+}

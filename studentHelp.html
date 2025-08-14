@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="help.css">
+    <link rel="stylesheet" href="logo.css">
 </head>
 
 <style>
@@ -175,8 +176,8 @@
 
     .header h1 {
         font-size: 1.5rem;
-        font-weight: 700;
-        background: var(--gradient-primary);
+        font-weight: 500;
+        background: #424141;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -1098,7 +1099,14 @@
         <header class="header">
             <div class="header-left">
                 <span class="material-icons menu-icon" id="menuIcon">menu</span>
-                <h1>Classroom</h1>
+                <!-- Logo Section Start -->
+                <div class="logo-container">
+                    <a href="student.html" class="navbar-logo-link">
+                        <img src="logo/logo.jpg" alt="Classroom Logo" class="navbar-logo">
+                        <h1 class="navbar-brand-text">LearnRoom</h1>
+                    </a>
+                </div>
+                <!-- Logo Section End -->
             </div>
             <div class="header-right">
                 <div class="user-info">

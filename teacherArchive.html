@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archive Classes - Classroom</title>
+    <title>Archive Classes - LearnRoom</title>
+    <link rel="icon" type="image/png" href="logo/chatlogo1.jpg">
     <link rel="stylesheet" href="teacher.css">
     <link rel="stylesheet" href="teacherArchive.css">
+    <link rel="stylesheet" href="logo.css">
+    <link rel="stylesheet" href="chatbot.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -18,7 +21,14 @@
         <header class="header">
             <div class="header-left">
                 <span class="material-icons menu-icon" id="menuIcon">menu</span>
-                <h1>Classroom</h1>
+                <!-- Logo Section Start -->
+                <div class="logo-container">
+                    <a href="teacher.html" class="navbar-logo-link">
+                        <img src="logo/logo.jpg" alt="Classroom Logo" class="navbar-logo">
+                        <h1 class="navbar-brand-text">LearnRoom</h1>
+                    </a>
+                </div>
+                <!-- Logo Section End -->
             </div>
             <div class="header-right">
                 <div class="user-info">
@@ -75,12 +85,6 @@
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
             <div class="courses-container">
-                <!-- Header Section -->
-                <section class="courses-header">
-                    <h2 id="dashboardTitle">Archived Classes</h2>
-                    <!-- No add course button on archive page -->
-                </section>
-
                 <!-- Empty State -->
                 <div class="empty-state" id="emptyState" style="display: none;">
                     <div class="empty-icon">
@@ -195,6 +199,101 @@
     </div>
 
 
+    <!-- Chatbot Section Start -->
+    <div class="chatbot-container">
+        <button id="chatbot-toggle-btn" class="chatbot-toggle-btn">
+            <span class="material-icons">chat</span>
+            <span class="chatbot-btn-text">Live Chat</span>
+        </button>
+
+        <div id="chatbot-modal" class="chatbot-modal">
+            <!-- Chatbot Header -->
+            <div class="chatbot-header">
+                <div class="chatbot-header-content">
+                    <div class="chatbot-logo">
+                        <div class="chatbot-logo-circle">
+                            <!-- Changed: Replaced material-icons with img tag for logo -->
+                            <img src="logo/chatlogo1.jpg" alt="Chatbot Logo" class="chatbot-header-logo">
+                        </div>
+                    </div>
+                    <div class="chatbot-header-text">
+                        <h3>Live Chat</h3>
+                        <span class="chatbot-status">Online</span>
+                    </div>
+                </div>
+                <button id="chatbot-close-btn" class="chatbot-close-btn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div class="chatbot-messages" id="chatbot-messages">
+                <!-- Chat messages will be appended here -->
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chatbot-input-area">
+                <!-- Plus Icon with Dropdown -->
+                <div class="chatbot-plus-container">
+                    <button id="chatbot-plus-btn" class="chatbot-plus-btn">
+                        <span class="material-icons">add</span>
+                    </button>
+                    <div id="chatbot-plus-dropdown" class="chatbot-plus-dropdown">
+                        <div class="chatbot-dropdown-item" data-action="customer-support">
+                            <span class="material-icons">support_agent</span>
+                            <span>Customer Support</span>
+                        </div>
+                        <div class="chatbot-dropdown-item" data-action="main-menu">
+                            <span class="material-icons">menu</span>
+                            <span>Main Menu</span>
+                        </div>
+                        <div class="chatbot-dropdown-item" data-action="classroom-help">
+                            <span class="material-icons">school</span>
+                            <span>Classroom Help</span>
+                        </div>
+                        <div class="chatbot-dropdown-item" data-action="technical-support">
+                            <span class="material-icons">build</span>
+                            <span>Technical Support</span>
+                        </div>
+                        <div class="chatbot-dropdown-item" data-action="course-management">
+                            <span class="material-icons">assignment</span>
+                            <span>Course Management</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Wrapper with Emoji Inside -->
+                <div class="chatbot-input-wrapper">
+                    <input type="text" id="chatbot-input" placeholder="Type your message...">
+
+                    <!-- Emoji Icon inside Input Field -->
+                    <div class="chatbot-emoji-container">
+                        <button id="chatbot-emoji-btn" class="chatbot-emoji-btn">
+                            <span class="material-icons">sentiment_satisfied</span>
+                        </button>
+                        <div id="chatbot-emoji-picker" class="chatbot-emoji-picker">
+                            <div class="emoji-categories">
+                                <div class="emoji-category-tabs" id="emoji-category-tabs">
+                                    <!-- Category tabs will be generated by JS -->
+                                </div>
+                                <div class="emoji-grid" id="emoji-grid">
+                                    <!-- Emojis will be generated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Send Button - Small and Professional -->
+                <button id="chatbot-send-btn" class="chatbot-send-btn">
+                    <span class="material-icons">send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Chatbot Section End -->
+
+    <script src="chatbot.js"></script>
     <script src="teacherArchive.js"></script>
 </body>
 

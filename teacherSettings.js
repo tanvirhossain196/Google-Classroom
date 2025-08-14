@@ -464,7 +464,7 @@ document.addEventListener("DOMContentLoaded", function () {
     mainBody.classList.remove("font-small", "font-medium", "font-large"); // Remove all font size classes
     mainBody.classList.add(`font-${selectedSize}`); // Add the selected font size class
     updatePreview();
-    showNotification("ফন্ট সাইজ পরিবর্তন করা হয়েছে!", "success");
+    showNotification("", "success");
   }
 
   function updateFontFamily() {

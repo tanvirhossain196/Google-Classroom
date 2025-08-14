@@ -11,9 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const coursesGrid = document.getElementById("coursesGrid");
   const emptyState = document.getElementById("emptyState");
   const emptyStateText = document.getElementById("emptyStateText");
-  // const addCourseBtn = document.getElementById("addCourseBtn"); // Removed
-  // const courseActionMenu = document.getElementById("courseActionMenu"); // Removed
-  // const dashboardTitle = document.getElementById("dashboardTitle"); // Removed
 
   // New: Join Course Button in Navbar
   const joinCourseNavBtn = document.getElementById("joinCourseNavBtn");
@@ -59,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Event listeners
   menuIcon.addEventListener("click", toggleSidebar);
   logoutBtn.addEventListener("click", handleLogout);
-  // addCourseBtn.addEventListener("click", toggleActionMenu); // Removed
   joinCourseNavBtn.addEventListener("click", showJoinModal); // New: Event listener for the new button
   joinCourseForm.addEventListener("submit", handleJoinCourse);
   closeJoinModal.addEventListener("click", hideJoinModal);
@@ -113,13 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target === joinCourseModal) {
       hideJoinModal();
     }
-    // Removed logic for courseActionMenu as it's removed
-    // if (
-    //   !addCourseBtn.contains(e.target) &&
-    //   !courseActionMenu.contains(e.target)
-    // ) {
-    //   courseActionMenu.classList.remove("show");
-    // }
     // Close enrolled classes dropdown if clicked outside
     if (
       !enrolledClassesDropdownToggle.contains(e.target) &&
@@ -196,12 +185,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateUIForRole() {
     userRoleBadge.textContent = "Student";
     userRoleBadge.className = "role-badge student";
-    // dashboardTitle.textContent = "Student Dashboard"; // Removed
     emptyStateText.textContent = "Join a course with the course code";
-    // updateActionMenu(); // Removed as action menu is removed
   }
-
-  // Removed updateActionMenu function
 
   function toggleSidebar() {
     sidebar.classList.toggle("open");
@@ -219,11 +204,8 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "index.html";
   }
 
-  // Removed toggleActionMenu function
-
   function showJoinModal() {
     joinCourseModal.style.display = "block";
-    // courseActionMenu.classList.remove("show"); // Removed
   }
 
   function hideJoinModal() {
