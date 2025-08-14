@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Login form submission with mobile enhancements
   loginForm.addEventListener("submit", function (e) {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission to avoid page reload and field clearing
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
     console.log("Form submitted:", { email, password, selectedRole });
@@ -79,6 +79,14 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
       handleLogin(email, password, selectedRole);
     }, 1500);
+  });
+
+  // Additional click handler for the button as a fallback for mobile devices
+  loginBtn.addEventListener("click", function (e) {
+    if (loginForm.checkValidity()) {
+      // Check if form is valid
+      loginForm.dispatchEvent(new Event("submit")); // Manually trigger submit event
+    }
   });
 
   function handleLogin(email, password, role) {
@@ -130,14 +138,26 @@ document.addEventListener("DOMContentLoaded", function () {
       // Initialize dashboard
       initializeUserDashboard(email, role);
 
-      // Redirect based on role
+      // Redirect based on role with fallback
       setTimeout(() => {
-        if (role === "admin") {
-          window.location.href = "admin.html";
-        } else if (role === "teacher") {
-          window.location.href = "teacher.html";
-        } else if (role === "student") {
-          window.location.href = "student.html";
+        try {
+          if (role === "admin") {
+            window.location.href = "admin.html";
+          } else if (role === "teacher") {
+            window.location.href = "teacher.html";
+          } else if (role === "student") {
+            window.location.href = "student.html";
+          }
+        } catch (error) {
+          console.error("Redirect error:", error);
+          // Fallback redirect
+          window.location.replace(
+            role === "admin"
+              ? "admin.html"
+              : role === "teacher"
+              ? "teacher.html"
+              : "student.html"
+          );
         }
       }, 1500);
       return;
