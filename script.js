@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const forgotPassword = document.getElementById("forgotPassword"); // This element is not in index.html, but kept for safety
   const roleCards = document.querySelectorAll(".role-card");
   const loginBtn = document.querySelector(".login-btn");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
   let selectedRole = null;
 
   // Function to detect if device is mobile
@@ -30,21 +32,43 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize default credentials on page load
   initializeDefaultCredentials();
 
-  // Role selection with touch support for mobile
+  // Role selection with improved touch support for mobile and persistence
   roleCards.forEach((card) => {
-    // Click event for desktop
-    card.addEventListener("click", handleRoleSelect);
-    // Touch events for mobile
-    card.addEventListener("touchstart", handleRoleSelect);
-    card.addEventListener("touchend", (e) => e.preventDefault()); // Prevent default touch behavior
+    // Unified event handler for both click and touch
+    const handleSelect = (event) => {
+      event.preventDefault(); // Prevent any default behavior
+      event.stopPropagation(); // Stop event bubbling to prevent unselecting
+      roleCards.forEach((c) => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedRole = card.dataset.role;
+      console.log("Selected role:", selectedRole);
+    };
+
+    card.addEventListener("click", handleSelect);
+    card.addEventListener("touchstart", handleSelect, { passive: false });
+    card.addEventListener(
+      "touchend",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      { passive: false }
+    );
   });
 
-  function handleRoleSelect(event) {
-    roleCards.forEach((c) => c.classList.remove("selected"));
-    event.currentTarget.classList.add("selected");
-    selectedRole = event.currentTarget.dataset.role;
-    console.log("Selected role:", selectedRole);
-  }
+  // Prevent role unselection when clicking on input fields
+  [emailInput, passwordInput].forEach((input) => {
+    input.addEventListener(
+      "touchstart",
+      (e) => {
+        e.stopPropagation(); // Stop propagation to prevent affecting role selection
+      },
+      { passive: false }
+    );
+    input.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  });
 
   // Forgot password link
   if (forgotPassword) {
@@ -57,8 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Login form submission with mobile enhancements
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault(); // Prevent default form submission to avoid page reload and field clearing
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
     console.log("Form submitted:", { email, password, selectedRole });
 
     // Validation
@@ -81,13 +105,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1500);
   });
 
-  // Additional click handler for the button as a fallback for mobile devices
+  // Additional click/touch handler for the button as a fallback for mobile devices
   loginBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     if (loginForm.checkValidity()) {
       // Check if form is valid
       loginForm.dispatchEvent(new Event("submit")); // Manually trigger submit event
     }
   });
+  loginBtn.addEventListener(
+    "touchstart",
+    function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (loginForm.checkValidity()) {
+        loginForm.dispatchEvent(new Event("submit"));
+      }
+    },
+    { passive: false }
+  );
 
   function handleLogin(email, password, role) {
     console.log("Handling login:", { email, role });
