@@ -39,7 +39,6 @@ body {
   position: relative;
 }
 
-/* Enhanced Header */
 .app-header {
   background: var(--surface-color);
   backdrop-filter: blur(20px);
@@ -169,7 +168,6 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Enhanced Sidebar */
 .sidebar {
   position: fixed;
   top: 64px;
@@ -250,11 +248,6 @@ body {
   transform: translateX(4px);
 }
 
-.sidebar-header .material-icons {
-  font-size: 24px;
-  min-width: 24px;
-}
-
 .sidebar-item {
   display: flex;
   align-items: center;
@@ -325,7 +318,6 @@ body {
   padding: 12px 0;
 }
 
-/* Enrolled Classes Dropdown Specific Styles */
 .sidebar-header .dropdown-icon {
   margin-left: auto;
   transition: transform 0.3s ease;
@@ -342,19 +334,18 @@ body {
 }
 
 .enrolled-classes-list.open {
-  max-height: 500px; /* Adjust as needed to fit content */
+  max-height: 500px;
   transition: max-height 0.5s ease-in;
 }
 
 .sidebar:not(.open) .enrolled-classes-list {
-  max-height: 0 !important; /* Force hide when sidebar is collapsed */
+  max-height: 0 !important;
 }
 
 .sidebar:not(.open) .sidebar-header .dropdown-icon {
-  display: none; /* Hide dropdown icon when sidebar is collapsed */
+  display: none;
 }
 
-/* Enhanced Course Header Section - Classroom Header */
 .course-header-section {
   background: var(--surface-color);
   border-radius: var(--border-radius);
@@ -454,13 +445,12 @@ body {
   transform: scale(1.1);
 }
 
-/* Enhanced Top Navigation - Fixed at top with proper positioning */
 .course-top-nav {
   background: var(--surface-color);
   border-bottom: 1px solid var(--border-color);
   position: fixed;
   top: 64px;
-  left: 72px; /* Initial position when sidebar is closed */
+  left: 72px;
   right: 0;
   z-index: 998;
   box-shadow: none;
@@ -473,7 +463,7 @@ body {
 }
 
 .course-top-nav.sidebar-open {
-  left: 300px; /* Position when sidebar is open */
+  left: 300px;
 }
 
 .top-nav-tabs {
@@ -541,14 +531,13 @@ body {
   z-index: 2;
 }
 
-/* Hide old course navigation */
 .course-nav {
   display: none;
 }
 
 .content-wrapper {
   margin-top: calc(64px + 48px);
-  margin-left: 72px; /* Initial position when sidebar is closed */
+  margin-left: 72px;
   width: calc(100% - 72px - 50px);
   padding: 0 32px 32px 32px;
   transition: var(--transition);
@@ -560,17 +549,16 @@ body {
 }
 
 .content-wrapper.sidebar-open {
-  margin-left: 300px; /* Position when sidebar is open */
+  margin-left: 300px;
   width: calc(100% - 300px - 50px);
 }
 
 .content-inner {
   width: 100%;
-  max-width: 1400px; /* Adjusted for classwork content */
+  max-width: 1400px;
   transition: var(--transition);
 }
 
-/* Enhanced Main Content */
 .main-content {
   padding: 32px 0;
   margin-top: 0;
@@ -585,11 +573,9 @@ body {
   display: block;
 }
 
-/* Enhanced People Section */
 .people-container {
   background: var(--surface-color);
   border-radius: var(--border-radius);
-  /* box-shadow: var(--shadow-medium); */
   padding: 32px;
   margin: 24px 0;
 }
@@ -674,7 +660,7 @@ body {
 }
 
 .person-item:hover {
-  background: var(--primary-hover);
+  background: var(--primary-color);
   color: white;
 }
 
@@ -700,6 +686,12 @@ body {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.person-item:hover .person-name,
+.person-item:hover .person-role,
+.person-item:hover .person-email {
+  color: white;
 }
 
 .person-role {
@@ -743,7 +735,6 @@ body {
   gap: 8px;
 }
 
-/* Enhanced Empty State */
 .people-empty {
   text-align: center;
   padding: 80px 32px;
@@ -797,7 +788,6 @@ body {
   box-shadow: var(--shadow-medium);
 }
 
-/* Enhanced Invite Modal */
 .invite-modal {
   position: fixed;
   top: 0;
@@ -1113,7 +1103,6 @@ body {
   box-shadow: var(--shadow-medium);
 }
 
-/* Person Detail Modal */
 .person-detail-modal {
   position: fixed;
   top: 0;
@@ -1179,7 +1168,6 @@ body {
   padding: 24px;
 }
 
-/* Sort/Filter Modal */
 .sort-filter-modal {
   position: fixed;
   top: 0;
@@ -1295,7 +1283,6 @@ body {
   font-weight: 600;
 }
 
-/* Enhanced hover effects for top navigation */
 .top-nav-tab:hover {
   background: linear-gradient(
     135deg,
@@ -1304,7 +1291,6 @@ body {
   );
 }
 
-/* Active state animation */
 @keyframes tabActivate {
   0% {
     transform: translateY(2px);
@@ -1320,7 +1306,6 @@ body {
   animation: tabActivate 0.3s ease;
 }
 
-/* Smooth transition for tab content */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1332,12 +1317,10 @@ body {
   }
 }
 
-/* Enhanced visual feedback */
 .top-nav-tab:active {
   transform: translateY(1px);
 }
 
-/* Notification Styles */
 .notification {
   position: fixed;
   top: 80px;
@@ -1375,7 +1358,6 @@ body {
   background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
 }
 
-/* Enhanced Course Color Variations */
 .course-banner.math {
   background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
 }
@@ -1396,7 +1378,6 @@ body {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-/* Responsive adjustments for top navigation */
 @media (max-width: 768px) {
   .course-top-nav {
     left: 0;
@@ -1549,7 +1530,6 @@ body {
   }
 }
 
-/* Enhanced animations */
 .person-item {
   animation: slideInUp 0.3s ease;
 }
@@ -1565,7 +1545,6 @@ body {
   }
 }
 
-/* Loading states */
 .loading-skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
@@ -1587,14 +1566,12 @@ body {
   margin-bottom: 16px;
 }
 
-/* Enhanced focus states */
 .email-input:focus,
 .role-option:focus-within {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
-/* Print styles */
 @media print {
   .invite-modal,
   .person-detail-modal,
@@ -1608,7 +1585,6 @@ body {
   }
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
   :root {
     --border-color: #000000;
@@ -1619,11 +1595,26 @@ body {
   }
 }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.action-btn:hover {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-light);
+}
+
+.action-btn .material-icons {
+  transition: color 0.3s ease;
+}
+
+.action-btn:hover .material-icons {
+  color: white;
 }

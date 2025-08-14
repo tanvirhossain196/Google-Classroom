@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (forgotPassword) {
     forgotPassword.addEventListener("click", function (e) {
       e.preventDefault();
-      showAlert("পাসওয়ার্ড রিসেট ফিচার শীঘ্রই যোগ করা হবে", "error");
+      showAlert("Password reset feature will be added soon", "error");
     });
   }
 
@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Validation
     if (!email || !password) {
-      showAlert("অনুগ্রহ করে সব ফিল্ড পূরণ করুন", "error");
+      showAlert("Please fill in all fields", "error");
       return;
     }
 
     if (!selectedRole) {
-      showAlert("অনুগ্রহ করে একটি ভূমিকা নির্বাচন করুন", "error");
+      showAlert("Please select a role", "error");
       return;
     }
 
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("currentUser", email);
         localStorage.setItem("userRole", "admin");
 
-        showAlert("প্রশাসক হিসেবে সফলভাবে লগইন হয়েছে!", "success");
+        showAlert("Successfully logged in as administrator!", "success");
 
         setTimeout(() => {
           console.log("Redirecting to admin.html now...");
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         console.log("Invalid admin credentials");
         showAlert(
-          "প্রশাসক লগইনের জন্য সঠিক ইমেইল এবং পাসওয়ার্ড প্রয়োজন",
+          "Correct email and password are required for admin login",
           "error"
         );
         resetButton();
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Initialize user dashboard if doesn't exist
         initializeUserDashboard(email, role);
 
-        showAlert("সফলভাবে লগইন হয়েছে!", "success");
+        showAlert("Successfully logged in!", "success");
 
         setTimeout(() => {
           if (role === "teacher") {
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 1500);
       } else {
         showAlert(
-          `এই ইমেইলটি ${user.role} হিসেবে নিবন্ধিত। অনুগ্রহ করে সঠিক ভূমিকা নির্বাচন করুন।`,
+          `This email is registered as a ${user.role}. Please select the correct role.`,
           "error"
         );
         resetButton();
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("currentUser", email);
     localStorage.setItem("userRole", role);
 
-    showAlert("নতুন অ্যাকাউন্ট তৈরি করে লগইন সম্পন্ন হয়েছে!", "success");
+    showAlert("New account created and login successful!", "success");
 
     setTimeout(() => {
       if (role === "teacher") {

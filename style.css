@@ -14,6 +14,13 @@ body {
   padding: 2rem;
 }
 
+/* START: Green color variable for consistency */
+:root {
+  --logo-green: #4AA81E; /* A clean, professional green from the logo */
+  --light-green-hover: #4AA81E; /* Slightly lighter for hover/selection */
+}
+/* END: Green color variable for consistency */
+
 .login-container {
   background: #ffffff;
   border-radius: 20px;
@@ -44,31 +51,31 @@ body {
   margin-bottom: 2.5rem;
 }
 
-.logo {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(145deg, #4f46e5, #7c3aed);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* START: Logo and Project Name Update Styling */
+.logo-container {
   margin: 0 auto 1.5rem;
-  box-shadow: 0 8px 16px rgba(79, 70, 229, 0.25),
-    inset 0 2px 4px rgba(255, 255, 255, 0.25),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.15);
-  position: relative;
 }
 
-.logo::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
-  height: 35%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent);
-  border-radius: 16px 16px 8px 8px;
+.learnroom-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+  object-fit: cover;
 }
+
+.project-name {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Updated: Green color for "Room" */
+.project-name .green-text {
+  color: #4AA81E;
+}
+/* END: Logo and Project Name Update Styling */
 
 .logo i {
   font-size: 2.5rem;
@@ -136,7 +143,8 @@ body {
 .form-control:not(:placeholder-shown) + .form-label,
 .form-control:valid + .form-label {
   transform: translateY(-1.75rem) scale(0.8);
-  color: #4f46e5;
+  /* Updated: Focus color to light green */
+  color: var(--light-green-hover);
   font-weight: 500;
   background: linear-gradient(to right, #ffffff 0%, #ffffff 100%);
   box-shadow: 0 0 0 2px #ffffff;
@@ -144,17 +152,20 @@ body {
 
 .form-control:focus {
   background: linear-gradient(145deg, #ffffff, #fafbff);
-  border-color: #4f46e5;
-  border-top-color: #3730a3;
-  border-bottom-color: #6366f1;
+  /* Updated: Focus border color to light green */
+  border-color: var(--light-green-hover);
+  border-top-color: var(--logo-green);
+  border-bottom-color: var(--light-green-hover);
   box-shadow: inset 0 2px 4px rgba(79, 70, 229, 0.05),
-    0 0 0 3px rgba(79, 70, 229, 0.1), 0 4px 12px rgba(79, 70, 229, 0.15);
+    /* Adjusted shadow to match green theme */ 0 0 0 3px rgba(52, 211, 153, 0.1),
+    0 4px 12px rgba(52, 211, 153, 0.15);
   outline: none;
   transform: translateY(-1px);
 }
 
 .form-control:focus + .form-label {
-  color: #4f46e5;
+  /* Updated: Focus label color to light green */
+  color: var(--light-green-hover);
 }
 
 .form-control:invalid:not(:placeholder-shown) {
@@ -168,22 +179,23 @@ body {
 }
 
 .form-control:valid:not(:placeholder-shown) {
-  border-color: #10b981;
-  border-top-color: #059669;
-  border-bottom-color: #34d399;
+  border-color: #4AA81E;
+  border-top-color: #4AA81E;
+  border-bottom-color: #4AA81E;
 }
 
 .form-control:valid:not(:placeholder-shown) + .form-label {
-  color: #10b981;
+  color: #4AA81E;
 }
 
 .login-btn {
   width: 100%;
   padding: 1.3rem;
-  background: linear-gradient(145deg, #5b52f0, #8b7cf6);
-  border: 2px solid #4338ca;
-  border-top-color: #6366f1;
-  border-bottom-color: #3730a3;
+  /* Updated: Button background to green gradient */
+  background: #4AA81E;
+  border: 2px solid var(--logo-green);
+  border-top-color: var(--light-green-hover);
+  border-bottom-color: var(--logo-green);
   border-radius: 15px;
   color: white;
   font-size: 1.1rem;
@@ -191,7 +203,8 @@ body {
   margin-bottom: 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 12px rgba(79, 70, 229, 0.25),
+  /* Updated: Button shadow to green */
+  box-shadow: 0 6px 12px rgba(52, 211, 153, 0.25),
     inset 0 2px 4px rgba(255, 255, 255, 0.25),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15),
     inset 0 1px 2px rgba(255, 255, 255, 0.3);
@@ -213,20 +226,24 @@ body {
 
 .login-btn:hover {
   transform: translateY(-3px);
-  background: linear-gradient(145deg, #6366f1, #9333ea);
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35),
+  /* Updated: Button hover background to a slightly different green gradient */
+  background: #4AA81E;
+  /* Updated: Button hover shadow to green */
+  box-shadow: 0 10px 20px rgba(52, 211, 153, 0.35),
     inset 0 2px 4px rgba(255, 255, 255, 0.3),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .login-btn:active {
   transform: translateY(1px);
-  background: linear-gradient(145deg, #4338ca, #7c3aed);
-  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3),
+  /* Updated: Button active background to a darker green gradient */
+  background: linear-gradient(145deg, #047857, #065f46);
+  /* Updated: Button active shadow to green */
+  box-shadow: 0 2px 6px rgba(52, 211, 153, 0.3),
     inset 0 3px 8px rgba(0, 0, 0, 0.25),
     inset 0 -1px 2px rgba(255, 255, 255, 0.1);
-  border-top-color: #3730a3;
-  border-bottom-color: #6366f1;
+  border-top-color: var(--logo-green);
+  border-bottom-color: var(--light-green-hover);
 }
 
 .login-btn:disabled {
@@ -241,14 +258,16 @@ body {
 }
 
 .forgot-link a {
-  color: #4f46e5;
+  /* Updated: Link color to light green */
+  color: var(--light-green-hover);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .forgot-link a:hover {
-  color: #3730a3;
+  /* Updated: Link hover color to logo green */
+  color: var(--logo-green);
 }
 
 .role-section {
@@ -265,10 +284,13 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* Updated: Removed flex-direction and gap from .role-cards to use Bootstrap grid */
 .role-cards {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
+  /* display: flex; */
+  /* gap: 1rem; */
+  /* justify-content: center; */
+  margin-left: -0.5rem; /* Adjust for Bootstrap's default row negative margin */
+  margin-right: -0.5rem; /* Adjust for Bootstrap's default row negative margin */
 }
 
 .role-card {
@@ -281,12 +303,18 @@ body {
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  flex: 1;
-  max-width: 140px;
+  /* Removed flex and max-width to let Bootstrap columns control size */
+  /* flex: 1; */
+  /* max-width: 140px; */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06),
     inset 0 2px 4px rgba(255, 255, 255, 0.9),
     inset 0 -2px 4px rgba(0, 0, 0, 0.04);
   position: relative;
+  height: 100%; /* Ensure cards in a row have equal height */
+  display: flex; /* For vertical centering of content */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .role-card::before {
@@ -302,24 +330,28 @@ body {
 }
 
 .role-card:hover {
-  border-color: #4f46e5;
-  border-top-color: #6366f1;
-  border-bottom-color: #3730a3;
+  /* Updated: Hover border color to light green */
+  border-color: var(--light-green-hover);
+  border-top-color: var(--light-green-hover);
+  border-bottom-color: var(--logo-green);
   transform: translateY(-4px);
   background: linear-gradient(145deg, #fefeff, #f0f4ff);
-  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.15),
+  /* Updated: Hover shadow to light green */
+  box-shadow: 0 12px 24px rgba(52, 211, 153, 0.15),
     inset 0 2px 4px rgba(255, 255, 255, 0.9),
     inset 0 -2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .role-card.selected {
-  background: linear-gradient(145deg, #5b52f0, #8b7cf6);
-  border-color: #4338ca;
-  border-top-color: #6366f1;
-  border-bottom-color: #3730a3;
+  /* Updated: Selected background to green gradient */
+  background: #4AA81E;
+  border-color: #4AA81E;
+  border-top-color: #4AA81E;
+  border-bottom-color: #4AA81E;
   color: white;
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.3),
+  /* Updated: Selected shadow to green */
+  box-shadow: 0 12px 24px rgba(52, 211, 153, 0.3),
     inset 0 2px 4px rgba(255, 255, 255, 0.25),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -330,7 +362,8 @@ body {
 
 .role-icon {
   font-size: 2.5rem;
-  color: #4f46e5;
+  /* Updated: Icon color to light green */
+  color:#4AA81E;
   margin-bottom: 0.8rem;
   display: block;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -463,25 +496,37 @@ body {
     font-size: 1.8rem;
   }
 
-  .logo {
-    width: 70px;
-    height: 70px;
-    border-radius: 16px;
+  /* START: Responsive Logo and Project Name Update */
+  .learnroom-logo {
+    width: 50px;
+    height: 50px;
   }
 
-  .logo i {
-    font-size: 2rem;
+  .project-name {
+    font-size: 1.8rem;
   }
+  /* END: Responsive Logo and Project Name Update */
 
+  /* Role cards are now handled by Bootstrap grid, ensuring they stay in one row */
   .role-cards {
-    flex-direction: column;
-    align-items: center;
+    /* flex-direction: row; */ /* Ensure they stay in a row */
+    /* align-items: stretch; */ /* Align items to stretch to fill height */
   }
 
   .role-card {
-    max-width: 200px;
+    /* max-width: none; */ /* Remove max-width to allow Bootstrap col to control */
     width: 100%;
     border-radius: 14px;
+    padding: 1rem 0.5rem; /* Adjusted padding for smaller cards */
+  }
+
+  .role-icon {
+    font-size: 2rem; /* Slightly smaller icons for smaller cards */
+    margin-bottom: 0.5rem;
+  }
+
+  .role-name {
+    font-size: 0.8rem; /* Smaller font for role names */
   }
 
   .alert {
@@ -518,5 +563,26 @@ body {
 
   .role-card {
     border-radius: 12px;
+    padding: 0.8rem 0.3rem; /* Even smaller padding for very small screens */
   }
+
+  .role-icon {
+    font-size: 1.8rem; /* Further reduced icon size */
+    margin-bottom: 0.4rem;
+  }
+
+  .role-name {
+    font-size: 0.75rem; /* Further reduced font size */
+  }
+
+  /* START: Smaller Mobile Logo and Project Name Update */
+  .learnroom-logo {
+    width: 45px;
+    height: 45px;
+  }
+
+  .project-name {
+    font-size: 1.6rem;
+  }
+  /* END: Smaller Mobile Logo and Project Name Update */
 }

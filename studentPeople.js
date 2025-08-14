@@ -4,45 +4,42 @@ class PeopleManager {
     this.students = [];
     this.currentSort = "name";
     this.currentFilter = "all";
-    this.isEnrolledClassesOpen = false; // New state for dropdown
+    this.isEnrolledClassesOpen = false;
     this.init();
   }
 
+  /**
+   * Initializes the PeopleManager, setting up user data, course data, and event listeners.
+   */
   init() {
-    // Simulate a student user for this version
-    // Ensure currentUser and userRole are correctly set from localStorage
     this.currentUser = localStorage.getItem("currentUser");
     this.userRole = localStorage.getItem("userRole");
 
     if (!this.currentUser || this.userRole !== "student") {
-      // Redirect to login or dashboard if session is invalid
       window.location.href = "index.html";
       return;
     }
 
-    // Simulate a selected course for testing if none exists
-    // This block is primarily for direct access to studentPeople.html for testing
     if (!localStorage.getItem("selectedCourse")) {
       const dummyCourse = {
         id: "course123",
         name: "Advanced Math",
         section: "Section A",
         teacher: "Teacher User",
-        students: ["Student One", "Student Two", this.currentUser], // Include the simulated student
+        students: ["Student One", "Student Two", this.currentUser],
         subject: "Math",
         room: "101",
         code: "MATH101",
       };
       localStorage.setItem("selectedCourse", JSON.stringify(dummyCourse));
-      // Also update the dashboard for the student
-      const studentDashboardKey = `dashboard_${this.currentUser}`;
       let studentDashboard = JSON.parse(
-        localStorage.getItem(studentDashboardKey) || '{"courses": []}'
+        localStorage.getItem(`dashboard_${this.currentUser}`) ||
+          '{"courses": []}'
       );
       if (!studentDashboard.courses.find((c) => c.id === dummyCourse.id)) {
         studentDashboard.courses.push(dummyCourse);
         localStorage.setItem(
-          studentDashboardKey,
+          `dashboard_${this.currentUser}`,
           JSON.stringify(studentDashboard)
         );
       }
@@ -50,19 +47,19 @@ class PeopleManager {
 
     this.setupElements();
     this.setupEventListeners();
-    this.loadUserData(); // This will now use the actual currentUser
+    this.loadUserData();
     this.loadCourseData();
     this.setupProfessionalFeatures();
     this.setupNotificationSystem();
     this.loadPeopleData();
-    // Class code generation/management is not for students, so skip it
-    // this.generateClassCode();
-    this.handleResize(); // Call on init to set initial state
+    this.handleResize();
 
-    // Hide teacher-specific elements for students
     this.hideTeacherSpecificElements();
   }
 
+  /**
+   * Sets up references to all necessary DOM elements.
+   */
   setupElements() {
     this.elements = {
       menuBtn: document.getElementById("menuBtn"),
@@ -73,11 +70,10 @@ class PeopleManager {
       settingsLink: document.getElementById("settingsLink"),
       currentCourseName: document.getElementById("currentCourseName"),
       courseHeaderSection: document.querySelector(".course-header-section"),
-      courseTopNav: document.getElementById("courseTopNav"), // Added for responsive adjustment
+      courseTopNav: document.getElementById("courseTopNav"),
 
-      // People specific elements
-      invitePeopleBtn: document.getElementById("invitePeopleBtn"), // Will be hidden
-      inviteFirstPersonBtn: document.getElementById("inviteFirstPersonBtn"), // Will be hidden
+      invitePeopleBtn: document.getElementById("invitePeopleBtn"),
+      inviteFirstPersonBtn: document.getElementById("inviteFirstPersonBtn"),
       teachersSection: document.getElementById("teachersSection"),
       studentsSection: document.getElementById("studentsSection"),
       teachersList: document.getElementById("teachersList"),
@@ -87,7 +83,6 @@ class PeopleManager {
       peopleEmpty: document.getElementById("peopleEmpty"),
       peopleContent: document.getElementById("peopleContent"),
 
-      // Modal elements (invite modal will be hidden)
       inviteModal: document.getElementById("inviteModal"),
       closeInviteModal: document.getElementById("closeInviteModal"),
       cancelInvite: document.getElementById("cancelInvite"),
@@ -97,18 +92,27 @@ class PeopleManager {
       copyCodeBtn: document.getElementById("copyCodeBtn"),
       regenerateCodeBtn: document.getElementById("regenerateCodeBtn"),
 
-      // Sort/Filter elements
-      sortStudentsBtn: document.getElementById("sortStudentsBtn"),
-      filterStudentsBtn: document.getElementById("filterStudentsBtn"),
       sortFilterModal: document.getElementById("sortFilterModal"),
       closeSortFilter: document.getElementById("closeSortFilter"),
 
-      // Person detail modal
       personDetailModal: document.getElementById("personDetailModal"),
       closePersonDetail: document.getElementById("closePersonDetail"),
       personDetailBody: document.getElementById("personDetailBody"),
+      detailAvatar: document.getElementById("detailAvatar"),
+      detailName: document.getElementById("detailName"),
+      detailRole: document.getElementById("detailRole"),
+      detailEmail: document.getElementById("detailEmail"),
+      detailJoinDate: document.getElementById("detailJoinDate"),
+      detailLastActive: document.getElementById("detailLastActive"),
+      detailAssignments: document.getElementById("detailAssignments"),
 
-      // Enrolled Classes Dropdown elements
+      sortByName: document.getElementById("sortByName"),
+      sortByRecent: document.getElementById("sortByRecent"),
+      sortByAlphabetical: document.getElementById("sortByAlphabetical"),
+      filterByAll: document.getElementById("filterByAll"),
+      filterByActive: document.getElementById("filterByActive"),
+      filterByInactive: document.getElementById("filterByInactive"),
+
       enrolledClassesHeader: document.getElementById("enrolledClassesHeader"),
       enrolledClassesList: document.getElementById("enrolledClasses"),
       enrolledClassesDropdownIcon: document.getElementById(
@@ -117,27 +121,19 @@ class PeopleManager {
     };
   }
 
+  /**
+   * Sets up all event listeners for interactive elements.
+   */
   setupEventListeners() {
-    // Enhanced menu functionality
     this.elements.menuBtn.addEventListener("click", () => this.toggleSidebar());
 
-    // The 'classesLink' now directly uses its href to 'student.html'
-    // and the goToDashboard function is modified to preserve selectedCourse.
-    // This ensures that clicking "Classroom" in the sidebar navigates correctly
-    // while preserving the user session.
     this.elements.classesLink.addEventListener("click", (e) => {
-      e.preventDefault(); // Prevent default link behavior
-      this.goToDashboard(); // Call custom navigation function
+      e.preventDefault();
+      this.goToDashboard();
     });
 
-    // Enhanced resize handling
     window.addEventListener("resize", () => this.handleResize());
 
-    // People specific event listeners (invite buttons are hidden for students)
-    // No event listeners for invitePeopleBtn, inviteFirstPersonBtn, sendInvites, copyCodeBtn, regenerateCodeBtn
-    // as these functionalities are for teachers only.
-
-    // Modal event listeners (invite modal will not be shown)
     if (this.elements.closeInviteModal) {
       this.elements.closeInviteModal.addEventListener("click", () =>
         this.hideInviteModal()
@@ -150,33 +146,18 @@ class PeopleManager {
       );
     }
 
-    // Sort/Filter event listeners
-    if (this.elements.sortStudentsBtn) {
-      this.elements.sortStudentsBtn.addEventListener("click", () =>
-        this.showSortFilterModal()
-      );
-    }
-
-    if (this.elements.filterStudentsBtn) {
-      this.elements.filterStudentsBtn.addEventListener("click", () =>
-        this.showSortFilterModal()
-      );
-    }
-
     if (this.elements.closeSortFilter) {
       this.elements.closeSortFilter.addEventListener("click", () =>
         this.hideSortFilterModal()
       );
     }
 
-    // Person detail modal
     if (this.elements.closePersonDetail) {
       this.elements.closePersonDetail.addEventListener("click", () =>
         this.hidePersonDetailModal()
       );
     }
 
-    // Close modals on backdrop click
     if (this.elements.inviteModal) {
       this.elements.inviteModal.addEventListener("click", (e) => {
         if (e.target === this.elements.inviteModal) {
@@ -201,7 +182,6 @@ class PeopleManager {
       });
     }
 
-    // Enrolled Classes Dropdown event listener
     if (this.elements.enrolledClassesHeader) {
       this.elements.enrolledClassesHeader.addEventListener("click", () =>
         this.toggleEnrolledClasses()
@@ -209,23 +189,25 @@ class PeopleManager {
     }
   }
 
+  /**
+   * Hides elements that are specific to teacher functionality.
+   */
   hideTeacherSpecificElements() {
-    // Hide invite buttons
     if (this.elements.invitePeopleBtn) {
       this.elements.invitePeopleBtn.style.display = "none";
     }
     if (this.elements.inviteFirstPersonBtn) {
       this.elements.inviteFirstPersonBtn.style.display = "none";
     }
-    // Hide invite modal itself
     if (this.elements.inviteModal) {
       this.elements.inviteModal.style.display = "none";
     }
   }
 
+  /**
+   * Loads user data from local storage and sets user initials.
+   */
   loadUserData() {
-    // currentUser and userRole are already set in init() from localStorage
-    // No need to re-fetch here, just use the class properties
     if (!this.currentUser) {
       this.navigateWithAnimation("index.html");
       return;
@@ -234,11 +216,14 @@ class PeopleManager {
     this.setUserInitials();
   }
 
+  /**
+   * Loads the selected course data from local storage.
+   */
   loadCourseData() {
     const selectedCourse = localStorage.getItem("selectedCourse");
 
     if (!selectedCourse) {
-      this.showErrorAndRedirect("কোন কোর্স নির্বাচিত নয়");
+      this.showErrorAndRedirect("No course selected");
       return;
     }
 
@@ -246,7 +231,7 @@ class PeopleManager {
       this.currentCourse = JSON.parse(selectedCourse);
 
       if (!this.currentCourse.id) {
-        this.showErrorAndRedirect("কোর্স ডেটা সঠিক নয়");
+        this.showErrorAndRedirect("Course data is incorrect");
         return;
       }
 
@@ -254,29 +239,36 @@ class PeopleManager {
       this.updateCourseDisplay();
       this.loadEnrolledClasses();
     } catch (error) {
-      this.showErrorAndRedirect("কোর্স লোড করতে সমস্যা হয়েছে");
+      this.showErrorAndRedirect("Problem loading course");
     }
   }
 
+  /**
+   * Displays an error message and redirects to the student dashboard.
+   * @param {string} message - The error message to display.
+   */
   showErrorAndRedirect(message) {
     alert(message);
-    // Ensure that when redirecting to student.html, the session is preserved.
-    // The student.js dashboard handles this by checking localStorage for currentUser.
     window.location.href = "student.html";
   }
 
+  /**
+   * Sets up professional features like tooltips and keyboard shortcuts.
+   */
   setupProfessionalFeatures() {
     this.setupTooltips();
     this.setupKeyboardShortcuts();
     this.setupThemeDetection();
   }
 
+  /**
+   * Toggles the visibility and width of the sidebar.
+   */
   toggleSidebar() {
     this.elements.sidebar.classList.toggle("open");
     this.elements.contentWrapper.classList.toggle("sidebar-open");
-    this.elements.courseTopNav.classList.toggle("sidebar-open"); // Adjust top nav
+    this.elements.courseTopNav.classList.toggle("sidebar-open");
 
-    // Add smooth animation effect
     this.elements.sidebar.style.transition =
       "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
     this.elements.contentWrapper.style.transition =
@@ -284,16 +276,18 @@ class PeopleManager {
     this.elements.courseTopNav.style.transition =
       "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
 
-    // If sidebar is closed, collapse enrolled classes
     if (!this.elements.sidebar.classList.contains("open")) {
       this.isEnrolledClassesOpen = false;
       this.elements.enrolledClassesList.classList.remove("open");
       this.elements.enrolledClassesDropdownIcon.style.transform =
         "rotate(0deg)";
     }
-    this.loadEnrolledClasses(); // Re-render to adjust for collapsed state
+    this.loadEnrolledClasses();
   }
 
+  /**
+   * Toggles the visibility of the enrolled classes dropdown in the sidebar.
+   */
   toggleEnrolledClasses() {
     this.isEnrolledClassesOpen = !this.isEnrolledClassesOpen;
     this.elements.enrolledClassesList.classList.toggle(
@@ -306,8 +300,11 @@ class PeopleManager {
       : "rotate(0deg)";
   }
 
+  /**
+   * Navigates to a given URL with a fade-out animation.
+   * @param {string} url - The URL to navigate to.
+   */
   navigateWithAnimation(url) {
-    // Add fade out animation before navigation
     document.body.style.opacity = "0";
     document.body.style.transition = "opacity 0.3s ease";
 
@@ -316,14 +313,16 @@ class PeopleManager {
     }, 300);
   }
 
-  // MODIFIED: Ensure selectedCourse is NOT cleared when returning to dashboard
+  /**
+   * Navigates back to the student dashboard.
+   */
   goToDashboard() {
-    // Preserve selectedCourse when navigating back to the dashboard
-    // The student.js dashboard will load courses based on currentUser,
-    // and selectedCourse is only used when navigating *into* a specific course page.
     this.navigateWithAnimation("student.html");
   }
 
+  /**
+   * Sets the user's initials in the avatar display.
+   */
   setUserInitials() {
     const initial = this.currentUser.charAt(0).toUpperCase();
     if (this.elements.userInitial) {
@@ -331,35 +330,38 @@ class PeopleManager {
     }
   }
 
+  /**
+   * Updates the display of the current course information.
+   */
   updateCourseDisplay() {
-    // Course title এবং section update করুন
     const courseTitle = document.getElementById("courseTitle");
     const courseSection = document.getElementById("courseSection");
 
     if (courseTitle) courseTitle.textContent = this.currentCourse.name;
     if (courseSection) courseSection.textContent = this.currentCourse.section;
 
-    // Page title update করুন
-    document.title = `${this.currentCourse.name} - ক্লাসরুম`;
+    document.title = `${this.currentCourse.name} - Classroom`;
 
-    // Sidebar এ current course name update করুন
     if (this.elements.currentCourseName) {
       this.elements.currentCourseName.textContent = this.currentCourse.name;
     }
 
-    // Course banner theme set করুন
     const courseBanner = document.getElementById("courseBanner");
     if (courseBanner) {
       const courseType = this.getCourseType(this.currentCourse.subject);
       courseBanner.className = `course-banner ${courseType}`;
     }
 
-    // Course info update করুন
     this.updateCourseInfo();
   }
 
+  /**
+   * Determines the CSS class for the course banner based on the subject.
+   * @param {string} subject - The subject of the course.
+   * @returns {string} The CSS class name for the course type.
+   */
   getCourseType(subject) {
-    if (!subject) return "science"; // default
+    if (!subject) return "science";
 
     const subjectLower = subject.toLowerCase();
 
@@ -377,14 +379,15 @@ class PeopleManager {
     )
       return "programming";
 
-    return "science"; // default
+    return "science";
   }
 
+  /**
+   * Updates additional course information displayed in the banner.
+   */
   updateCourseInfo() {
-    // In studentPeople.js, we always assume the user is a student
-    const isTeacher = false; // Always false for student version
+    const isTeacher = false;
 
-    // Create additional course info section
     const courseBanner = document.getElementById("courseBanner");
     if (!courseBanner) return;
 
@@ -399,55 +402,54 @@ class PeopleManager {
       }
     }
 
-    // Clear previous content
     additionalInfo.innerHTML = "";
 
     if (isTeacher) {
-      // This block should ideally not be reached in studentPeople.js
-      // Teacher sees: course code, subject, room, student count
       if (this.currentCourse.code) {
         const courseCode = document.createElement("p");
-        courseCode.innerHTML = `কোর্স কোড: ${this.currentCourse.code}`;
+        courseCode.innerHTML = `Course Code: ${this.currentCourse.code}`;
         additionalInfo.appendChild(courseCode);
       }
 
       if (this.currentCourse.subject) {
         const subject = document.createElement("p");
-        subject.innerHTML = `বিষয়: ${this.currentCourse.subject}`;
+        subject.innerHTML = `Subject: ${this.currentCourse.subject}`;
         additionalInfo.appendChild(subject);
       }
 
       if (this.currentCourse.room) {
         const room = document.createElement("p");
-        room.innerHTML = `রুম: ${this.currentCourse.room}`;
+        room.innerHTML = `Room: ${this.currentCourse.room}`;
         additionalInfo.appendChild(room);
       }
 
       const studentCount = document.createElement("p");
       studentCount.innerHTML = `: ${
         this.currentCourse.students ? this.currentCourse.students.length : 0
-      } জন`;
+      } members`;
       additionalInfo.appendChild(studentCount);
     } else {
-      // Student sees: subject, room, teacher name
       if (this.currentCourse.subject) {
         const subject = document.createElement("p");
-        subject.innerHTML = `বিষয়: ${this.currentCourse.subject}`;
+        subject.innerHTML = `Subject: ${this.currentCourse.subject}`;
         additionalInfo.appendChild(subject);
       }
 
       if (this.currentCourse.room) {
         const room = document.createElement("p");
-        room.innerHTML = `রুম: ${this.currentCourse.room}`;
+        room.innerHTML = `Room: ${this.currentCourse.room}`;
         additionalInfo.appendChild(room);
       }
 
       const teacher = document.createElement("p");
-      teacher.innerHTML = `শিক্ষক: ${this.currentCourse.teacher}`;
+      teacher.innerHTML = `Teacher: ${this.currentCourse.teacher}`;
       additionalInfo.appendChild(teacher);
     }
   }
 
+  /**
+   * Loads and displays the list of enrolled classes in the sidebar.
+   */
   loadEnrolledClasses() {
     const enrolledClasses = this.elements.enrolledClassesList;
     if (!enrolledClasses) return;
@@ -479,30 +481,37 @@ class PeopleManager {
 
       courseItem.appendChild(avatar);
       if (isSidebarOpen) {
-        // Only append text if sidebar is open
         courseItem.appendChild(courseName);
       }
       enrolledClasses.appendChild(courseItem);
     });
   }
 
+  /**
+   * Retrieves the user's dashboard data from local storage.
+   * @returns {object} The user's dashboard object.
+   */
   getUserDashboard() {
     const dashboardKey = `dashboard_${this.currentUser}`;
     return JSON.parse(localStorage.getItem(dashboardKey) || '{"courses": []}');
   }
 
+  /**
+   * Switches the current course and reloads the page.
+   * @param {object} course - The course object to switch to.
+   */
   switchToCourse(course) {
     localStorage.setItem("selectedCourse", JSON.stringify(course));
     location.reload();
   }
 
-  // People specific methods
+  /**
+   * Loads teacher and student data for the current course.
+   */
   loadPeopleData() {
-    // Load teachers and students from course data
-    this.teachers = [this.currentCourse.teacher]; // Course creator is always a teacher
+    this.teachers = [this.currentCourse.teacher];
     this.students = this.currentCourse.students || [];
 
-    // Add any additional teachers if they exist
     if (
       this.currentCourse.teachers &&
       Array.isArray(this.currentCourse.teachers)
@@ -517,6 +526,9 @@ class PeopleManager {
     this.renderPeopleData();
   }
 
+  /**
+   * Renders the teacher and student lists based on loaded data.
+   */
   renderPeopleData() {
     const totalPeople = this.teachers.length + this.students.length;
 
@@ -531,6 +543,9 @@ class PeopleManager {
     this.updateCounts();
   }
 
+  /**
+   * Displays the empty state message when no members are present.
+   */
   showEmptyState() {
     if (this.elements.peopleEmpty) {
       this.elements.peopleEmpty.style.display = "block";
@@ -543,6 +558,9 @@ class PeopleManager {
     }
   }
 
+  /**
+   * Hides the empty state message.
+   */
   hideEmptyState() {
     if (this.elements.peopleEmpty) {
       this.elements.peopleEmpty.style.display = "none";
@@ -555,6 +573,9 @@ class PeopleManager {
     }
   }
 
+  /**
+   * Renders the list of teachers.
+   */
   renderTeachers() {
     if (!this.elements.teachersList) return;
 
@@ -570,12 +591,14 @@ class PeopleManager {
     });
   }
 
+  /**
+   * Renders the list of students, applying current sort and filter options.
+   */
   renderStudents() {
     if (!this.elements.studentsList) return;
 
     this.elements.studentsList.innerHTML = "";
 
-    // Sort students based on current sort option
     const sortedStudents = this.sortStudents([...this.students]);
 
     sortedStudents.forEach((student, index) => {
@@ -588,6 +611,13 @@ class PeopleManager {
     });
   }
 
+  /**
+   * Creates a DOM element for a single person (teacher or student).
+   * @param {string} name - The name of the person.
+   * @param {string} role - The role of the person ('teacher' or 'student').
+   * @param {number} index - The index of the person in the list for animation delay.
+   * @returns {HTMLElement} The created person element.
+   */
   createPersonElement(name, role, index) {
     const personDiv = document.createElement("div");
     personDiv.className = "person-item";
@@ -620,35 +650,6 @@ class PeopleManager {
     const actions = document.createElement("div");
     actions.className = "person-actions";
 
-    // View details button
-    const viewBtn = document.createElement("button");
-    viewBtn.className = "action-btn";
-    viewBtn.innerHTML =
-      '<span class="material-icons">visibility</span> বিস্তারিত';
-    viewBtn.onclick = () => this.showPersonDetails(name, role);
-
-    // Message button
-    const messageBtn = document.createElement("button");
-    messageBtn.className = "action-btn";
-    messageBtn.innerHTML = '<span class="material-icons">message</span> বার্তা';
-    messageBtn.onclick = () => this.sendMessage(name);
-
-    actions.appendChild(viewBtn);
-    actions.appendChild(messageBtn);
-
-    // The remove button is only for teachers, so it's not added here for students.
-    // if (
-    //   this.currentUser === this.currentCourse.teacher &&
-    //   name !== this.currentUser
-    // ) {
-    //   const removeBtn = document.createElement("button");
-    //   removeBtn.className = "action-btn";
-    //   removeBtn.innerHTML =
-    //     '<span class="material-icons">remove_circle</span> সরান';
-    //   removeBtn.onclick = () => this.removePerson(name, role);
-    //   actions.appendChild(removeBtn);
-    // }
-
     personDiv.appendChild(avatar);
     personDiv.appendChild(info);
     personDiv.appendChild(actions);
@@ -656,6 +657,11 @@ class PeopleManager {
     return personDiv;
   }
 
+  /**
+   * Generates a consistent background color for a person's avatar based on their name.
+   * @param {string} name - The name of the person.
+   * @returns {string} A CSS linear-gradient string for the avatar background.
+   */
   getAvatarColor(name) {
     const colors = [
       "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -672,13 +678,20 @@ class PeopleManager {
     return colors[index];
   }
 
+  /**
+   * Generates a fake email address for a given name.
+   * @param {string} name - The name of the person.
+   * @returns {string} A generated email address.
+   */
   generateEmail(name) {
-    // Generate a fake email for demonstration
     const domain = "";
     const username = name.toLowerCase().replace(/\s+/g, ".");
     return username + domain;
   }
 
+  /**
+   * Updates the displayed counts of teachers and students.
+   */
   updateCounts() {
     if (this.elements.teachersCount) {
       this.elements.teachersCount.textContent = this.teachers.length;
@@ -688,12 +701,16 @@ class PeopleManager {
     }
   }
 
+  /**
+   * Sorts a list of students based on the current sort option.
+   * @param {Array<string>} students - The array of student names to sort.
+   * @returns {Array<string>} The sorted array of student names.
+   */
   sortStudents(students) {
     switch (this.currentSort) {
       case "name":
         return students.sort((a, b) => a.localeCompare(b));
       case "recent":
-        // For demonstration, we'll reverse the array to simulate recent activity
         return students.reverse();
       case "alphabetical":
         return students.sort((a, b) => a.localeCompare(b));
@@ -702,193 +719,124 @@ class PeopleManager {
     }
   }
 
-  // Modal methods (invite modal is not for students)
+  /**
+   * Displays the invite modal (not functional for students).
+   */
   showInviteModal() {
-    // This function should not be called for students, but if it is, do nothing or show an error.
-    this.showNotification("শিক্ষকদের জন্য আমন্ত্রণ কার্যকারিতা", "info");
+    this.showNotification("Invite functionality for teachers", "info");
   }
 
-  hideInviteModal() {
-    // This function should not be called for students.
-  }
+  /**
+   * Hides the invite modal (not functional for students).
+   */
+  hideInviteModal() {}
 
+  /**
+   * Displays the person detail modal with information about a specific person.
+   * @param {string} name - The name of the person.
+   * @param {string} role - The role of the person.
+   */
   showPersonDetails(name, role) {
     if (!this.elements.personDetailModal || !this.elements.personDetailBody)
       return;
 
-    // Create person detail content
-    const detailContent = this.createPersonDetailContent(name, role);
-    this.elements.personDetailBody.innerHTML = detailContent;
+    this.elements.detailAvatar.textContent = name.charAt(0).toUpperCase();
+    this.elements.detailAvatar.style.background = this.getAvatarColor(name);
+    this.elements.detailName.textContent = name;
+    this.elements.detailRole.textContent = role === "teacher" ? "" : "";
+    this.elements.detailEmail.textContent = this.generateEmail(name);
+    this.elements.detailJoinDate.textContent = this.generateJoinDate();
+    this.elements.detailLastActive.textContent = this.generateLastActive();
+    this.elements.detailAssignments.textContent =
+      role === "student" ? this.generateAssignmentCount() : "N/A";
 
     this.elements.personDetailModal.classList.add("active");
   }
 
+  /**
+   * Hides the person detail modal.
+   */
   hidePersonDetailModal() {
     if (this.elements.personDetailModal) {
       this.elements.personDetailModal.classList.remove("active");
     }
   }
 
-  createPersonDetailContent(name, role) {
-    const email = this.generateEmail(name);
-    const joinDate = this.generateJoinDate();
-    const lastActive = this.generateLastActive();
-
-    return `
-      <div class="person-detail-profile">
-        <div class="person-detail-avatar" style="background: ${this.getAvatarColor(
-          name
-        )}">
-          ${name.charAt(0).toUpperCase()}
-        </div>
-        <div class="person-detail-info">
-          <h3 class="person-detail-name">${name}</h3>
-          <p class="person-detail-role">${role === "teacher" ? "" : ""}</p>
-          <p class="person-detail-email">${email}</p>
-        </div>
-      </div>
-      
-      <div class="person-detail-stats">
-        <div class="stat-item">
-          <span class="stat-label">যোগদানের তারিখ:</span>
-          <span class="stat-value">${joinDate}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">শেষ সক্রিয়:</span>
-          <span class="stat-value">${lastActive}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">জমা দেওয়া কাজ:</span>
-          <span class="stat-value">${
-            role === "student" ? this.generateAssignmentCount() : "প্রযোজ্য নয়"
-          }</span>
-        </div>
-      </div>
-
-      <div class="person-detail-actions">
-        <button class="detail-action-btn primary" onclick="peopleManager.sendMessage('${name}')">
-          <span class="material-icons">message</span>
-          বার্তা পাঠান
-        </button>
-        <button class="detail-action-btn secondary" onclick="peopleManager.viewProfile('${name}')">
-          <span class="material-icons">person</span>
-          প্রোফাইল দেখুন
-        </button>
-        ${
-          // Remove button is not shown for students
-          ""
-        }
-      </div>
-    `;
-  }
-
+  /**
+   * Generates a random join date for demonstration purposes.
+   * @returns {string} A formatted date string.
+   */
   generateJoinDate() {
     const dates = [
-      "১৫ জানুয়ারি, ২০২৪",
-      "২৮ ফেব্রুয়ারি, ২০২৪",
-      "১২ মার্চ, ২০২৪",
-      "০৫ এপ্রিল, ২০২৪",
-      "২০ মে, ২০২৪",
+      "January 15, 2024",
+      "February 28, 2024",
+      "March 12, 2024",
+      "April 05, 2024",
+      "May 20, 2024",
     ];
     return dates[Math.floor(Math.random() * dates.length)];
   }
 
+  /**
+   * Generates a random last active time for demonstration purposes.
+   * @returns {string} A string indicating last active time.
+   */
   generateLastActive() {
     const activities = [
-      "২ ঘন্টা আগে",
-      "১ দিন আগে",
-      "৩ দিন আগে",
-      "১ সপ্তাহ আগে",
-      "২ সপ্তাহ আগে",
+      "2 hours ago",
+      "1 day ago",
+      "3 days ago",
+      "1 week ago",
+      "2 weeks ago",
     ];
     return activities[Math.floor(Math.random() * activities.length)];
   }
 
+  /**
+   * Generates a random number of submitted assignments for demonstration purposes.
+   * @returns {number} A random integer representing assignment count.
+   */
   generateAssignmentCount() {
     return Math.floor(Math.random() * 15) + 1;
   }
 
+  /**
+   * Displays the sort and filter modal.
+   */
   showSortFilterModal() {
     if (!this.elements.sortFilterModal) return;
 
-    // Create sort/filter content
-    const sortFilterContent = this.createSortFilterContent();
-    const modalBody =
-      this.elements.sortFilterModal.querySelector(".sort-filter-body");
-    if (modalBody) {
-      modalBody.innerHTML = sortFilterContent;
-    }
+    if (this.elements.sortByName)
+      this.elements.sortByName.checked = this.currentSort === "name";
+    if (this.elements.sortByRecent)
+      this.elements.sortByRecent.checked = this.currentSort === "recent";
+    if (this.elements.sortByAlphabetical)
+      this.elements.sortByAlphabetical.checked =
+        this.currentSort === "alphabetical";
+
+    if (this.elements.filterByAll)
+      this.elements.filterByAll.checked = this.currentFilter === "all";
+    if (this.elements.filterByActive)
+      this.elements.filterByActive.checked = this.currentFilter === "active";
+    if (this.elements.filterByInactive)
+      this.elements.filterByInactive.checked =
+        this.currentFilter === "inactive";
 
     this.elements.sortFilterModal.classList.add("active");
   }
 
+  /**
+   * Hides the sort and filter modal.
+   */
   hideSortFilterModal() {
     if (this.elements.sortFilterModal) {
       this.elements.sortFilterModal.classList.remove("active");
     }
   }
 
-  createSortFilterContent() {
-    return `
-      <div class="filter-section">
-        <h4>সাজান</h4>
-        <div class="sort-options">
-          <label class="sort-option">
-            <input type="radio" name="sortBy" value="name" ${
-              this.currentSort === "name" ? "checked" : ""
-            }>
-            নাম অনুযায়ী
-          </label>
-          <label class="sort-option">
-            <input type="radio" name="sortBy" value="recent" ${
-              this.currentSort === "recent" ? "checked" : ""
-            }>
-            সাম্প্রতিক কার্যকলাপ
-          </label>
-          <label class="sort-option">
-            <input type="radio" name="sortBy" value="alphabetical" ${
-              this.currentSort === "alphabetical" ? "checked" : ""
-            }>
-            বর্ণানুক্রমিক
-          </label>
-        </div>
-      </div>
-
-      <div class="filter-section">
-        <h4>ফিল্টার</h4>
-        <div class="sort-options">
-          <label class="sort-option">
-            <input type="radio" name="filterBy" value="all" ${
-              this.currentFilter === "all" ? "checked" : ""
-            }>
-            সকল সদস্য
-          </label>
-          <label class="sort-option">
-            <input type="radio" name="filterBy" value="active" ${
-              this.currentFilter === "active" ? "checked" : ""
-            }>
-            সক্রিয় সদস্য
-          </label>
-          <label class="sort-option">
-            <input type="radio" name="filterBy" value="inactive" ${
-              this.currentFilter === "inactive" ? "checked" : ""
-            }>
-            নিষ্ক্রিয় সদস্য
-          </label>
-        </div>
-      </div>
-
-      <div class="sort-filter-actions">
-        <button class="modal-btn-cancel" onclick="peopleManager.hideSortFilterModal()">
-          বাতিল করুন
-        </button>
-        <button class="modal-btn-confirm" onclick="peopleManager.applySortFilter()">
-          প্রয়োগ করুন
-        </button>
-      </div>
-    `;
-  }
-
+  /**
+   * Applies the selected sort and filter options and re-renders the student list.
+   */
   applySortFilter() {
     const sortBy = document.querySelector(
       'input[name="sortBy"]:checked'
@@ -906,18 +854,23 @@ class PeopleManager {
 
     this.renderStudents();
     this.hideSortFilterModal();
-    this.showNotification("সাজানো এবং ফিল্টার প্রয়োগ করা হয়েছে", "success");
+    this.showNotification("Sort and filter applied", "success");
   }
 
-  // Action methods (teacher-specific methods removed or made non-functional)
+  /**
+   * Simulates sending invitations (not allowed for students).
+   */
   sendInvitations() {
-    // This method is for teachers only.
-    this.showNotification("শিক্ষার্থীদের আমন্ত্রণ পাঠানোর অনুমতি নেই", "error");
+    this.showNotification(
+      "Students are not allowed to send invitations",
+      "error"
+    );
   }
 
+  /**
+   * Updates course data in local storage (minimal functionality for students).
+   */
   updateCourseData() {
-    // Students cannot directly update course data like adding/removing members.
-    // This method is kept minimal for student-side to avoid errors if called.
     localStorage.setItem("selectedCourse", JSON.stringify(this.currentCourse));
 
     const userDashboard = this.getUserDashboard();
@@ -931,71 +884,98 @@ class PeopleManager {
     }
   }
 
+  /**
+   * Simulates sending a message to a person.
+   * @param {string} name - The name of the person to message.
+   */
   sendMessage(name) {
-    // Simulate sending a message
-    this.showNotification(`${name} কে বার্তা পাঠানোর জন্য প্রস্তুত`, "info");
+    this.showNotification(`Ready to send message to ${name}`, "info");
     this.hidePersonDetailModal();
   }
 
+  /**
+   * Simulates viewing a person's profile.
+   * @param {string} name - The name of the person whose profile to view.
+   */
   viewProfile(name) {
-    // Simulate viewing profile
-    this.showNotification(`${name} এর প্রোফাইল দেখানো হচ্ছে`, "info");
+    this.showNotification(`Showing profile of ${name}`, "info");
     this.hidePersonDetailModal();
   }
 
+  /**
+   * Simulates removing a person (not allowed for students).
+   * @param {string} name - The name of the person to remove.
+   * @param {string} role - The role of the person.
+   */
   removePerson(name, role) {
-    // This method is for teachers only.
-    this.showNotification("শিক্ষার্থীদের সদস্য সরানোর অনুমতি নেই", "error");
+    this.showNotification(
+      "Students are not allowed to remove members",
+      "error"
+    );
   }
 
-  // Class code methods (not for students)
-  generateClassCode() {
-    // Not applicable for students
-  }
+  /**
+   * Placeholder for generating class code (not applicable for students).
+   */
+  generateClassCode() {}
 
+  /**
+   * Placeholder for creating a random code (not applicable for students).
+   * @returns {string} An empty string.
+   */
   createRandomCode() {
-    // Not applicable for students
     return "";
   }
 
+  /**
+   * Simulates copying class code (not applicable for students).
+   */
   copyClassCode() {
-    // Not applicable for students
     this.showNotification(
-      "শিক্ষার্থীদের ক্লাস কোড কপি করার অনুমতি নেই",
+      "Students are not allowed to copy class code",
       "error"
     );
   }
 
+  /**
+   * Simulates regenerating class code (not applicable for students).
+   */
   regenerateClassCode() {
-    // Not applicable for students
     this.showNotification(
-      "শিক্ষার্থীদের ক্লাস কোড পুনরুত্পাদন করার অনুমতি নেই",
+      "Students are not allowed to regenerate class code",
       "error"
     );
   }
 
-  // Utility methods
-  setupTooltips() {
-    // Enhanced tooltip functionality
-  }
+  /**
+   * Sets up tooltip functionality.
+   */
+  setupTooltips() {}
 
+  /**
+   * Sets up keyboard shortcuts for modal control.
+   */
   setupKeyboardShortcuts() {
     document.addEventListener("keydown", (e) => {
-      // Escape to close modals
       if (e.key === "Escape") {
-        this.hideInviteModal(); // Will do nothing for students
+        this.hideInviteModal();
         this.hidePersonDetailModal();
         this.hideSortFilterModal();
       }
 
-      // Ctrl/Cmd + I to open invite modal (disabled for students)
       if ((e.ctrlKey || e.metaKey) && e.key === "i") {
         e.preventDefault();
-        this.showNotification("শিক্ষার্থীদের আমন্ত্রণ কার্যকারিতা নেই", "info");
+        this.showNotification(
+          "Invite functionality not available for students",
+          "info"
+        );
       }
     });
   }
 
+  /**
+   * Detects user's preferred color scheme and applies dark theme if necessary.
+   */
   setupThemeDetection() {
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -1012,10 +992,16 @@ class PeopleManager {
     });
   }
 
-  setupNotificationSystem() {
-    // Real-time notification system setup
-  }
+  /**
+   * Sets up a real-time notification system.
+   */
+  setupNotificationSystem() {}
 
+  /**
+   * Displays a temporary notification message.
+   * @param {string} message - The message to display.
+   * @param {string} type - The type of notification ('success', 'error', 'info').
+   */
   showNotification(message, type) {
     const notification = document.createElement("div");
     notification.className = `notification ${type}`;
@@ -1027,19 +1013,19 @@ class PeopleManager {
     }, 3000);
   }
 
+  /**
+   * Handles responsive adjustments based on window size.
+   */
   handleResize() {
-    // Enhanced responsive behavior
     const sidebar = this.elements.sidebar;
     const contentWrapper = this.elements.contentWrapper;
     const courseTopNav = this.elements.courseTopNav;
 
     if (window.innerWidth <= 768) {
-      // Adjusted breakpoint for mobile
       sidebar.classList.remove("open");
       contentWrapper.classList.remove("sidebar-open");
       courseTopNav.classList.remove("sidebar-open");
     } else {
-      // For larger screens, ensure correct positioning if sidebar is open
       if (sidebar.classList.contains("open")) {
         contentWrapper.classList.add("sidebar-open");
         courseTopNav.classList.add("sidebar-open");
@@ -1048,10 +1034,14 @@ class PeopleManager {
         courseTopNav.classList.remove("sidebar-open");
       }
     }
-    this.loadEnrolledClasses(); // Re-render to adjust for collapsed state on resize
+    this.loadEnrolledClasses();
   }
 
-  // Advanced people management methods (teacher-specific methods removed or made non-functional)
+  /**
+   * Searches for people (teachers or students) based on a query.
+   * @param {string} query - The search query.
+   * @returns {Array<string>} An array of matching person names.
+   */
   searchPeople(query) {
     const allPeople = [...this.teachers, ...this.students];
     return allPeople.filter((person) =>
@@ -1059,33 +1049,55 @@ class PeopleManager {
     );
   }
 
+  /**
+   * Simulates exporting the people list (not allowed for students).
+   */
   exportPeopleList() {
     this.showNotification(
-      "শিক্ষার্থীদের সদস্য তালিকা ডাউনলোড করার অনুমতি নেই",
+      "Students are not allowed to download member list",
       "error"
     );
   }
 
+  /**
+   * Simulates importing a people list (not allowed for students).
+   * @param {File} file - The file to import.
+   */
   importPeopleList(file) {
     this.showNotification(
-      "শিক্ষার্থীদের সদস্য তালিকা আমদানি করার অনুমতি নেই",
+      "Students are not allowed to import member list",
       "error"
     );
   }
 
+  /**
+   * Simulates bulk inviting people (not allowed for students).
+   * @param {string} emailList - A comma-separated string of emails.
+   * @returns {boolean} Always returns false.
+   */
   bulkInvite(emailList) {
     this.showNotification(
-      "শিক্ষার্থীদের বাল্ক আমন্ত্রণ পাঠানোর অনুমতি নেই",
+      "Students are not allowed to send bulk invitations",
       "error"
     );
     return false;
   }
 
+  /**
+   * Validates an email address format.
+   * @param {string} email - The email address to validate.
+   * @returns {boolean} True if the email is valid, false otherwise.
+   */
   validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
 
+  /**
+   * Extracts a capitalized name from an email address.
+   * @param {string} email - The email address.
+   * @returns {string} The extracted name.
+   */
   extractNameFromEmail(email) {
     return email
       .split("@")[0]
@@ -1093,7 +1105,10 @@ class PeopleManager {
       .replace(/\b\w/g, (l) => l.toUpperCase());
   }
 
-  // Analytics and reporting
+  /**
+   * Gathers analytics data about the people in the class.
+   * @returns {object} An object containing various analytics metrics.
+   */
   getPeopleAnalytics() {
     return {
       totalPeople: this.teachers.length + this.students.length,
@@ -1112,12 +1127,20 @@ class PeopleManager {
     };
   }
 
+  /**
+   * Calculates the average length of names among all members.
+   * @returns {string} The average name length, formatted to one decimal place.
+   */
   calculateAverageNameLength() {
     const allNames = [...this.teachers, ...this.students];
     const totalLength = allNames.reduce((sum, name) => sum + name.length, 0);
     return (totalLength / allNames.length).toFixed(1);
   }
 
+  /**
+   * Finds the most common first letter among all member names.
+   * @returns {string} The most common first letter.
+   */
   getMostCommonFirstLetter() {
     const allNames = [...this.teachers, ...this.students];
     const letterCount = {};
@@ -1132,7 +1155,9 @@ class PeopleManager {
     );
   }
 
-  // Accessibility enhancements
+  /**
+   * Sets up accessibility features for the people list.
+   */
   setupAccessibility() {
     const peopleList = document.querySelectorAll(".person-item");
     peopleList.forEach((item, index) => {
@@ -1157,13 +1182,22 @@ class PeopleManager {
     this.announcer = announcer;
   }
 
+  /**
+   * Announces a message to screen readers.
+   * @param {string} message - The message to announce.
+   */
   announceToScreenReader(message) {
     if (this.announcer) {
       this.announcer.textContent = message;
     }
   }
 
-  // Performance optimizations
+  /**
+   * Debounces a function call to limit its execution rate.
+   * @param {Function} func - The function to debounce.
+   * @param {number} wait - The debounce time in milliseconds.
+   * @returns {Function} The debounced function.
+   */
   debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -1176,13 +1210,18 @@ class PeopleManager {
     };
   }
 
-  // Lazy loading for large lists
+  /**
+   * Sets up virtual scrolling for large student lists.
+   */
   setupVirtualScrolling() {
     if (this.students.length > 100) {
       this.renderStudentsVirtual();
     }
   }
 
+  /**
+   * Renders students using virtual scrolling for performance optimization.
+   */
   renderStudentsVirtual() {
     const container = this.elements.studentsList;
     const itemHeight = 80;
@@ -1224,16 +1263,22 @@ class PeopleManager {
     updateVisibleItems();
   }
 
-  // Error handling and recovery
+  /**
+   * Handles errors by logging and displaying a notification.
+   * @param {Error} error - The error object.
+   * @param {string} context - The context where the error occurred.
+   */
   handleError(error, context) {
     console.error(`Error in ${context}:`, error);
     this.showNotification(
-      `একটি সমস্যা হয়েছে: ${context}। অনুগ্রহ করে আবার চেষ্টা করুন।`,
+      `An issue occurred: ${context}. Please try again.`,
       "error"
     );
   }
 
-  // Cleanup and memory management
+  /**
+   * Cleans up event listeners and timers before the page unloads.
+   */
   destroy() {
     window.removeEventListener("resize", this.handleResize);
     document.removeEventListener("keydown", this.setupKeyboardShortcuts);
@@ -1247,25 +1292,32 @@ class PeopleManager {
     }
   }
 
-  // Auto-refresh functionality
+  /**
+   * Sets up auto-refresh functionality for people data.
+   */
   setupAutoRefresh() {
     this.refreshTimer = setInterval(() => {
       this.loadPeopleData();
     }, 30000);
   }
 
-  // Offline support
+  /**
+   * Sets up offline support by listening for online/offline events.
+   */
   setupOfflineSupport() {
     window.addEventListener("online", () => {
-      this.showNotification("ইন্টারনেট সংযোগ পুনরুদ্ধার হয়েছে", "success");
+      this.showNotification("Internet connection restored", "success");
       this.syncOfflineChanges();
     });
 
     window.addEventListener("offline", () => {
-      this.showNotification("ইন্টারনেট সংযোগ বিচ্ছিন্ন হয়েছে", "info");
+      this.showNotification("Internet connection disconnected", "info");
     });
   }
 
+  /**
+   * Synchronizes offline changes to the people data.
+   */
   syncOfflineChanges() {
     const offlineChanges = localStorage.getItem("offline_people_changes");
     if (offlineChanges) {
@@ -1279,6 +1331,10 @@ class PeopleManager {
     }
   }
 
+  /**
+   * Processes a list of offline changes to update people data.
+   * @param {Array<object>} changes - An array of change objects.
+   */
   processOfflineChanges(changes) {
     changes.forEach((change) => {
       switch (change.type) {

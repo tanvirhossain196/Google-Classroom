@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -17,20 +17,17 @@
 
 <body>
     <div class="app-container">
-        <!-- Enhanced Header -->
         <header class="app-header">
             <div class="header-left">
                 <button class="menu-btn" id="menuBtn">
                     <span class="material-icons">menu</span>
                 </button>
-                <!-- Logo Section Start -->
                 <div class="logo-container">
                     <a href="teacher.html" class="navbar-logo-link">
                         <img src="logo/logo.jpg" alt="Classroom Logo" class="navbar-logo">
                         <h1 class="navbar-brand-text">LearnRoom</h1>
                     </a>
                 </div>
-                <!-- Logo Section End -->
             </div>
             <div class="header-right">
                 <button class="header-icon-btn">
@@ -45,7 +42,6 @@
             </div>
         </header>
 
-        <!-- Enhanced Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-content">
                 <div class="current-course-section">
@@ -66,7 +62,6 @@
                     <span class="sidebar-text">Settings</span>
                 </a>
 
-                <!-- Enrolled Classes Dropdown -->
                 <div class="sidebar-header" id="enrolledClassesHeader">
                     <span class="material-icons">school</span>
                     <span class="sidebar-text">Enrolled Classes</span>
@@ -74,12 +69,10 @@
                 </div>
 
                 <div id="enrolledClasses" class="enrolled-classes-list">
-                    <!-- Enrolled classes will be populated here -->
                 </div>
             </div>
         </aside>
 
-        <!-- Enhanced Top Navigation -->
         <nav class="course-top-nav" id="courseTopNav">
             <div class="top-nav-tabs">
                 <button class="top-nav-tab" data-tab="stream" onclick="window.location.href='teacherStream.html'">
@@ -97,17 +90,14 @@
             </div>
         </nav>
 
-        <!-- Enhanced Content Wrapper -->
         <main class="content-wrapper" id="contentWrapper">
             <div class="content-inner">
-                <!-- Enhanced Course Header -->
                 <section class="course-header-section" style="display: none;">
                     <div class="course-banner" id="courseBanner">
                         <div class="banner-content">
                             <h1 class="course-title" id="courseTitle">Course loading...</h1>
                             <p class="course-section" id="courseSection">Section loading...</p>
 
-                            <!-- Course additional info -->
                             <div class="course-additional-info">
                                 <p id="courseCode">Course Code: ---</p>
                                 <p id="studentsCount">Students: ---</p>
@@ -120,9 +110,7 @@
                     </div>
                 </section>
 
-                <!-- Enhanced Main Content -->
                 <section class="main-content">
-                    <!-- People Tab -->
                     <div id="people" class="tab-content active">
                         <div class="people-container" id="peopleContent">
                             <div class="people-header">
@@ -136,7 +124,6 @@
                                 </button>
                             </div>
 
-                            <!-- Teachers Section -->
                             <div class="people-section" id="teachersSection">
                                 <div class="section-header">
                                     <h3 class="section-title">
@@ -146,11 +133,9 @@
                                     </h3>
                                 </div>
                                 <div class="people-list" id="teachersList">
-                                    <!-- Teachers will be populated here -->
                                 </div>
                             </div>
 
-                            <!-- Students Section -->
                             <div class="people-section" id="studentsSection">
                                 <div class="section-header">
                                     <h3 class="section-title">
@@ -170,11 +155,9 @@
                                     </div>
                                 </div>
                                 <div class="people-list" id="studentsList">
-                                    <!-- Students will be populated here -->
                                 </div>
                             </div>
 
-                            <!-- Empty State -->
                             <div class="people-empty" id="peopleEmpty" style="display: none;">
                                 <div class="empty-icon">
                                     <span class="material-icons">people_outline</span>
@@ -188,7 +171,6 @@
                             </div>
                         </div>
 
-                        <!-- Invite People Modal -->
                         <div class="invite-modal" id="inviteModal" style="display: none;">
                             <div class="invite-modal-content">
                                 <div class="invite-modal-header">
@@ -202,7 +184,6 @@
                                 </div>
 
                                 <div class="invite-modal-body">
-                                    <!-- Invite by Email -->
                                     <div class="invite-section">
                                         <div class="invite-section-header">
                                             <h4>Invite by Email</h4>
@@ -234,7 +215,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Invite by Class Code -->
                                     <div class="invite-section">
                                         <div class="invite-section-header">
                                             <h4>Share Class Code</h4>
@@ -269,16 +249,24 @@
                             </div>
                         </div>
 
-                        <!-- Person Detail Modal -->
-                        <div class="person-detail-modal" id="personDetailModal" style="display: none;">
-                            <div class="person-detail-content">
-                                <div class="person-detail-header">
-                                    <button class="close-person-detail" id="closePersonDetail">
-                                        <span class="material-icons">close</span>
-                                    </button>
-                                </div>
-                                <div class="person-detail-body" id="personDetailBody">
-                                    <!-- Person detail content will be loaded here -->
+                        <!-- Bootstrap Person Detail Modal -->
+                        <div class="modal fade" id="personDetailBootstrapModal" tabindex="-1"
+                            aria-labelledby="personDetailBootstrapModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="personDetailBootstrapModalLabel">Person Details
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" id="personDetailBootstrapBody">
+                                        <!-- Person details will be loaded here by JS -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -293,7 +281,6 @@
                                     </button>
                                 </div>
                                 <div class="sort-filter-body">
-                                    <!-- Sort options -->
                                     <div class="filter-section">
                                         <h4>Sort</h4>
                                         <div class="sort-options">
@@ -312,7 +299,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Filter options -->
                                     <div class="filter-section">
                                         <h4>Filter</h4>
                                         <div class="sort-options">
@@ -331,7 +317,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Apply actions -->
                                     <div class="sort-filter-actions">
                                         <button class="modal-btn-cancel" onclick="peopleManager.hideSortFilterModal()">
                                             Cancel
@@ -348,7 +333,6 @@
             </div>
         </main>
 
-        <!-- Assignment Detail View Modal -->
         <div class="assignment-detail-modal" id="assignmentDetailModal" style="display: none;">
             <div class="assignment-detail-content">
                 <div class="assignment-detail-header">
@@ -357,14 +341,12 @@
                     </button>
                 </div>
                 <div class="assignment-detail-body" id="assignmentDetailBody">
-                    <!-- Assignment detail content will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
 
 
-    <!-- Chatbot Section Start -->
     <div class="chatbot-container">
         <button id="chatbot-toggle-btn" class="chatbot-toggle-btn">
             <span class="material-icons">chat</span>
@@ -372,12 +354,10 @@
         </button>
 
         <div id="chatbot-modal" class="chatbot-modal">
-            <!-- Chatbot Header -->
             <div class="chatbot-header">
                 <div class="chatbot-header-content">
                     <div class="chatbot-logo">
                         <div class="chatbot-logo-circle">
-                            <!-- Changed: Replaced material-icons with img tag for logo -->
                             <img src="logo/chatlogo1.jpg" alt="Chatbot Logo" class="chatbot-header-logo">
                         </div>
                     </div>
@@ -391,14 +371,10 @@
                 </button>
             </div>
 
-            <!-- Chat Messages Area -->
             <div class="chatbot-messages" id="chatbot-messages">
-                <!-- Chat messages will be appended here -->
             </div>
 
-            <!-- Chat Input Area -->
             <div class="chatbot-input-area">
-                <!-- Plus Icon with Dropdown -->
                 <div class="chatbot-plus-container">
                     <button id="chatbot-plus-btn" class="chatbot-plus-btn">
                         <span class="material-icons">add</span>
@@ -427,11 +403,9 @@
                     </div>
                 </div>
 
-                <!-- Input Wrapper with Emoji Inside -->
                 <div class="chatbot-input-wrapper">
                     <input type="text" id="chatbot-input" placeholder="Type your message...">
 
-                    <!-- Emoji Icon inside Input Field -->
                     <div class="chatbot-emoji-container">
                         <button id="chatbot-emoji-btn" class="chatbot-emoji-btn">
                             <span class="material-icons">sentiment_satisfied</span>
@@ -439,24 +413,20 @@
                         <div id="chatbot-emoji-picker" class="chatbot-emoji-picker">
                             <div class="emoji-categories">
                                 <div class="emoji-category-tabs" id="emoji-category-tabs">
-                                    <!-- Category tabs will be generated by JS -->
                                 </div>
                                 <div class="emoji-grid" id="emoji-grid">
-                                    <!-- Emojis will be generated by JS -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Send Button - Small and Professional -->
                 <button id="chatbot-send-btn" class="chatbot-send-btn">
                     <span class="material-icons">send</span>
                 </button>
             </div>
         </div>
     </div>
-    <!-- Chatbot Section End -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="teacherPeople.js"></script>

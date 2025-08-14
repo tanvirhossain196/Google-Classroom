@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LearnRoom - Person</title>
     <link rel="icon" type="image/png" href="logo/chatlogo1.jpg">
-    
+
     <link rel="stylesheet" href="studentPeople.css">
     <link rel="stylesheet" href="logo.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -17,20 +17,17 @@
 
 <body>
     <div class="app-container">
-        <!-- Enhanced Header -->
         <header class="app-header">
             <div class="header-left">
                 <button class="menu-btn" id="menuBtn">
                     <span class="material-icons">menu</span>
                 </button>
-                <!-- Logo Section Start -->
                 <div class="logo-container">
                     <a href="student.html" class="navbar-logo-link">
                         <img src="logo/logo.jpg" alt="Classroom Logo" class="navbar-logo">
                         <h1 class="navbar-brand-text">LearnRoom</h1>
                     </a>
                 </div>
-                <!-- Logo Section End -->
             </div>
             <div class="header-right">
                 <button class="header-icon-btn">
@@ -45,7 +42,6 @@
             </div>
         </header>
 
-        <!-- Enhanced Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-content">
                 <div class="current-course-section">
@@ -54,7 +50,6 @@
                         <span class="course-name-text" id="currentCourseName">Course loading...</span>
                     </div>
                 </div>
-
 
                 <a href="student.html" class="sidebar-item" id="classesLink">
                     <span class="material-icons">home</span>
@@ -66,7 +61,6 @@
                     <span class="sidebar-text">Settings</span>
                 </a>
 
-                <!-- Enrolled Classes Dropdown -->
                 <div class="sidebar-header" id="enrolledClassesHeader">
                     <span class="material-icons">school</span>
                     <span class="sidebar-text">Enrolled Classes</span>
@@ -74,12 +68,10 @@
                 </div>
 
                 <div id="enrolledClasses" class="enrolled-classes-list">
-                    <!-- Enrolled classes will be populated here -->
                 </div>
             </div>
         </aside>
 
-        <!-- Enhanced Top Navigation -->
         <nav class="course-top-nav" id="courseTopNav">
             <div class="top-nav-tabs">
                 <button class="top-nav-tab" data-tab="stream" onclick="window.location.href='studentStream.html'">
@@ -97,17 +89,14 @@
             </div>
         </nav>
 
-        <!-- Enhanced Content Wrapper -->
         <main class="content-wrapper" id="contentWrapper">
             <div class="content-inner">
-                <!-- Enhanced Course Header -->
                 <section class="course-header-section" style="display: none;">
                     <div class="course-banner" id="courseBanner">
                         <div class="banner-content">
                             <h1 class="course-title" id="courseTitle">Course loading...</h1>
                             <p class="course-section" id="courseSection">Section loading...</p>
 
-                            <!-- Course additional info -->
                             <div class="course-additional-info">
                                 <p id="courseCode">Course Code: ---</p>
                                 <p id="studentsCount">Students: ---</p>
@@ -120,9 +109,7 @@
                     </div>
                 </section>
 
-                <!-- Enhanced Main Content -->
                 <section class="main-content">
-                    <!-- People Tab -->
                     <div id="people" class="tab-content active">
                         <div class="people-container" id="peopleContent">
                             <div class="people-header">
@@ -130,14 +117,12 @@
                                     <span class="material-icons">people</span>
                                     Class Members
                                 </h2>
-                                <!-- Invite People button is hidden for students -->
                                 <button class="invite-people-btn" id="invitePeopleBtn" style="display: none;">
                                     <span class="material-icons">person_add</span>
                                     Invite People
                                 </button>
                             </div>
 
-                            <!-- Teachers Section -->
                             <div class="people-section" id="teachersSection">
                                 <div class="section-header">
                                     <h3 class="section-title">
@@ -147,11 +132,9 @@
                                     </h3>
                                 </div>
                                 <div class="people-list" id="teachersList">
-                                    <!-- Teachers will be populated here -->
                                 </div>
                             </div>
 
-                            <!-- Students Section -->
                             <div class="people-section" id="studentsSection">
                                 <div class="section-header">
                                     <h3 class="section-title">
@@ -160,29 +143,18 @@
                                         <span class="count-badge" id="studentsCount">0</span>
                                     </h3>
                                     <div class="section-actions">
-                                        <button class="action-btn" id="sortStudentsBtn">
-                                            <span class="material-icons">sort</span>
-                                            Sort
-                                        </button>
-                                        <button class="action-btn" id="filterStudentsBtn">
-                                            <span class="material-icons">filter_list</span>
-                                            Filter
-                                        </button>
                                     </div>
                                 </div>
                                 <div class="people-list" id="studentsList">
-                                    <!-- Students will be populated here -->
                                 </div>
                             </div>
 
-                            <!-- Empty State -->
                             <div class="people-empty" id="peopleEmpty" style="display: none;">
                                 <div class="empty-icon">
                                     <span class="material-icons">people_outline</span>
                                 </div>
                                 <h3>No Members</h3>
                                 <p>No teachers or students have joined this class yet.</p>
-                                <!-- Invite First Person button is hidden for students -->
                                 <button class="empty-action-btn" id="inviteFirstPersonBtn" style="display: none;">
                                     <span class="material-icons">person_add</span>
                                     Invite First Person
@@ -190,7 +162,6 @@
                             </div>
                         </div>
 
-                        <!-- Invite People Modal (hidden for students) -->
                         <div class="invite-modal" id="inviteModal" style="display: none;">
                             <div class="invite-modal-content">
                                 <div class="invite-modal-header">
@@ -204,7 +175,6 @@
                                 </div>
 
                                 <div class="invite-modal-body">
-                                    <!-- Invite by Email -->
                                     <div class="invite-section">
                                         <div class="invite-section-header">
                                             <h4>Invite by Email</h4>
@@ -233,7 +203,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Invite by Class Code -->
                                     <div class="invite-section">
                                         <div class="invite-section-header">
                                             <h4>Share Class Code</h4>
@@ -268,7 +237,6 @@
                             </div>
                         </div>
 
-                        <!-- Person Detail Modal -->
                         <div class="person-detail-modal" id="personDetailModal" style="display: none;">
                             <div class="person-detail-content">
                                 <div class="person-detail-header">
@@ -277,12 +245,37 @@
                                     </button>
                                 </div>
                                 <div class="person-detail-body" id="personDetailBody">
-                                    <!-- Person detail content will be loaded here -->
+                                    <div class="person-detail-profile">
+                                        <div class="person-detail-avatar" id="detailAvatar">
+                                        </div>
+                                        <div class="person-detail-info">
+                                            <h3 class="person-detail-name" id="detailName"></h3>
+                                            <p class="person-detail-role" id="detailRole"></p>
+                                            <p class="person-detail-email" id="detailEmail"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="person-detail-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Join Date:</span>
+                                            <span class="stat-value" id="detailJoinDate"></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Last Active:</span>
+                                            <span class="stat-value" id="detailLastActive"></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Submitted Assignments:</span>
+                                            <span class="stat-value" id="detailAssignments"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="person-detail-actions">
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sort/Filter Modal -->
                         <div class="sort-filter-modal" id="sortFilterModal" style="display: none;">
                             <div class="sort-filter-content">
                                 <div class="sort-filter-header">
@@ -292,45 +285,44 @@
                                     </button>
                                 </div>
                                 <div class="sort-filter-body">
-                                    <!-- Sort options -->
                                     <div class="filter-section">
                                         <h4>Sort</h4>
                                         <div class="sort-options">
                                             <label class="sort-option">
-                                                <input type="radio" name="sortBy" value="name" checked>
+                                                <input type="radio" name="sortBy" value="name" id="sortByName">
                                                 By Name
                                             </label>
                                             <label class="sort-option">
-                                                <input type="radio" name="sortBy" value="recent">
+                                                <input type="radio" name="sortBy" value="recent" id="sortByRecent">
                                                 By Recent Activity
                                             </label>
                                             <label class="sort-option">
-                                                <input type="radio" name="sortBy" value="alphabetical">
+                                                <input type="radio" name="sortBy" value="alphabetical"
+                                                    id="sortByAlphabetical">
                                                 By Alphabetical Order
                                             </label>
                                         </div>
                                     </div>
 
-                                    <!-- Filter options -->
                                     <div class="filter-section">
                                         <h4>Filter</h4>
                                         <div class="sort-options">
                                             <label class="sort-option">
-                                                <input type="radio" name="filterBy" value="all" checked>
+                                                <input type="radio" name="filterBy" value="all" id="filterByAll">
                                                 All Members
                                             </label>
                                             <label class="sort-option">
-                                                <input type="radio" name="filterBy" value="active">
+                                                <input type="radio" name="filterBy" value="active" id="filterByActive">
                                                 Active Members
                                             </label>
                                             <label class="sort-option">
-                                                <input type="radio" name="filterBy" value="inactive">
+                                                <input type="radio" name="filterBy" value="inactive"
+                                                    id="filterByInactive">
                                                 Inactive Members
                                             </label>
                                         </div>
                                     </div>
 
-                                    <!-- Apply actions -->
                                     <div class="sort-filter-actions">
                                         <button class="modal-btn-cancel" onclick="peopleManager.hideSortFilterModal()">
                                             Cancel
@@ -347,7 +339,6 @@
             </div>
         </main>
 
-        <!-- Assignment Detail View Modal -->
         <div class="assignment-detail-modal" id="assignmentDetailModal" style="display: none;">
             <div class="assignment-detail-content">
                 <div class="assignment-detail-header">
@@ -356,7 +347,6 @@
                     </button>
                 </div>
                 <div class="assignment-detail-body" id="assignmentDetailBody">
-                    <!-- Assignment detail content will be loaded here -->
                 </div>
             </div>
         </div>
