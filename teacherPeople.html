@@ -25,7 +25,7 @@
                 <div class="logo-container">
                     <a href="teacher.html" class="navbar-logo-link">
                         <img src="logo/logo.jpg" alt="Classroom Logo" class="navbar-logo">
-                        <h1 class="navbar-brand-text">LearnRoom</h1>
+                        <h1 class="project-name">Learn<span class="green-text">Room</span></h1>
                     </a>
                 </div>
             </div>
@@ -140,18 +140,27 @@
                                 <div class="section-header">
                                     <h3 class="section-title">
                                         <span class="material-icons">group</span>
-                                        Students
-                                        <span class="count-badge" id="studentsCount">0</span>
+                                        Students <span class="count-badge" id="studentsTotalCount">0</span>
                                     </h3>
                                     <div class="section-actions">
-                                        <button class="action-btn" id="sortStudentsBtn">
-                                            <span class="material-icons">sort</span>
-                                            Sort
-                                        </button>
-                                        <button class="action-btn" id="filterStudentsBtn">
-                                            <span class="material-icons">filter_list</span>
-                                            Filter
-                                        </button>
+                                        <div class="dropdown">
+                                            <button class="action-btn dropdown-toggle" type="button"
+                                                id="sortStudentsBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="material-icons">sort</span>
+                                                Sort
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="sortStudentsBtn">
+                                                <li><a class="dropdown-item" href="#" data-sort="az">A-Z by name</a>
+                                                </li>
+                                                <li><a class="dropdown-item" href="#" data-sort="za">Z-A by name</a>
+                                                </li>
+                                                <li><a class="dropdown-item" href="#" data-sort="oldest">Oldest
+                                                        first</a></li>
+                                                <li><a class="dropdown-item" href="#" data-sort="newest">Newest
+                                                        first</a></li>
+                                            </ul>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="people-list" id="studentsList">

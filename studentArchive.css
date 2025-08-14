@@ -18,6 +18,19 @@
     margin-left: 17.5rem; /* Margin for open sidebar from student.css */
 }
 
+.project-name {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.project-name .green-text {
+  color: #4AA81E;
+}
+
+
 /* Courses Container */
 .courses-container {
     max-width: 100%;

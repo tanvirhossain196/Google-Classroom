@@ -71,10 +71,12 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Updated: Green color for "Room" */
 .project-name .green-text {
   color: #4AA81E;
 }
+
+/* Updated: Green color for "Room" */
+
 /* END: Logo and Project Name Update Styling */
 
 .logo i {

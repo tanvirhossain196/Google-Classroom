@@ -5,10 +5,10 @@ class PeopleManager {
   constructor() {
     this.teachers = [];
     this.students = [];
-    this.currentSort = "name";
+    this.currentSort = "az"; // Changed default sort to 'az'
     this.currentFilter = "all";
     this.isEnrolledClassesOpen = false;
-    this.personDetailBootstrapModal = null; // Bootstrap modal instance
+    this.personDetailBootstrapModal = null;
     this.init();
   }
 
@@ -42,7 +42,6 @@ class PeopleManager {
       courseHeaderSection: document.querySelector(".course-header-section"),
       courseTopNav: document.getElementById("courseTopNav"),
 
-      // People specific elements
       invitePeopleBtn: document.getElementById("invitePeopleBtn"),
       inviteFirstPersonBtn: document.getElementById("inviteFirstPersonBtn"),
       teachersSection: document.getElementById("teachersSection"),
@@ -51,10 +50,10 @@ class PeopleManager {
       studentsList: document.getElementById("studentsList"),
       teachersCount: document.getElementById("teachersCount"),
       studentsCount: document.getElementById("studentsCount"),
+      studentsTotalCount: document.getElementById("studentsTotalCount"), // Added for total student count
       peopleEmpty: document.getElementById("peopleEmpty"),
       peopleContent: document.getElementById("peopleContent"),
 
-      // Modal elements
       inviteModal: document.getElementById("inviteModal"),
       closeInviteModal: document.getElementById("closeInviteModal"),
       cancelInvite: document.getElementById("cancelInvite"),
@@ -64,13 +63,11 @@ class PeopleManager {
       copyCodeBtn: document.getElementById("copyCodeBtn"),
       regenerateCodeBtn: document.getElementById("regenerateCodeBtn"),
 
-      // Sort/Filter elements
       sortStudentsBtn: document.getElementById("sortStudentsBtn"),
       filterStudentsBtn: document.getElementById("filterStudentsBtn"),
       sortFilterModal: document.getElementById("sortFilterModal"),
       closeSortFilter: document.getElementById("closeSortFilter"),
 
-      // Bootstrap Person detail modal
       personDetailBootstrapModalElement: document.getElementById(
         "personDetailBootstrapModal"
       ),
@@ -78,7 +75,6 @@ class PeopleManager {
         "personDetailBootstrapBody"
       ),
 
-      // Enrolled Classes Dropdown elements
       enrolledClassesHeader: document.getElementById("enrolledClassesHeader"),
       enrolledClassesList: document.getElementById("enrolledClasses"),
       enrolledClassesDropdownIcon: document.getElementById(
@@ -86,7 +82,6 @@ class PeopleManager {
       ),
     };
 
-    // Initialize Bootstrap modal
     if (this.elements.personDetailBootstrapModalElement) {
       this.personDetailBootstrapModal = new bootstrap.Modal(
         this.elements.personDetailBootstrapModalElement
@@ -153,10 +148,17 @@ class PeopleManager {
       );
     }
 
-    if (this.elements.sortStudentsBtn) {
-      this.elements.sortStudentsBtn.addEventListener("click", () =>
-        this.showSortFilterModal()
-      );
+    // Event listener for sort dropdown items
+    const sortDropdown = document.querySelector(
+      "#sortStudentsBtn + .dropdown-menu"
+    );
+    if (sortDropdown) {
+      sortDropdown.addEventListener("click", (e) => {
+        if (e.target.classList.contains("dropdown-item")) {
+          const sortType = e.target.dataset.sort;
+          this.applySort(sortType);
+        }
+      });
     }
 
     if (this.elements.filterStudentsBtn) {
@@ -683,7 +685,7 @@ class PeopleManager {
    * @returns {string} A generated email address.
    */
   generateEmail(name) {
-    const domain = "";
+    const domain = "@example.com";
     const username = name.toLowerCase().replace(/\s+/g, ".");
     return username + domain;
   }
@@ -698,6 +700,9 @@ class PeopleManager {
     if (this.elements.studentsCount) {
       this.elements.studentsCount.textContent = this.students.length;
     }
+    if (this.elements.studentsTotalCount) {
+      this.elements.studentsTotalCount.textContent = `(${this.students.length})`;
+    }
   }
 
   /**
@@ -707,11 +712,16 @@ class PeopleManager {
    */
   sortStudents(students) {
     switch (this.currentSort) {
-      case "name":
-      case "alphabetical":
+      case "az":
         return students.sort((a, b) => a.localeCompare(b));
-      case "recent":
-        return students.reverse();
+      case "za":
+        return students.sort((a, b) => b.localeCompare(a));
+      case "oldest":
+        // For mock data, we can simulate oldest by original order or a simple reverse
+        return students.reverse(); // Simple reverse for mock 'oldest'
+      case "newest":
+        // For mock data, we can simulate newest by original order or a simple reverse
+        return students; // Keep original order for mock 'newest'
       default:
         return students;
     }
@@ -719,12 +729,10 @@ class PeopleManager {
 
   /**
    * Filters a list of students based on the current filter preference.
-   * (Currently, this is a placeholder as active/inactive status is not implemented)
    * @param {string[]} students - An array of student names.
    * @returns {string[]} The filtered array of student names.
    */
   filterStudents(students) {
-    // Placeholder for future filtering logic (e.g., active/inactive status)
     return students;
   }
 
@@ -896,22 +904,28 @@ class PeopleManager {
         <h4>Sort</h4>
         <div class="sort-options">
           <label class="sort-option">
-            <input type="radio" name="sortBy" value="name" ${
-              this.currentSort === "name" ? "checked" : ""
+            <input type="radio" name="sortBy" value="az" ${
+              this.currentSort === "az" ? "checked" : ""
             }>
-            By Name
+            A-Z by name
           </label>
           <label class="sort-option">
-            <input type="radio" name="sortBy" value="recent" ${
-              this.currentSort === "recent" ? "checked" : ""
+            <input type="radio" name="sortBy" value="za" ${
+              this.currentSort === "za" ? "checked" : ""
             }>
-            By Recent Activity
+            Z-A by name
           </label>
           <label class="sort-option">
-            <input type="radio" name="sortBy" value="alphabetical" ${
-              this.currentSort === "alphabetical" ? "checked" : ""
+            <input type="radio" name="sortBy" value="oldest" ${
+              this.currentSort === "oldest" ? "checked" : ""
             }>
-            By Alphabetical Order
+            Oldest first
+          </label>
+          <label class="sort-option">
+            <input type="radio" name="sortBy" value="newest" ${
+              this.currentSort === "newest" ? "checked" : ""
+            }>
+            Newest first
           </label>
         </div>
       </div>
@@ -972,6 +986,16 @@ class PeopleManager {
     this.renderStudents();
     this.hideSortFilterModal();
     this.showNotification("Sort and filter applied", "success");
+  }
+
+  /**
+   * Applies the selected sort option to the student list directly from the dropdown.
+   * @param {string} sortType - The type of sort to apply (e.g., 'az', 'za', 'oldest', 'newest').
+   */
+  applySort(sortType) {
+    this.currentSort = sortType;
+    this.renderStudents();
+    this.showNotification(`Sorted by ${sortType}`, "info");
   }
 
   /**
@@ -1139,7 +1163,7 @@ class PeopleManager {
   }
 
   /**
-   * Sets up tooltip functionality (placeholder).
+   * Sets up tooltip functionality.
    */
   setupTooltips() {
     // Tooltip functionality can be added here if needed.
@@ -1185,7 +1209,7 @@ class PeopleManager {
   }
 
   /**
-   * Sets up the notification system (placeholder).
+   * Sets up the notification system.
    */
   setupNotificationSystem() {
     // Real-time notification system setup can be added here.
@@ -1241,6 +1265,5 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("beforeunload", (e) => {
   if (peopleManager) {
     // No specific destroy logic needed for this class, but good practice to include.
-    // peopleManager.destroy && peopleManager.destroy();
   }
 });
