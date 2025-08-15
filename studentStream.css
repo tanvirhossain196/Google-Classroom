@@ -25,11 +25,7 @@
 body {
   font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #ffffff 100%
-  );
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
   color: var(--text-primary);
   line-height: 1.6;
   font-weight: 400;
@@ -81,11 +77,7 @@ body {
 }
 
 .menu-btn:hover {
-  background: linear-gradient(
-    135deg,
-    #e3f2fd 0%,
-    #f3e5f5 100%
-  );
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
   transform: scale(1.02);
 }
 
@@ -133,11 +125,7 @@ body {
 }
 
 .header-icon-btn:hover {
-  background: linear-gradient(
-    135deg,
-    #e3f2fd 0%,
-    #f3e5f5 100%
-  );
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
   transform: scale(1.02);
 }
 
@@ -257,11 +245,7 @@ body {
 }
 
 .sidebar-header:hover {
-  background: linear-gradient(
-    135deg,
-    #f5f7fa 0%,
-    #e9ecef 100%
-  );
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
   color: var(--primary-color);
   transform: translateX(2px);
 }
@@ -607,9 +591,8 @@ body {
 }
 
 .project-name .green-text {
-  color: #4AA81E;
+  color: #4aa81e;
 }
-
 
 /* Hide old course navigation */
 .course-nav {
@@ -872,6 +855,7 @@ body {
 .announcement-editor-expanded:focus-within {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  outline: none;
 }
 
 .editor-toolbar {
@@ -1036,11 +1020,11 @@ body {
 
 /* Specific styles for different post types */
 .stream-post.text-only {
-  border-left: 4px solid var(--primary-color);
+  border-left: 4px solid var(--border-color); /* Changed to normal border */
 }
 
 .stream-post.with-attachments {
-  border-left: 4px solid var(--secondary-color);
+  border-left: 4px solid var(--border-color); /* Changed to normal border */
 }
 
 .post-header {
@@ -1292,26 +1276,29 @@ body {
   box-shadow: var(--shadow-light);
 }
 
-/* FIXED DROPDOWN MENU - APPEARS ABOVE POST */
+/* FIXED DROPDOWN MENU - APPEARS ABOVE POST - COMPACT SIZE */
 .notification-dropdown-menu {
-  position: absolute;
-  top: -10px;
-  right: 0;
+  position: fixed; /* Changed to fixed */
   background: var(--surface-color);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 8px; /* Reduced border radius */
   box-shadow: var(--shadow-heavy);
   z-index: 10000;
-  min-width: 180px;
+  width: 88px; /* Fixed width for square shape */
+  height: 88px; /* Fixed height for square shape */
   display: none;
   overflow: hidden;
   transform-origin: top right;
   animation: dropdownSlideIn 0.2s ease-out;
   backdrop-filter: blur(10px);
+  padding: 0; /* Remove padding to control item spacing */
 }
 
 .notification-dropdown-menu.show {
-  display: block;
+  display: flex; /* Use flex to center items if needed */
+  flex-direction: column; /* Arrange items vertically */
+  justify-content: center; /* Center items vertically */
+  align-items: center; /* Center items horizontally */
 }
 
 @keyframes dropdownSlideIn {
@@ -1326,19 +1313,22 @@ body {
 }
 
 .notification-dropdown-item {
-  padding: 14px 18px;
+  padding: 10px 12px; /* Reduced padding */
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px; /* Reduced font size */
   border: none;
   background: none;
   width: 100%;
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px; /* Reduced gap */
   color: var(--text-primary);
   transition: var(--transition);
   font-weight: 500;
+  white-space: nowrap; /* Prevent text wrapping */
+  flex-grow: 1; /* Allow items to grow and fill space */
+  justify-content: flex-start; /* Align content to start */
 }
 
 .notification-dropdown-item:hover {
@@ -1352,9 +1342,9 @@ body {
 }
 
 .notification-dropdown-item span {
-  font-size: 16px;
-  width: 20px;
-  height: 20px;
+  font-size: 14px; /* Icon size */
+  width: 14px; /* Fixed width for icons */
+  height: 14px; /* Fixed height for icons */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1919,439 +1909,7 @@ body {
   .notification-dropdown-menu {
     right: -10px;
     left: auto;
-    min-width: 160px;
-  }
-}
-
-@media (max-width: 480px) {
-  .course-banner {
-    height: 140px;
-    padding: 16px 20px;
-  }
-
-  .course-title {
-    font-size: 24px;
-  }
-
-  .top-nav-tab {
-    min-width: 70px;
-    padding: 0 10px;
-    font-size: 12px;
-  }
-
-  .top-nav-tab .material-icons {
-    font-size: 14px;
-  }
-
-  .stream-layout {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .stream-sidebar {
-    position: static;
-    order: -1;
-  }
-}
-
-/* Enhanced Responsive Design */
-@media (max-width: 1200px) {
-  .stream-layout {
-    grid-template-columns: 280px 1fr;
-    gap: 24px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .stream-layout {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .stream-sidebar {
-    position: static;
-    order: -1;
-  }
-}
-
-/* Enhanced Tab Switching Animation */
-.tab-content {
-  display: none;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.tab-content.active {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-  animation: smoothSlideIn 0.5s ease;
-}
-
-@keyframes smoothSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Enhanced visual feedback */
-.top-nav-tab:active {
-  transform: translateY(1px);
-}
-
-/* Modal Styles */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 10000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(5px);
-}
-
-.modal-content {
-  background-color: var(--surface-color);
-  margin: 5% auto;
-  padding: 24px;
-  border-radius: var(--border-radius);
-  width: 90%;
-  max-width: 500px;
-  box-shadow: var(--shadow-heavy);
-  animation: modalFadeIn 0.3s ease;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8) translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid var(--border-color);
-}
-
-.modal-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: var(--text-secondary);
-  padding: 8px;
-  border-radius: 50%;
-  transition: var(--transition);
-}
-
-.modal-close:hover {
-  background: #f1f3f4;
-  transform: scale(1.05);
-}
-
-.modal-body {
-  margin-bottom: 20px;
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
-}
-
-/* CONFIRMATION MODAL STYLES */
-.confirmation-modal {
-  display: none;
-  position: fixed;
-  z-index: 10001;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  animation: modalFadeIn 0.3s ease;
-}
-
-.confirmation-modal.show {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.confirmation-modal-content {
-  background-color: var(--surface-color);
-  padding: 32px;
-  border-radius: var(--border-radius);
-  width: 90%;
-  max-width: 450px;
-  box-shadow: var(--shadow-heavy);
-  animation: modalSlideIn 0.3s ease;
-  text-align: center;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8) translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.confirmation-modal-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-}
-
-.confirmation-modal-message {
-  font-size: 16px;
-  color: var(--text-secondary);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-
-.confirmation-modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.confirmation-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-  border: 2px solid transparent;
-  min-width: 100px;
-}
-
-.confirmation-btn-cancel {
-  background: var(--surface-color);
-  border-color: var(--border-color);
-  color: var(--text-secondary);
-}
-
-.confirmation-btn-cancel:hover {
-  background: #f1f3f4;
-  color: var(--text-primary);
-  transform: translateY(-1px);
-}
-
-.confirmation-btn-delete {
-  background: #d32f2f;
-  border-color: #d32f2f;
-  color: white;
-}
-
-.confirmation-btn-delete:hover {
-  background: #b71c1c;
-  border-color: #b71c1c;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
-/* Notification Styles */
-.notification {
-  position: fixed;
-  top: 80px;
-  right: 24px;
-  padding: 16px 20px;
-  border-radius: var(--border-radius);
-  color: white;
-  font-weight: 600;
-  box-shadow: var(--shadow-medium);
-  z-index: 10001;
-  animation: slideInRight 0.3s ease;
-  max-width: 400px;
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.notification.success {
-  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
-}
-
-.notification.error {
-  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-}
-
-.notification.info {
-  background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
-}
-
-/* Enhanced Course Color Variations */
-.course-banner.math {
-  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-}
-
-.course-banner.science {
-  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
-}
-
-.course-banner.english {
-  background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
-}
-
-.course-banner.programming {
-  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-}
-
-.course-banner.bangla {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-/* Responsive adjustments for top navigation */
-@media (max-width: 768px) {
-  .course-top-nav {
-    left: 0;
-    padding: 0 16px;
-  }
-
-  .course-top-nav.sidebar-open {
-    left: 0;
-  }
-
-  .content-wrapper {
-    margin-left: 0;
-    width: 100%;
-    padding: 0 16px 16px 16px;
-    margin-top: calc(64px + 48px);
-  }
-
-  .content-wrapper.sidebar-open {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .top-nav-tabs {
-    padding: 0 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .top-nav-tabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .top-nav-tab {
-    white-space: nowrap;
-    min-width: 80px;
-    flex: none;
-    padding: 0px 12px;
-    font-size: 13px;
-  }
-
-  .course-banner {
-    height: 160px;
-    padding: 20px 24px;
-  }
-
-  .course-title {
-    font-size: 28px;
-  }
-
-  .course-section {
-    font-size: 14px;
-  }
-
-  .sidebar {
-    transform: translateX(-100%);
-    width: 300px;
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .stream-layout {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .stream-sidebar {
-    position: static;
-    order: -1;
-  }
-
-  .announcement-header {
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
-  }
-
-  .announcement-actions {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .attachment-buttons {
-    justify-content: center;
-  }
-
-  .action-buttons {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .top-nav-tab .material-icons {
-    font-size: 16px;
-  }
-
-  /* Mobile dropdown positioning */
-  .notification-dropdown-menu {
-    right: -10px;
-    left: auto;
-    min-width: 160px;
+    min-width: 80px; /* Compact width for mobile */
   }
 }
 
@@ -2892,7 +2450,7 @@ body {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 1;
+  z-index: 10000; /* Increased z-index to appear above other divs */
 }
 
 .comment-menu-dots {
@@ -2913,16 +2471,18 @@ body {
   background: rgba(0, 0, 0, 0.05);
 }
 
+/* COMPACT COMMENT DROPDOWN MENU */
 .comment-dropdown-menu {
   position: absolute;
   top: 24px;
   right: 0;
   background: var(--surface-color);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 6px; /* Reduced border radius */
   box-shadow: var(--shadow-medium);
-  z-index: 10001;
-  min-width: 120px;
+  z-index: 10001; /* Increased z-index to appear above other divs */
+  min-width: 72px; /* Compact width - same as height */
+  width: auto; /* Auto width */
   display: none;
   overflow: hidden;
   transform-origin: top right;
@@ -2934,18 +2494,19 @@ body {
 }
 
 .comment-dropdown-item {
-  padding: 10px 15px;
+  padding: 8px 10px; /* Reduced padding */
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px; /* Reduced font size */
   border: none;
   background: none;
   width: 100%;
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px; /* Reduced gap */
   color: var(--text-primary);
   transition: var(--transition);
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .comment-dropdown-item:hover {
@@ -2959,7 +2520,12 @@ body {
 }
 
 .comment-dropdown-item span {
-  font-size: 14px;
+  font-size: 12px; /* Icon size */
+  width: 12px; /* Fixed width for icons */
+  height: 12px; /* Fixed height for icons */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .view-comments-btn {

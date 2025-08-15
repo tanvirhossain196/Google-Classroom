@@ -831,12 +831,17 @@ class StreamManager {
         });
       dropdown.classList.toggle("show");
 
+      // Append to body to ensure it's on top of all other elements
+      document.body.appendChild(dropdown);
+
       // Position the dropdown relative to the button
       const rect = button.getBoundingClientRect();
-      dropdown.style.top = `${rect.bottom + 5}px`; // 5px below the button
+      dropdown.style.top = `${
+        rect.top + rect.height / 2 - dropdown.offsetHeight / 2
+      }px`; // Center vertically with button
       dropdown.style.left = `${
-        rect.left - dropdown.offsetWidth + rect.width
-      }px`; // Align right edge with button's right edge
+        rect.left + rect.width / 2 - dropdown.offsetWidth / 2
+      }px`; // Center horizontally with button
     }
   }
 
@@ -1124,8 +1129,26 @@ class StreamManager {
     document
       .querySelectorAll(".notification-dropdown-menu.show")
       .forEach((menu) => {
-        if (!menu.previousElementSibling.contains(e.target)) {
+        // Check if the click target is outside the menu and its trigger button
+        const menuButton = menu.previousElementSibling; // Assuming the button is the previous sibling
+        if (
+          !menu.contains(e.target) &&
+          (!menuButton || !menuButton.contains(e.target))
+        ) {
           menu.classList.remove("show");
+          // Re-append to its original parent if it was moved to body
+          const postId = menu.id.replace("dropdown-", "");
+          const postElement = document.querySelector(
+            `[data-post-id="${postId}"]`
+          );
+          if (postElement) {
+            const menuContainer = postElement.querySelector(
+              ".notification-menu-container"
+            );
+            if (menuContainer && !menuContainer.contains(menu)) {
+              menuContainer.appendChild(menu);
+            }
+          }
         }
       });
 
@@ -1173,6 +1196,24 @@ class StreamManager {
       contentWrapper.classList.remove("sidebar-open");
       courseTopNav.classList.remove("sidebar-open");
     }
+    // Re-position any open dropdowns on resize
+    document
+      .querySelectorAll(".notification-dropdown-menu.show")
+      .forEach((menu) => {
+        const postId = menu.id.replace("dropdown-", "");
+        const button = document.querySelector(
+          `[data-post-id="${postId}"] .notification-menu-dots`
+        );
+        if (button) {
+          const rect = button.getBoundingClientRect();
+          menu.style.top = `${
+            rect.top + rect.height / 2 - menu.offsetHeight / 2
+          }px`;
+          menu.style.left = `${
+            rect.left + rect.width / 2 - menu.offsetWidth / 2
+          }px`;
+        }
+      });
   }
 
   // Other methods remain unchanged...
@@ -1620,6 +1661,7 @@ class StreamManager {
   toggleCommentDropdown(commentId, button) {
     const dropdown = document.getElementById(`comment-dropdown-${commentId}`);
     if (dropdown) {
+      // Close all other comment dropdowns
       document
         .querySelectorAll(".comment-dropdown-menu.show")
         .forEach((menu) => {
@@ -1627,13 +1669,20 @@ class StreamManager {
             menu.classList.remove("show");
           }
         });
+
       dropdown.classList.toggle("show");
 
+      // Position the dropdown relative to the button
       const rect = button.getBoundingClientRect();
-      dropdown.style.top = `${rect.bottom + 5}px`;
+      // Append to body to ensure it's on top of all other elements
+      document.body.appendChild(dropdown);
+
+      // Calculate position relative to viewport
+      dropdown.style.position = "fixed"; // Use fixed positioning
+      dropdown.style.top = `${rect.top - dropdown.offsetHeight - 5}px`; // 5px above the button
       dropdown.style.left = `${
         rect.left - dropdown.offsetWidth + rect.width
-      }px`;
+      }px`; // Align right edge with button's right edge
     }
   }
 
@@ -1980,30 +2029,40 @@ StreamManager.prototype.setupNotificationSystem = function () {
   // Close dropdown menus when clicking outside or scrolling
   document.addEventListener("click", (e) => {
     // Close assignment post dropdown menus
-    if (
-      !e.target.closest(".notification-menu-container") &&
-      !e.target.closest(".notification-dropdown-menu")
-    ) {
-      const allDropdowns = document.querySelectorAll(
-        ".notification-dropdown-menu"
-      );
-      allDropdowns.forEach((menu) => {
-        menu.classList.remove("show");
+    document
+      .querySelectorAll(".notification-dropdown-menu.show")
+      .forEach((menu) => {
+        const menuButton = menu.previousElementSibling; // Assuming the button is the previous sibling
+        if (
+          !menu.contains(e.target) &&
+          (!menuButton || !menuButton.contains(e.target))
+        ) {
+          menu.classList.remove("show");
+          // Re-append to its original parent if it was moved to body
+          const postId = menu.id.replace("dropdown-", "");
+          const postElement = document.querySelector(
+            `[data-post-id="${postId}"]`
+          );
+          if (postElement) {
+            const menuContainer = postElement.querySelector(
+              ".notification-menu-container"
+            );
+            if (menuContainer && !menuContainer.contains(menu)) {
+              menuContainer.appendChild(menu);
+            }
+          }
+        }
       });
-    }
 
     // Close comment dropdown menus
-    if (
-      !e.target.closest(".comment-menu-container") &&
-      !e.target.closest(".comment-dropdown-menu")
-    ) {
-      const allCommentDropdowns = document.querySelectorAll(
-        ".comment-dropdown-menu"
-      );
-      allCommentDropdowns.forEach((menu) => {
+    document.querySelectorAll(".comment-dropdown-menu.show").forEach((menu) => {
+      if (
+        !e.target.closest(".comment-menu-container") &&
+        !e.target.closest(".comment-dropdown-menu")
+      ) {
         menu.classList.remove("show");
-      });
-    }
+      }
+    });
 
     // Close sidebar enrolled classes dropdown if open and clicked outside
     const enrolledClassesDropdown = this.elements.enrolledClasses;
@@ -2025,12 +2084,25 @@ StreamManager.prototype.setupNotificationSystem = function () {
 
   // Close dropdowns on scroll
   document.addEventListener("scroll", () => {
-    const allDropdowns = document.querySelectorAll(
-      ".notification-dropdown-menu"
-    );
-    allDropdowns.forEach((menu) => {
-      menu.classList.remove("show");
-    });
+    // Close assignment post dropdown menus
+    document
+      .querySelectorAll(".notification-dropdown-menu.show")
+      .forEach((menu) => {
+        menu.classList.remove("show");
+        // Re-append to its original parent if it was moved to body
+        const postId = menu.id.replace("dropdown-", "");
+        const postElement = document.querySelector(
+          `[data-post-id="${postId}"]`
+        );
+        if (postElement) {
+          const menuContainer = postElement.querySelector(
+            ".notification-menu-container"
+          );
+          if (menuContainer && !menuContainer.contains(menu)) {
+            menuContainer.appendChild(menu);
+          }
+        }
+      });
 
     const allCommentDropdowns = document.querySelectorAll(
       ".comment-dropdown-menu"
@@ -2051,12 +2123,25 @@ StreamManager.prototype.setupNotificationSystem = function () {
 
   // Close dropdowns on window resize
   window.addEventListener("resize", () => {
-    const allDropdowns = document.querySelectorAll(
-      ".notification-dropdown-menu"
-    );
-    allDropdowns.forEach((menu) => {
-      menu.classList.remove("show");
-    });
+    // Close assignment post dropdown menus
+    document
+      .querySelectorAll(".notification-dropdown-menu.show")
+      .forEach((menu) => {
+        menu.classList.remove("show");
+        // Re-append to its original parent if it was moved to body
+        const postId = menu.id.replace("dropdown-", "");
+        const postElement = document.querySelector(
+          `[data-post-id="${postId}"]`
+        );
+        if (postElement) {
+          const menuContainer = postElement.querySelector(
+            ".notification-menu-container"
+          );
+          if (menuContainer && !menuContainer.contains(menu)) {
+            menuContainer.appendChild(menu);
+          }
+        }
+      });
 
     const allCommentDropdowns = document.querySelectorAll(
       ".comment-dropdown-menu"
