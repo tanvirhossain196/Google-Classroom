@@ -23,7 +23,7 @@
 }
 
 body {
-  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
+  font-family: "Roboto", -apple-system, BlinkMacMacSystemFont, "Segoe UI",
     sans-serif;
   background: linear-gradient(
     135deg,
@@ -509,7 +509,6 @@ body {
   transform: scale(1.05); /* Slightly reduced scale */
 }
 
-/* Enhanced Top Navigation - Fixed at top with proper positioning */
 /* Enhanced Top Navigation - Google Classroom Style */
 .course-top-nav {
   background: var(--surface-color);
@@ -607,9 +606,8 @@ body {
 }
 
 .project-name .green-text {
-  color: #4AA81E;
+  color: #4aa81e;
 }
-
 
 /* Hide old course navigation */
 .course-nav {
@@ -704,8 +702,7 @@ body {
   margin: 0;
 }
 
-/* Removed .course-code-menu-btn */
-
+/* Requirement 1: Removed .course-code-menu-btn */
 .course-code-display {
   display: flex;
   align-items: center;
@@ -821,8 +818,88 @@ body {
   transform: translateX(2px); /* Reduced translateX */
 }
 
+/* NEW: Dropdown Menus positioned above announcement input area */
+.students-dropdown-menu,
+.courses-dropdown-menu {
+  position: absolute;
+  top: -8px; /* Position above the announcement input area */
+  left: 0;
+  right: 0;
+  background: var(--surface-color);
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transform: translateY(-100%); /* Move it completely above */
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.students-dropdown-menu.show,
+.courses-dropdown-menu.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-100%);
+}
+
+.students-dropdown-menu .dropdown-header,
+.courses-dropdown-menu .dropdown-header {
+  padding: 12px 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: #f8f9fa;
+  border-bottom: 1px solid #dadce0;
+  border-radius: 8px 8px 0 0;
+  font-size: 14px;
+}
+
+.students-dropdown-menu .dropdown-content,
+.courses-dropdown-menu .dropdown-content {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.students-dropdown-menu .dropdown-item,
+.courses-dropdown-menu .dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-primary);
+  transition: background-color 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.students-dropdown-menu .dropdown-item:hover,
+.courses-dropdown-menu .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.students-dropdown-menu .dropdown-item input[type="checkbox"],
+.courses-dropdown-menu .dropdown-item input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.students-dropdown-menu .dropdown-item label,
+.courses-dropdown-menu .dropdown-item label {
+  cursor: pointer;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.students-dropdown-menu .dropdown-divider {
+  height: 1px;
+  margin: 4px 0;
+  background-color: #e9ecef;
+}
+
 /* New Announcement Input Card - Google Classroom Style */
 .announcement-input-card {
+  position: relative; /* For dropdown positioning */
   background: var(--surface-color);
   border-radius: 8px; /* Less rounded */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* Subtle shadow */
@@ -830,9 +907,8 @@ body {
   margin-bottom: 24px; /* Less margin */
   transition: var(--transition);
   border: 1px solid #dadce0; /* Light border */
-  position: relative;
   cursor: pointer;
-  overflow: hidden; /* Hide overflow for clean appearance */
+  overflow: visible; /* Changed from hidden to visible for dropdowns */
 }
 
 .announcement-input-card:hover {
@@ -880,6 +956,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  position: relative; /* For dropdown positioning */
 }
 
 .announcement-label {
@@ -888,59 +965,69 @@ body {
   color: #5f6368; /* Google gray */
 }
 
-.announcement-dropdown {
+.announcement-for-dropdown {
+  position: relative;
+}
+
+.announcement-for-dropdown .announcement-dropdown {
   background: var(--surface-color) !important;
-  border: 1px solid #dadce0 !important; /* Light border */
-  color: #202124 !important; /* Darker text */
-  font-size: 13px !important; /* Smaller font */
+  border: 1px solid #dadce0 !important;
+  color: #202124 !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
-  padding: 6px 12px !important; /* Smaller padding */
-  border-radius: 6px !important; /* Smaller radius */
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
   transition: var(--transition) !important;
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
 }
 
-.announcement-dropdown:hover,
-.announcement-dropdown:focus {
-  border-color: #1976d2 !important; /* Blue border */
-  box-shadow: none !important; /* Remove shadow */
+.announcement-for-dropdown .announcement-dropdown:hover,
+.announcement-for-dropdown .announcement-dropdown:focus {
+  border-color: #1976d2 !important;
+  box-shadow: none !important;
 }
 
-.dropdown-arrow {
-  font-size: 16px !important; /* Smaller arrow */
-  color: #5f6368 !important; /* Gray arrow */
+.announcement-for-dropdown .dropdown-arrow {
+  font-size: 16px !important;
+  color: #5f6368 !important;
+  transition: transform 0.3s ease;
+}
+
+.announcement-for-dropdown .dropdown-arrow.rotated {
+  transform: rotate(180deg);
 }
 
 .announcement-students-section {
   display: flex;
   align-items: center;
+  position: relative; /* For dropdown positioning */
 }
 
-.students-btn {
+.announcement-students-section .students-btn {
   background: var(--surface-color) !important;
-  border: 1px solid #dadce0 !important; /* Light border */
-  color: #202124 !important; /* Darker text */
-  font-size: 13px !important; /* Smaller font */
+  border: 1px solid #dadce0 !important;
+  color: #202124 !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
-  padding: 6px 12px !important; /* Smaller padding */
-  border-radius: 20px !important; /* More rounded */
+  padding: 6px 12px !important;
+  border-radius: 20px !important;
   transition: var(--transition) !important;
   display: flex !important;
   align-items: center !important;
-  gap: 6px !important; /* Smaller gap */
+  gap: 6px !important;
 }
 
-.students-btn:hover,
-.students-btn:focus {
-  border-color: #1976d2 !important; /* Blue border */
-  background: #e3f2fd !important; /* Light blue background */
-  color: #1976d2 !important; /* Blue text */
+.announcement-students-section .students-btn:hover,
+.announcement-students-section .students-btn:focus {
+  border-color: #1976d2 !important;
+  background: #e3f2fd !important;
+  color: #1976d2 !important;
 }
 
-.students-btn .material-icons {
-  font-size: 16px !important; /* Smaller icon */
+.announcement-students-section .students-btn .material-icons {
+  font-size: 16px !important;
 }
 
 .announcement-input-area {
@@ -1027,7 +1114,7 @@ body {
 .editor-content {
   min-height: 100px; /* Reduced height */
   padding: 16px 20px; /* Better padding */
-  font-size: 14px; /* Smaller font */
+  font-size: 14px;
   line-height: 1.5;
   outline: none;
   color: var(--text-primary);
@@ -1040,7 +1127,7 @@ body {
   pointer-events: none;
 }
 
-/* COLLAPSED ACTIONS (HIDDEN BY DEFAULT) - Image 2 Style */
+/* COLLAPSED ACTIONS (HIDDEN BY DEFAULT) */
 .announcement-actions {
   display: flex;
   justify-content: space-between;
@@ -1159,7 +1246,7 @@ body {
   box-shadow: none;
   overflow: visible; /* Changed from hidden to visible */
   transition: var(--transition);
-  border: 1px solid #c4c7c5; /* Slightly darker black border */
+  border: 1px solid var(--border-color);
   position: relative; /* Added relative positioning */
   background-image: linear-gradient(
     135deg,
@@ -1920,6 +2007,10 @@ body {
     font-size: 13px;
   }
 
+  .top-nav-tab .material-icons {
+    font-size: 16px;
+  }
+
   .course-banner {
     height: 160px;
     padding: 20px 24px;
@@ -1972,15 +2063,23 @@ body {
     width: 100%;
   }
 
-  .top-nav-tab .material-icons {
-    font-size: 16px;
-  }
-
   /* Mobile dropdown positioning */
   .notification-dropdown-menu {
     right: -10px;
     left: auto;
     min-width: 160px;
+  }
+
+  /* Mobile adjustments for new dropdowns */
+  .students-dropdown-menu,
+  .courses-dropdown-menu {
+    left: -10px;
+    right: -10px;
+  }
+
+  .students-dropdown-menu .dropdown-content,
+  .courses-dropdown-menu .dropdown-content {
+    max-height: 150px;
   }
 }
 
@@ -2416,8 +2515,8 @@ body {
 
 /* Styles for comments section */
 .comments-section {
-  margin-left: 64px;
-  padding: 0 24px 20px;
+  margin-left: 50px; /* Reduced from 64px */
+  padding: 0 16px 20px; /* Reduced horizontal padding */
   border-top: 1px solid var(--border-color);
   margin-top: 16px;
 }
@@ -2426,7 +2525,8 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 8px; /* Reduced space between comments */
+  position: relative; /* For dropdown positioning */
 }
 
 .comment-avatar {
@@ -2451,7 +2551,8 @@ body {
   flex-grow: 1;
   background: var(--background-color);
   border-radius: 16px;
-  padding: 10px 16px;
+  padding: 8px 12px; /* Reduced padding inside comment bubble */
+  position: relative; /* For dropdown positioning */
 }
 
 .comment-author-time {
@@ -2470,26 +2571,25 @@ body {
 .comment-time {
   font-size: 12px;
   color: var(--text-secondary);
+  margin-top: 4px;
+  display: block;
 }
 
-.comment-text {
-  font-size: 14px;
-  color: var(--text-primary);
-  line-height: 1.5;
-  word-wrap: break-word;
+/* Comment 3-dot menu */
+.comment-menu-container {
+  position: absolute;
+  top: 8px; /* Adjust as needed */
+  right: 8px; /* Adjust as needed */
+  z-index: 10; /* Ensure it's above comment content */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }
 
-.comment-actions {
-  display: none;
-  margin-left: 8px;
-  flex-shrink: 0;
+.comment-item:hover .comment-menu-container {
+  opacity: 1;
 }
 
-.comment-item:hover .comment-actions {
-  display: flex;
-}
-
-.comment-action-btn {
+.comment-menu-dots {
   background: none;
   border: none;
   padding: 4px;
@@ -2497,20 +2597,70 @@ body {
   cursor: pointer;
   color: var(--text-secondary);
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
 }
 
-.comment-action-btn:hover {
+.comment-menu-dots:hover {
   background: rgba(0, 0, 0, 0.05);
   color: var(--primary-color);
 }
 
-.comment-action-btn.delete:hover {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
+.comment-menu-dots .material-icons {
+  font-size: 18px;
 }
 
-.comment-action-btn .material-icons {
-  font-size: 18px;
+.comment-dropdown-menu {
+  position: absolute;
+  top: 100%; /* Position below the button */
+  right: 0;
+  background: var(--surface-color);
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 99999; /* Higher z-index for dropdowns */
+  min-width: 140px;
+  display: none;
+  overflow: hidden;
+  transform-origin: top right;
+  margin-top: 4px; /* Small gap from button */
+}
+
+.comment-dropdown-menu.show {
+  display: block !important;
+  opacity: 1;
+  animation: dropdownSlideIn 0.15s ease-out;
+}
+
+.comment-dropdown-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #3c4043;
+  transition: background-color 0.1s ease;
+  font-weight: 400;
+}
+
+.comment-dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #3c4043;
+}
+
+.comment-dropdown-item .material-icons {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #5f6368;
 }
 
 /* Comment edit mode */
@@ -2570,32 +2720,141 @@ body {
   border-color: var(--primary-hover);
 }
 
-.view-comments-btn {
+/* Comment visibility */
+.comment-item.hidden {
+  display: none;
+}
+
+.view-comments-toggle {
   background: none;
   border: none;
   color: var(--primary-color);
   font-size: 14px;
   font-weight: 500;
-  padding: 8px 0;
   cursor: pointer;
-  transition: var(--transition);
-  display: block;
-  width: 100%;
-  text-align: left;
+  padding: 8px 0;
   margin-top: 8px;
+  display: block;
+  width: fit-content;
+  transition: color 0.2s ease;
 }
 
-.view-comments-btn:hover {
+.view-comments-toggle:hover {
   color: var(--primary-hover);
   text-decoration: underline;
 }
 
-.comments-list-container {
-  max-height: 100px; /* Initial height for first comment */
+/* Custom Dropdown Styles for Student/Course Selection */
+.custom-dropdown-menu {
+  position: absolute;
+  background: var(--surface-color);
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10000; /* Ensure it's above other content */
+  min-width: 250px;
+  display: none;
   overflow: hidden;
-  transition: max-height 0.3s ease-out;
+  transform-origin: bottom left; /* For appearing above */
+  padding: 8px 0;
+  animation: dropdownSlideUp 0.15s ease-out;
 }
 
-.comments-list-container.expanded {
-  max-height: 1000px; /* Sufficiently large to show all comments */
+.custom-dropdown-menu.show {
+  display: block;
+}
+
+@keyframes dropdownSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.custom-dropdown-menu .dropdown-header {
+  padding: 8px 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.custom-dropdown-menu .dropdown-divider {
+  height: 1px;
+  margin: 8px 0;
+  overflow: hidden;
+  background-color: #e9ecef;
+}
+
+.custom-dropdown-menu .custom-dropdown-scroll-area {
+  max-height: 200px; /* Adjust as needed */
+  overflow-y: auto;
+  padding: 0 8px; /* Padding for scrollable content */
+}
+
+.custom-dropdown-menu .form-check {
+  padding: 8px 16px;
+  margin-bottom: 0; /* Remove default margin */
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.custom-dropdown-menu .form-check:hover {
+  background-color: #f8f9fa;
+}
+
+.custom-dropdown-menu .form-check-input {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.custom-dropdown-menu .form-check-label {
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+/* Specific positioning for the "For" dropdown */
+.announcement-for-section .custom-dropdown-menu {
+  left: 0;
+  bottom: calc(100% + 8px); /* Position above the button with a small gap */
+  transform-origin: bottom left;
+}
+
+/* Specific positioning for the "Students" dropdown */
+.announcement-students-section .custom-dropdown-menu {
+  right: 0;
+  bottom: calc(100% + 8px); /* Position above the button with a small gap */
+  transform-origin: bottom right;
+}
+
+/* Ensure dropdowns are visible when announcement card is expanded */
+.announcement-input-card.expanded .custom-dropdown-menu {
+  display: block; /* Ensure they are block when expanded */
+}
+
+/* New style for copied icon feedback */
+.course-code-copy-btn.copied .material-icons {
+  color: var(--secondary-color); /* Green color for copied */
+  animation: copiedTick 0.5s ease-out forwards;
+}
+
+@keyframes copiedTick {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

@@ -131,7 +131,7 @@
                                 <div class="course-code-section">
                                     <div class="course-code-header">
                                         <h3>Class code</h3>
-                                        <!-- Removed 3-dot menu container -->
+                                        <!-- Requirement 1: Removed 3-dot menu -->
                                     </div>
                                     <div class="course-code-display" id="courseCodeDisplay">
                                         <span class="course-code-text" id="courseCodeText">vwqisoz6</span>
@@ -156,29 +156,52 @@
 
                             <div class="stream-main">
                                 <!-- ENHANCED ANNOUNCEMENT INPUT - COLLAPSED BY DEFAULT -->
-                                <div class="announcement-input-card">
+                                <div class="announcement-input-card" id="announcementInputCard">
+                                    <!-- NEW: Students Dropdown positioned above announcement input area -->
+                                    <div class="custom-dropdown-menu students-dropdown-menu" id="studentsDropdownMenu">
+                                        <div class="dropdown-header">Select Students</div>
+                                        <div class="dropdown-content custom-dropdown-scroll-area"
+                                            id="studentsDropdownContent">
+                                            <div class="form-check dropdown-item" data-value="all">
+                                                <input type="checkbox" id="allStudentsCheckbox" class="form-check-input"
+                                                    checked>
+                                                <label for="allStudentsCheckbox" class="form-check-label">All
+                                                    Students</label>
+                                            </div>
+                                            <div class="dropdown-divider"></div>
+                                            <div id="studentListContainer">
+                                                <!-- Student list will be populated here -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- NEW: Courses Dropdown positioned above announcement input area -->
+                                    <div class="custom-dropdown-menu courses-dropdown-menu" id="coursesDropdownMenu">
+                                        <div class="dropdown-header">Select Course(s)</div>
+                                        <div class="dropdown-content custom-dropdown-scroll-area"
+                                            id="coursesDropdownContent">
+                                            <!-- Course list will be populated here -->
+                                        </div>
+                                    </div>
+
                                     <!-- COLLAPSED HEADER (HIDDEN BY DEFAULT) -->
                                     <div class="announcement-header" id="announcementHeader">
                                         <div class="announcement-for-section">
                                             <label class="announcement-label">For</label>
-                                            <div class="dropdown">
-                                                <button class="btn dropdown-toggle announcement-dropdown" type="button"
-                                                    id="forDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div class="announcement-for-dropdown">
+                                                <button class="btn announcement-dropdown" type="button"
+                                                    id="forDropdownButton">
                                                     <span id="selectedCourse">CSE479 1</span>
-                                                    <span
-                                                        class="material-icons dropdown-arrow">keyboard_arrow_down</span>
+                                                    <span class="material-icons dropdown-arrow"
+                                                        id="forDropdownArrow">keyboard_arrow_down</span>
                                                 </button>
-                                                <ul class="dropdown-menu" aria-labelledby="forDropdown"
-                                                    id="announcementCourseDropdown">
-                                                    <!-- Courses will be populated here by JS -->
-                                                </ul>
                                             </div>
                                         </div>
                                         <div class="announcement-students-section">
-                                            <button class="btn students-btn" type="button"
-                                                onclick="streamManager.openStudentSelector()">
+                                            <button class="btn students-btn" type="button" id="studentsDropdownButton">
                                                 <span class="material-icons">people</span>
-                                                <span>All students</span>
+                                                <span id="selectedStudentsText">All students</span>
+                                                <span class="material-icons">keyboard_arrow_down</span>
                                             </button>
                                         </div>
                                     </div>
