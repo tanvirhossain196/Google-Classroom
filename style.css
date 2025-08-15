@@ -24,9 +24,9 @@ body {
 .login-container {
   background: #ffffff;
   border-radius: 20px;
-  padding: 3rem;
+  padding: 2.5rem; /* Reduced padding for smaller height */
   width: 100%;
-  max-width: 450px;
+  max-width: 400px; /* Reduced max-width for smaller width */
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 10px 25px rgba(0, 0, 0, 0.05),
     inset 0 2px 4px rgba(255, 255, 255, 0.9),
     inset 0 -2px 4px rgba(0, 0, 0, 0.02);
@@ -48,23 +48,23 @@ body {
 
 .brand-section {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem; /* Adjusted margin for smaller height */
 }
 
 /* START: Logo and Project Name Update Styling */
 .logo-container {
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1.2rem; /* Adjusted margin */
 }
 
 .learnroom-logo {
-  width: 120px;
-  height: 120px;
+  width: 100px; /* Slightly smaller logo */
+  height: 100px; /* Slightly smaller logo */
   border-radius: 15px;
   object-fit: cover;
 }
 
 .project-name {
-  font-size: 2rem;
+  font-size: 1.8rem; /* Slightly smaller font size */
   font-weight: 500;
   color: #212529;
   margin-bottom: 0;
@@ -101,7 +101,7 @@ body {
 }
 
 .form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* Reduced margin between form groups */
   position: relative;
 }
 
@@ -109,8 +109,8 @@ body {
   background: linear-gradient(145deg, #ffffff, #f8f9fa);
   border: 2px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1.5rem 1.2rem 0.8rem 1.2rem;
-  font-size: 1rem;
+  padding: 1.2rem 1.2rem 0.6rem 1.2rem; /* Reduced padding for smaller height */
+  font-size: 0.95rem; /* Slightly smaller font size */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.05);
   position: relative;
@@ -127,9 +127,9 @@ body {
 .form-label {
   position: absolute;
   left: 1.2rem;
-  top: 1.2rem;
+  top: 1rem; /* Adjusted top position for smaller input height */
   color: #6b7280;
-  font-size: 1rem;
+  font-size: 0.95rem; /* Slightly smaller font size */
   font-weight: 400;
   pointer-events: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -143,7 +143,7 @@ body {
 .form-control:focus + .form-label,
 .form-control:not(:placeholder-shown) + .form-label,
 .form-control:valid + .form-label {
-  transform: translateY(-1.75rem) scale(0.8);
+  transform: translateY(-1.5rem) scale(0.8); /* Adjusted translateY for smaller input height */
   /* Updated: Focus color to new light green */
   color: var(--light-green-hover);
   font-weight: 500;
@@ -192,7 +192,7 @@ body {
 
 .login-btn {
   width: 100%;
-  padding: 1rem; /* Updated: Reduced padding to make height smaller for a more compact, professional look */
+  padding: 0.9rem; /* Further reduced padding for a more compact button */
   /* Updated: Button background to new green gradient for standard professional look */
   background: linear-gradient(
     145deg,
@@ -204,9 +204,9 @@ body {
   border-bottom-color: var(--logo-green);
   border-radius: 15px;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1rem; /* Slightly smaller font size */
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem; /* Adjusted margin */
   cursor: pointer;
   transition: all 0.3s ease;
   /* Updated: Button shadow to new green */
@@ -264,7 +264,7 @@ body {
 
 .forgot-link {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* Adjusted margin */
 }
 
 .forgot-link a {
@@ -282,16 +282,16 @@ body {
 
 .role-section {
   border-top: 1px solid #e5e7eb;
-  padding-top: 2rem;
-  margin-bottom: 2rem;
+  padding-top: 1.5rem; /* Reduced padding */
+  margin-bottom: 1.5rem; /* Reduced margin */
 }
 
 .role-title {
   text-align: center;
   color: #374151;
-  font-size: 1.1rem;
+  font-size: 1rem; /* Slightly smaller font size */
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; /* Reduced margin */
 }
 
 /* Updated: Role cards using Bootstrap grid for responsiveness */
@@ -306,7 +306,7 @@ body {
   border-top-color: #f1f5f9;
   border-bottom-color: #cbd5e1;
   border-radius: 18px;
-  padding: 1.5rem 1rem;
+  padding: 1.2rem 0.8rem; /* Reduced padding for smaller height */
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -365,10 +365,10 @@ body {
 }
 
 .role-icon {
-  font-size: 2.5rem;
+  font-size: 2.2rem; /* Slightly smaller icon size */
   /* Updated: Icon color to new light green */
   color: var(--light-green-hover);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem; /* Adjusted margin */
   display: block;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -380,7 +380,7 @@ body {
 
 .role-name {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* Slightly smaller font size */
   color: #374151;
 }
 
@@ -391,22 +391,22 @@ body {
 /* Demo Credentials Section */
 .demo-credentials {
   border-top: 1px solid #e5e7eb;
-  padding-top: 1.5rem;
+  padding-top: 1.2rem; /* Reduced padding */
   background: linear-gradient(145deg, #f8f9fa, #e9ecef);
-  margin: 0 -3rem -3rem -3rem;
-  padding: 1.5rem 3rem 2rem 3rem;
+  margin: 0 -2.5rem -2.5rem -2.5rem; /* Adjusted margin to match new padding */
+  padding: 1.2rem 2.5rem 1.5rem 2.5rem; /* Adjusted padding */
   border-radius: 0 0 20px 20px;
 }
 
 .demo-title {
   font-weight: 600;
   color: #374151;
-  margin-bottom: 0.8rem;
-  font-size: 0.95rem;
+  margin-bottom: 0.6rem; /* Adjusted margin */
+  font-size: 0.9rem; /* Slightly smaller font size */
 }
 
 .demo-info {
-  font-size: 0.85rem;
+  font-size: 0.8rem; /* Slightly smaller font size */
   color: #6b7280;
   line-height: 1.5;
 }
@@ -495,17 +495,17 @@ body {
 
   .login-container {
     max-width: 100%;
-    padding: 2.5rem;
+    padding: 2rem; /* Adjusted padding */
     border-radius: 18px;
   }
 
   .learnroom-logo {
-    width: 100px;
-    height: 100px;
+    width: 90px; /* Adjusted */
+    height: 90px; /* Adjusted */
   }
 
   .project-name {
-    font-size: 1.8rem;
+    font-size: 1.7rem; /* Adjusted */
   }
 
   .title {
@@ -523,14 +523,14 @@ body {
   }
 
   .login-container {
-    padding: 2rem 1.5rem;
-    margin: 1rem;
+    padding: 1.8rem 1.2rem; /* Adjusted padding */
+    margin: 0.8rem; /* Adjusted margin */
     border-radius: 16px;
   }
 
   .demo-credentials {
-    margin: 0 -1.5rem -2rem -1.5rem;
-    padding: 1.5rem 1.5rem 2rem 1.5rem;
+    margin: 0 -1.2rem -1.8rem -1.2rem; /* Adjusted margin */
+    padding: 1.2rem 1.2rem 1.5rem 1.2rem; /* Adjusted padding */
   }
 
   .title {
@@ -539,26 +539,33 @@ body {
 
   /* Responsive Logo and Project Name */
   .learnroom-logo {
-    width: 80px;
-    height: 80px;
+    width: 70px; /* Adjusted */
+    height: 70px; /* Adjusted */
   }
 
   .project-name {
-    font-size: 1.6rem;
+    font-size: 1.5rem; /* Adjusted */
   }
 
   .form-control {
-    padding: 1.3rem 1rem 0.6rem 1rem;
-    font-size: 0.95rem;
+    padding: 1.1rem 1rem 0.5rem 1rem; /* Adjusted padding */
+    font-size: 0.9rem; /* Adjusted */
   }
 
   .form-label {
-    font-size: 0.95rem;
+    font-size: 0.9rem; /* Adjusted */
+    top: 0.9rem; /* Adjusted */
+  }
+
+  .form-control:focus + .form-label,
+  .form-control:not(:placeholder-shown) + .form-label,
+  .form-control:valid + .form-label {
+    transform: translateY(-1.4rem) scale(0.8); /* Adjusted translateY */
   }
 
   .login-btn {
-    padding: 0.9rem;
-    font-size: 1rem;
+    padding: 0.8rem; /* Adjusted */
+    font-size: 0.95rem; /* Adjusted */
     border-radius: 12px;
   }
 
@@ -569,16 +576,16 @@ body {
   .role-card {
     width: 100%;
     border-radius: 14px;
-    padding: 1rem 0.5rem;
+    padding: 0.9rem 0.5rem; /* Adjusted */
   }
 
   .role-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem; /* Adjusted */
+    margin-bottom: 0.4rem; /* Adjusted */
   }
 
   .role-name {
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Adjusted */
   }
 
   .alert {
@@ -595,13 +602,13 @@ body {
   }
 
   .login-container {
-    padding: 1.5rem 1rem;
+    padding: 1.2rem 0.8rem; /* Adjusted padding */
     border-radius: 12px;
   }
 
   .demo-credentials {
-    margin: 0 -1rem -1.5rem -1rem;
-    padding: 1.5rem 1rem 2rem 1rem;
+    margin: 0 -0.8rem -1.2rem -0.8rem; /* Adjusted margin */
+    padding: 1.2rem 0.8rem 1.5rem 0.8rem; /* Adjusted padding */
   }
 
   .title {
@@ -613,117 +620,149 @@ body {
   }
 
   .form-control {
-    padding: 1.1rem 1rem;
+    padding: 1rem 0.8rem 0.5rem 0.8rem; /* Adjusted padding */
     border-radius: 10px;
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Adjusted */
+  }
+
+  .form-label {
+    font-size: 0.85rem; /* Adjusted */
+    top: 0.8rem; /* Adjusted */
+  }
+
+  .form-control:focus + .form-label,
+  .form-control:not(:placeholder-shown) + .form-label,
+  .form-control:valid + .form-label {
+    transform: translateY(-1.3rem) scale(0.75); /* Adjusted translateY and scale */
   }
 
   .login-btn {
-    padding: 0.8rem;
-    font-size: 0.95rem;
+    padding: 0.7rem; /* Adjusted */
+    font-size: 0.9rem; /* Adjusted */
     border-radius: 10px;
   }
 
   .role-section {
-    padding-top: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding-top: 1.2rem; /* Adjusted */
+    margin-bottom: 1.2rem; /* Adjusted */
   }
 
   .role-title {
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
+    font-size: 0.9rem; /* Adjusted */
+    margin-bottom: 0.8rem; /* Adjusted */
   }
 
   .role-card {
     border-radius: 12px;
-    padding: 0.8rem 0.3rem;
-    margin-bottom: 1rem; /* Add spacing if stacked */
+    padding: 0.7rem 0.3rem; /* Adjusted */
+    margin-bottom: 0.8rem; /* Adjusted spacing if stacked */
   }
 
   .role-icon {
-    font-size: 1.8rem;
-    margin-bottom: 0.4rem;
+    font-size: 1.6rem; /* Adjusted */
+    margin-bottom: 0.3rem; /* Adjusted */
   }
 
   .role-name {
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Adjusted */
   }
 
   /* Smaller Mobile Logo and Project Name */
   .learnroom-logo {
-    width: 60px;
-    height: 60px;
+    width: 50px; /* Adjusted */
+    height: 50px; /* Adjusted */
   }
 
   .project-name {
-    font-size: 1.4rem;
+    font-size: 1.3rem; /* Adjusted */
   }
 
   .forgot-link {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem; /* Adjusted */
   }
 
   .forgot-link a {
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Adjusted */
   }
 
   .demo-title {
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Adjusted */
   }
 
   .demo-info {
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Adjusted */
   }
 }
 
 @media (max-width: 320px) {
   .login-container {
-    padding: 1rem 0.5rem;
+    padding: 0.8rem 0.4rem; /* Further adjusted padding */
   }
 
   .learnroom-logo {
-    width: 50px;
-    height: 50px;
+    width: 45px; /* Adjusted */
+    height: 45px; /* Adjusted */
   }
 
   .project-name {
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Adjusted */
   }
 
   .title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+  }
+
+  .form-control {
+    padding: 0.9rem 0.6rem 0.4rem 0.6rem; /* Adjusted */
+    font-size: 0.8rem; /* Adjusted */
+  }
+
+  .form-label {
+    font-size: 0.8rem; /* Adjusted */
+    top: 0.7rem; /* Adjusted */
+  }
+
+  .form-control:focus + .form-label,
+  .form-control:not(:placeholder-shown) + .form-label,
+  .form-control:valid + .form-label {
+    transform: translateY(-1.2rem) scale(0.7); /* Adjusted */
+  }
+
+  .login-btn {
+    padding: 0.6rem; /* Adjusted */
+    font-size: 0.85rem; /* Adjusted */
   }
 
   .role-card {
-    padding: 0.6rem 0.2rem;
+    padding: 0.5rem 0.2rem; /* Adjusted */
   }
 
   .role-icon {
-    font-size: 1.5rem;
+    font-size: 1.4rem; /* Adjusted */
   }
 
   .role-name {
-    font-size: 0.7rem;
+    font-size: 0.65rem; /* Adjusted */
   }
 }
 
 /* For larger screens, ensure centering and no overflow */
 @media (min-width: 1200px) {
   .login-container {
-    max-width: 500px;
-    padding: 3.5rem;
+    max-width: 450px; /* Adjusted max-width for larger screens */
+    padding: 3rem; /* Adjusted padding */
   }
 
   .learnroom-logo {
-    width: 140px;
-    height: 140px;
+    width: 110px; /* Adjusted */
+    height: 110px; /* Adjusted */
   }
 
   .project-name {
-    font-size: 2.2rem;
+    font-size: 2rem; /* Adjusted */
   }
 
   .title {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
 }
