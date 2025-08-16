@@ -1153,8 +1153,26 @@ class StreamManager {
       });
 
     document.querySelectorAll(".comment-dropdown-menu.show").forEach((menu) => {
-      if (!menu.previousElementSibling.contains(e.target)) {
+      // Check if the click target is outside the menu and its trigger button
+      const menuButton = menu.previousElementSibling; // Assuming the button is the previous sibling
+      if (
+        !menu.contains(e.target) &&
+        (!menuButton || !menuButton.contains(e.target))
+      ) {
         menu.classList.remove("show");
+        // Re-append to its original parent if it was moved to body
+        const commentId = menu.id.replace("comment-dropdown-", "");
+        const commentElement = document.querySelector(
+          `[data-comment-id="${commentId}"]`
+        );
+        if (commentElement) {
+          const menuContainer = commentElement.querySelector(
+            ".comment-menu-container"
+          );
+          if (menuContainer && !menuContainer.contains(menu)) {
+            menuContainer.appendChild(menu);
+          }
+        }
       }
     });
 
@@ -1214,6 +1232,19 @@ class StreamManager {
           }px`;
         }
       });
+
+    // Re-position any open comment dropdowns on resize
+    document.querySelectorAll(".comment-dropdown-menu.show").forEach((menu) => {
+      const commentId = menu.id.replace("comment-dropdown-", "");
+      const button = document.querySelector(
+        `[data-comment-id="${commentId}"] .comment-menu-dots`
+      );
+      if (button) {
+        const rect = button.getBoundingClientRect();
+        menu.style.top = `${rect.top - menu.offsetHeight - 5}px`;
+        menu.style.left = `${rect.left - menu.offsetWidth + rect.width}px`;
+      }
+    });
   }
 
   // Other methods remain unchanged...
@@ -1672,13 +1703,11 @@ class StreamManager {
 
       dropdown.classList.toggle("show");
 
-      // Position the dropdown relative to the button
-      const rect = button.getBoundingClientRect();
       // Append to body to ensure it's on top of all other elements
       document.body.appendChild(dropdown);
 
       // Calculate position relative to viewport
-      dropdown.style.position = "fixed"; // Use fixed positioning
+      const rect = button.getBoundingClientRect();
       dropdown.style.top = `${rect.top - dropdown.offsetHeight - 5}px`; // 5px above the button
       dropdown.style.left = `${
         rect.left - dropdown.offsetWidth + rect.width
@@ -2061,6 +2090,19 @@ StreamManager.prototype.setupNotificationSystem = function () {
         !e.target.closest(".comment-dropdown-menu")
       ) {
         menu.classList.remove("show");
+        // Re-append to its original parent if it was moved to body
+        const commentId = menu.id.replace("comment-dropdown-", "");
+        const commentElement = document.querySelector(
+          `[data-comment-id="${commentId}"]`
+        );
+        if (commentElement) {
+          const menuContainer = commentElement.querySelector(
+            ".comment-menu-container"
+          );
+          if (menuContainer && !menuContainer.contains(menu)) {
+            menuContainer.appendChild(menu);
+          }
+        }
       }
     });
 
@@ -2109,6 +2151,19 @@ StreamManager.prototype.setupNotificationSystem = function () {
     );
     allCommentDropdowns.forEach((menu) => {
       menu.classList.remove("show");
+      // Re-append to its original parent if it was moved to body
+      const commentId = menu.id.replace("comment-dropdown-", "");
+      const commentElement = document.querySelector(
+        `[data-comment-id="${commentId}"]`
+      );
+      if (commentElement) {
+        const menuContainer = commentElement.querySelector(
+          ".comment-menu-container"
+        );
+        if (menuContainer && !menuContainer.contains(menu)) {
+          menuContainer.appendChild(menu);
+        }
+      }
     });
 
     // Close sidebar enrolled classes dropdown on scroll
@@ -2148,6 +2203,19 @@ StreamManager.prototype.setupNotificationSystem = function () {
     );
     allCommentDropdowns.forEach((menu) => {
       menu.classList.remove("show");
+      // Re-append to its original parent if it was moved to body
+      const commentId = menu.id.replace("comment-dropdown-", "");
+      const commentElement = document.querySelector(
+        `[data-comment-id="${commentId}"]`
+      );
+      if (commentElement) {
+        const menuContainer = commentElement.querySelector(
+          ".comment-menu-container"
+        );
+        if (menuContainer && !menuContainer.contains(menu)) {
+          menuContainer.appendChild(menu);
+        }
+      }
     });
 
     // Close sidebar enrolled classes dropdown on resize
